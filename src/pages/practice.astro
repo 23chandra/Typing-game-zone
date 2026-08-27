@@ -1,123 +1,384 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PracticeLabWidget from '../components/PracticeLabWidget.astro';
 import { WORD_LISTS } from '../lib/wordLists';
 ---
 
 <Layout
   title="Touch Typing Practice Lab & Drills — Typing Game Zone"
-  description="Master the keyboard with touch-typing finger placement guides, home row drills, number row practice, and visual heatmap training."
+  description="Master touch typing with interactive QWERTY visual keyboard, real-time finger placement guides, home row drills, number row practice, and rhythm metronomes."
 >
   <div class="py-12 sm:py-16 bg-canvas-soft min-h-screen">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       
       <!-- Page Header -->
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Muscle Memory & Technique</span>
-        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink mt-2">
-          Touch Typing Practice Lab.
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-mono text-link mb-3 shadow-sm">
+          <span class="h-2 w-2 rounded-full animate-ping" style="background-color: var(--site-primary, #e2b714);"></span>
+          <span>INTERACTIVE PRACTICE LAB • 100% FREE</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink">
+          Touch Typing <span class="text-gradient-preview">Practice Lab.</span>
         </h1>
         <p class="mt-3 text-sm text-body leading-relaxed">
-          Master the home row, eliminate hunt-and-peck habits, and train each finger to strike its designated quadrant automatically without looking down.
+          Master anchor keys, build subconscious finger muscle memory, and train each quadrant to strike without looking down at the keyboard.
         </p>
       </div>
 
-      <!-- Feature Interactive Key Master CTA Card -->
-      <div class="relative overflow-hidden rounded-2xl border border-hairline bg-canvas p-8 shadow-level-3 mb-12 flex flex-col md:flex-row items-center justify-between gap-8">
+      <!-- 1. Interactive Touch Typing Practice Suite Arena -->
+      <div class="mb-14">
+        <PracticeLabWidget />
+      </div>
+
+      <!-- 2. Finger Placement & Quadrant Map (Interactive Filters) -->
+      <div class="mb-12 rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 select-none">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+          <div>
+            <h3 class="text-lg font-bold text-ink">Standard Touch Typing Finger Map</h3>
+            <p class="text-xs text-body mt-0.5">Click any finger zone below to load targeted muscle-memory drills.</p>
+          </div>
+          <span class="text-[11px] font-mono text-mute">Tactile Bumps: F & J</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+          <!-- Pinky Finger Card -->
+          <button
+            type="button"
+            data-finger-filter="pinkyDrills"
+            class="finger-zone-card text-left rounded-2xl border border-hairline bg-canvas-soft p-4 shadow-sm transition hover:scale-[1.02] hover:shadow-md cursor-pointer group"
+            style="border-left: 4px solid #f43f5e;"
+          >
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm" style="color: #f43f5e;">Left / Right Pinky</span>
+              <span class="text-[10px] opacity-60 group-hover:opacity-100 transition">Practice →</span>
+            </div>
+            <p class="text-[11px] text-body mt-1 leading-relaxed">Keys: Q, A, Z, P, ;, /, 1, 0, -, =, [, ], ', Return, Tab</p>
+            <div class="mt-3 flex items-center gap-1.5 text-[10px] text-mute font-bold">
+              <span class="px-1.5 py-0.5 rounded bg-canvas">aqua</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">quiz</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">paza</span>
+            </div>
+          </button>
+
+          <!-- Ring Finger Card -->
+          <button
+            type="button"
+            data-finger-filter="ringDrills"
+            class="finger-zone-card text-left rounded-2xl border border-hairline bg-canvas-soft p-4 shadow-sm transition hover:scale-[1.02] hover:shadow-md cursor-pointer group"
+            style="border-left: 4px solid #a855f7;"
+          >
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm" style="color: #a855f7;">Left / Right Ring</span>
+              <span class="text-[10px] opacity-60 group-hover:opacity-100 transition">Practice →</span>
+            </div>
+            <p class="text-[11px] text-body mt-1 leading-relaxed">Keys: W, S, X, O, L, ., 2, 9</p>
+            <div class="mt-3 flex items-center gap-1.5 text-[10px] text-mute font-bold">
+              <span class="px-1.5 py-0.5 rounded bg-canvas">slow</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">work</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">soul</span>
+            </div>
+          </button>
+
+          <!-- Middle Finger Card -->
+          <button
+            type="button"
+            data-finger-filter="middleDrills"
+            class="finger-zone-card text-left rounded-2xl border border-hairline bg-canvas-soft p-4 shadow-sm transition hover:scale-[1.02] hover:shadow-md cursor-pointer group"
+            style="border-left: 4px solid #3b82f6;"
+          >
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm" style="color: #3b82f6;">Left / Right Middle</span>
+              <span class="text-[10px] opacity-60 group-hover:opacity-100 transition">Practice →</span>
+            </div>
+            <p class="text-[11px] text-body mt-1 leading-relaxed">Keys: E, D, C, I, K, ,, 3, 8</p>
+            <div class="mt-3 flex items-center gap-1.5 text-[10px] text-mute font-bold">
+              <span class="px-1.5 py-0.5 rounded bg-canvas">deck</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">dive</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">edit</span>
+            </div>
+          </button>
+
+          <!-- Index Finger Card -->
+          <button
+            type="button"
+            data-finger-filter="indexDrills"
+            class="finger-zone-card text-left rounded-2xl border border-hairline bg-canvas-soft p-4 shadow-sm transition hover:scale-[1.02] hover:shadow-md cursor-pointer group"
+            style="border-left: 4px solid #10b981;"
+          >
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm" style="color: #10b981;">Left / Right Index</span>
+              <span class="text-[10px] opacity-60 group-hover:opacity-100 transition">Practice →</span>
+            </div>
+            <p class="text-[11px] text-body mt-1 leading-relaxed">Keys: R, T, F, G, V, B, Y, U, H, J, N, M, 4, 5, 6, 7</p>
+            <div class="mt-3 flex items-center gap-1.5 text-[10px] text-mute font-bold">
+              <span class="px-1.5 py-0.5 rounded bg-canvas">turn</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">hero</span>
+              <span class="px-1.5 py-0.5 rounded bg-canvas">jump</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. Practice Drill Sets Catalog (Clickable Words) -->
+      <div class="mb-14">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="text-xl font-bold text-ink">Interactive Drill Catalog</h3>
+            <p class="text-xs text-mute mt-0.5">Click any drill chip or word to load it into the Practice Arena.</p>
+          </div>
+          <span class="text-xs font-mono text-mute hidden sm:inline">6 Core Categories</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Drill Set 1: Home Row -->
+          <div class="rounded-3xl border border-hairline bg-canvas p-6 shadow-level-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold font-mono text-link uppercase tracking-wider">01. Home Row Anchor</span>
+                <span class="text-base">🏠</span>
+              </div>
+              <p class="text-xs text-mute mb-4">Focus exclusively on ASDF and JKL; combinations.</p>
+              <div class="flex flex-wrap gap-2 font-mono text-xs">
+                {WORD_LISTS.practiceDrills.homeRow.slice(0, 10).map(w => (
+                  <button
+                    type="button"
+                    data-drill-type="homeRow"
+                    class="drill-chip rounded-xl bg-canvas-soft px-2.5 py-1 border border-hairline font-bold text-ink hover:bg-canvas-soft-2 hover:scale-105 active:scale-95 transition cursor-pointer"
+                  >
+                    {w}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              data-load-cat="homeRow"
+              class="mt-5 w-full rounded-xl py-2 text-xs font-bold border border-hairline bg-canvas-soft text-ink hover:bg-canvas transition cursor-pointer"
+            >
+              Load Full Home Row Set →
+            </button>
+          </div>
+
+          <!-- Drill Set 2: Top Row -->
+          <div class="rounded-3xl border border-hairline bg-canvas p-6 shadow-level-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold font-mono text-link uppercase tracking-wider">02. Top Row Elevation</span>
+                <span class="text-base">⬆️</span>
+              </div>
+              <p class="text-xs text-mute mb-4">Practice upward reaches without lifting your palms.</p>
+              <div class="flex flex-wrap gap-2 font-mono text-xs">
+                {WORD_LISTS.practiceDrills.topRow.slice(0, 10).map(w => (
+                  <button
+                    type="button"
+                    data-drill-type="topRow"
+                    class="drill-chip rounded-xl bg-canvas-soft px-2.5 py-1 border border-hairline font-bold text-ink hover:bg-canvas-soft-2 hover:scale-105 active:scale-95 transition cursor-pointer"
+                  >
+                    {w}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              data-load-cat="topRow"
+              class="mt-5 w-full rounded-xl py-2 text-xs font-bold border border-hairline bg-canvas-soft text-ink hover:bg-canvas transition cursor-pointer"
+            >
+              Load Full Top Row Set →
+            </button>
+          </div>
+
+          <!-- Drill Set 3: Bottom Row -->
+          <div class="rounded-3xl border border-hairline bg-canvas p-6 shadow-level-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold font-mono text-link uppercase tracking-wider">03. Bottom Row Agility</span>
+                <span class="text-base">⬇️</span>
+              </div>
+              <p class="text-xs text-mute mb-4">Smooth downward finger tucks for ZXCV and BNM.</p>
+              <div class="flex flex-wrap gap-2 font-mono text-xs">
+                {WORD_LISTS.practiceDrills.bottomRow.slice(0, 10).map(w => (
+                  <button
+                    type="button"
+                    data-drill-type="bottomRow"
+                    class="drill-chip rounded-xl bg-canvas-soft px-2.5 py-1 border border-hairline font-bold text-ink hover:bg-canvas-soft-2 hover:scale-105 active:scale-95 transition cursor-pointer"
+                  >
+                    {w}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              data-load-cat="bottomRow"
+              class="mt-5 w-full rounded-xl py-2 text-xs font-bold border border-hairline bg-canvas-soft text-ink hover:bg-canvas transition cursor-pointer"
+            >
+              Load Full Bottom Row Set →
+            </button>
+          </div>
+
+          <!-- Drill Set 4: Numbers & Symbols -->
+          <div class="rounded-3xl border border-hairline bg-canvas p-6 shadow-level-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold font-mono text-link uppercase tracking-wider">04. Number Row & Code</span>
+                <span class="text-base">🔢</span>
+              </div>
+              <p class="text-xs text-mute mb-4">Precision accuracy for programming syntax and numbers.</p>
+              <div class="flex flex-wrap gap-2 font-mono text-xs">
+                {WORD_LISTS.practiceDrills.numberRow.slice(0, 8).map(w => (
+                  <button
+                    type="button"
+                    data-drill-type="numberRow"
+                    class="drill-chip rounded-xl bg-canvas-soft px-2.5 py-1 border border-hairline font-bold text-ink hover:bg-canvas-soft-2 hover:scale-105 active:scale-95 transition cursor-pointer"
+                  >
+                    {w}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              data-load-cat="numberRow"
+              class="mt-5 w-full rounded-xl py-2 text-xs font-bold border border-hairline bg-canvas-soft text-ink hover:bg-canvas transition cursor-pointer"
+            >
+              Load Numbers & Code Set →
+            </button>
+          </div>
+
+          <!-- Drill Set 5: Pangrams -->
+          <div class="rounded-3xl border border-hairline bg-canvas p-6 shadow-level-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold font-mono text-link uppercase tracking-wider">05. Full Pangrams (A-Z)</span>
+                <span class="text-base">🔠</span>
+              </div>
+              <p class="text-xs text-mute mb-4">Every sentence exercises all 26 English letters.</p>
+              <div class="flex flex-col gap-2 font-mono text-xs">
+                <button
+                  type="button"
+                  data-custom-text="the quick brown fox jumps over the lazy dog"
+                  class="drill-custom-chip text-left rounded-xl bg-canvas-soft p-2 border border-hairline text-ink text-[11px] hover:bg-canvas-soft-2 transition cursor-pointer"
+                >
+                  "The quick brown fox jumps over the lazy dog."
+                </button>
+                <button
+                  type="button"
+                  data-custom-text="pack my box with five dozen liquor jugs"
+                  class="drill-custom-chip text-left rounded-xl bg-canvas-soft p-2 border border-hairline text-ink text-[11px] hover:bg-canvas-soft-2 transition cursor-pointer"
+                >
+                  "Pack my box with five dozen liquor jugs."
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              data-load-cat="pangrams"
+              class="mt-5 w-full rounded-xl py-2 text-xs font-bold border border-hairline bg-canvas-soft text-ink hover:bg-canvas transition cursor-pointer"
+            >
+              Load Pangrams Drill →
+            </button>
+          </div>
+
+          <!-- Drill Set 6: N-Grams -->
+          <div class="rounded-3xl border border-hairline bg-canvas p-6 shadow-level-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold font-mono text-link uppercase tracking-wider">06. Speed Bigrams</span>
+                <span class="text-base">⚡</span>
+              </div>
+              <p class="text-xs text-mute mb-4">High frequency 2-letter combos to accelerate speed.</p>
+              <div class="flex flex-wrap gap-2 font-mono text-xs">
+                {WORD_LISTS.practiceDrills.ngrams.slice(0, 14).map(w => (
+                  <button
+                    type="button"
+                    data-drill-type="ngrams"
+                    class="drill-chip rounded-xl bg-canvas-soft px-2.5 py-1 border border-hairline font-bold text-ink hover:bg-canvas-soft-2 hover:scale-105 active:scale-95 transition cursor-pointer"
+                  >
+                    {w}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              data-load-cat="ngrams"
+              class="mt-5 w-full rounded-xl py-2 text-xs font-bold border border-hairline bg-canvas-soft text-ink hover:bg-canvas transition cursor-pointer"
+            >
+              Load Bigrams Drill →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Feature Interactive Key Master CTA Card -->
+      <div class="relative overflow-hidden rounded-3xl border border-hairline bg-canvas p-8 sm:p-10 shadow-level-3 mb-14 flex flex-col md:flex-row items-center justify-between gap-8">
         <div class="max-w-xl">
           <span class="rounded-full bg-canvas-soft text-link border border-hairline px-3 py-1 text-xs font-mono font-semibold">
             RECOMMENDED GAME
           </span>
-          <h2 class="text-2xl font-bold text-ink mt-3">Key Master: 3D Keyboard Heatmap Lab</h2>
-          <p class="text-xs text-body mt-2 leading-relaxed">
-            Experience real-time keystroke ripple waves, finger zone color coding, and accuracy heatmaps on an illuminated interactive keyboard.
+          <h2 class="text-2xl sm:text-3xl font-bold text-ink mt-3">Key Master: 3D Keyboard Heatmap Lab</h2>
+          <p class="text-xs sm:text-sm text-body mt-2 leading-relaxed">
+            Experience real-time keystroke ripple waves, finger zone color coding, and accuracy heatmaps on an illuminated interactive keyboard game.
           </p>
-          <a
-            href="/game/key-master"
-            class="mt-5 inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 text-xs font-medium text-on-primary shadow-level-2 transition hover:opacity-90 active:scale-95"
-          >
-            <span>Launch Key Master Lab</span>
-            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </a>
+          <div class="mt-6 flex flex-wrap items-center gap-3 font-mono">
+            <a
+              href="/game/key-master"
+              class="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95"
+              style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+            >
+              <span>Launch Key Master Lab</span>
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+            <a
+              href="/speed-test"
+              class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-2.5 text-xs font-bold text-ink transition hover:bg-canvas"
+            >
+              <span>Speed Test Benchmark ⚡</span>
+            </a>
+          </div>
         </div>
 
-        <div class="flex flex-col items-center justify-center rounded-xl bg-canvas-soft p-6 border border-hairline w-full md:w-80 text-center font-mono">
-          <div class="text-4xl mb-2">⌨️</div>
-          <span class="text-xs font-bold text-ink">Finger Zone Coding</span>
-          <span class="text-[10px] text-mute mt-1">Left Pinky (A) • Right Pinky (;)</span>
-          <span class="text-[10px] text-mute">Index Home (F & J bumps)</span>
-        </div>
-      </div>
-
-      <!-- Finger Placement & Quadrant Map -->
-      <div class="mb-12 rounded-2xl border border-hairline bg-canvas p-8 shadow-level-2">
-        <h3 class="text-lg font-bold text-ink mb-2">Standard Touch Typing Finger Map</h3>
-        <p class="text-xs text-body mb-6">Rest both index fingers on the home keys with tactile bumps: <strong>F</strong> and <strong>J</strong>.</p>
-
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs">
-          <div class="rounded-xl border border-hairline bg-canvas-soft p-4 shadow-sm" style="border-left: 3px solid #f44c7f;">
-            <span class="font-bold" style="color: #f44c7f;">Left / Right Pinky</span>
-            <p class="text-[11px] text-body mt-1">Keys: Q, A, Z, P, ;, /, Shift, Return, Tab</p>
-          </div>
-          <div class="rounded-xl border border-hairline bg-canvas-soft p-4 shadow-sm" style="border-left: 3px solid #bd93f9;">
-            <span class="font-bold" style="color: #bd93f9;">Left / Right Ring</span>
-            <p class="text-[11px] text-body mt-1">Keys: W, S, X, O, L, .</p>
-          </div>
-          <div class="rounded-xl border border-hairline bg-canvas-soft p-4 shadow-sm" style="border-left: 3px solid #88c0d0;">
-            <span class="font-bold" style="color: #88c0d0;">Left / Right Middle</span>
-            <p class="text-[11px] text-body mt-1">Keys: E, D, C, I, K, ,</p>
-          </div>
-          <div class="rounded-xl border border-hairline bg-canvas-soft p-4 shadow-sm" style="border-left: 3px solid var(--site-primary, #e2b714);">
-            <span class="font-bold" style="color: var(--site-primary, #e2b714);">Left / Right Index</span>
-            <p class="text-[11px] text-body mt-1">Keys: R, T, F, G, V, B, Y, U, H, J, N, M</p>
+        <div class="flex flex-col items-center justify-center rounded-2xl bg-canvas-soft p-6 border border-hairline w-full md:w-80 text-center font-mono shadow-sm">
+          <div class="text-5xl mb-3">⌨️</div>
+          <span class="text-sm font-bold text-ink">Illuminated Keycaps</span>
+          <span class="text-xs text-mute mt-1">Left Pinky (A) • Right Pinky (;)</span>
+          <span class="text-xs text-mute">Index Home (F & J bumps)</span>
+          <div class="mt-4 flex items-center gap-1.5">
+            <span class="h-3 w-3 rounded-full" title="Pinky Quadrant" style="background-color: #f43f5e;"></span>
+            <span class="h-3 w-3 rounded-full" title="Ring Quadrant" style="background-color: #a855f7;"></span>
+            <span class="h-3 w-3 rounded-full" title="Middle Quadrant" style="background-color: #3b82f6;"></span>
+            <span class="h-3 w-3 rounded-full" title="Index Quadrant" style="background-color: #10b981;"></span>
+            <span class="h-3 w-3 rounded-full" title="Thumb Zone" style="background-color: #eab308;"></span>
           </div>
         </div>
       </div>
 
-      <!-- Practice Drill Sets -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Drill Set 1 -->
-        <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-1">
-          <h4 class="font-bold text-sm text-ink mb-1">1. Home Row Anchor Drills</h4>
-          <p class="text-xs text-mute mb-4">Focus exclusively on ASDF and JKL; combinations.</p>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            {WORD_LISTS.practiceDrills.homeRow.map(w => (
-              <span class="rounded bg-canvas-soft px-3 py-1.5 border border-hairline font-bold text-ink">{w}</span>
-            ))}
-          </div>
-        </div>
+      <!-- 5. Touch Typing Golden Rules & Ergonomics Guide -->
+      <div class="rounded-3xl border border-hairline bg-canvas p-8 sm:p-10 font-mono text-xs">
+        <h3 class="text-lg font-bold text-ink mb-6 flex items-center gap-2">
+          <span>🧠</span>
+          <span>4 Touch Typing Golden Rules</span>
+        </h3>
 
-        <!-- Drill Set 2 -->
-        <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-1">
-          <h4 class="font-bold text-sm text-ink mb-1">2. Top Row Transition Drills</h4>
-          <p class="text-xs text-mute mb-4">Practice upward reaches without lifting your palms.</p>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            {WORD_LISTS.practiceDrills.topRow.map(w => (
-              <span class="rounded bg-canvas-soft px-3 py-1.5 border border-hairline font-bold text-ink">{w}</span>
-            ))}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 font-sans text-xs">
+          <div class="rounded-2xl p-4 border border-hairline bg-canvas-soft">
+            <div class="font-bold text-sm text-ink mb-1">1. Never Look Down</div>
+            <p class="text-body leading-relaxed">Looking at your hands prevents motor cortex neural pathways from forming. Trust the on-screen visual instructor instead.</p>
           </div>
-        </div>
-
-        <!-- Drill Set 3 -->
-        <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-1">
-          <h4 class="font-bold text-sm text-ink mb-1">3. Bottom Row Agility</h4>
-          <p class="text-xs text-mute mb-4">Smooth downward finger tucks for ZXCV and BNM.</p>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            {WORD_LISTS.practiceDrills.bottomRow.map(w => (
-              <span class="rounded bg-canvas-soft px-3 py-1.5 border border-hairline font-bold text-ink">{w}</span>
-            ))}
+          <div class="rounded-2xl p-4 border border-hairline bg-canvas-soft">
+            <div class="font-bold text-sm text-ink mb-1">2. Anchor on F & J</div>
+            <p class="text-body leading-relaxed">Always return your index fingers to the tactile bumps on F and J after reaching for letters or numbers.</p>
           </div>
-        </div>
-
-        <!-- Drill Set 4 -->
-        <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-1">
-          <h4 class="font-bold text-sm text-ink mb-1">4. Numbers & Symbols Row</h4>
-          <p class="text-xs text-mute mb-4">Precision accuracy for programming syntax and numbers.</p>
-          <div class="flex flex-wrap gap-2 font-mono text-xs">
-            {WORD_LISTS.practiceDrills.numberRow.concat(WORD_LISTS.practiceDrills.symbols).map(w => (
-              <span class="rounded bg-canvas-soft px-3 py-1.5 border border-hairline font-bold text-ink">{w}</span>
-            ))}
+          <div class="rounded-2xl p-4 border border-hairline bg-canvas-soft">
+            <div class="font-bold text-sm text-ink mb-1">3. Hover Your Wrists</div>
+            <p class="text-body leading-relaxed">Keep wrists elevated in a relaxed, neutral posture without resting heavily on the desk to avoid carpal fatigue.</p>
+          </div>
+          <div class="rounded-2xl p-4 border border-hairline bg-canvas-soft">
+            <div class="font-bold text-sm text-ink mb-1">4. Rhythm Over Rush</div>
+            <p class="text-body leading-relaxed">Aim for a steady metronomic cadence with 98%+ accuracy. Speed naturally accelerates as rhythm stabilizes.</p>
           </div>
         </div>
       </div>
@@ -125,3 +386,64 @@ import { WORD_LISTS } from '../lib/wordLists';
     </div>
   </div>
 </Layout>
+
+<script>
+  import { WORD_LISTS } from '../lib/wordLists';
+
+  function initPracticePageInteractions() {
+    // Clickable Drill Category Loaders
+    document.querySelectorAll('[data-load-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-load-cat');
+        if (cat && (window as any).loadPracticeDrill) {
+          (window as any).loadPracticeDrill(cat);
+        }
+      });
+    });
+
+    // Clickable Drill Word Chips
+    document.querySelectorAll('.drill-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const drillType = btn.getAttribute('data-drill-type');
+        const wordText = btn.textContent?.trim();
+        if (drillType && (window as any).loadPracticeDrill) {
+          if (wordText) {
+            // Repeat this word 15 times for high-intensity muscle memory drill
+            const repeated = new Array(15).fill(wordText);
+            (window as any).loadPracticeDrill(drillType, repeated);
+          } else {
+            (window as any).loadPracticeDrill(drillType);
+          }
+        }
+      });
+    });
+
+    // Clickable Custom Text Chips
+    document.querySelectorAll('.drill-custom-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.getAttribute('data-custom-text');
+        if (text && (window as any).loadPracticeDrill) {
+          (window as any).loadPracticeDrill('custom', text.split(' '));
+        }
+      });
+    });
+
+    // Clickable Finger Zone Cards
+    document.querySelectorAll('.finger-zone-card').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterKey = btn.getAttribute('data-finger-filter');
+        const drillsDict = WORD_LISTS.practiceDrills as any;
+        if (filterKey && drillsDict[filterKey] && (window as any).loadPracticeDrill) {
+          (window as any).loadPracticeDrill('custom', drillsDict[filterKey]);
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPracticePageInteractions);
+  } else {
+    initPracticePageInteractions();
+  }
+  document.addEventListener('astro:page-load', initPracticePageInteractions);
+</script>

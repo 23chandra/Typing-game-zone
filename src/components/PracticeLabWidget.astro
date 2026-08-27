@@ -1,0 +1,1120 @@
+---
+// Interactive Touch Typing Practice Lab Widget
+// Powered by standard ANSI QWERTY Keyboard Quadrant Mapping
+import { QUADRANT_COLORS } from '../lib/fingerMapping';
+---
+
+<div
+  id="practice-lab-root"
+  class="w-full max-w-5xl mx-auto rounded-3xl p-4 sm:p-8 font-mono transition-colors duration-300 relative select-none border border-hairline shadow-level-3"
+  style="background-color: var(--site-canvas, #2c2e31); color: var(--site-ink, #d1d0c5);"
+>
+  <!-- Top Drill Selector & Controls Bar -->
+  <div
+    class="flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 text-xs font-semibold select-none border border-hairline shadow-sm mb-6"
+    style="background-color: var(--site-canvas-soft, #323437);"
+  >
+    <!-- Left: Drill Categories -->
+    <div class="flex flex-wrap items-center gap-1" id="prac-categories-bar">
+      <button type="button" data-drill="homeRow" class="prac-cat-btn active flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">
+        <span>🏠</span>
+        <span>Home Row</span>
+      </button>
+      <button type="button" data-drill="topRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+        <span>⬆️</span>
+        <span>Top Row</span>
+      </button>
+      <button type="button" data-drill="bottomRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+        <span>⬇️</span>
+        <span>Bottom Row</span>
+      </button>
+      <button type="button" data-drill="numberRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+        <span>🔢</span>
+        <span>Numbers</span>
+      </button>
+      <button type="button" data-drill="symbols" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+        <span>💻</span>
+        <span>Code</span>
+      </button>
+      <button type="button" data-drill="pangrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+        <span>🔠</span>
+        <span>Pangrams</span>
+      </button>
+      <button type="button" data-drill="ngrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+        <span>⚡</span>
+        <span>N-Grams</span>
+      </button>
+      <button type="button" data-drill="pinkyDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #f43f5e;">
+        <span>🌸</span>
+        <span>Pinky</span>
+      </button>
+      <button type="button" data-drill="ringDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #a855f7;">
+        <span>🔮</span>
+        <span>Ring</span>
+      </button>
+      <button type="button" data-drill="middleDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #3b82f6;">
+        <span>💎</span>
+        <span>Middle</span>
+      </button>
+      <button type="button" data-drill="indexDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #10b981;">
+        <span>🌿</span>
+        <span>Index</span>
+      </button>
+      <button type="button" data-drill="custom" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+        <span>✏️</span>
+        <span>Custom</span>
+      </button>
+    </div>
+
+    <!-- Right: Drill Options (Word Count & Metronome Rhythm) -->
+    <div class="flex items-center gap-2">
+      <!-- Drill Length Toggle -->
+      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--site-canvas, #2c2e31);">
+        <button type="button" data-count="10" class="prac-count-btn px-2 py-1 rounded-lg transition cursor-pointer text-[11px] opacity-75 hover:opacity-100">10w</button>
+        <button type="button" data-count="20" class="prac-count-btn active px-2 py-1 rounded-lg font-bold transition cursor-pointer text-[11px]" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">20w</button>
+        <button type="button" data-count="40" class="prac-count-btn px-2 py-1 rounded-lg transition cursor-pointer text-[11px] opacity-75 hover:opacity-100">40w</button>
+      </div>
+
+      <!-- Metronome Pacer Dropdown -->
+      <div class="relative">
+        <button
+          type="button"
+          id="prac-metronome-btn"
+          class="flex items-center gap-1 rounded-xl border border-hairline px-2.5 py-1.5 text-xs font-mono font-medium transition cursor-pointer hover:bg-canvas"
+          style="background-color: var(--site-canvas, #2c2e31);"
+          title="Metronome Typing Cadence Guide"
+        >
+          <span>⏱️</span>
+          <span id="prac-metronome-label">Metro: OFF</span>
+        </button>
+
+        <div
+          id="prac-metronome-menu"
+          class="absolute right-0 mt-1 hidden min-w-32 rounded-xl border border-hairline p-1 shadow-xl z-50 text-xs font-mono"
+          style="background-color: var(--site-canvas, #2c2e31);"
+        >
+          <button type="button" data-bpm="0" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft active font-bold">
+            <span>OFF</span>
+            <span class="bpm-check text-success">✓</span>
+          </button>
+          <button type="button" data-bpm="60" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>60 BPM (Slow)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+          <button type="button" data-bpm="80" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>80 BPM (Target)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+          <button type="button" data-bpm="100" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>100 BPM (Brisk)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+          <button type="button" data-bpm="120" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>120 BPM (Fast)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Typing Arena & Prompt Box -->
+  <div id="prac-typing-view" class="relative mb-6">
+    
+    <!-- Header Mini Telemetry Row -->
+    <div class="flex items-center justify-between mb-3 px-1 text-xs select-none">
+      <div class="flex items-center gap-4">
+        <div>
+          <span class="text-mute uppercase text-[10px] block">Progress</span>
+          <span id="prac-live-progress" class="font-bold text-sm text-ink">0 / 20</span>
+        </div>
+        <div>
+          <span class="text-mute uppercase text-[10px] block">Live WPM</span>
+          <span id="prac-live-wpm" class="font-bold text-sm" style="color: var(--site-primary, #e2b714);">0</span>
+        </div>
+        <div>
+          <span class="text-mute uppercase text-[10px] block">Accuracy</span>
+          <span id="prac-live-acc" class="font-bold text-sm text-ink">100%</span>
+        </div>
+        <div>
+          <span class="text-mute uppercase text-[10px] block">Streak</span>
+          <span class="font-bold text-sm text-warning flex items-center gap-0.5">
+            <span>🔥</span>
+            <span id="prac-live-streak">0</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Reset Button -->
+      <button
+        type="button"
+        id="prac-restart-btn"
+        class="flex items-center gap-1.5 rounded-xl border border-hairline px-3 py-1.5 text-xs font-bold transition hover:text-ink hover:bg-canvas-soft cursor-pointer"
+        title="Restart Drill (Tab + Enter)"
+      >
+        <span>⟲</span>
+        <span class="hidden sm:inline">Restart</span>
+      </button>
+    </div>
+
+    <!-- Active Words Display Arena -->
+    <div
+      id="prac-words-viewport"
+      class="relative h-32 sm:h-36 overflow-hidden rounded-2xl p-4 sm:p-6 text-xl sm:text-2xl leading-[1.8] tracking-wide cursor-text select-none border border-hairline transition-all shadow-inner"
+      style="background-color: var(--site-canvas-soft, #323437);"
+    >
+      <div
+        id="prac-words-wrapper"
+        class="relative transition-transform duration-100 ease-out select-none flex flex-wrap"
+      >
+        <!-- Caret Element -->
+        <div
+          id="prac-caret"
+          class="absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0"
+          style="background-color: var(--site-primary, #e2b714); width: 3px; border-radius: 9999px;"
+        ></div>
+        <!-- Injected dynamically via JS -->
+      </div>
+
+      <!-- Single Hidden Input Dispatcher -->
+      <input
+        id="prac-unified-input"
+        type="text"
+        class="absolute -top-40 left-0 w-1 h-1 opacity-0 pointer-events-none"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      />
+
+      <!-- Out-of-Focus Overlay -->
+      <div
+        id="prac-focus-overlay"
+        class="absolute inset-0 flex items-center justify-center backdrop-blur-xs transition-opacity duration-200 cursor-pointer z-30 hidden"
+        style="background-color: rgba(0, 0, 0, 0.45);"
+      >
+        <div class="flex items-center gap-2 rounded-full px-5 py-2 shadow-2xl border border-hairline text-xs font-semibold animate-pulse" style="background-color: var(--site-canvas, #2c2e31); color: var(--site-ink, #d1d0c5);">
+          <span>🔒 Click or press any key to focus practice</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Finger Instructor Callout Ribbon -->
+  <div
+    id="prac-instructor-ribbon"
+    class="rounded-2xl p-3.5 mb-6 border border-hairline flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs shadow-sm transition-all"
+    style="background-color: var(--site-canvas-soft, #323437);"
+  >
+    <div class="flex items-center gap-3">
+      <div id="prac-finger-dot" class="h-4 w-4 rounded-full border border-black/30 shadow-md animate-pulse" style="background-color: #10b981;"></div>
+      <div class="flex flex-col">
+        <span class="text-[10px] text-mute uppercase tracking-wider font-semibold">Live Finger Guidance:</span>
+        <span id="prac-finger-instruction" class="font-bold text-sm text-ink">👉 Rest Index Fingers on [F] & [J] Tactile Bumps</span>
+      </div>
+    </div>
+
+    <!-- Hand & Quadrant Zone Badge -->
+    <div id="prac-hand-badge" class="flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold border border-hairline shadow-sm" style="background-color: var(--site-canvas, #2c2e31);">
+      <span id="prac-hand-side" class="text-ink">Left Hand</span>
+      <span>•</span>
+      <span id="prac-hand-finger" style="color: #10b981;">Index Quadrant</span>
+    </div>
+  </div>
+
+  <!-- Interactive QWERTY Visual Keyboard with Real-time Key Highlights -->
+  <div class="rounded-2xl border border-hairline p-3.5 sm:p-6 shadow-inner select-none overflow-x-auto" style="background-color: var(--site-canvas-soft, #323437);">
+    
+    <!-- Quadrant Color Legend Filter Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] mb-4 pb-3 border-b border-hairline min-w-[560px] sm:min-w-0">
+      <div class="flex items-center gap-2">
+        <span class="font-bold uppercase tracking-wider text-ink text-xs">Keyboard Quadrant Mapping</span>
+      </div>
+      
+      <!-- Clickable Quadrant Filter Chips -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button type="button" data-filter-quadrant="pinkyDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #f43f5e; color: #f43f5e;">
+          <span class="h-2 w-2 rounded-full" style="background-color: #f43f5e;"></span>
+          <span>Pinky Quadrant</span>
+        </button>
+        <button type="button" data-filter-quadrant="ringDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #a855f7; color: #a855f7;">
+          <span class="h-2 w-2 rounded-full" style="background-color: #a855f7;"></span>
+          <span>Ring Quadrant</span>
+        </button>
+        <button type="button" data-filter-quadrant="middleDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #3b82f6; color: #3b82f6;">
+          <span class="h-2 w-2 rounded-full" style="background-color: #3b82f6;"></span>
+          <span>Middle Quadrant</span>
+        </button>
+        <button type="button" data-filter-quadrant="indexDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #10b981; color: #10b981;">
+          <span class="h-2 w-2 rounded-full" style="background-color: #10b981;"></span>
+          <span>Index Quadrant</span>
+        </button>
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #eab308; color: #eab308;">
+          <span class="h-2 w-2 rounded-full" style="background-color: #eab308;"></span>
+          <span>Thumbs (Space)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keycaps Matrix -->
+    <div id="prac-keyboard-matrix" class="flex flex-col gap-1.5 text-xs font-mono min-w-[560px] sm:min-w-0 select-none">
+      <!-- Injected dynamically via JavaScript with exact quadrant color tokens -->
+    </div>
+  </div>
+
+  <!-- Drill Scorecard Result Modal -->
+  <div
+    id="prac-result-view"
+    class="hidden my-4 rounded-3xl p-6 sm:p-8 border border-hairline shadow-2xl font-mono text-xs animate-in fade-in zoom-in-95 duration-200"
+    style="background-color: var(--site-canvas-soft, #323437);"
+  >
+    <div class="flex items-center justify-between pb-4 border-b border-hairline mb-6">
+      <div class="flex items-center gap-2.5">
+        <span id="prac-scorecard-icon" class="text-3xl">🎉</span>
+        <div>
+          <h3 id="prac-scorecard-title" class="text-lg font-bold text-ink">Drill Completed!</h3>
+          <p class="text-[11px] text-mute">Touch-typing muscle memory reinforced.</p>
+        </div>
+      </div>
+
+      <div id="prac-rank-badge" class="rounded-full px-3.5 py-1 text-xs font-bold text-white shadow-md bg-emerald-500">
+        RANK S
+      </div>
+    </div>
+
+    <!-- Metrics Hero -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
+        <span class="text-[10px] text-mute uppercase">Net WPM</span>
+        <div id="prac-res-wpm" class="text-3xl font-bold mt-1" style="color: var(--site-primary, #e2b714);">0</div>
+      </div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
+        <span class="text-[10px] text-mute uppercase">Accuracy</span>
+        <div id="prac-res-acc" class="text-3xl font-bold mt-1 text-ink">100%</div>
+      </div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
+        <span class="text-[10px] text-mute uppercase">Max Streak</span>
+        <div id="prac-res-streak" class="text-3xl font-bold mt-1 text-warning">0x</div>
+      </div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
+        <span class="text-[10px] text-mute uppercase">Errors</span>
+        <div id="prac-res-errors" class="text-3xl font-bold mt-1 text-error">0</div>
+      </div>
+    </div>
+
+    <!-- Scorecard Action Buttons -->
+    <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-hairline">
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          id="prac-next-drill-btn"
+          class="flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold shadow-lg transition hover:scale-105 active:scale-95 cursor-pointer"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        >
+          <span>Next Drill →</span>
+        </button>
+        <button
+          type="button"
+          id="prac-repeat-drill-btn"
+          class="flex items-center gap-2 rounded-xl border border-hairline px-4 py-2.5 text-xs font-bold transition hover:bg-canvas cursor-pointer"
+        >
+          <span>Repeat Drill (Tab)</span>
+        </button>
+      </div>
+
+      <a
+        href="/game/key-master"
+        class="inline-flex items-center gap-2 rounded-xl border border-hairline px-4 py-2.5 text-xs font-bold text-link transition hover:bg-canvas"
+      >
+        <span>Launch 3D Key Master 🎮</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Custom Text Drill Modal -->
+  <div
+    id="prac-custom-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/60 hidden select-none"
+  >
+    <div
+      class="w-full max-w-lg rounded-3xl p-6 border border-hairline shadow-2xl font-mono relative"
+      style="background-color: var(--site-canvas, #2c2e31); color: var(--site-ink, #d1d0c5);"
+    >
+      <div class="flex items-center justify-between pb-3 border-b border-hairline mb-4">
+        <h3 class="text-sm font-bold" style="color: var(--site-primary, #e2b714);">Custom Practice Text</h3>
+        <button type="button" id="prac-custom-close" class="text-base px-2 hover:opacity-75 cursor-pointer">✕</button>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-xs text-mute mb-2">Paste any custom passage or programming drill:</label>
+        <textarea
+          id="prac-custom-textarea"
+          rows="5"
+          placeholder="Paste articles, code snippets, vocabulary lists, or numbers here..."
+          class="w-full rounded-xl p-3 text-xs leading-relaxed border border-hairline focus:outline-none font-mono"
+          style="background-color: var(--site-canvas-soft, #323437); color: var(--site-ink, #d1d0c5);"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 text-xs">
+        <button type="button" id="prac-custom-cancel" class="rounded-xl px-4 py-2 font-bold cursor-pointer hover:bg-canvas-soft">Cancel</button>
+        <button type="button" id="prac-custom-apply" class="rounded-xl px-5 py-2 font-bold shadow-md cursor-pointer" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">Set & Practice</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  import { WORD_LISTS } from '../lib/wordLists';
+  import { soundEngine } from '../lib/soundEngine';
+  import { storage } from '../lib/storage';
+  import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import confetti from 'canvas-confetti';
+
+  let metronomeTimer: number | null = null;
+  let activeCleanups: (() => void)[] = [];
+
+  function initPracticeLab() {
+    // Clean old listeners & timers
+    if (metronomeTimer) {
+      clearInterval(metronomeTimer);
+      metronomeTimer = null;
+    }
+    activeCleanups.forEach(c => c());
+    activeCleanups = [];
+
+    const root = document.getElementById('practice-lab-root');
+    if (!root) return;
+
+    // DOM Elements
+    const wordsViewport = document.getElementById('prac-words-viewport');
+    const wordsWrapper = document.getElementById('prac-words-wrapper');
+    const caret = document.getElementById('prac-caret');
+    const inputEl = document.getElementById('prac-unified-input') as HTMLInputElement | null;
+    const focusOverlay = document.getElementById('prac-focus-overlay');
+    const typingView = document.getElementById('prac-typing-view');
+    const resultView = document.getElementById('prac-result-view');
+    const keyboardMatrix = document.getElementById('prac-keyboard-matrix');
+
+    // Telemetry Elements
+    const liveProgress = document.getElementById('prac-live-progress');
+    const liveWpm = document.getElementById('prac-live-wpm');
+    const liveAcc = document.getElementById('prac-live-acc');
+    const liveStreak = document.getElementById('prac-live-streak');
+    const restartBtn = document.getElementById('prac-restart-btn');
+
+    // Instructor Elements
+    const fingerDot = document.getElementById('prac-finger-dot');
+    const fingerInstruction = document.getElementById('prac-finger-instruction');
+    const handSideEl = document.getElementById('prac-hand-side');
+    const handFingerEl = document.getElementById('prac-hand-finger');
+
+    // Scorecard Elements
+    const resWpm = document.getElementById('prac-res-wpm');
+    const resAcc = document.getElementById('prac-res-acc');
+    const resStreak = document.getElementById('prac-res-streak');
+    const resErrors = document.getElementById('prac-res-errors');
+    const rankBadge = document.getElementById('prac-rank-badge');
+    const nextDrillBtn = document.getElementById('prac-next-drill-btn');
+    const repeatDrillBtn = document.getElementById('prac-repeat-drill-btn');
+
+    // Metronome Elements
+    const metroBtn = document.getElementById('prac-metronome-btn');
+    const metroMenu = document.getElementById('prac-metronome-menu');
+    const metroLabel = document.getElementById('prac-metronome-label');
+
+    // Custom Modal Elements
+    const customModal = document.getElementById('prac-custom-modal');
+    const customClose = document.getElementById('prac-custom-close');
+    const customCancel = document.getElementById('prac-custom-cancel');
+    const customApply = document.getElementById('prac-custom-apply');
+    const customTextarea = document.getElementById('prac-custom-textarea') as HTMLTextAreaElement | null;
+
+    if (!wordsViewport || !wordsWrapper || !inputEl || !keyboardMatrix) return;
+
+    // State Variables
+    let currentDrillType = 'homeRow';
+    let targetWordCount = 20;
+    let customBuffer = '';
+    let selectedBPM = 0;
+
+    let words: string[] = [];
+    let currentWordIndex = 0;
+    let currentCharIndex = 0;
+    let correctChars = 0;
+    let errorChars = 0;
+    let currentStreak = 0;
+    let maxStreak = 0;
+    let totalKeystrokes = 0;
+    let startTime = 0;
+    let isDrillRunning = false;
+    let isDrillComplete = false;
+    let wordCharStates: (boolean | null)[][] = [];
+
+    // Map for O(1) Keycap Lookups without any querySelector syntax bugs
+    const keycapsMap = new Map<string, HTMLElement>();
+
+    // Render Physical On-Screen Keyboard with Standard Touch Typing Quadrant Mapping
+    function renderVirtualKeyboardDOM() {
+      if (!keyboardMatrix) return;
+      keyboardMatrix.innerHTML = '';
+      keycapsMap.clear();
+
+      PHYSICAL_KEYBOARD_LAYOUT.forEach(row => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'flex justify-center gap-1 sm:gap-1.5 w-full';
+
+        row.forEach((keyDef: PhysicalKeyDef) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          const fData = getFingerQuadrantData(keyDef.k);
+          const flexGrow = keyDef.w ? `flex-grow: ${keyDef.w}; min-width: ${Math.round(keyDef.w * 28)}px;` : 'flex-1 min-width: 26px; max-width: 44px;';
+          
+          btn.className = `prac-keycap relative flex flex-col items-center justify-center h-10 sm:h-11 rounded-xl border font-bold text-xs shadow-sm transition duration-100 active:scale-95 cursor-pointer select-none`;
+          
+          // Apply exact Quadrant Tint and Top Accent Bar
+          btn.style.cssText = `
+            ${flexGrow}
+            background-color: var(--site-canvas, #2c2e31);
+            color: var(--site-ink, #d1d0c5);
+            border-color: ${fData.borderTint};
+            border-top: 3.5px solid ${fData.color};
+          `;
+          btn.setAttribute('data-base-key', keyDef.k.toLowerCase());
+          if (keyDef.s) btn.setAttribute('data-shift-key', keyDef.s);
+          btn.setAttribute('data-default-border', fData.borderTint);
+          btn.setAttribute('data-quadrant-color', fData.color);
+
+          // Render Dual Label if shifted symbol
+          if (keyDef.s) {
+            btn.innerHTML = `
+              <span class="text-[9px] leading-none opacity-80" style="color: ${fData.color};">${keyDef.s}</span>
+              <span class="text-[11px] sm:text-xs leading-none font-bold mt-0.5">${keyDef.display}</span>
+            `;
+          } else if (keyDef.k === ' ') {
+            btn.innerHTML = `<span class="text-[10px] tracking-widest font-bold opacity-75" style="color: ${fData.color};">SPACEBAR</span>`;
+          } else if (keyDef.isAnchor) {
+            // Tactile bump marker indicator for F and J
+            btn.innerHTML = `
+              <span class="text-xs font-bold leading-none">${keyDef.display}</span>
+              <span class="w-3.5 h-1 rounded-full mt-1 shadow-sm" style="background-color: ${fData.color};"></span>
+            `;
+          } else {
+            btn.innerHTML = `<span class="text-xs leading-none">${keyDef.display}</span>`;
+          }
+
+          // Register in Keycaps Map for fast O(1) character lookup
+          keycapsMap.set(keyDef.k.toLowerCase(), btn);
+          if (keyDef.s) keycapsMap.set(keyDef.s, btn);
+          keycapsMap.set(keyDef.display.toLowerCase(), btn);
+          if (keyDef.display) keycapsMap.set(keyDef.display, btn);
+
+          // Click keycap handler
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            soundEngine.initContext();
+            if (keyDef.k === 'backspace') {
+              handleKey('Backspace');
+            } else if (keyDef.k === ' ') {
+              handleKey(' ');
+            } else if (keyDef.k.length === 1) {
+              handleKey(keyDef.k);
+            }
+            inputEl?.focus();
+          });
+
+          rowDiv.appendChild(btn);
+        });
+
+        keyboardMatrix.appendChild(rowDiv);
+      });
+    }
+
+    renderVirtualKeyboardDOM();
+
+    // Generate Drill Word List
+    function generateDrillWords() {
+      isDrillRunning = false;
+      isDrillComplete = false;
+      currentWordIndex = 0;
+      currentCharIndex = 0;
+      correctChars = 0;
+      errorChars = 0;
+      currentStreak = 0;
+      maxStreak = 0;
+      totalKeystrokes = 0;
+
+      resultView?.classList.add('hidden');
+      typingView?.classList.remove('hidden');
+
+      let sourceList: string[] = [];
+      const drillsDict = WORD_LISTS.practiceDrills as any;
+
+      if (currentDrillType === 'custom') {
+        if (!customBuffer) customBuffer = 'the quick brown fox jumps over the lazy dog';
+        const rawWords = customBuffer.trim().split(/\s+/).filter(Boolean);
+        words = [];
+        for (let i = 0; i < targetWordCount; i++) {
+          words.push(rawWords[i % rawWords.length]);
+        }
+      } else if (drillsDict[currentDrillType]) {
+        sourceList = drillsDict[currentDrillType];
+        words = [];
+        for (let i = 0; i < targetWordCount; i++) {
+          words.push(sourceList[i % sourceList.length]);
+        }
+      } else {
+        sourceList = drillsDict.homeRow;
+        words = [];
+        for (let i = 0; i < targetWordCount; i++) {
+          words.push(sourceList[i % sourceList.length]);
+        }
+      }
+
+      wordCharStates = words.map(w => new Array(w.length).fill(null));
+
+      if (liveProgress) liveProgress.textContent = `0 / ${words.length}`;
+      if (liveWpm) liveWpm.textContent = '0';
+      if (liveAcc) liveAcc.textContent = '100%';
+      if (liveStreak) liveStreak.textContent = '0';
+
+      renderWordsDOM();
+      requestAnimationFrame(() => {
+        positionCaret();
+        updateInstructorAndKeyboard();
+      });
+    }
+
+    // Render Word Viewport Elements
+    function renderWordsDOM() {
+      if (!wordsWrapper) return;
+      const caretEl = caret;
+      wordsWrapper.innerHTML = '';
+      if (caretEl) wordsWrapper.appendChild(caretEl);
+      wordsWrapper.style.transform = 'translateY(0px)';
+
+      words.forEach((w, wIdx) => {
+        const wordDiv = document.createElement('div');
+        wordDiv.className = `prac-word inline-block mr-3 mb-1.5 transition-colors ${wIdx === currentWordIndex ? 'active-word font-bold' : ''}`;
+        wordDiv.setAttribute('data-word-idx', `${wIdx}`);
+
+        w.split('').forEach((ch, cIdx) => {
+          const letterSpan = document.createElement('span');
+          letterSpan.textContent = ch;
+          letterSpan.className = 'prac-letter transition-colors';
+          letterSpan.setAttribute('data-char-idx', `${cIdx}`);
+          letterSpan.style.color = 'var(--site-mute, #646669)';
+          wordDiv.appendChild(letterSpan);
+        });
+
+        wordsWrapper.appendChild(wordDiv);
+      });
+    }
+
+    // Smooth Caret Positioning & Line Jumping
+    function positionCaret() {
+      if (!caret || !wordsWrapper || isDrillComplete) {
+        if (caret) caret.style.opacity = '0';
+        return;
+      }
+
+      const activeWordDiv = wordsWrapper.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+      if (!activeWordDiv) {
+        caret.style.opacity = '0';
+        return;
+      }
+
+      const letters = activeWordDiv.querySelectorAll('.prac-letter:not(.extra-char)') as NodeListOf<HTMLElement>;
+      let targetX = activeWordDiv.offsetLeft;
+      let targetY = activeWordDiv.offsetTop;
+      const targetH = activeWordDiv.offsetHeight || 38;
+
+      if (currentCharIndex < letters.length) {
+        const activeLetter = letters[currentCharIndex];
+        targetX = activeLetter.offsetLeft;
+        targetY = activeLetter.offsetTop;
+      } else if (letters.length > 0) {
+        const lastLetter = letters[letters.length - 1];
+        targetX = lastLetter.offsetLeft + lastLetter.offsetWidth;
+        targetY = lastLetter.offsetTop;
+      }
+
+      caret.style.transform = `translate(${targetX}px, ${targetY + 4}px)`;
+      caret.style.height = `${targetH - 8}px`;
+      caret.style.opacity = '1';
+
+      // Auto line jump scrolling
+      const singleLineH = targetH || 38;
+      const scrollOffset = Math.max(0, activeWordDiv.offsetTop - singleLineH);
+      wordsWrapper.style.transform = `translateY(-${scrollOffset}px)`;
+    }
+
+    // Dynamic Live Finger Placement Instructor & Visual Key Highlights
+    function updateInstructorAndKeyboard() {
+      if (isDrillComplete) return;
+
+      const currentWord = words[currentWordIndex] || '';
+      let targetChar = currentWord[currentCharIndex];
+
+      // If at end of word, next key is Spacebar
+      if (currentCharIndex >= currentWord.length) {
+        targetChar = ' ';
+      }
+
+      if (!targetChar) return;
+
+      const fData = getFingerQuadrantData(targetChar);
+
+      // Update Ribbon
+      if (fingerDot) fingerDot.style.backgroundColor = fData.color;
+      if (fingerInstruction) {
+        const displayChar = targetChar === ' ' ? 'SPACEBAR' : targetChar;
+        const shiftHint = fData.shiftKey ? `(Shift + ${fData.baseKey.toUpperCase()})` : '';
+        fingerInstruction.innerHTML = `👉 Strike <span class="font-bold underline" style="color: ${fData.color};">[${displayChar}]</span> ${shiftHint} using your <strong style="color: ${fData.color};">${fData.fingerName}</strong>`;
+      }
+      if (handSideEl) handSideEl.textContent = fData.hand;
+      if (handFingerEl) {
+        handFingerEl.textContent = fData.quadrantName;
+        handFingerEl.style.color = fData.color;
+      }
+
+      // Reset all keycaps back to their default state
+      keyboardMatrix?.querySelectorAll('.prac-keycap').forEach(kc => {
+        const el = kc as HTMLElement;
+        const defaultBorder = el.getAttribute('data-default-border') || 'var(--site-hairline)';
+        el.style.boxShadow = 'none';
+        el.style.transform = 'scale(1)';
+        el.style.backgroundColor = 'var(--site-canvas, #2c2e31)';
+        el.style.color = 'var(--site-ink, #d1d0c5)';
+        el.style.borderColor = defaultBorder;
+        el.classList.remove('ring-2', 'ring-offset-1');
+      });
+
+      // Find matched keycap using Map
+      const matchedKeycap = keycapsMap.get(targetChar) || keycapsMap.get(targetChar.toLowerCase());
+
+      if (matchedKeycap) {
+        matchedKeycap.style.boxShadow = `0 0 20px ${fData.color}, inset 0 0 10px ${fData.color}`;
+        matchedKeycap.style.transform = 'translateY(-2px) scale(1.08)';
+        matchedKeycap.style.backgroundColor = fData.color;
+        matchedKeycap.style.color = '#ffffff';
+        matchedKeycap.style.borderColor = '#ffffff';
+        matchedKeycap.classList.add('ring-2');
+      }
+    }
+
+    // Keystroke Processor
+    function handleKey(key: string) {
+      if (isDrillComplete) return;
+
+      if (!isDrillRunning) {
+        isDrillRunning = true;
+        startTime = Date.now();
+      }
+
+      const currentWord = words[currentWordIndex];
+      if (!currentWord) return;
+
+      const activeWordDiv = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+      const letters = activeWordDiv?.querySelectorAll('.prac-letter:not(.extra-char)') as NodeListOf<HTMLElement> | undefined;
+
+      // Visual press on keycap
+      const pressedKeycap = keycapsMap.get(key) || keycapsMap.get(key.toLowerCase());
+      if (pressedKeycap) {
+        pressedKeycap.style.transform = 'translateY(2px) scale(0.96)';
+        setTimeout(() => {
+          if (!isDrillComplete) positionCaret();
+        }, 80);
+      }
+
+      // Space Key -> Advance Word
+      if (key === ' ') {
+        soundEngine.playKey(true);
+
+        if (currentCharIndex > 0) {
+          if (letters && currentCharIndex < letters.length) {
+            // Penalize untyped characters
+            for (let i = currentCharIndex; i < letters.length; i++) {
+              letters[i].style.color = 'var(--site-error, #ca4754)';
+              letters[i].style.opacity = '0.5';
+              errorChars++;
+              if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][i] = false;
+            }
+          }
+
+          if (activeWordDiv) activeWordDiv.classList.remove('active-word', 'font-bold');
+          currentWordIndex++;
+          currentCharIndex = 0;
+
+          if (liveProgress) liveProgress.textContent = `${currentWordIndex} / ${words.length}`;
+
+          if (currentWordIndex >= words.length) {
+            finishDrill();
+            return;
+          }
+
+          const nextWordDiv = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+          if (nextWordDiv) nextWordDiv.classList.add('active-word', 'font-bold');
+          positionCaret();
+          updateInstructorAndKeyboard();
+        }
+        return;
+      }
+
+      // Backspace Handler
+      if (key === 'Backspace') {
+        soundEngine.playKey();
+
+        if (currentCharIndex > 0) {
+          currentCharIndex--;
+          const prevStatus = wordCharStates[currentWordIndex]?.[currentCharIndex];
+          if (prevStatus === true) correctChars = Math.max(0, correctChars - 1);
+          else if (prevStatus === false) errorChars = Math.max(0, errorChars - 1);
+
+          if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = null;
+          if (letters && letters[currentCharIndex]) {
+            letters[currentCharIndex].style.color = 'var(--site-mute, #646669)';
+            letters[currentCharIndex].style.opacity = '1';
+          }
+          positionCaret();
+          updateInstructorAndKeyboard();
+        }
+        return;
+      }
+
+      // Printable Single Characters
+      if (key.length === 1) {
+        totalKeystrokes++;
+        const expected = currentWord[currentCharIndex];
+        const isMatch = key === expected;
+
+        if (letters && currentCharIndex < letters.length) {
+          const letterEl = letters[currentCharIndex];
+
+          if (isMatch) {
+            correctChars++;
+            currentStreak++;
+            maxStreak = Math.max(maxStreak, currentStreak);
+            if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = true;
+            soundEngine.playKey();
+            letterEl.style.color = 'var(--site-ink, #d1d0c5)';
+            letterEl.style.fontWeight = 'bold';
+          } else {
+            errorChars++;
+            currentStreak = 0;
+            if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = false;
+            soundEngine.playError();
+            letterEl.style.color = 'var(--site-error, #ca4754)';
+            letterEl.style.fontWeight = 'bold';
+          }
+        }
+
+        currentCharIndex++;
+
+        // Live Telemetry Calculation
+        const elapsedMin = Math.max(0.016, (Date.now() - startTime) / 60000);
+        const netWpm = Math.max(0, Math.round(((correctChars - errorChars) / 5) / elapsedMin));
+        const acc = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
+
+        if (liveWpm) liveWpm.textContent = `${netWpm}`;
+        if (liveAcc) liveAcc.textContent = `${acc}%`;
+        if (liveStreak) liveStreak.textContent = `${currentStreak}`;
+
+        positionCaret();
+        updateInstructorAndKeyboard();
+
+        // Finish on final char of last word
+        if (currentWordIndex === words.length - 1 && currentCharIndex >= currentWord.length) {
+          finishDrill();
+        }
+      }
+    }
+
+    // Finish Drill & Render Scorecard
+    function finishDrill() {
+      isDrillRunning = false;
+      isDrillComplete = true;
+      if (caret) caret.style.opacity = '0';
+
+      const elapsedSec = Math.max(1, (Date.now() - startTime) / 1000);
+      const minutes = elapsedSec / 60;
+      const netWpmVal = Math.max(0, Math.round(((correctChars - errorChars) / 5) / minutes));
+      const accuracyVal = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
+
+      // Grade calculation
+      let grade = 'RANK S';
+      let gradeClass = 'bg-emerald-500';
+      if (accuracyVal >= 98 && netWpmVal >= 55) {
+        grade = '👑 RANK S (LEGENDARY)';
+        gradeClass = 'bg-emerald-500';
+      } else if (accuracyVal >= 92 && netWpmVal >= 40) {
+        grade = '🎯 RANK A (EXCELLENT)';
+        gradeClass = 'bg-blue-500';
+      } else if (accuracyVal >= 80) {
+        grade = '⚡ RANK B (PROFICIENT)';
+        gradeClass = 'bg-amber-500';
+      } else {
+        grade = '🌱 RANK C (NEEDS PRACTICE)';
+        gradeClass = 'bg-rose-500';
+      }
+
+      if (resWpm) resWpm.textContent = `${netWpmVal}`;
+      if (resAcc) resAcc.textContent = `${accuracyVal}%`;
+      if (resStreak) resStreak.textContent = `${maxStreak}x`;
+      if (resErrors) resErrors.textContent = `${errorChars}`;
+      if (rankBadge) {
+        rankBadge.textContent = grade;
+        rankBadge.className = `rounded-full px-3.5 py-1 text-xs font-bold text-white shadow-md ${gradeClass}`;
+      }
+
+      // Record to storage
+      storage.recordGameResult('practice-lab', netWpmVal * 10, netWpmVal, accuracyVal, 1, words.length, totalKeystrokes, errorChars);
+
+      typingView?.classList.add('hidden');
+      resultView?.classList.remove('hidden');
+
+      soundEngine.playVictory();
+      if (accuracyVal >= 90) {
+        try {
+          confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        } catch {}
+      }
+    }
+
+    // Metronome Cadence Synthesizer
+    function setMetronomeBPM(bpm: number) {
+      selectedBPM = bpm;
+      if (metronomeTimer) {
+        clearInterval(metronomeTimer);
+        metronomeTimer = null;
+      }
+
+      if (metroLabel) metroLabel.textContent = bpm === 0 ? 'Metro: OFF' : `Metro: ${bpm} BPM`;
+
+      if (bpm > 0) {
+        const intervalMs = (60 / bpm) * 1000;
+        metronomeTimer = window.setInterval(() => {
+          soundEngine.initContext();
+          soundEngine.playKey(false);
+        }, intervalMs);
+      }
+    }
+
+    // Focus Handlers
+    const focusPracticeInput = () => {
+      soundEngine.initContext();
+      inputEl.focus();
+      focusOverlay?.classList.add('hidden');
+      positionCaret();
+      updateInstructorAndKeyboard();
+    };
+
+    wordsViewport.addEventListener('click', focusPracticeInput);
+    focusOverlay?.addEventListener('click', focusPracticeInput);
+    activeCleanups.push(() => {
+      wordsViewport.removeEventListener('click', focusPracticeInput);
+      focusOverlay?.removeEventListener('click', focusPracticeInput);
+    });
+
+    inputEl.addEventListener('blur', () => {
+      if (isDrillRunning && !isDrillComplete) focusOverlay?.classList.remove('hidden');
+    });
+    inputEl.addEventListener('focus', () => {
+      focusOverlay?.classList.add('hidden');
+      positionCaret();
+    });
+
+    // Keydown input listeners
+    const onInputKeyDown = (e: KeyboardEvent) => {
+      soundEngine.initContext();
+
+      if (e.key === ' ' || e.key === 'Backspace' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        e.stopPropagation();
+        handleKey(e.key);
+      }
+    };
+    inputEl.addEventListener('keydown', onInputKeyDown);
+    activeCleanups.push(() => inputEl.removeEventListener('keydown', onInputKeyDown));
+
+    // Global Keybinds
+    const onGlobalKey = (e: KeyboardEvent) => {
+      // Tab + Enter / Tab restart
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        generateDrillWords();
+        inputEl.focus();
+        return;
+      }
+
+      // Auto-focus if user types outside
+      if (document.activeElement !== inputEl && !customModal?.classList.contains('hidden') === false) {
+        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          inputEl.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', onGlobalKey);
+    activeCleanups.push(() => window.removeEventListener('keydown', onGlobalKey));
+
+    // Metronome Menu
+    metroBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      metroMenu?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!metroMenu?.contains(e.target as Node) && !metroBtn?.contains(e.target as Node)) {
+        metroMenu?.classList.add('hidden');
+      }
+    });
+    const bpmOpts = document.querySelectorAll('.prac-bpm-opt');
+    bpmOpts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const bpm = parseInt(opt.getAttribute('data-bpm') || '0', 10);
+        setMetronomeBPM(bpm);
+        bpmOpts.forEach(o => o.querySelector('.bpm-check')?.classList.add('hidden'));
+        opt.querySelector('.bpm-check')?.classList.remove('hidden');
+        metroMenu?.classList.add('hidden');
+      });
+    });
+
+    // Function to activate a drill tab button
+    function activateDrillButton(drillName: string) {
+      catBtns.forEach(b => {
+        b.classList.remove('active');
+        (b as HTMLElement).style.backgroundColor = 'transparent';
+        (b as HTMLElement).style.color = 'var(--site-ink, #d1d0c5)';
+        b.classList.add('opacity-75');
+      });
+      const matchBtn = root.querySelector(`[data-drill="${drillName}"]`) as HTMLElement | null;
+      if (matchBtn) {
+        matchBtn.classList.add('active');
+        matchBtn.style.backgroundColor = 'var(--site-primary, #e2b714)';
+        matchBtn.style.color = 'var(--site-on-primary, #323437)';
+        matchBtn.classList.remove('opacity-75');
+      }
+    }
+
+    // Drill Category Buttons
+    const catBtns = root.querySelectorAll('.prac-cat-btn');
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const drill = btn.getAttribute('data-drill') || 'homeRow';
+        if (drill === 'custom') {
+          customModal?.classList.remove('hidden');
+          if (customTextarea) customTextarea.value = customBuffer;
+          customTextarea?.focus();
+          return;
+        }
+
+        currentDrillType = drill;
+        activateDrillButton(drill);
+        generateDrillWords();
+        inputEl.focus();
+      });
+    });
+
+    // Clickable Quadrant Legend Buttons
+    root.querySelectorAll('.prac-quad-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const quadDrill = btn.getAttribute('data-filter-quadrant');
+        if (quadDrill) {
+          currentDrillType = quadDrill;
+          activateDrillButton(quadDrill);
+          generateDrillWords();
+          inputEl.focus();
+        }
+      });
+    });
+
+    // Word Count Buttons
+    const countBtns = root.querySelectorAll('.prac-count-btn');
+    countBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        countBtns.forEach(b => {
+          b.classList.remove('active', 'font-bold');
+          (b as HTMLElement).style.backgroundColor = 'transparent';
+          (b as HTMLElement).style.color = 'var(--site-ink, #d1d0c5)';
+          b.classList.add('opacity-75');
+        });
+        btn.classList.add('active', 'font-bold');
+        (btn as HTMLElement).style.backgroundColor = 'var(--site-primary, #e2b714)';
+        (btn as HTMLElement).style.color = 'var(--site-on-primary, #323437)';
+        btn.classList.remove('opacity-75');
+
+        targetWordCount = parseInt(btn.getAttribute('data-count') || '20', 10);
+        generateDrillWords();
+        inputEl.focus();
+      });
+    });
+
+    // Custom Modal Handlers
+    customClose?.addEventListener('click', () => customModal?.classList.add('hidden'));
+    customCancel?.addEventListener('click', () => customModal?.classList.add('hidden'));
+    customApply?.addEventListener('click', () => {
+      const text = customTextarea?.value.trim() || '';
+      if (text) {
+        customBuffer = text;
+        currentDrillType = 'custom';
+        activateDrillButton('custom');
+        customModal?.classList.add('hidden');
+        generateDrillWords();
+        inputEl.focus();
+      }
+    });
+
+    // Action Buttons
+    restartBtn?.addEventListener('click', () => {
+      generateDrillWords();
+      inputEl.focus();
+    });
+    repeatDrillBtn?.addEventListener('click', () => {
+      generateDrillWords();
+      inputEl.focus();
+    });
+    nextDrillBtn?.addEventListener('click', () => {
+      const order = ['homeRow', 'topRow', 'bottomRow', 'numberRow', 'symbols', 'pangrams', 'ngrams', 'pinkyDrills', 'ringDrills', 'middleDrills', 'indexDrills'];
+      const nextIdx = (order.indexOf(currentDrillType) + 1) % order.length;
+      const nextType = order[nextIdx];
+      currentDrillType = nextType;
+      activateDrillButton(nextType);
+      generateDrillWords();
+      inputEl.focus();
+    });
+
+    // Public method on window to load specific drill from page grid chips
+    (window as any).loadPracticeDrill = (type: string, customWords?: string[]) => {
+      if (customWords && customWords.length > 0) {
+        customBuffer = customWords.join(' ');
+        currentDrillType = 'custom';
+        activateDrillButton('custom');
+      } else {
+        currentDrillType = type;
+        activateDrillButton(type);
+      }
+
+      generateDrillWords();
+      root.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      inputEl.focus();
+    };
+
+    // Initial setup
+    generateDrillWords();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPracticeLab);
+  } else {
+    initPracticeLab();
+  }
+  document.addEventListener('astro:page-load', initPracticeLab);
+  document.addEventListener('astro:before-swap', () => {
+    if (metronomeTimer) {
+      clearInterval(metronomeTimer);
+      metronomeTimer = null;
+    }
+    activeCleanups.forEach(c => c());
+    activeCleanups = [];
+  });
+</script>

@@ -311,11 +311,27 @@ export const WORD_LISTS = {
   quotes: MONKEYTYPE_QUOTES,
   codeSnippets: MONKEYTYPE_CODE_SNIPPETS,
   practiceDrills: {
-    homeRow: ['asdf', 'jkl;', 'fad', 'lad', 'ask', 'fall', 'flask', 'salad', 'flash', 'slash'],
-    topRow: ['qwer', 'tyui', 'op', 'type', 'write', 'power', 'quiet', 'tower', 'report', 'require'],
-    bottomRow: ['zxcv', 'bnm,', 'zoom', 'cave', 'bone', 'menu', 'zone', 'vixen', 'beacon', 'zenith'],
-    numberRow: ['1234', '5678', '90', '1984', '2026', '3.1415', '42', '100%', '#404', '8080'],
-    symbols: ['()=>{}', '[]', '<>', '!==', '&&', '||', '$', '@', '#', '%', '^', '*', '+', '=', '~/']
+    homeRow: ['asdf', 'jkl;', 'fjdk', 'slal', 'skal', 'fad', 'lad', 'ask', 'fall', 'flask', 'salad', 'flash', 'slash', 'glad', 'half', 'dash', 'alas', 'fads', 'salsa', 'alfalfa'],
+    topRow: ['qwer', 'tyui', 'op', 'qetu', 'wryo', 'type', 'write', 'power', 'quiet', 'tower', 'report', 'require', 'poetry', 'pretty', 'equity', 'proper', 'purity', 'territory', 'utility', 'quote'],
+    bottomRow: ['zxcv', 'bnm,', 'zcb', 'xvm', 'zoom', 'cave', 'bone', 'menu', 'zone', 'vixen', 'beacon', 'zenith', 'carbon', 'maximum', 'vocal', 'breeze', 'bronze', 'matrix', 'civil', 'cabin'],
+    numberRow: ['1234', '5678', '9012', '1984', '2026', '3.1415', '42', '100%', '#404', '8080', '99.99$', '50-50', '2+2=4', '10*10=100', '192.168.1.1', '256000'],
+    symbols: ['()=>{}', '[]', '<>', '!==', '&&', '||', '$', '@', '#', '%', '^', '*', '+', '=', '~/;', 'console.log("ok");', 'const [a, b] = [1, 2];', '<div class="app" />'],
+    pangrams: [
+      'the quick brown fox jumps over the lazy dog',
+      'pack my box with five dozen liquor jugs',
+      'how vexingly quick daft zebras jump',
+      'sphinx of black quartz judge my vow',
+      'two driven jocks help fax my big quiz',
+      'the five boxing wizards jump quickly',
+      'jackdaws love my big sphinx of quartz',
+      'crazy fredrick bought many very exquisite opal jewels',
+      'we promptly judged antique ivory buckles for the next prize'
+    ],
+    ngrams: ['th', 'he', 'in', 'er', 'an', 're', 'ed', 'on', 'es', 'st', 'en', 'at', 'to', 'nt', 'ha', 'nd', 'ou', 'ea', 'ng', 'as', 'or', 'ti', 'is', 'et', 'it', 'ar', 'te', 'se', 'hi', 'of'],
+    pinkyDrills: ['aqua', 'quiz', 'paza', 'apex', 'zero', 'lazy', 'zaps', 'quip', 'park', 'past', 'plus', 'plan', 'post', 'path', 'page'],
+    ringDrills: ['slow', 'work', 'soul', 'walk', 'silk', 'look', 'solo', 'wall', 'wool', 'laws', 'lows', 'wolf', 'word', 'wood', 'wild'],
+    middleDrills: ['deck', 'dive', 'edit', 'cite', 'kite', 'kick', 'like', 'dice', 'cake', 'mile', 'idea', 'epic', 'item', 'time', 'date'],
+    indexDrills: ['turn', 'burn', 'from', 'hero', 'jump', 'grab', 'hunt', 'farm', 'yard', 'vibe', 'next', 'math', 'road', 'huge', 'ring']
   }
 };
 

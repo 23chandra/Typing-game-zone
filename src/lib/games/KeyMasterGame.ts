@@ -2,13 +2,16 @@
 import { BaseGame, type GameLevelDef } from './GameEngine';
 import { WORD_LISTS } from '../wordLists';
 import { soundEngine } from '../soundEngine';
+import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, QUADRANT_COLORS, type PhysicalKeyDef } from '../fingerMapping';
 
 interface KeyCap {
   key: string;
+  shiftKey?: string;
   display: string;
   finger: string;
   fingerName: string;
-  hand: 'left' | 'right';
+  quadrantName: string;
+  hand: 'left' | 'right' | 'both';
   color: string;
   x: number;
   y: number;
@@ -17,6 +20,7 @@ interface KeyCap {
   hitCount: number;
   errorCount: number;
   isPressed: boolean;
+  isAnchor?: boolean;
 }
 
 export class KeyMasterGame extends BaseGame {
@@ -24,7 +28,7 @@ export class KeyMasterGame extends BaseGame {
   private currentWordIndex: number = 0;
   private currentTypedIndex: number = 0;
   private keycaps: Record<string, KeyCap> = {};
-  private activeKey: string = '';
+  private uniqueKeycaps: KeyCap[] = [];
   private ripples: { x: number; y: number; r: number; alpha: number; color: string }[] = [];
   private drillType: 'homeRow' | 'topRow' | 'bottomRow' | 'numbers' | 'code' = 'homeRow';
   private idleTime: number = 0;
@@ -54,7 +58,7 @@ export class KeyMasterGame extends BaseGame {
     } else if (this.drillType === 'numbers') {
       this.targetWords = [...WORD_LISTS.practiceDrills.numberRow];
     } else {
-      this.targetWords = [...WORD_LISTS.pangrams];
+      this.targetWords = [...WORD_LISTS.practiceDrills.pangrams];
     }
 
     this.currentWordIndex = 0;
@@ -65,99 +69,86 @@ export class KeyMasterGame extends BaseGame {
   }
 
   private initKeyboardLayout(): void {
-    const layout = [
-      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';'],
-      ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.']
-    ];
+    this.keycaps = {};
+    this.uniqueKeycaps = [];
 
-    const fingerColors: Record<string, string> = {
-      lp: '#ff0080', // Left Pinky
-      lr: '#7928ca', // Left Ring
-      lm: '#0070f3', // Left Middle
-      li: '#00dfd8', // Left Index
-      ri: '#50e3c2', // Right Index
-      rm: '#f9cb28', // Right Middle
-      rr: '#ff884d', // Right Ring
-      rp: '#ff4d4d'  // Right Pinky
-    };
+    const maxRowWidthUnits = 14.5;
+    const baseKeySize = Math.min(36, Math.max(22, (this.width - 60) / maxRowWidthUnits));
+    const startY = this.height * 0.35;
+    const keyGap = 4;
 
-    const getFingerInfo = (k: string): { finger: string; name: string; hand: 'left' | 'right' } => {
-      if (['1', 'q', 'a', 'z'].includes(k)) return { finger: 'lp', name: 'Left Pinky', hand: 'left' };
-      if (['2', 'w', 's', 'x'].includes(k)) return { finger: 'lr', name: 'Left Ring', hand: 'left' };
-      if (['3', 'e', 'd', 'c'].includes(k)) return { finger: 'lm', name: 'Left Middle', hand: 'left' };
-      if (['4', '5', 'r', 't', 'f', 'g', 'v', 'b'].includes(k)) return { finger: 'li', name: 'Left Index', hand: 'left' };
-      if (['6', '7', 'y', 'u', 'h', 'j', 'n', 'm'].includes(k)) return { finger: 'ri', name: 'Right Index', hand: 'right' };
-      if (['8', 'i', 'k', ','].includes(k)) return { finger: 'rm', name: 'Right Middle', hand: 'right' };
-      if (['9', 'o', 'l', '.'].includes(k)) return { finger: 'rr', name: 'Right Ring', hand: 'right' };
-      return { finger: 'rp', name: 'Right Pinky', hand: 'right' };
-    };
+    PHYSICAL_KEYBOARD_LAYOUT.forEach((row, rIdx) => {
+      // Calculate total width of this row
+      let totalRowUnits = 0;
+      row.forEach(kd => { totalRowUnits += kd.w || 1; });
+      const rowPixelWidth = totalRowUnits * baseKeySize + (row.length - 1) * keyGap;
+      let curX = (this.width - rowPixelWidth) / 2;
 
-    const keySize = Math.min(38, (this.width - 140) / 10);
-    const startY = this.height * 0.36;
+      row.forEach(keyDef => {
+        const fData = getFingerQuadrantData(keyDef.k);
+        const wUnits = keyDef.w || 1;
+        const kw = wUnits * baseKeySize;
+        const kh = baseKeySize;
 
-    layout.forEach((row, rIdx) => {
-      const offsetX = (this.width - row.length * (keySize + 6)) / 2;
-      row.forEach((k, cIdx) => {
-        const info = getFingerInfo(k);
-        this.keycaps[k] = {
-          key: k,
-          display: k.toUpperCase(),
-          finger: info.finger,
-          fingerName: info.name,
-          hand: info.hand,
-          color: fingerColors[info.finger] || '#00dfd8',
-          x: offsetX + cIdx * (keySize + 6),
-          y: startY + rIdx * (keySize + 7),
-          w: keySize,
-          h: keySize,
+        const cap: KeyCap = {
+          key: keyDef.k,
+          shiftKey: keyDef.s,
+          display: keyDef.display,
+          finger: fData.finger,
+          fingerName: fData.fingerName,
+          quadrantName: fData.quadrantName,
+          hand: keyDef.hand,
+          color: fData.color,
+          x: curX,
+          y: startY + rIdx * (kh + keyGap + 2),
+          w: kw,
+          h: kh,
           hitCount: 0,
           errorCount: 0,
-          isPressed: false
+          isPressed: false,
+          isAnchor: keyDef.isAnchor
         };
+
+        this.uniqueKeycaps.push(cap);
+        this.keycaps[keyDef.k.toLowerCase()] = cap;
+        if (keyDef.s) this.keycaps[keyDef.s] = cap;
+        if (keyDef.display) this.keycaps[keyDef.display.toLowerCase()] = cap;
+
+        curX += kw + keyGap;
       });
     });
+  }
 
-    // Spacebar
-    this.keycaps[' '] = {
-      key: ' ',
-      display: 'SPACEBAR',
-      finger: 'thumb',
-      fingerName: 'Left or Right Thumb',
-      hand: 'right',
-      color: '#50e3c2',
-      x: this.width / 2 - 130,
-      y: startY + 4 * (keySize + 7),
-      w: 260,
-      h: keySize * 0.85,
-      hitCount: 0,
-      errorCount: 0,
-      isPressed: false
-    };
+  private getKeyCapForChar(char: string): KeyCap | undefined {
+    if (!char) return undefined;
+    if (this.keycaps[char]) return this.keycaps[char];
+    const lower = char.toLowerCase();
+    if (this.keycaps[lower]) return this.keycaps[lower];
+    return undefined;
   }
 
   public handleInputChar(char: string): void {
     soundEngine.playKey(char === ' ');
 
     const currentWord = this.targetWords[this.currentWordIndex] || '';
-    const expected = currentWord[this.currentTypedIndex]?.toLowerCase();
-    const pressedKey = char.toLowerCase();
+    const expected = currentWord[this.currentTypedIndex];
+    const cap = this.getKeyCapForChar(char);
 
-    if (this.keycaps[pressedKey]) {
-      this.keycaps[pressedKey].isPressed = true;
-      const k = this.keycaps[pressedKey];
+    if (cap) {
+      cap.isPressed = true;
       this.ripples.push({
-        x: k.x + k.w / 2,
-        y: k.y + k.h / 2,
+        x: cap.x + cap.w / 2,
+        y: cap.y + cap.h / 2,
         r: 10,
         alpha: 0.9,
-        color: k.color
+        color: cap.color
       });
     }
 
-    if (pressedKey === expected) {
-      if (this.keycaps[pressedKey]) this.keycaps[pressedKey].hitCount++;
+    const isMatch = (expected && char === expected) || (expected && char.toLowerCase() === expected.toLowerCase());
+
+    if (isMatch) {
+      if (cap) cap.hitCount++;
       this.currentTypedIndex++;
       this.recordKeystroke(true);
 
@@ -167,14 +158,15 @@ export class KeyMasterGame extends BaseGame {
         this.wordsCompletedInLevel++;
         this.score += 50;
         soundEngine.playChime();
-        this.addFloatingText(this.width / 2, this.height * 0.28, '✨ DRILL MASTERED! +50', '#50e3c2', 20);
+        this.addFloatingText(this.width / 2, this.height * 0.28, '✨ DRILL MASTERED! +50', '#10b981', 20);
 
         if (this.currentWordIndex >= this.targetWords.length) {
           this.triggerLevelClear();
         }
       }
     } else {
-      if (this.keycaps[pressedKey]) this.keycaps[pressedKey].errorCount++;
+      if (cap) cap.errorCount++;
+      soundEngine.playError();
       this.recordKeystroke(false);
     }
   }
@@ -190,7 +182,7 @@ export class KeyMasterGame extends BaseGame {
     this.idleTime += dt;
 
     // Reset key press animation states
-    for (const k of Object.values(this.keycaps)) {
+    for (const k of this.uniqueKeycaps) {
       if (k.isPressed) k.isPressed = false;
     }
 
@@ -206,28 +198,31 @@ export class KeyMasterGame extends BaseGame {
   }
 
   public renderGame(ctx: CanvasRenderingContext2D): void {
-    // 1. Sleek Mechanical Studio Canvas
+    // 1. Studio Mechanical Canvas Background
     const bg = ctx.createLinearGradient(0, 0, 0, this.height);
     bg.addColorStop(0, '#090d14');
     bg.addColorStop(1, '#111827');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, this.width, this.height);
 
-    const currentWord = this.targetWords[this.currentWordIndex] || 'COMPLETE!';
-    const expectedChar = currentWord[this.currentTypedIndex]?.toLowerCase() || '';
-    const activeCap = this.keycaps[expectedChar];
+    const currentWord = this.targetWords[this.currentWordIndex] || 'DRILL COMPLETED!';
+    const expectedChar = currentWord[this.currentTypedIndex] || '';
+    const activeCap = this.getKeyCapForChar(expectedChar);
 
     // 2. Active Target Pangram Word Box (Top)
-    this.drawWordBadge(ctx, currentWord, this.currentTypedIndex, this.width / 2, 70, true, '#50e3c2', 26);
+    this.drawWordBadge(ctx, currentWord, this.currentTypedIndex, this.width / 2, 60, true, '#10b981', 24);
 
     // Dynamic Finger Placement Guide Banner
     if (activeCap) {
-      ctx.font = 'bold 12px "Geist Mono", monospace';
+      ctx.font = 'bold 13px "Geist Mono", monospace';
       ctx.textAlign = 'center';
       ctx.fillStyle = activeCap.color;
       ctx.shadowColor = activeCap.color;
       ctx.shadowBlur = 10;
-      ctx.fillText(`👉 USE: ${activeCap.fingerName.toUpperCase()} [KEY: ${activeCap.display}]`, this.width / 2, 115);
+      const isShift = activeCap.shiftKey && expectedChar === activeCap.shiftKey;
+      const keyPrompt = isShift ? `[${activeCap.shiftKey} (Shift + ${activeCap.display})]` : `[KEY: ${activeCap.display}]`;
+      const handTxt = activeCap.hand === 'left' ? 'LEFT HAND' : activeCap.hand === 'right' ? 'RIGHT HAND' : 'THUMBS';
+      ctx.fillText(`👉 ${handTxt} • ${activeCap.fingerName.toUpperCase()} ${keyPrompt}`, this.width / 2, 102);
       ctx.shadowBlur = 0;
       ctx.textAlign = 'left';
     }
@@ -247,26 +242,27 @@ export class KeyMasterGame extends BaseGame {
     }
 
     // 4. Render 3D Keycaps
-    for (const cap of Object.values(this.keycaps)) {
-      this.renderKeycap(ctx, cap, cap.key === expectedChar);
+    for (const cap of this.uniqueKeycaps) {
+      const isTarget = cap === activeCap;
+      this.renderKeycap(ctx, cap, isTarget);
     }
   }
 
   private renderKeycap(ctx: CanvasRenderingContext2D, k: KeyCap, isTarget: boolean): void {
     ctx.save();
-    const pressOffset = k.isPressed ? 3 : 0;
+    const pressOffset = k.isPressed ? 2 : 0;
     const ky = k.y + pressOffset;
 
     // Key Shadow / Bottom Bevel
-    ctx.fillStyle = '#0a0d14';
-    ctx.fillRect(k.x, ky + 4, k.w, k.h);
+    ctx.fillStyle = '#05070a';
+    ctx.fillRect(k.x, ky + 3, k.w, k.h);
 
     // Keycap Top Surface
     if (isTarget) {
       // Glowing Target Key
       ctx.fillStyle = k.color;
       ctx.shadowColor = k.color;
-      ctx.shadowBlur = 16;
+      ctx.shadowBlur = 18;
     } else {
       ctx.fillStyle = '#1e293b';
     }
@@ -275,16 +271,32 @@ export class KeyMasterGame extends BaseGame {
     ctx.roundRect(k.x, ky, k.w, k.h, 4);
     ctx.fill();
 
-    // Finger Color Accent Bar on keycap top
+    // Finger Quadrant Color Accent Bar on keycap top
     ctx.fillStyle = k.color;
     ctx.fillRect(k.x + 2, ky + 2, k.w - 4, 3);
     ctx.shadowBlur = 0;
 
     // Keycap Letter Text
-    ctx.font = `bold ${k.key === ' ' ? 10 : 13}px "Geist Mono", monospace`;
-    ctx.fillStyle = isTarget ? '#0a0d14' : '#ffffff';
+    const fontSize = k.key === ' ' ? 9 : k.shiftKey ? 10 : 11;
+    ctx.font = `bold ${fontSize}px "Geist Mono", monospace`;
+    ctx.fillStyle = isTarget ? '#ffffff' : '#e2e8f0';
     ctx.textAlign = 'center';
-    ctx.fillText(k.display, k.x + k.w / 2, ky + k.h / 2 + 5);
+
+    if (k.shiftKey) {
+      // Render dual label (Shifted symbol on top in color, Base letter below)
+      ctx.fillStyle = isTarget ? '#ffffff' : k.color;
+      ctx.fillText(k.shiftKey, k.x + k.w / 2, ky + k.h * 0.42);
+      ctx.fillStyle = isTarget ? '#ffffff' : '#e2e8f0';
+      ctx.font = `9px "Geist Mono", monospace`;
+      ctx.fillText(k.display, k.x + k.w / 2, ky + k.h * 0.82);
+    } else if (k.isAnchor) {
+      ctx.fillText(k.display, k.x + k.w / 2, ky + k.h / 2 + 2);
+      // Tactile bump dot on F and J
+      ctx.fillStyle = isTarget ? '#ffffff' : k.color;
+      ctx.fillRect(k.x + k.w / 2 - 3, ky + k.h - 5, 6, 2);
+    } else {
+      ctx.fillText(k.display, k.x + k.w / 2, ky + k.h / 2 + 4);
+    }
 
     ctx.restore();
   }
