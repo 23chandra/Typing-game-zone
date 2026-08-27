@@ -152,6 +152,18 @@ const {
 
 <script>
   import { initGlobalTheme } from '../lib/monkeytypeThemes';
+  import { soundEngine } from '../lib/soundEngine';
+
+  // Global AudioContext unlocker on first user gesture
+  const unlockAudioContext = () => {
+    soundEngine.initContext();
+    window.removeEventListener('pointerdown', unlockAudioContext);
+    window.removeEventListener('keydown', unlockAudioContext);
+    window.removeEventListener('touchstart', unlockAudioContext);
+  };
+  window.addEventListener('pointerdown', unlockAudioContext, { passive: true });
+  window.addEventListener('keydown', unlockAudioContext, { passive: true });
+  window.addEventListener('touchstart', unlockAudioContext, { passive: true });
 
   // Sync across tabs
   window.addEventListener('storage', (e) => {

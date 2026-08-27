@@ -858,6 +858,12 @@
     };
     updateSoundUI();
 
+    const onGlobalSoundChange = () => {
+      updateSoundUI();
+    };
+    window.addEventListener('typing:sound-change', onGlobalSoundChange);
+    activeCleanups.push(() => window.removeEventListener('typing:sound-change', onGlobalSoundChange));
+
     // 7. Word Generation
     function generateWords() {
       missedWordsSet.clear();

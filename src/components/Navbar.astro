@@ -282,20 +282,29 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     soundBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
+      soundEngine.initContext();
       themeMenu?.classList.add('hidden');
       soundMenu?.classList.toggle('hidden');
     });
 
     document.querySelectorAll('.switch-opt').forEach((el) => {
-      el.addEventListener('click', () => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
         const sw = el.getAttribute('data-switch') as SwitchSoundType;
         if (sw) {
+          soundEngine.initContext();
           soundEngine.setSwitch(sw);
-          soundEngine.playKey(false, sw === 'typewriter');
+          if (sw !== 'off') {
+            soundEngine.playKey(false, sw === 'typewriter');
+          }
           updateSoundUI();
           soundMenu?.classList.add('hidden');
         }
       });
+    });
+
+    window.addEventListener('typing:sound-change', () => {
+      updateSoundUI();
     });
 
     // --- THEME ENGINE UI SYNC ---
