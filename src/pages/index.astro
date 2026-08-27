@@ -1,11 +1,300 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import GameCard from '../components/GameCard.astro';
+import SpeedTestWidget from '../components/SpeedTestWidget.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const totalGames = ALL_GAMES.length;
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Typing Game Zone — 21 Free 2D Typing Games & Speed Practice">
+  <!-- 1. Hero Band with Atmospheric Mesh Gradient Backdrop -->
+  <section class="relative overflow-hidden border-b border-hairline bg-canvas py-16 sm:py-24 mesh-gradient-hero">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- Announcement Eyebrow Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/90 px-3.5 py-1 text-xs font-mono text-body shadow-level-1 backdrop-blur mb-6">
+        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>Version 2.0 Live</span>
+        <span class="text-mute">•</span>
+        <span class="text-ink font-semibold">21 Games & 105 Levels</span>
+      </div>
+
+      <!-- Main Display Headline (Vercel-inspired negative tracking & period termination) -->
+      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-ink leading-[1.08] max-w-4xl mx-auto">
+        Master the keyboard. <br class="hidden sm:inline" />
+        <span class="text-gradient-develop">One game</span> at a time.
+      </h1>
+
+      <!-- Body Lead Paragraph -->
+      <p class="mt-6 text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed">
+        Level up your typing speed and accuracy with 21 immersive 2D arcade, adventure, action, and fighting games. Featuring authentic mechanical keyboard acoustic synthesis.
+      </p>
+
+      <!-- CTA Buttons Row (100px Marketing Pill Radius) -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+        <a
+          href="/game/type-defender"
+          class="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm sm:text-base font-medium text-on-primary shadow-level-3 transition hover:opacity-90 active:scale-95"
+        >
+          <span>Play Type Defender</span>
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+
+        <a
+          href="/speed-test"
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-6 py-3.5 text-sm sm:text-base font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95"
+        >
+          <span>Speed Test (30s)</span>
+        </a>
+
+        <a
+          href="/arcade"
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3.5 text-sm sm:text-base font-medium text-body transition hover:text-ink hover:bg-canvas active:scale-95"
+        >
+          <span>🕹️ Arcade Lounge</span>
+        </a>
+      </div>
+
+      <!-- Quick Platform Telemetry Bar -->
+      <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-left font-mono">
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[11px] text-mute uppercase tracking-wider">Available Games</div>
+          <div class="text-2xl font-bold text-ink mt-1">21 Titles</div>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[11px] text-mute uppercase tracking-wider">Playable Levels</div>
+          <div class="text-2xl font-bold text-ink mt-1">105 Levels</div>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[11px] text-mute uppercase tracking-wider">Audio Synthesizer</div>
+          <div class="text-2xl font-bold text-success mt-1">4 Switches</div>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[11px] text-mute uppercase tracking-wider">Engine Latency</div>
+          <div class="text-2xl font-bold text-link mt-1">&lt; 1 ms</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 2. Interactive Game Hub & Catalog Section -->
+  <section class="py-16 sm:py-20 bg-canvas-soft" id="games-section">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-hairline">
+        <div>
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Game Library</span>
+          <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
+            Choose Your Arena ({totalGames} Games)
+          </h2>
+          <p class="text-sm text-body mt-1">
+            Each game features unique 2D canvas physics, visual animations, and 5 level tiers.
+          </p>
+        </div>
+
+        <!-- Real-time Search Box -->
+        <div class="relative w-full md:w-72">
+          <input
+            type="text"
+            id="game-search-input"
+            placeholder="Search games, tags, genres..."
+            class="w-full rounded-full border border-hairline bg-canvas px-4 py-2.5 pl-10 text-xs font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20"
+          />
+          <svg class="absolute left-3.5 top-3 h-4 w-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Filter Tabs Row -->
+      <div class="flex flex-wrap items-center gap-2 pt-6 pb-8">
+        <button data-filter="all" class="cat-filter-btn active rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-on-primary shadow-level-1 transition">
+          All Games (21)
+        </button>
+        <button data-filter="arcade" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          🛸 Arcade Shooters (4)
+        </button>
+        <button data-filter="action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          ⚔️ Action & Survival (4)
+        </button>
+        <button data-filter="adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          🗝️ Adventure & Runners (4)
+        </button>
+        <button data-filter="fighting" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          🥊 Fighting & Duels (4)
+        </button>
+        <button data-filter="puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          🧩 Puzzle & Rhythm (4)
+        </button>
+        <button data-filter="practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          ⌨️ Practice & Drills (1)
+        </button>
+      </div>
+
+      <!-- 21 Games Responsive Grid -->
+      <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {ALL_GAMES.map(game => (
+          <GameCard game={game} />
+        ))}
+      </div>
+
+      <!-- No search results fallback -->
+      <div id="no-results" class="hidden py-16 text-center">
+        <div class="text-4xl mb-2">🔍</div>
+        <h3 class="text-base font-semibold text-ink">No matching games found</h3>
+        <p class="text-xs text-mute mt-1">Try clearing your search query or filter category.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. Polarity-Flipped Dark Feature Band (per DESIGN.md showcase-band-dark) -->
+  <section class="border-y border-hairline bg-ink text-on-primary py-20 relative overflow-hidden mesh-gradient-dark">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="max-w-3xl mb-12">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-cyan">Engineering & Physics</span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white mt-2 leading-tight">
+          Engineered for speed, rhythm, and accuracy.
+        </h2>
+        <p class="text-neutral-400 mt-4 text-sm sm:text-base leading-relaxed">
+          Zero bloat, pure canvas rendering at 60+ FPS, and authentic acoustic feedback powered by Web Audio API procedural synthesis.
+        </p>
+      </div>
+
+      <!-- 3 Feature Pillars -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-sans">
+        <!-- Pillar 1 -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/80 p-6 backdrop-blur">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800 text-cyan text-xl mb-4">
+            🔊
+          </div>
+          <h3 class="text-lg font-semibold text-white">Procedural Switch Audio</h3>
+          <p class="text-xs text-neutral-400 mt-2 leading-relaxed">
+            Real-time synthesized clicks and thocks. Switch instantly between Blue Clicky, Panda Thock, Linear Red, or mechanical typewriter bells with zero samples download.
+          </p>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/80 p-6 backdrop-blur">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800 text-highlight-pink text-xl mb-4">
+            ⚡
+          </div>
+          <h3 class="text-lg font-semibold text-white">Live Telemetry & Delta WPM</h3>
+          <p class="text-xs text-neutral-400 mt-2 leading-relaxed">
+            Sub-millisecond keystroke timing calculates gross WPM, net WPM, streak multipliers, and accuracy curves in real time as you play.
+          </p>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/80 p-6 backdrop-blur">
+          <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800 text-warning text-xl mb-4">
+            🎮
+          </div>
+          <h3 class="text-lg font-semibold text-white">105 Multi-Tier Levels</h3>
+          <p class="text-xs text-neutral-400 mt-2 leading-relaxed">
+            Every one of the 21 games features 5 distinct levels, scaling from gentle 30 WPM starter drills to intense 100+ WPM Boss battles and bullet storms.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. Speed Test Lab Showcase -->
+  <section class="py-16 sm:py-24 bg-canvas border-b border-hairline">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Benchmark Your Speed</span>
+        <h2 class="text-3xl font-bold tracking-tight text-ink mt-1">Live Speed Test Bench</h2>
+        <p class="text-sm text-body mt-2">Test your raw WPM and accuracy across timed bursts, words, famous quotes, and code syntax.</p>
+      </div>
+
+      <SpeedTestWidget />
+    </div>
+  </section>
 </Layout>
+
+<script>
+  function initCatalogFilter() {
+    const searchInput = document.getElementById('game-search-input') as HTMLInputElement;
+    const filterBtns = document.querySelectorAll('.cat-filter-btn');
+    const cards = document.querySelectorAll('#games-grid > div');
+    const noResults = document.getElementById('no-results');
+
+    let currentCat = 'all';
+    let searchQuery = '';
+
+    function filterCards() {
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        const title = card.getAttribute('data-title') || '';
+
+        const matchesCat = currentCat === 'all' || cat === currentCat;
+        const matchesSearch = searchQuery === '' || title.includes(searchQuery);
+
+        if (matchesCat && matchesSearch) {
+          (card as HTMLElement).style.display = 'flex';
+          visibleCount++;
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+
+      if (noResults) {
+        if (visibleCount === 0) noResults.classList.remove('hidden');
+        else noResults.classList.add('hidden');
+      }
+    }
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      filterCards();
+    });
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-ink', 'text-on-primary', 'active');
+          b.classList.add('bg-canvas', 'text-body', 'border');
+        });
+        btn.classList.add('bg-ink', 'text-on-primary', 'active');
+        btn.classList.remove('bg-canvas', 'text-body');
+
+        currentCat = btn.getAttribute('data-filter') || 'all';
+        filterCards();
+      });
+    });
+
+    // Read URL query parameter for category if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const catParam = urlParams.get('cat');
+    if (catParam) {
+      const matchBtn = Array.from(filterBtns).find(b => b.getAttribute('data-filter') === catParam);
+      if (matchBtn) {
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-ink', 'text-on-primary', 'active');
+          b.classList.add('bg-canvas', 'text-body', 'border');
+        });
+        matchBtn.classList.add('bg-ink', 'text-on-primary', 'active');
+        matchBtn.classList.remove('bg-canvas', 'text-body');
+        currentCat = catParam;
+        filterCards();
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCatalogFilter);
+  } else {
+    initCatalogFilter();
+  }
+  document.addEventListener('astro:page-load', initCatalogFilter);
+</script>

@@ -1,0 +1,75 @@
+---
+// Footer following DESIGN.md 4-column specification
+---
+
+<footer class="border-t border-hairline bg-canvas mt-auto">
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-4">
+      <!-- Column 1: Brand & Status -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-2">
+          <div class="flex h-7 w-7 items-center justify-center rounded bg-ink text-canvas">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M18 12h.01M8 16h8"></path>
+            </svg>
+          </div>
+          <span class="text-sm font-semibold tracking-tight text-ink">Typing Game Zone</span>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          The ultimate 2D typing game arcade & speed testing platform. Practice, compete, and master the keyboard.
+        </p>
+        <div class="flex items-center gap-2 mt-2">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="text-[11px] font-mono text-mute uppercase">Systems Operational • 60 FPS</span>
+        </div>
+      </div>
+
+      <!-- Column 2: Game Categories -->
+      <div class="flex flex-col gap-3">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Game Genres</span>
+        <ul class="flex flex-col gap-2 text-xs text-body">
+          <li><a href="/?cat=arcade" class="transition hover:text-ink">Arcade Shooters (4)</a></li>
+          <li><a href="/?cat=action" class="transition hover:text-ink">Action & Survival (4)</a></li>
+          <li><a href="/?cat=adventure" class="transition hover:text-ink">Adventure & Runner (4)</a></li>
+          <li><a href="/?cat=fighting" class="transition hover:text-ink">Fighting & Duels (4)</a></li>
+          <li><a href="/?cat=puzzle" class="transition hover:text-ink">Puzzle & Rhythm (4)</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Tools & Practice -->
+      <div class="flex flex-col gap-3">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Practice & Tools</span>
+        <ul class="flex flex-col gap-2 text-xs text-body">
+          <li><a href="/speed-test" class="transition hover:text-ink">15s / 60s Speed Test</a></li>
+          <li><a href="/practice" class="transition hover:text-ink">Home Row Mastery</a></li>
+          <li><a href="/game/key-master" class="transition hover:text-ink">3D Heatmap Keyboard</a></li>
+          <li><a href="/leaderboards" class="transition hover:text-ink">High Scores & Badges</a></li>
+          <li><a href="/arcade" class="transition hover:text-ink">Retro Arcade Lounge</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Sound & Platform -->
+      <div class="flex flex-col gap-3">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Audio Synthesizer</span>
+        <p class="text-xs text-body leading-relaxed">
+          Real-time Web Audio synthesis simulates Cherry MX Blue clicks, Holy Panda thocks, Linear Reds, and mechanical typewriters with carriage return chimes.
+        </p>
+        <div class="flex items-center gap-1.5 mt-1">
+          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">Web Audio API</span>
+          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">Tailwind v4</span>
+          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">Astro 7</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright & Domain -->
+    <div class="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-hairline pt-6 text-xs text-mute font-mono">
+      <p>© {new Date().getFullYear()} Typing Game Zone (typinggamezone.com). All rights reserved.</p>
+      <p class="mt-2 sm:mt-0">Engineered with speed and precision.</p>
+    </div>
+  </div>
+</footer>

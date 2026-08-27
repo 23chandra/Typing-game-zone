@@ -1,0 +1,82 @@
+---
+// Modal for Level Clear, Game Over, and Victory
+---
+
+<div id="game-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
+  <div class="relative w-full max-w-md rounded-2xl border border-hairline bg-canvas p-6 shadow-level-5 text-center animate-in fade-in zoom-in-95 duration-200">
+    
+    <!-- Status Icon & Grade -->
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-canvas-soft border border-hairline shadow-level-2 mb-3">
+      <span id="modal-status-icon" class="text-3xl">🎉</span>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <h3 id="modal-title" class="text-2xl font-bold tracking-tight text-ink">Level Cleared!</h3>
+    <p id="modal-subtitle" class="text-xs text-body mt-1">Excellent typing rhythm and precision.</p>
+
+    <!-- Grade Rank Pill -->
+    <div class="mt-4 flex items-center justify-center gap-2">
+      <span class="text-xs font-mono uppercase text-mute">Performance Grade:</span>
+      <span id="modal-grade-badge" class="rounded-full bg-emerald-500 text-white font-mono font-bold px-3 py-0.5 text-xs shadow-level-1">
+        RANK S
+      </span>
+    </div>
+
+    <!-- Stats Grid Breakdown -->
+    <div class="mt-6 grid grid-cols-2 gap-3 rounded-xl bg-canvas-soft p-4 border border-hairline font-mono text-left">
+      <div>
+        <span class="text-[10px] text-mute uppercase">Net WPM</span>
+        <div id="modal-wpm" class="text-lg font-bold text-ink">0</div>
+      </div>
+      <div>
+        <span class="text-[10px] text-mute uppercase">Accuracy</span>
+        <div id="modal-accuracy" class="text-lg font-bold text-ink">100%</div>
+      </div>
+      <div>
+        <span class="text-[10px] text-mute uppercase">Final Score</span>
+        <div id="modal-score" class="text-lg font-bold text-success">0</div>
+      </div>
+      <div>
+        <span class="text-[10px] text-mute uppercase">Max Streak</span>
+        <div id="modal-streak" class="text-lg font-bold text-warning">0</div>
+      </div>
+      <div>
+        <span class="text-[10px] text-mute uppercase">Total Errors</span>
+        <div id="modal-errors" class="text-lg font-bold text-error">0</div>
+      </div>
+      <div>
+        <span class="text-[10px] text-mute uppercase">Time Elapsed</span>
+        <div id="modal-time" class="text-lg font-bold text-body">0s</div>
+      </div>
+    </div>
+
+    <!-- New High Score Alert -->
+    <div id="modal-new-record" class="mt-3 hidden items-center justify-center gap-1.5 text-xs font-mono text-warning font-semibold">
+      <span>👑 NEW HIGH SCORE RECORD!</span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-6 flex items-center justify-center gap-3">
+      <button
+        id="modal-next-btn"
+        class="inline-flex items-center justify-center rounded-full bg-ink px-6 py-2.5 text-sm font-medium text-on-primary shadow-level-2 transition hover:opacity-90 active:scale-95"
+      >
+        Next Level →
+      </button>
+
+      <button
+        id="modal-retry-btn"
+        class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas px-5 py-2.5 text-sm font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95"
+      >
+        Try Again
+      </button>
+
+      <a
+        href="/"
+        class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas-soft px-4 py-2.5 text-sm font-medium text-body transition hover:text-ink hover:bg-canvas"
+      >
+        Hub
+      </a>
+    </div>
+  </div>
+</div>

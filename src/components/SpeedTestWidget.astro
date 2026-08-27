@@ -1,0 +1,458 @@
+---
+// Interactive Typing Speed Test Widget
+---
+
+<div class="w-full max-w-4xl mx-auto rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-3">
+  <!-- Mode Bar -->
+  <div class="flex flex-wrap items-center justify-between gap-4 border-b border-hairline pb-4 font-mono text-xs">
+    <!-- Test Type Toggle -->
+    <div class="flex items-center gap-1 rounded-lg bg-canvas-soft p-1 border border-hairline">
+      <button data-mode="time" class="speed-mode-btn active rounded px-3 py-1 font-medium bg-ink text-on-primary transition">
+        Time
+      </button>
+      <button data-mode="words" class="speed-mode-btn rounded px-3 py-1 font-medium text-body hover:text-ink transition">
+        Words
+      </button>
+      <button data-mode="quote" class="speed-mode-btn rounded px-3 py-1 font-medium text-body hover:text-ink transition">
+        Quotes
+      </button>
+      <button data-mode="code" class="speed-mode-btn rounded px-3 py-1 font-medium text-body hover:text-ink transition">
+        Code
+      </button>
+    </div>
+
+    <!-- Duration / Count Options -->
+    <div id="sub-options-container" class="flex items-center gap-1">
+      <button data-sub="15" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">15s</button>
+      <button data-sub="30" class="sub-opt-btn active rounded px-2.5 py-1 text-ink bg-canvas-soft-2 font-bold transition">30s</button>
+      <button data-sub="60" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">60s</button>
+      <button data-sub="120" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">120s</button>
+    </div>
+
+    <!-- Live Telemetry Pill -->
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <div class="flex items-center gap-1.5">
+        <span class="text-mute">TIME:</span>
+        <span id="st-timer" class="font-bold text-ink">30</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="text-mute">WPM:</span>
+        <span id="st-wpm" class="font-bold text-success">0</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="text-mute">ACC:</span>
+        <span id="st-acc" class="font-bold text-ink">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Words Display Area -->
+  <div
+    id="words-display-box"
+    class="relative my-6 h-36 overflow-hidden rounded-xl bg-canvas-soft p-5 font-mono text-lg sm:text-xl leading-relaxed text-mute cursor-text select-none border border-hairline focus-within:ring-2 focus-within:ring-link/20 transition-all"
+    tabindex="0"
+  >
+    <div id="words-wrapper" class="relative transition-transform duration-200">
+      <!-- Words injected dynamically via JS -->
+    </div>
+    <!-- Hidden Input for mobile touch focus -->
+    <input
+      id="speed-hidden-input"
+      type="text"
+      class="absolute -top-40 opacity-0 pointer-events-none"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+    />
+  </div>
+
+  <!-- Bottom Action & Restart -->
+  <div class="flex items-center justify-between pt-2 text-xs font-mono text-mute">
+    <div class="flex items-center gap-2">
+      <span class="rounded bg-canvas-soft-2 px-2 py-0.5 border border-hairline">Tab + Enter</span>
+      <span>to restart test</span>
+    </div>
+    <button
+      id="st-restart-btn"
+      class="flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-medium text-body hover:text-ink shadow-level-1 transition hover:bg-canvas-soft"
+    >
+      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+      <span>Restart</span>
+    </button>
+  </div>
+
+  <!-- Test Results Scorecard (Revealed upon test completion) -->
+  <div id="st-result-card" class="mt-6 hidden rounded-xl border border-hairline bg-canvas-soft p-6 shadow-level-2 animate-in fade-in duration-200 font-mono">
+    <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4">
+      <h4 class="text-base font-bold text-ink">Test Performance Complete</h4>
+      <span id="st-result-badge" class="rounded-full bg-emerald-500 text-white px-3 py-0.5 text-xs font-bold">RANK S</span>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+      <div class="rounded-lg bg-canvas p-3 border border-hairline">
+        <div class="text-[10px] text-mute uppercase">Net WPM</div>
+        <div id="st-res-net" class="text-2xl font-bold text-ink">0</div>
+      </div>
+      <div class="rounded-lg bg-canvas p-3 border border-hairline">
+        <div class="text-[10px] text-mute uppercase">Accuracy</div>
+        <div id="st-res-acc" class="text-2xl font-bold text-success">100%</div>
+      </div>
+      <div class="rounded-lg bg-canvas p-3 border border-hairline">
+        <div class="text-[10px] text-mute uppercase">Raw WPM</div>
+        <div id="st-res-raw" class="text-2xl font-bold text-body">0</div>
+      </div>
+      <div class="rounded-lg bg-canvas p-3 border border-hairline">
+        <div class="text-[10px] text-mute uppercase">Errors</div>
+        <div id="st-res-err" class="text-2xl font-bold text-error">0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { getRandomWords, WORD_LISTS } from '../lib/wordLists';
+  import { soundEngine } from '../lib/soundEngine';
+  import { storage } from '../lib/storage';
+  import confetti from 'canvas-confetti';
+
+  function initSpeedTest() {
+    let mode = 'time';
+    let subOption = 30; // 30s
+    let words: string[] = [];
+    let currentWordIndex = 0;
+    let currentCharIndex = 0;
+    let correctChars = 0;
+    let errorChars = 0;
+    let totalKeystrokes = 0;
+    let startTime: number = 0;
+    let timerInterval: number | null = null;
+    let timeRemaining = 30;
+    let isTestRunning = false;
+    let isTestComplete = false;
+
+    const displayBox = document.getElementById('words-display-box');
+    const wordsWrapper = document.getElementById('words-wrapper');
+    const hiddenInput = document.getElementById('speed-hidden-input') as HTMLInputElement;
+    const timerLabel = document.getElementById('st-timer');
+    const wpmLabel = document.getElementById('st-wpm');
+    const accLabel = document.getElementById('st-acc');
+    const restartBtn = document.getElementById('st-restart-btn');
+    const resultCard = document.getElementById('st-result-card');
+
+    function generateWords() {
+      if (mode === 'quote') {
+        const q = WORD_LISTS.quotes[Math.floor(Math.random() * WORD_LISTS.quotes.length)];
+        words = q.text.split(' ');
+      } else if (mode === 'code') {
+        const c = WORD_LISTS.codeSnippets[Math.floor(Math.random() * WORD_LISTS.codeSnippets.length)];
+        words = c.code.replace(/\n/g, ' ↵ ').split(' ');
+      } else {
+        const count = mode === 'words' ? subOption : 80;
+        words = getRandomWords(count, 'easy');
+      }
+
+      currentWordIndex = 0;
+      currentCharIndex = 0;
+      correctChars = 0;
+      errorChars = 0;
+      totalKeystrokes = 0;
+      timeRemaining = mode === 'time' ? subOption : 0;
+      isTestRunning = false;
+      isTestComplete = false;
+
+      if (timerLabel) timerLabel.textContent = mode === 'time' ? `${timeRemaining}s` : '0s';
+      if (wpmLabel) wpmLabel.textContent = '0';
+      if (accLabel) accLabel.textContent = '100%';
+      resultCard?.classList.add('hidden');
+
+      renderWordsDOM();
+    }
+
+    function renderWordsDOM() {
+      if (!wordsWrapper) return;
+      wordsWrapper.innerHTML = '';
+
+      words.forEach((w, wIdx) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = `word-span mr-2.5 inline-block ${wIdx === currentWordIndex ? 'text-ink font-semibold' : ''}`;
+
+        w.split('').forEach((ch, cIdx) => {
+          const charSpan = document.createElement('span');
+          charSpan.textContent = ch;
+          charSpan.className = 'char-span';
+          wordSpan.appendChild(charSpan);
+        });
+
+        wordsWrapper.appendChild(wordSpan);
+      });
+
+      updateCaretAndClasses();
+    }
+
+    function updateCaretAndClasses() {
+      if (!wordsWrapper) return;
+      const wordSpans = wordsWrapper.querySelectorAll('.word-span');
+      wordSpans.forEach((ws, wIdx) => {
+        if (wIdx === currentWordIndex) {
+          ws.classList.add('text-ink');
+          ws.classList.remove('text-mute');
+        } else if (wIdx < currentWordIndex) {
+          ws.classList.remove('text-ink');
+        }
+      });
+    }
+
+    function startTest() {
+      if (isTestRunning) return;
+      isTestRunning = true;
+      startTime = Date.now();
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = window.setInterval(() => {
+        const elapsedSec = (Date.now() - startTime) / 1000;
+
+        if (mode === 'time') {
+          timeRemaining = Math.max(0, subOption - Math.floor(elapsedSec));
+          if (timerLabel) timerLabel.textContent = `${timeRemaining}s`;
+
+          if (timeRemaining <= 0) {
+            finishTest();
+            return;
+          }
+        } else {
+          if (timerLabel) timerLabel.textContent = `${Math.floor(elapsedSec)}s`;
+        }
+
+        // Update live WPM
+        const minutes = elapsedSec / 60;
+        const grossWpm = Math.round((correctChars / 5) / minutes) || 0;
+        const netWpm = Math.max(0, Math.round(((correctChars - errorChars) / 5) / minutes)) || 0;
+        const acc = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
+
+        if (wpmLabel) wpmLabel.textContent = `${netWpm}`;
+        if (accLabel) accLabel.textContent = `${acc}%`;
+      }, 500);
+    }
+
+    function finishTest() {
+      if (timerInterval) clearInterval(timerInterval);
+      isTestRunning = false;
+      isTestComplete = true;
+
+      const elapsedSec = mode === 'time' ? subOption : Math.max(1, (Date.now() - startTime) / 1000);
+      const minutes = elapsedSec / 60;
+      const rawWpm = Math.round((totalKeystrokes / 5) / minutes) || 0;
+      const netWpm = Math.max(0, Math.round(((correctChars - errorChars) / 5) / minutes)) || 0;
+      const accuracy = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
+
+      // Update Result card
+      const resNet = document.getElementById('st-res-net');
+      const resAcc = document.getElementById('st-res-acc');
+      const resRaw = document.getElementById('st-res-raw');
+      const resErr = document.getElementById('st-res-err');
+      const resBadge = document.getElementById('st-result-badge');
+
+      if (resNet) resNet.textContent = `${netWpm}`;
+      if (resAcc) resAcc.textContent = `${accuracy}%`;
+      if (resRaw) resRaw.textContent = `${rawWpm}`;
+      if (resErr) resErr.textContent = `${errorChars}`;
+
+      let rank = 'RANK S';
+      if (accuracy >= 98 && netWpm >= 70) rank = 'RANK S (LEGENDARY)';
+      else if (accuracy >= 95 && netWpm >= 50) rank = 'RANK A (EXCELLENT)';
+      else if (accuracy >= 90) rank = 'RANK B (GREAT)';
+      else rank = 'RANK C (PRACTICE)';
+
+      if (resBadge) resBadge.textContent = rank;
+      resultCard?.classList.remove('hidden');
+
+      soundEngine.playVictory();
+      if (netWpm >= 60) {
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+      }
+
+      // Record to storage
+      storage.recordGameResult('speed-test', netWpm * 10, netWpm, accuracy, 1, currentWordIndex, totalKeystrokes, errorChars);
+    }
+
+    function handleKey(key: string) {
+      if (isTestComplete) return;
+      if (!isTestRunning) startTest();
+
+      const currentWord = words[currentWordIndex];
+      if (!currentWord) return;
+
+      if (key === ' ') {
+        // Space advances to next word
+        soundEngine.playKey(true);
+        currentWordIndex++;
+        currentCharIndex = 0;
+
+        if (currentWordIndex >= words.length) {
+          finishTest();
+        } else {
+          updateCaretAndClasses();
+        }
+        return;
+      }
+
+      if (key === 'Backspace') {
+        soundEngine.playKey();
+        if (currentCharIndex > 0) {
+          currentCharIndex--;
+          const wordSpans = wordsWrapper?.querySelectorAll('.word-span');
+          const curSpan = wordSpans?.[currentWordIndex];
+          const charSpans = curSpan?.querySelectorAll('.char-span');
+          if (charSpans?.[currentCharIndex]) {
+            charSpans[currentCharIndex].className = 'char-span text-mute';
+          }
+        }
+        return;
+      }
+
+      if (key.length === 1) {
+        totalKeystrokes++;
+        const expected = currentWord[currentCharIndex];
+        const wordSpans = wordsWrapper?.querySelectorAll('.word-span');
+        const curSpan = wordSpans?.[currentWordIndex];
+        const charSpans = curSpan?.querySelectorAll('.char-span');
+
+        if (key === expected) {
+          correctChars++;
+          soundEngine.playKey();
+          if (charSpans?.[currentCharIndex]) {
+            charSpans[currentCharIndex].className = 'char-span text-success font-semibold';
+          }
+        } else {
+          errorChars++;
+          soundEngine.playError();
+          if (charSpans?.[currentCharIndex]) {
+            charSpans[currentCharIndex].className = 'char-span text-error underline';
+          }
+        }
+
+        currentCharIndex++;
+        if (currentCharIndex >= currentWord.length && mode !== 'words') {
+          // auto advance
+          currentWordIndex++;
+          currentCharIndex = 0;
+          if (currentWordIndex >= words.length) {
+            finishTest();
+          } else {
+            updateCaretAndClasses();
+          }
+        }
+      }
+    }
+
+    // Event listeners
+    displayBox?.addEventListener('click', () => {
+      soundEngine.initContext();
+      displayBox.focus();
+      hiddenInput?.focus();
+    });
+
+    displayBox?.addEventListener('keydown', (e) => {
+      soundEngine.initContext();
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        generateWords();
+        return;
+      }
+      if (e.key === ' ' || e.key === 'Backspace' || e.key.length === 1) {
+        if (e.key === ' ') e.preventDefault();
+        handleKey(e.key);
+      }
+    });
+
+    // Mobile touch input support
+    hiddenInput?.addEventListener('input', (e) => {
+      soundEngine.initContext();
+      const val = (e.target as HTMLInputElement).value;
+      if (val.length > 0) {
+        handleKey(val[val.length - 1]);
+        (e.target as HTMLInputElement).value = '';
+      }
+    });
+
+    hiddenInput?.addEventListener('keydown', (e) => {
+      soundEngine.initContext();
+      if (e.key === 'Backspace') {
+        handleKey('Backspace');
+      }
+    });
+
+    restartBtn?.addEventListener('click', () => {
+      generateWords();
+      displayBox?.focus();
+    });
+
+    // Mode Toggle Buttons
+    document.querySelectorAll('.speed-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.speed-mode-btn').forEach(b => {
+          b.classList.remove('bg-ink', 'text-on-primary', 'active');
+          b.classList.add('text-body');
+        });
+        btn.classList.add('bg-ink', 'text-on-primary', 'active');
+        btn.classList.remove('text-body');
+
+        mode = btn.getAttribute('data-mode') || 'time';
+
+        // Update Sub-options display
+        const subContainer = document.getElementById('sub-options-container');
+        if (subContainer) {
+          if (mode === 'time') {
+            subContainer.innerHTML = `
+              <button data-sub="15" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">15s</button>
+              <button data-sub="30" class="sub-opt-btn active rounded px-2.5 py-1 text-ink bg-canvas-soft-2 font-bold transition">30s</button>
+              <button data-sub="60" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">60s</button>
+              <button data-sub="120" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">120s</button>
+            `;
+            subOption = 30;
+          } else if (mode === 'words') {
+            subContainer.innerHTML = `
+              <button data-sub="25" class="sub-opt-btn active rounded px-2.5 py-1 text-ink bg-canvas-soft-2 font-bold transition">25w</button>
+              <button data-sub="50" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">50w</button>
+              <button data-sub="100" class="sub-opt-btn rounded px-2.5 py-1 text-mute hover:text-ink transition font-bold">100w</button>
+            `;
+            subOption = 25;
+          } else {
+            subContainer.innerHTML = '';
+          }
+          bindSubButtons();
+        }
+
+        generateWords();
+      });
+    });
+
+    function bindSubButtons() {
+      document.querySelectorAll('.sub-opt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.sub-opt-btn').forEach(b => {
+            b.classList.remove('text-ink', 'bg-canvas-soft-2', 'active');
+            b.classList.add('text-mute');
+          });
+          btn.classList.add('text-ink', 'bg-canvas-soft-2', 'active');
+          btn.classList.remove('text-mute');
+          subOption = parseInt(btn.getAttribute('data-sub') || '30', 10);
+          generateWords();
+        });
+      });
+    }
+
+    bindSubButtons();
+    generateWords();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSpeedTest);
+  } else {
+    initSpeedTest();
+  }
+  document.addEventListener('astro:page-load', initSpeedTest);
+</script>

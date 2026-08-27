@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SpeedTestWidget from '../components/SpeedTestWidget.astro';
+---
+
+<Layout
+  title="Typing Speed Test (15s, 30s, 60s, Code, Quotes) — Typing Game Zone"
+  description="Test your typing speed (WPM) and accuracy in real-time with customizable durations, quote mode, and programming language code syntax drills."
+>
+  <div class="py-12 sm:py-16 bg-canvas-soft">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Benchmark Suite</span>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink mt-2">
+          Typing Speed Benchmark.
+        </h1>
+        <p class="mt-3 text-sm text-body leading-relaxed">
+          Accurately measure your Words Per Minute (WPM) and character precision. Switch between standard timed tests, word quotas, inspirational quotes, and programming code snippets.
+        </p>
+      </div>
+
+      <!-- Main Speed Test Widget -->
+      <SpeedTestWidget />
+
+      <!-- Speed Tiers & Information Grid -->
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-sans">
+        
+        <!-- WPM Speed Ranking Scale -->
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1">
+          <h3 class="text-sm font-semibold uppercase font-mono text-mute">Global WPM Speed Tiers</h3>
+          <ul class="mt-4 flex flex-col gap-2.5 font-mono text-xs text-body">
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span>Novice</span>
+              <span class="text-mute">0 – 35 WPM</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span>Average Touch Typer</span>
+              <span class="text-mute">40 – 55 WPM</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span>Fast / Professional</span>
+              <span class="text-body font-semibold">60 – 80 WPM</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span>Speed Demon</span>
+              <span class="text-link font-semibold">85 – 105 WPM</span>
+            </li>
+            <li class="flex items-center justify-between text-warning font-bold">
+              <span>Keyboard Deity</span>
+              <span>110+ WPM</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pro Typing Tips -->
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1">
+          <h3 class="text-sm font-semibold uppercase font-mono text-mute">Speed Optimization Tips</h3>
+          <ul class="mt-4 flex flex-col gap-3 text-xs text-body leading-relaxed">
+            <li class="flex items-start gap-2">
+              <span class="text-success font-bold">✓</span>
+              <span><strong>Maintain Posture:</strong> Keep your wrists slightly elevated without resting them heavily on the desk.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-success font-bold">✓</span>
+              <span><strong>Prioritize Accuracy:</strong> Aim for 98%+ accuracy before attempting to push raw typing speed.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-success font-bold">✓</span>
+              <span><strong>Look Ahead:</strong> Train your eyes to scan 2 to 3 words ahead of what your fingers are currently striking.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Audio Synthesis Info -->
+        <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1">
+          <h3 class="text-sm font-semibold uppercase font-mono text-mute">Acoustic Feedback</h3>
+          <p class="mt-3 text-xs text-body leading-relaxed">
+            Every keystroke is rendered using Web Audio synthesized frequencies calibrated to real mechanical switches:
+          </p>
+          <div class="mt-3 flex flex-wrap gap-1.5 font-mono text-[11px]">
+            <span class="rounded bg-canvas-soft px-2 py-1 border border-hairline">Cherry MX Blue</span>
+            <span class="rounded bg-canvas-soft px-2 py-1 border border-hairline">Holy Panda</span>
+            <span class="rounded bg-canvas-soft px-2 py-1 border border-hairline">Gateron Red</span>
+            <span class="rounded bg-canvas-soft px-2 py-1 border border-hairline">Underwood Bell</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</Layout>

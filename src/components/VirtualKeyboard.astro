@@ -1,0 +1,86 @@
+---
+// Virtual Keyboard & Mobile Input Bar for Responsive Touch Devices & Tablets
+---
+
+<div class="mt-4 flex flex-col items-center gap-3 w-full">
+  <!-- Mobile Hidden Virtual Input Bar (focused automatically on tap to trigger soft keyboard) -->
+  <div class="relative w-full max-w-lg">
+    <input
+      type="text"
+      id="mobile-game-input"
+      class="w-full rounded-xl border border-hairline bg-canvas px-4 py-3 text-center text-sm font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 sm:hidden cursor-text"
+      placeholder="Tap here to type with soft keyboard..."
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+    />
+  </div>
+
+  <!-- On-Screen Interactive Keyboard (Responsive for touch screen tablets & desktops) -->
+  <div class="w-full max-w-2xl select-none">
+    <div class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 text-center">
+      <div class="flex items-center justify-between text-[11px] font-mono text-mute px-2 mb-2">
+        <span class="flex items-center gap-1.5">
+          <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Touch Typing Zone</span>
+        </span>
+        <span class="hidden sm:inline">Space to advance • Backspace to erase</span>
+      </div>
+      <div class="flex flex-col gap-1.5 font-mono text-xs">
+        <!-- Row 1 -->
+        <div class="flex justify-center gap-1">
+          {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map(k => (
+            <button
+              type="button"
+              data-virtual-key={k.toLowerCase()}
+              class="virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+        <!-- Row 2 -->
+        <div class="flex justify-center gap-1">
+          {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'].map(k => (
+            <button
+              type="button"
+              data-virtual-key={k.toLowerCase()}
+              class={`virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border font-bold text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer ${
+                ['F', 'J'].includes(k) ? 'border-link text-link underline' : 'border-hairline text-ink'
+              }`}
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+        <!-- Row 3 -->
+        <div class="flex justify-center gap-1">
+          <button
+            type="button"
+            data-virtual-key="backspace"
+            class="virtual-key-btn flex h-9 px-2 sm:px-3 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[11px] text-error shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-error active:text-white transition cursor-pointer"
+          >
+            ⌫
+          </button>
+          {['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.'].map(k => (
+            <button
+              type="button"
+              data-virtual-key={k.toLowerCase()}
+              class="virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+            >
+              {k}
+            </button>
+          ))}
+          <button
+            type="button"
+            data-virtual-key=" "
+            class="virtual-key-btn flex h-9 px-3 sm:px-4 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[11px] text-ink shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+          >
+            SPACE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,511 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GameHUD from '../../components/GameHUD.astro';
+import GameModal from '../../components/GameModal.astro';
+import VirtualKeyboard from '../../components/VirtualKeyboard.astro';
+import { ALL_GAMES } from '../../lib/games/gameRegistry';
+
+export function getStaticPaths() {
+  return ALL_GAMES.map(game => ({
+    params: { id: game.id },
+    props: { game }
+  }));
+}
+
+const { game } = Astro.props;
+---
+
+<Layout
+  title={`${game.title} — Play Free 2D Typing Game | Typing Game Zone`}
+  description={game.description}
+>
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    
+    <!-- Top Breadcrumb & Tag -->
+    <div class="mb-4 flex items-center justify-between">
+      <nav class="flex items-center gap-2 text-xs font-mono text-mute">
+        <a href="/" class="hover:text-ink transition">Home</a>
+        <span>/</span>
+        <a href={`/?cat=${game.category}`} class="hover:text-ink transition uppercase">{game.categoryName}</a>
+        <span>/</span>
+        <span class="text-ink font-semibold">{game.title}</span>
+      </nav>
+
+      <span class="rounded-full bg-canvas border border-hairline px-3 py-1 text-xs font-mono text-body shadow-level-1">
+        {game.difficulty} • 5 Levels
+      </span>
+    </div>
+
+    <!-- Telemetry HUD -->
+    <div class="mb-4">
+      <GameHUD gameTitle={game.title} gameId={game.id} />
+    </div>
+
+    <!-- Canvas Game Container -->
+    <div class="relative w-full overflow-hidden rounded-2xl border border-hairline bg-[#0a0d14] shadow-level-4">
+      <canvas
+        id="game-canvas"
+        data-game-id={game.id}
+        class="w-full h-[360px] sm:h-[480px] lg:h-[540px] block cursor-crosshair focus:outline-none"
+        tabindex="0"
+      ></canvas>
+
+      <!-- Pause Overlay -->
+      <div id="pause-overlay" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm hidden font-mono">
+        <div class="text-4xl mb-2">⏸️</div>
+        <h3 class="text-2xl font-bold text-white tracking-tight">GAME PAUSED</h3>
+        <p class="text-xs text-neutral-400 mt-1">Press Space, Enter, or Click Resume</p>
+        <button
+          id="resume-btn"
+          class="mt-4 rounded-full bg-cyan px-6 py-2 text-xs font-bold text-ink hover:opacity-90 transition cursor-pointer"
+        >
+          Resume Game
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Virtual Input Bar & Keyboard -->
+    <VirtualKeyboard />
+
+    <!-- Result / Victory / Game Over Modal -->
+    <GameModal />
+
+    <!-- Game Instructions & Levels Information -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 font-sans">
+      <!-- How to Play -->
+      <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1 md:col-span-2">
+        <h3 class="text-base font-semibold text-ink flex items-center gap-2">
+          <span>📖</span> How to Play & Controls
+        </h3>
+        <p class="mt-2 text-xs text-body leading-relaxed">
+          {game.description}
+        </p>
+
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+          <div class="rounded-lg bg-canvas-soft p-3 border border-hairline">
+            <span class="text-mute text-[10px] uppercase block">Targeting</span>
+            <span class="font-bold text-ink">Type First Letter</span>
+          </div>
+          <div class="rounded-lg bg-canvas-soft p-3 border border-hairline">
+            <span class="text-mute text-[10px] uppercase block">Mistakes</span>
+            <span class="font-bold text-error">Backspace to Erase</span>
+          </div>
+          <div class="rounded-lg bg-canvas-soft p-3 border border-hairline">
+            <span class="text-mute text-[10px] uppercase block">Pause Game</span>
+            <span class="font-bold text-ink">ESC / Pause Icon</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level Tier Breakdown -->
+      <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1">
+        <h3 class="text-base font-semibold text-ink flex items-center gap-2">
+          <span>🏆</span> 5 Level Tiers
+        </h3>
+        <ul class="mt-3 flex flex-col gap-2 font-mono text-xs text-body">
+          <li class="flex items-center justify-between border-b border-hairline pb-1">
+            <span>Level 1: Novice</span>
+            <span class="text-mute">30 WPM</span>
+          </li>
+          <li class="flex items-center justify-between border-b border-hairline pb-1">
+            <span>Level 2: Apprentice</span>
+            <span class="text-mute">45 WPM</span>
+          </li>
+          <li class="flex items-center justify-between border-b border-hairline pb-1">
+            <span>Level 3: Expert</span>
+            <span class="text-mute">60 WPM</span>
+          </li>
+          <li class="flex items-center justify-between border-b border-hairline pb-1">
+            <span>Level 4: Master</span>
+            <span class="text-mute">75 WPM</span>
+          </li>
+          <li class="flex items-center justify-between text-warning font-bold">
+            <span>Level 5: Boss Battle</span>
+            <span>90+ WPM</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</Layout>
+
+<script>
+  import { GAME_REGISTRY } from '../../lib/games/gameRegistry';
+  import { storage } from '../../lib/storage';
+  import { soundEngine } from '../../lib/soundEngine';
+  import type { BaseGame, GameStats, GameState } from '../../lib/games/GameEngine';
+  import confetti from 'canvas-confetti';
+
+  let activeGameInstance: BaseGame | null = null;
+
+  function initGameArena() {
+    // Cleanup previous game instance if any
+    if (activeGameInstance) {
+      activeGameInstance.destroy();
+      activeGameInstance = null;
+    }
+
+    const canvas = document.getElementById('game-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const gameId = canvas.getAttribute('data-game-id') || '';
+    const gameMeta = GAME_REGISTRY[gameId];
+    if (!gameMeta) {
+      console.error(`Game not found in registry for ID: "${gameId}"`);
+      return;
+    }
+
+    // Instantiate game from factory
+    const gameInstance = gameMeta.factory(canvas);
+    activeGameInstance = gameInstance;
+
+    // Elements
+    const hudScore = document.getElementById('hud-score');
+    const hudWpm = document.getElementById('hud-wpm');
+    const hudAccuracy = document.getElementById('hud-accuracy');
+    const hudStreak = document.getElementById('hud-streak');
+    const hudHealthBar = document.getElementById('hud-health-bar');
+    const hudHealthPct = document.getElementById('hud-health-pct');
+    const hudLevelTag = document.getElementById('hud-level-tag');
+    const hudTimeTag = document.getElementById('hud-time-tag');
+    const pauseOverlay = document.getElementById('pause-overlay');
+    const pauseBtn = document.getElementById('hud-pause-btn');
+    const restartBtn = document.getElementById('hud-restart-btn');
+    const resumeBtn = document.getElementById('resume-btn');
+    const lvlBtns = document.querySelectorAll('.lvl-select-btn');
+    const mobileInput = document.getElementById('mobile-game-input') as HTMLInputElement | null;
+
+    // Modal elements
+    const gameModal = document.getElementById('game-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalSubtitle = document.getElementById('modal-subtitle');
+    const modalStatusIcon = document.getElementById('modal-status-icon');
+    const modalGradeBadge = document.getElementById('modal-grade-badge');
+    const modalWpm = document.getElementById('modal-wpm');
+    const modalAccuracy = document.getElementById('modal-accuracy');
+    const modalScore = document.getElementById('modal-score');
+    const modalStreak = document.getElementById('modal-streak');
+    const modalErrors = document.getElementById('modal-errors');
+    const modalTime = document.getElementById('modal-time');
+    const modalNewRecord = document.getElementById('modal-new-record');
+    const modalNextBtn = document.getElementById('modal-next-btn');
+    const modalRetryBtn = document.getElementById('modal-retry-btn');
+
+    let currentLvl = 1;
+
+    // Hook HUD telemetry updates
+    gameInstance.onStatsChange = (stats: GameStats) => {
+      if (hudScore) hudScore.textContent = stats.score.toLocaleString();
+      if (hudWpm) hudWpm.textContent = `${stats.netWPM}`;
+      if (hudAccuracy) hudAccuracy.textContent = `${stats.accuracy}%`;
+      if (hudStreak) hudStreak.textContent = `${stats.streak}x`;
+      if (hudHealthPct) hudHealthPct.textContent = `${Math.floor(stats.health)}%`;
+      if (hudHealthBar) {
+        hudHealthBar.style.width = `${stats.health}%`;
+        hudHealthBar.className = `h-full transition-all duration-300 ${
+          stats.health > 50 ? 'bg-emerald-500' : stats.health > 25 ? 'bg-amber-500' : 'bg-rose-500'
+        }`;
+      }
+      if (hudLevelTag) hudLevelTag.textContent = `LEVEL ${stats.level}`;
+
+      const mins = Math.floor(stats.timeElapsedSec / 60).toString().padStart(2, '0');
+      const secs = (stats.timeElapsedSec % 60).toString().padStart(2, '0');
+      if (hudTimeTag) hudTimeTag.textContent = `${mins}:${secs}`;
+    };
+
+    // Hook game state transitions
+    gameInstance.onStateChange = (state: GameState, stats: GameStats) => {
+      if (state === 'PAUSED') {
+        pauseOverlay?.classList.remove('hidden');
+      } else {
+        pauseOverlay?.classList.add('hidden');
+      }
+
+      if (state === 'LEVEL_CLEARED' || state === 'VICTORY' || state === 'GAME_OVER') {
+        showModal(state, stats);
+      }
+    };
+
+    function showModal(state: GameState, stats: GameStats) {
+      if (!gameModal) return;
+
+      const isVictory = state === 'VICTORY';
+      const isLevelClear = state === 'LEVEL_CLEARED';
+      const isGameOver = state === 'GAME_OVER';
+
+      // Status title & icons
+      if (modalStatusIcon) modalStatusIcon.textContent = isVictory ? '👑' : isLevelClear ? '🎉' : '💀';
+      if (modalTitle) modalTitle.textContent = isVictory ? 'VICTORY CHAMPION!' : isLevelClear ? `Level ${currentLvl} Cleared!` : 'GAME OVER';
+      if (modalSubtitle) modalSubtitle.textContent = isVictory ? 'You mastered all 5 levels of this arena!' : isLevelClear ? 'Fantastic speed and accuracy.' : 'Defense breach. Regroup and try again!';
+
+      // Rank Grade
+      let grade = 'RANK S';
+      let gradeColor = 'bg-emerald-500';
+      if (stats.accuracy >= 98 && stats.netWPM >= 60) {
+        grade = 'RANK S (LEGENDARY)';
+        gradeColor = 'bg-emerald-500';
+      } else if (stats.accuracy >= 90 && stats.netWPM >= 40) {
+        grade = 'RANK A (EXCELLENT)';
+        gradeColor = 'bg-blue-500';
+      } else if (stats.accuracy >= 80) {
+        grade = 'RANK B (GOOD)';
+        gradeColor = 'bg-amber-500';
+      } else {
+        grade = 'RANK C (NEED PRACTICE)';
+        gradeColor = 'bg-rose-500';
+      }
+
+      if (modalGradeBadge) {
+        modalGradeBadge.textContent = grade;
+        modalGradeBadge.className = `rounded-full text-white font-mono font-bold px-3 py-0.5 text-xs shadow-level-1 ${gradeColor}`;
+      }
+
+      if (modalWpm) modalWpm.textContent = `${stats.netWPM}`;
+      if (modalAccuracy) modalAccuracy.textContent = `${stats.accuracy}%`;
+      if (modalScore) modalScore.textContent = `${stats.score}`;
+      if (modalStreak) modalStreak.textContent = `${stats.maxStreak}`;
+      if (modalErrors) modalErrors.textContent = `${stats.errors}`;
+      if (modalTime) modalTime.textContent = `${stats.timeElapsedSec}s`;
+
+      if (modalNextBtn) {
+        if (isGameOver || isVictory || currentLvl >= 5) {
+          modalNextBtn.classList.add('hidden');
+        } else {
+          modalNextBtn.classList.remove('hidden');
+        }
+      }
+
+      // Record to storage
+      const result = storage.recordGameResult(
+        gameId,
+        stats.score,
+        stats.netWPM,
+        stats.accuracy,
+        currentLvl,
+        Math.floor(stats.correctKeystrokes / 5),
+        stats.totalKeystrokes,
+        stats.errors
+      );
+
+      if (modalNewRecord) {
+        if (result.newHighScore || result.newBestWPM) {
+          modalNewRecord.classList.remove('hidden');
+          modalNewRecord.classList.add('flex');
+        } else {
+          modalNewRecord.classList.add('hidden');
+          modalNewRecord.classList.remove('flex');
+        }
+      }
+
+      // Trigger Confetti on victory or level clear
+      if (isVictory || isLevelClear) {
+        try {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        } catch {
+          // Confetti fallback
+        }
+      }
+
+      gameModal.classList.remove('hidden');
+    }
+
+    // Modal buttons
+    modalNextBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+      if (currentLvl < 5) {
+        currentLvl++;
+        updateLvlBtnUI();
+        gameInstance.nextLevel();
+        canvas.focus();
+      }
+    });
+
+    modalRetryBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+      gameInstance.start(currentLvl);
+      canvas.focus();
+    });
+
+    function updateLvlBtnUI() {
+      lvlBtns.forEach(btn => {
+        const lvl = parseInt(btn.getAttribute('data-lvl-btn') || '1', 10);
+        if (lvl === currentLvl) {
+          btn.className = 'lvl-select-btn flex h-6 w-6 items-center justify-center rounded text-xs font-bold bg-ink text-on-primary';
+        } else {
+          btn.className = 'lvl-select-btn flex h-6 w-6 items-center justify-center rounded text-xs font-bold text-body hover:bg-canvas';
+        }
+      });
+    }
+
+    // Level selector buttons
+    lvlBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentLvl = parseInt(btn.getAttribute('data-lvl-btn') || '1', 10);
+        updateLvlBtnUI();
+        gameInstance.start(currentLvl);
+        canvas.focus();
+      });
+    });
+
+    // Quick Sound Toggle Button on HUD
+    const soundToggleBtn = document.getElementById('hud-sound-toggle');
+    const soundIconEl = document.getElementById('hud-sound-icon');
+    const soundNameEl = document.getElementById('hud-sound-name');
+
+    const updateSoundToggleUI = () => {
+      const cur = soundEngine.getSwitch();
+      const isMuted = soundEngine.getIsMuted() || cur === 'off';
+      if (soundIconEl) soundIconEl.textContent = isMuted ? '🔇' : '🔊';
+      const labels: Record<string, string> = {
+        clicky: 'Clicky',
+        thock: 'Thock',
+        linear: 'Linear',
+        typewriter: 'Typewriter',
+        off: 'Muted'
+      };
+      if (soundNameEl) soundNameEl.textContent = labels[cur] || 'Sound';
+    };
+
+    updateSoundToggleUI();
+
+    soundToggleBtn?.addEventListener('click', () => {
+      const cycle: ('clicky' | 'thock' | 'linear' | 'typewriter' | 'off')[] = ['clicky', 'thock', 'linear', 'typewriter', 'off'];
+      const cur = soundEngine.getSwitch();
+      const nextIdx = (cycle.indexOf(cur) + 1) % cycle.length;
+      const nextSwitch = cycle[nextIdx];
+      soundEngine.setSwitch(nextSwitch);
+      soundEngine.initContext();
+      soundEngine.playKey(false, nextSwitch === 'typewriter');
+      updateSoundToggleUI();
+    });
+
+    // Pause / Resume / Restart
+    pauseBtn?.addEventListener('click', () => {
+      if (gameInstance.state === 'PLAYING') gameInstance.pause();
+      else if (gameInstance.state === 'PAUSED') gameInstance.resume();
+    });
+
+    resumeBtn?.addEventListener('click', () => {
+      gameInstance.resume();
+      canvas.focus();
+    });
+
+    restartBtn?.addEventListener('click', () => {
+      gameInstance.start(currentLvl);
+      canvas.focus();
+    });
+
+    // Click canvas to focus and resume audio
+    canvas.addEventListener('click', () => {
+      soundEngine.initContext();
+      canvas.focus();
+    });
+
+    // Keyboard inputs to Canvas
+    const onKeyDown = (e: KeyboardEvent) => {
+      // Ignore if typing in an input element or textarea
+      if (document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      if (gameModal && !gameModal.classList.contains('hidden')) return;
+
+      soundEngine.initContext();
+
+      if (e.key === 'Escape') {
+        if (gameInstance.state === 'PLAYING') gameInstance.pause();
+        else if (gameInstance.state === 'PAUSED') gameInstance.resume();
+        return;
+      }
+
+      if (gameInstance.state === 'PAUSED') {
+        if (e.key === ' ' || e.key === 'Enter') {
+          gameInstance.resume();
+          return;
+        }
+      }
+
+      if (gameInstance.state === 'PLAYING') {
+        if (e.key === 'Backspace') {
+          gameInstance.handleBackspaceKey();
+          e.preventDefault();
+        } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          gameInstance.handleInputChar(e.key);
+          if (e.key === ' ') e.preventDefault();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    // On-screen Virtual Keyboard buttons click handlers
+    const virtualKeys = document.querySelectorAll('.virtual-key-btn');
+    virtualKeys.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        soundEngine.initContext();
+        if (gameInstance.state !== 'PLAYING') return;
+
+        const key = btn.getAttribute('data-virtual-key');
+        if (!key) return;
+
+        if (key === 'backspace') {
+          gameInstance.handleBackspaceKey();
+        } else {
+          gameInstance.handleInputChar(key);
+        }
+      });
+    });
+
+    // Mobile Virtual Input binding
+    mobileInput?.addEventListener('input', (e) => {
+      const val = (e.target as HTMLInputElement).value;
+      if (val.length > 0) {
+        soundEngine.initContext();
+        if (gameInstance.state === 'PLAYING') {
+          const lastChar = val[val.length - 1];
+          gameInstance.handleInputChar(lastChar);
+        }
+        (e.target as HTMLInputElement).value = '';
+      }
+    });
+
+    // Mobile backspace keydown
+    mobileInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace') {
+        soundEngine.initContext();
+        if (gameInstance.state === 'PLAYING') {
+          gameInstance.handleBackspaceKey();
+        }
+      }
+    });
+
+    // Focus mobile input on tap
+    mobileInput?.addEventListener('focus', () => {
+      soundEngine.initContext();
+    });
+
+    // Auto start level 1 and focus
+    gameInstance.start(1);
+    canvas.focus();
+  }
+
+  // Initialize on page load and astro transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGameArena);
+  } else {
+    initGameArena();
+  }
+  document.addEventListener('astro:page-load', initGameArena);
+  document.addEventListener('astro:before-swap', () => {
+    if (activeGameInstance) {
+      activeGameInstance.destroy();
+      activeGameInstance = null;
+    }
+  });
+</script>

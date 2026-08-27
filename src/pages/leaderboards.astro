@@ -1,0 +1,191 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+---
+
+<Layout
+  title="Player Telemetry & Achievements Dashboard — Typing Game Zone"
+  description="View your typing stats, best WPM records, high scores per game, and unlockable achievement badges on Typing Game Zone."
+>
+  <div class="py-12 sm:py-16 bg-canvas-soft min-h-screen">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Profile & Telemetry</span>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink mt-2">
+          Leaderboards & Badges.
+        </h1>
+        <p class="mt-3 text-sm text-body leading-relaxed">
+          Track your personal records across all 21 games, monitor overall typing milestones, and unlock prestige achievement badges.
+        </p>
+      </div>
+
+      <!-- Player Profile Stats Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12 font-mono">
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+          <span class="text-[11px] text-mute uppercase">Best WPM Record</span>
+          <div id="prof-best-wpm" class="text-3xl font-bold text-success mt-1">0</div>
+          <span class="text-[10px] text-mute mt-1 block">Peak typing velocity</span>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+          <span class="text-[11px] text-mute uppercase">Average WPM</span>
+          <div id="prof-avg-wpm" class="text-3xl font-bold text-ink mt-1">0</div>
+          <span class="text-[10px] text-mute mt-1 block">Career average</span>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+          <span class="text-[11px] text-mute uppercase">Accuracy</span>
+          <div id="prof-avg-acc" class="text-3xl font-bold text-link mt-1">100%</div>
+          <span class="text-[10px] text-mute mt-1 block">Keystroke precision</span>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+          <span class="text-[11px] text-mute uppercase">Games Completed</span>
+          <div id="prof-games-played" class="text-3xl font-bold text-warning mt-1">0</div>
+          <span class="text-[10px] text-mute mt-1 block">Sessions recorded</span>
+        </div>
+      </div>
+
+      <!-- 20+ Unlockable Achievements Grid -->
+      <div class="mb-12 rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2">
+        <div class="flex items-center justify-between border-b border-hairline pb-4 mb-6">
+          <div>
+            <h3 class="text-lg font-bold text-ink">Prestige Achievements</h3>
+            <p class="text-xs text-body mt-0.5">Unlock milestone badges by excelling in games and tests.</p>
+          </div>
+          <span id="prof-ach-count" class="text-xs font-mono font-bold text-link">0 / 20 UNLOCKED</span>
+        </div>
+
+        <div id="achievements-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Populated dynamically via JS from storage.ts -->
+        </div>
+      </div>
+
+      <!-- Game Records & High Scores Table -->
+      <div class="rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 overflow-hidden">
+        <h3 class="text-lg font-bold text-ink mb-2">High Scores Per Game</h3>
+        <p class="text-xs text-body mb-6">Your local telemetry records across all 21 games.</p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left font-mono text-xs">
+            <thead>
+              <tr class="border-b border-hairline text-mute uppercase text-[10px]">
+                <th class="pb-3">Game Title</th>
+                <th class="pb-3">Genre</th>
+                <th class="pb-3">Highest Score</th>
+                <th class="pb-3">Best WPM</th>
+                <th class="pb-3">Accuracy</th>
+                <th class="pb-3">Level Reached</th>
+                <th class="pb-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="game-scores-tbody" class="divide-y divide-hairline">
+              {ALL_GAMES.map(game => (
+                <tr class="hover:bg-canvas-soft transition-colors" data-game-row={game.id}>
+                  <td class="py-3.5 font-semibold text-ink flex items-center gap-2">
+                    <span>{game.icon}</span>
+                    <span>{game.title}</span>
+                  </td>
+                  <td class="py-3.5 text-mute">{game.categoryName}</td>
+                  <td class="py-3.5 font-bold text-ink score-cell">0</td>
+                  <td class="py-3.5 text-success font-bold wpm-cell">0</td>
+                  <td class="py-3.5 acc-cell">100%</td>
+                  <td class="py-3.5 lvl-cell">Level 1</td>
+                  <td class="py-3.5 text-right">
+                    <a
+                      href={`/game/${game.id}`}
+                      class="rounded-full bg-canvas-soft border border-hairline px-3 py-1 text-[11px] font-medium text-ink hover:bg-ink hover:text-on-primary transition"
+                    >
+                      Play
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { storage } from '../lib/storage';
+
+  function renderLeaderboards() {
+    const profile = storage.getProfile();
+
+    // Fill profile stats
+    const bestWpmEl = document.getElementById('prof-best-wpm');
+    const avgWpmEl = document.getElementById('prof-avg-wpm');
+    const avgAccEl = document.getElementById('prof-avg-acc');
+    const gamesPlayedEl = document.getElementById('prof-games-played');
+    const achCountEl = document.getElementById('prof-ach-count');
+
+    if (bestWpmEl) bestWpmEl.textContent = `${profile.bestWPM}`;
+    if (avgWpmEl) avgWpmEl.textContent = `${profile.averageWPM}`;
+    if (avgAccEl) avgAccEl.textContent = `${profile.averageAccuracy}%`;
+    if (gamesPlayedEl) gamesPlayedEl.textContent = `${profile.totalGamesPlayed}`;
+
+    // Fill Achievements
+    const achGrid = document.getElementById('achievements-grid');
+    if (achGrid) {
+      achGrid.innerHTML = '';
+      let unlockedCount = 0;
+
+      Object.values(profile.achievements).forEach(ach => {
+        if (ach.unlocked) unlockedCount++;
+
+        const card = document.createElement('div');
+        card.className = `rounded-xl p-4 border transition-all ${
+          ach.unlocked
+            ? 'bg-canvas border-emerald-200 shadow-level-1'
+            : 'bg-canvas-soft border-hairline opacity-60'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-2xl">${ach.icon}</span>
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full ${
+              ach.unlocked ? 'bg-emerald-100 text-emerald-800' : 'bg-canvas-soft-2 text-mute'
+            }">
+              ${ach.unlocked ? 'UNLOCKED' : 'LOCKED'}
+            </span>
+          </div>
+          <h4 class="text-xs font-bold text-ink">${ach.title}</h4>
+          <p class="text-[11px] text-body mt-1 leading-snug">${ach.description}</p>
+        `;
+
+        achGrid.appendChild(card);
+      });
+
+      if (achCountEl) {
+        achCountEl.textContent = `${unlockedCount} / ${Object.keys(profile.achievements).length} UNLOCKED`;
+      }
+    }
+
+    // Fill Table rows
+    document.querySelectorAll('[data-game-row]').forEach(row => {
+      const gId = row.getAttribute('data-game-row');
+      if (gId && profile.gameRecords[gId]) {
+        const rec = profile.gameRecords[gId];
+        const scoreCell = row.querySelector('.score-cell');
+        const wpmCell = row.querySelector('.wpm-cell');
+        const accCell = row.querySelector('.acc-cell');
+        const lvlCell = row.querySelector('.lvl-cell');
+
+        if (scoreCell) scoreCell.textContent = rec.highScore.toLocaleString();
+        if (wpmCell) wpmCell.textContent = `${rec.highestWPM}`;
+        if (accCell) accCell.textContent = `${rec.highestAccuracy}%`;
+        if (lvlCell) lvlCell.textContent = `Level ${rec.unlockedLevel}`;
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderLeaderboards);
+  } else {
+    renderLeaderboards();
+  }
+  document.addEventListener('astro:page-load', renderLeaderboards);
+</script>

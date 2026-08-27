@@ -1,0 +1,122 @@
+---
+interface Props {
+  gameTitle: string;
+  gameId: string;
+}
+
+const { gameTitle, gameId } = Astro.props;
+---
+
+<div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-canvas p-4 shadow-level-2">
+  <!-- Game Info & Title -->
+  <div class="flex items-center gap-3">
+    <a
+      href="/"
+      class="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-canvas-soft text-body hover:text-ink shadow-level-1 transition"
+      title="Return to Game Zone"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    </a>
+    <div>
+      <h2 class="text-base font-semibold tracking-tight text-ink">{gameTitle}</h2>
+      <div class="flex items-center gap-2 text-xs font-mono text-mute">
+        <span id="hud-level-tag">LEVEL 1</span>
+        <span>•</span>
+        <span id="hud-time-tag">00:00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Stats Dashboard -->
+  <div class="flex items-center gap-4 sm:gap-6 font-mono text-xs">
+    <!-- Score -->
+    <div class="flex flex-col items-center sm:items-start">
+      <span class="text-[10px] text-mute uppercase">Score</span>
+      <span id="hud-score" class="text-sm font-bold text-ink">0</span>
+    </div>
+
+    <!-- WPM -->
+    <div class="flex flex-col items-center sm:items-start">
+      <span class="text-[10px] text-mute uppercase">Net WPM</span>
+      <span id="hud-wpm" class="text-sm font-bold text-success">0</span>
+    </div>
+
+    <!-- Accuracy -->
+    <div class="flex flex-col items-center sm:items-start">
+      <span class="text-[10px] text-mute uppercase">Accuracy</span>
+      <span id="hud-accuracy" class="text-sm font-bold text-ink">100%</span>
+    </div>
+
+    <!-- Streak -->
+    <div class="flex flex-col items-center sm:items-start">
+      <span class="text-[10px] text-mute uppercase">Streak</span>
+      <div class="flex items-center gap-1 text-sm font-bold text-warning">
+        <span>🔥</span>
+        <span id="hud-streak">0</span>
+      </div>
+    </div>
+
+    <!-- Health Shield -->
+    <div class="hidden md:flex flex-col items-start w-28">
+      <div class="flex w-full justify-between text-[10px] text-mute uppercase mb-0.5">
+        <span>Shield</span>
+        <span id="hud-health-pct">100%</span>
+      </div>
+      <div class="h-2 w-full rounded-full bg-canvas-soft-2 border border-hairline overflow-hidden">
+        <div id="hud-health-bar" class="h-full bg-emerald-500 transition-all duration-300 w-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls (Level Select, Pause, Restart, Sound Quick Toggle) -->
+  <div class="flex items-center gap-2">
+    <!-- Sound Quick Cycle Button -->
+    <button
+      id="hud-sound-toggle"
+      class="hidden sm:flex items-center gap-1.5 rounded-lg border border-hairline bg-canvas-soft px-2.5 py-1.5 text-xs font-mono text-body hover:text-ink shadow-level-1 transition cursor-pointer"
+      title="Click to cycle switch sounds"
+    >
+      <span id="hud-sound-icon">🔊</span>
+      <span id="hud-sound-name" class="text-[11px]">Clicky</span>
+    </button>
+
+    <!-- Level Selector -->
+    <div class="flex items-center gap-1 bg-canvas-soft p-1 rounded-lg border border-hairline text-xs font-mono">
+      <span class="text-[10px] text-mute px-1">LVL:</span>
+      {[1, 2, 3, 4, 5].map(lvl => (
+        <button
+          data-lvl-btn={lvl}
+          class={`lvl-select-btn flex h-6 w-6 items-center justify-center rounded text-xs font-bold transition cursor-pointer ${
+            lvl === 1 ? 'bg-ink text-on-primary' : 'text-body hover:bg-canvas'
+          }`}
+        >
+          {lvl}
+        </button>
+      ))}
+    </div>
+
+    <!-- Pause Button -->
+    <button
+      id="hud-pause-btn"
+      class="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-canvas text-body hover:text-ink shadow-level-1 transition cursor-pointer"
+      title="Pause / Resume"
+    >
+      <svg id="hud-pause-icon" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </button>
+
+    <!-- Restart Button -->
+    <button
+      id="hud-restart-btn"
+      class="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-canvas text-body hover:text-ink shadow-level-1 transition cursor-pointer"
+      title="Restart Level"
+    >
+      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+    </button>
+  </div>
+</div>

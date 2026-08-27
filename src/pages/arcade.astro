@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GameCard from '../components/GameCard.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+
+// Filter Arcade, Action, and Fighting games
+const arcadeGames = ALL_GAMES.filter(g => ['arcade', 'action', 'fighting'].includes(g.category));
+---
+
+<Layout
+  title="Retro Arcade Lounge — 2D Typing Action & Defense Games | Typing Game Zone"
+  description="Step into the Retro Arcade Lounge! Play 2D space invaders, alien defense, katana ninja slicing, and martial arts fighter typing games."
+>
+  <div class="bg-[#0b0c10] text-white min-h-screen py-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Retro Arcade Header Banner -->
+      <div class="relative overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-950 p-8 sm:p-12 mb-12 shadow-level-5 scanline-effect">
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 rounded-full bg-neutral-900 border border-neutral-700 px-3 py-1 text-xs font-mono text-cyan mb-4">
+            <span class="animate-ping h-2 w-2 rounded-full bg-cyan inline-block"></span>
+            <span>COIN-OP READY • INSERT 100 WPM TO PLAY</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+            The Retro <span class="text-gradient-preview">Arcade Lounge.</span>
+          </h1>
+          <p class="mt-4 text-sm sm:text-base text-neutral-400 leading-relaxed">
+            Classic 8-bit space invaders, planetary orbital defenses, neon ninja blades, and Hadoken brawlers. Grab your keyboard and dominate the arcade high-score table.
+          </p>
+
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href="/game/retro-invaders"
+              class="inline-flex items-center gap-2 rounded-full bg-cyan px-6 py-2.5 text-xs font-bold text-black shadow-level-2 transition hover:opacity-90 active:scale-95"
+            >
+              <span>Launch Retro Invaders</span>
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+            <a
+              href="/game/street-fighter"
+              class="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-900 px-5 py-2.5 text-xs font-bold text-white transition hover:bg-neutral-800 active:scale-95"
+            >
+              <span>Street Fighter Typer 🥊</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arcade Games Grid -->
+      <div class="mb-8 flex items-center justify-between border-b border-neutral-800 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-white">Arcade, Combat & Defense Titles ({arcadeGames.length})</h2>
+          <p class="text-xs text-neutral-400 mt-0.5">High intensity typing games with multi-phase bosses.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-ink">
+        {arcadeGames.map(game => (
+          <GameCard game={game} />
+        ))}
+      </div>
+
+    </div>
+  </div>
+</Layout>

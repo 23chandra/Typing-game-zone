@@ -1,0 +1,80 @@
+---
+import type { GameMetadata } from '../lib/games/gameRegistry';
+
+interface Props {
+  game: GameMetadata;
+}
+
+const { game } = Astro.props;
+---
+
+<div
+  class="group relative flex flex-col justify-between rounded-xl border border-hairline bg-canvas p-6 shadow-level-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-level-4"
+  data-category={game.category}
+  data-title={game.title.toLowerCase()}
+>
+  <!-- Card Header -->
+  <div>
+    <div class="flex items-center justify-between gap-2 mb-4">
+      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-canvas-soft text-2xl shadow-level-1 border border-hairline group-hover:scale-110 transition-transform duration-300">
+        {game.icon}
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="rounded-full bg-canvas-soft px-2.5 py-1 text-[11px] font-mono font-medium text-body border border-hairline">
+          {game.categoryName}
+        </span>
+        <span class={`rounded-full px-2.5 py-1 text-[11px] font-mono font-medium border ${
+          game.difficulty === 'Beginner' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+          game.difficulty === 'Intermediate' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+          game.difficulty === 'Advanced' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+          'bg-rose-50 text-rose-700 border-rose-200'
+        }`}>
+          {game.difficulty}
+        </span>
+      </div>
+    </div>
+
+    <!-- Title & Description -->
+    <h3 class="text-lg font-semibold tracking-tight text-ink group-hover:text-link transition-colors">
+      {game.title}
+    </h3>
+    <p class="mt-2 text-xs text-body line-clamp-2 leading-relaxed">
+      {game.description}
+    </p>
+
+    <!-- Tags -->
+    <div class="mt-4 flex flex-wrap gap-1.5">
+      {game.tags.map(tag => (
+        <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">
+          #{tag}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- Card Footer -->
+  <div class="mt-6 flex items-center justify-between border-t border-hairline pt-4">
+    <!-- 5 Levels Indicator -->
+    <div class="flex items-center gap-1" title="5 Progressive Levels">
+      <span class="text-[10px] font-mono text-mute uppercase mr-1">LVL</span>
+      <div class="flex gap-1">
+        {[1, 2, 3, 4, 5].map(lvl => (
+          <span class="flex h-4 w-4 items-center justify-center rounded-sm bg-canvas-soft text-[9px] font-mono font-bold text-body border border-hairline">
+            {lvl}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Play Pill Button -->
+    <a
+      href={`/game/${game.id}`}
+      class="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-medium text-on-primary shadow-level-1 transition hover:opacity-90 active:scale-95"
+    >
+      <span>Play</span>
+      <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </a>
+  </div>
+</div>
