@@ -207,15 +207,38 @@ const totalGames = ALL_GAMES.length;
   </section>
 
   <!-- 4. Speed Test Lab Showcase -->
-  <section class="py-16 sm:py-24 bg-canvas border-b border-hairline">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <section class="py-16 sm:py-24 bg-canvas-soft/80 border-b border-hairline relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,112,243,0.06),rgba(255,255,255,0))] pointer-events-none"></div>
+    
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- Section Header -->
       <div class="text-center max-w-3xl mx-auto mb-10">
-        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Benchmark Your Speed</span>
-        <h2 class="text-3xl font-bold tracking-tight text-ink mt-1">Live Speed Test Bench</h2>
-        <p class="text-sm text-body mt-2">Test your raw WPM and accuracy across timed bursts, words, famous quotes, and code syntax.</p>
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-body shadow-level-1 backdrop-blur mb-3">
+          <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
+          <span class="text-ink font-semibold">Live Speed Benchmark Suite</span>
+          <span class="text-mute">•</span>
+          <span>Millisecond Latency</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+          Live Speed Test Bench.
+        </h2>
+        <p class="text-sm text-body mt-2 leading-relaxed">
+          Accurately measure your Words Per Minute (WPM), typing cadence consistency, and keystroke precision across timed bursts, word quotas, quotes, and code syntax drills.
+        </p>
+
+        <!-- Speed Tier Mini Badges -->
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-2 font-mono text-[11px]">
+          <span class="rounded-full bg-canvas border border-hairline px-2.5 py-1 text-mute">🌱 Novice: 0–35 WPM</span>
+          <span class="rounded-full bg-canvas border border-hairline px-2.5 py-1 text-body">🎯 Average: 40–55 WPM</span>
+          <span class="rounded-full bg-canvas border border-hairline px-2.5 py-1 text-link font-semibold">⚡ Pro: 60–85 WPM</span>
+          <span class="rounded-full bg-canvas border border-amber-500/30 px-2.5 py-1 text-amber-500 font-bold">👑 Titan: 100+ WPM</span>
+        </div>
       </div>
 
+      <!-- Main Widget Component -->
       <SpeedTestWidget />
+      
     </div>
   </section>
 </Layout>
