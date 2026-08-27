@@ -46,21 +46,25 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         <span>⚡</span>
         <span>N-Grams</span>
       </button>
-      <button type="button" data-drill="pinkyDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #f43f5e;">
+      <button type="button" data-drill="pinkyDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);">
         <span>🌸</span>
         <span>Pinky</span>
       </button>
-      <button type="button" data-drill="ringDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #a855f7;">
+      <button type="button" data-drill="ringDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 45%, var(--mt-sub, #646669));">
         <span>🔮</span>
         <span>Ring</span>
       </button>
-      <button type="button" data-drill="middleDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #3b82f6;">
+      <button type="button" data-drill="middleDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 75%, var(--mt-text, #d1d0c5));">
         <span>💎</span>
         <span>Middle</span>
       </button>
-      <button type="button" data-drill="indexDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: #10b981;">
+      <button type="button" data-drill="indexDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: var(--mt-main, #10b981);">
         <span>🌿</span>
         <span>Index</span>
+      </button>
+      <button type="button" data-drill="thumbDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: var(--mt-caret, var(--mt-main, #e2b714));">
+        <span>⚡</span>
+        <span>Thumbs</span>
       </button>
       <button type="button" data-drill="custom" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
         <span>✏️</span>
@@ -281,55 +285,79 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     <!-- Top Legend & Appearance Controls Bar -->
     <div class="flex flex-wrap items-center justify-between gap-3 text-[11px] mb-5 pb-3 border-b border-hairline min-w-[620px] sm:min-w-0">
       
-      <!-- Left: Title & Mode Toggle -->
-      <div class="flex items-center gap-2.5">
-        <span class="font-bold uppercase tracking-wider text-xs" style="color: var(--mt-text, #d1d0c5);">Mechanical Keyboard</span>
-        
-        <!-- Mode Switcher Pill (Theme vs Quadrant) -->
-        <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, #323437);">
+      <!-- Top Left: Title & 5 Quadrant Filter Chips (100% Theme Dynamic) -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+        <span class="font-bold uppercase tracking-wider text-xs" style="color: var(--mt-text, #d1d0c5);">⌨️ Keyboard Focus:</span>
+
+        <div class="flex items-center gap-1.5 sm:gap-2" id="prac-quad-filters-wrapper">
           <button
             type="button"
-            id="prac-mode-theme-btn"
-            class="prac-style-toggle active px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
-            style="background-color: var(--mt-main, #e2b714); color: var(--site-on-primary, var(--mt-bg, #323437));"
-            title="Keys 100% styled to match website theme"
+            data-filter-quadrant="pinkyDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%); color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);"
           >
-            🎨 Theme Match
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);"></span>
+            <span>Pinky</span>
           </button>
           <button
             type="button"
-            id="prac-mode-quad-btn"
-            class="prac-style-toggle px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer opacity-70 hover:opacity-100"
-            style="color: var(--mt-text, #d1d0c5);"
-            title="Keys show color-coded finger quadrants"
+            data-filter-quadrant="ringDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%); color: color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%);"
           >
-            🌈 Quadrants
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%);"></span>
+            <span>Ring</span>
+          </button>
+          <button
+            type="button"
+            data-filter-quadrant="middleDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%); color: color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%);"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%);"></span>
+            <span>Middle</span>
+          </button>
+          <button
+            type="button"
+            data-filter-quadrant="indexDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid var(--mt-main, #e2b714); color: var(--mt-main, #e2b714);"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: var(--mt-main, #e2b714);"></span>
+            <span>Index</span>
+          </button>
+          <button
+            type="button"
+            data-filter-quadrant="thumbDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid var(--mt-caret, var(--mt-main, #e2b714)); color: var(--mt-caret, var(--mt-main, #e2b714));"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: var(--mt-caret, var(--mt-main, #e2b714));"></span>
+            <span>Thumbs</span>
           </button>
         </div>
       </div>
       
-      <!-- Right: Clickable Quadrant Filter Chips -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
-        <button type="button" data-filter-quadrant="pinkyDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #f43f5e; color: #f43f5e;">
-          <span class="h-2 w-2 rounded-full" style="background-color: #f43f5e;"></span>
-          <span>Pinky</span>
+      <!-- Top Right: Appearance Mode Switcher Pill -->
+      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline);">
+        <button
+          type="button"
+          id="prac-mode-theme-btn"
+          class="prac-style-toggle active px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
+          style="background-color: var(--mt-main, #e2b714); color: var(--site-on-primary, var(--mt-bg, #323437));"
+          title="Keys 100% styled to match website theme"
+        >
+          🎨 Theme Match
         </button>
-        <button type="button" data-filter-quadrant="ringDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #a855f7; color: #a855f7;">
-          <span class="h-2 w-2 rounded-full" style="background-color: #a855f7;"></span>
-          <span>Ring</span>
+        <button
+          type="button"
+          id="prac-mode-quad-btn"
+          class="prac-style-toggle px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer opacity-70 hover:opacity-100"
+          style="color: var(--mt-text, #d1d0c5);"
+          title="Keys show color-coded finger quadrants"
+        >
+          🌈 Quadrants
         </button>
-        <button type="button" data-filter-quadrant="middleDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #3b82f6; color: #3b82f6;">
-          <span class="h-2 w-2 rounded-full" style="background-color: #3b82f6;"></span>
-          <span>Middle</span>
-        </button>
-        <button type="button" data-filter-quadrant="indexDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #10b981; color: #10b981;">
-          <span class="h-2 w-2 rounded-full" style="background-color: #10b981;"></span>
-          <span>Index</span>
-        </button>
-        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #eab308; color: #eab308;">
-          <span class="h-2 w-2 rounded-full" style="background-color: #eab308;"></span>
-          <span>Thumbs</span>
-        </div>
       </div>
     </div>
 
@@ -1190,8 +1218,9 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       });
     });
 
-    // Function to activate a drill tab button
+    // Function to activate a drill tab button & sync quadrant filter chips
     function activateDrillButton(drillName: string) {
+      // 1. Update top category bar buttons
       catBtns.forEach(b => {
         b.classList.remove('active');
         (b as HTMLElement).style.backgroundColor = 'transparent';
@@ -1205,6 +1234,49 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         matchBtn.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
         matchBtn.classList.remove('opacity-75');
       }
+
+      // 2. Synchronize the 5 keyboard quadrant filter chips
+      root.querySelectorAll('.prac-quad-filter').forEach(qf => {
+        const qEl = qf as HTMLElement;
+        const qDrill = qEl.getAttribute('data-filter-quadrant');
+        const isMatch = qDrill === drillName;
+        const dot = qEl.querySelector('.dot-indicator') as HTMLElement | null;
+
+        if (isMatch) {
+          qEl.style.backgroundColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+          qEl.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+          qEl.style.borderColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+          qEl.style.boxShadow = '0 0 14px 2px var(--mt-main, #e2b714)';
+          if (dot) dot.style.backgroundColor = 'var(--site-on-primary, var(--mt-bg, #323437))';
+        } else {
+          qEl.style.backgroundColor = 'var(--mt-bg, #323437)';
+          qEl.style.color = 'var(--mt-text, #d1d0c5)';
+          qEl.style.borderColor = 'var(--site-hairline)';
+          qEl.style.boxShadow = 'none';
+
+          if (qDrill === 'pinkyDrills') {
+            qEl.style.borderLeft = '3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%)';
+            qEl.style.color = 'color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%)';
+            if (dot) dot.style.backgroundColor = 'color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%)';
+          } else if (qDrill === 'ringDrills') {
+            qEl.style.borderLeft = '3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%)';
+            qEl.style.color = 'color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%)';
+            if (dot) dot.style.backgroundColor = 'color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%)';
+          } else if (qDrill === 'middleDrills') {
+            qEl.style.borderLeft = '3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%)';
+            qEl.style.color = 'color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%)';
+            if (dot) dot.style.backgroundColor = 'color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%)';
+          } else if (qDrill === 'indexDrills') {
+            qEl.style.borderLeft = '3.5px solid var(--mt-main, #e2b714)';
+            qEl.style.color = 'var(--mt-main, #e2b714)';
+            if (dot) dot.style.backgroundColor = 'var(--mt-main, #e2b714)';
+          } else if (qDrill === 'thumbDrills') {
+            qEl.style.borderLeft = '3.5px solid var(--mt-caret, var(--mt-main, #e2b714))';
+            qEl.style.color = 'var(--mt-caret, var(--mt-main, #e2b714))';
+            if (dot) dot.style.backgroundColor = 'var(--mt-caret, var(--mt-main, #e2b714))';
+          }
+        }
+      });
     }
 
     // Drill Category Buttons
@@ -1285,7 +1357,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       inputEl.focus();
     });
     nextDrillBtn?.addEventListener('click', () => {
-      const order = ['homeRow', 'topRow', 'bottomRow', 'numberRow', 'symbols', 'pangrams', 'ngrams', 'pinkyDrills', 'ringDrills', 'middleDrills', 'indexDrills'];
+      const order = ['homeRow', 'topRow', 'bottomRow', 'numberRow', 'symbols', 'pangrams', 'ngrams', 'pinkyDrills', 'ringDrills', 'middleDrills', 'indexDrills', 'thumbDrills'];
       const nextIdx = (order.indexOf(currentDrillType) + 1) % order.length;
       const nextType = order[nextIdx];
       currentDrillType = nextType;

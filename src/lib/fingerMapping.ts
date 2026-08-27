@@ -20,36 +20,36 @@ export interface FingerQuadrantInfo {
   isAnchor?: boolean;
 }
 
-// Unified Quadrant Design System Colors
+// Unified Quadrant Design System Colors (Dynamically synchronizes with active website theme)
 export const QUADRANT_COLORS = {
   pinky: {
-    primary: '#f43f5e', // Rose 500
-    tint: 'rgba(244, 63, 94, 0.14)',
-    border: 'rgba(244, 63, 94, 0.35)',
+    primary: 'color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%)',
+    tint: 'color-mix(in srgb, var(--mt-main, #e2b714) 14%, transparent)',
+    border: 'color-mix(in srgb, var(--mt-main, #e2b714) 40%, transparent)',
     name: 'Pinky Quadrant'
   },
   ring: {
-    primary: '#a855f7', // Purple 500
-    tint: 'rgba(168, 85, 247, 0.14)',
-    border: 'rgba(168, 85, 247, 0.35)',
+    primary: 'color-mix(in srgb, var(--mt-main, #e2b714) 45%, var(--mt-sub, #646669))',
+    tint: 'color-mix(in srgb, var(--mt-main, #e2b714) 14%, transparent)',
+    border: 'color-mix(in srgb, var(--mt-main, #e2b714) 40%, transparent)',
     name: 'Ring Quadrant'
   },
   middle: {
-    primary: '#3b82f6', // Blue 500
-    tint: 'rgba(59, 130, 246, 0.14)',
-    border: 'rgba(59, 130, 246, 0.35)',
+    primary: 'color-mix(in srgb, var(--mt-main, #e2b714) 75%, var(--mt-text, #d1d0c5))',
+    tint: 'color-mix(in srgb, var(--mt-main, #e2b714) 18%, transparent)',
+    border: 'color-mix(in srgb, var(--mt-main, #e2b714) 45%, transparent)',
     name: 'Middle Quadrant'
   },
   index: {
-    primary: '#10b981', // Emerald 500
-    tint: 'rgba(16, 185, 129, 0.14)',
-    border: 'rgba(16, 185, 129, 0.35)',
+    primary: 'var(--mt-main, #e2b714)',
+    tint: 'color-mix(in srgb, var(--mt-main, #e2b714) 22%, transparent)',
+    border: 'color-mix(in srgb, var(--mt-main, #e2b714) 55%, transparent)',
     name: 'Index Quadrant'
   },
   thumb: {
-    primary: '#eab308', // Amber 500
-    tint: 'rgba(234, 179, 8, 0.14)',
-    border: 'rgba(234, 179, 8, 0.35)',
+    primary: 'var(--mt-caret, var(--mt-main, #e2b714))',
+    tint: 'color-mix(in srgb, var(--mt-main, #e2b714) 14%, transparent)',
+    border: 'color-mix(in srgb, var(--mt-main, #e2b714) 40%, transparent)',
     name: 'Thumb Zone'
   }
 } as const;

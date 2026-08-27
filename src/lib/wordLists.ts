@@ -331,7 +331,8 @@ export const WORD_LISTS = {
     pinkyDrills: ['aqua', 'quiz', 'paza', 'apex', 'zero', 'lazy', 'zaps', 'quip', 'park', 'past', 'plus', 'plan', 'post', 'path', 'page'],
     ringDrills: ['slow', 'work', 'soul', 'walk', 'silk', 'look', 'solo', 'wall', 'wool', 'laws', 'lows', 'wolf', 'word', 'wood', 'wild'],
     middleDrills: ['deck', 'dive', 'edit', 'cite', 'kite', 'kick', 'like', 'dice', 'cake', 'mile', 'idea', 'epic', 'item', 'time', 'date'],
-    indexDrills: ['turn', 'burn', 'from', 'hero', 'jump', 'grab', 'hunt', 'farm', 'yard', 'vibe', 'next', 'math', 'road', 'huge', 'ring']
+    indexDrills: ['turn', 'burn', 'from', 'hero', 'jump', 'grab', 'hunt', 'farm', 'yard', 'vibe', 'next', 'math', 'road', 'huge', 'ring'],
+    thumbDrills: ['a', 'the', 'to', 'in', 'is', 'you', 'that', 'it', 'he', 'was', 'for', 'on', 'are', 'as', 'with', 'his', 'they', 'at', 'be', 'this']
   }
 };
 
