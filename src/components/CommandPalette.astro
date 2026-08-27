@@ -203,7 +203,11 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
     function openPalette() {
       palette.classList.remove('hidden');
       renderList(searchInput?.value || '');
-      searchInput?.focus();
+      try {
+        searchInput?.focus({ preventScroll: true });
+      } catch {
+        searchInput?.focus();
+      }
     }
 
     function closePalette() {

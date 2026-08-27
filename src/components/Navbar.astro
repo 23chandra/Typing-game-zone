@@ -27,7 +27,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     <!-- Desktop Nav Links -->
     <nav class="hidden md:flex items-center gap-1 rounded-full border border-hairline bg-canvas-soft px-3 py-1 text-xs font-medium shadow-level-1">
-      <a href="/" class="rounded-full px-3 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas">Games (21)</a>
+      <a href="/#games-section" class="rounded-full px-3 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas">Games (21)</a>
       <a href="/arcade" class="rounded-full px-3 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas">Arcade Lounge</a>
       <a href="/speed-test" class="rounded-full px-3 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas">Speed Test</a>
       <a href="/practice" class="rounded-full px-3 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas">Practice Lab</a>
@@ -193,7 +193,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
   <!-- Mobile Dropdown Navigation -->
   <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-3 md:hidden font-mono text-xs">
     <div class="flex flex-col gap-1.5 font-medium mb-3">
-      <a href="/" class="rounded-xl px-3 py-2 text-body hover:bg-canvas-soft hover:text-ink">🎮 All Games (21)</a>
+      <a href="/#games-section" class="rounded-xl px-3 py-2 text-body hover:bg-canvas-soft hover:text-ink">🎮 All Games (21)</a>
       <a href="/arcade" class="rounded-xl px-3 py-2 text-body hover:bg-canvas-soft hover:text-ink">🕹️ Arcade Lounge</a>
       <a href="/speed-test" class="rounded-xl px-3 py-2 text-body hover:bg-canvas-soft hover:text-ink">⚡ Speed Test</a>
       <a href="/practice" class="rounded-xl px-3 py-2 text-body hover:bg-canvas-soft hover:text-ink">⌨️ Practice Lab</a>
@@ -337,7 +337,11 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       soundMenu?.classList.add('hidden');
       themeMenu?.classList.toggle('hidden');
       if (!themeMenu?.classList.contains('hidden')) {
-        themeSearch?.focus();
+        try {
+          themeSearch?.focus({ preventScroll: true });
+        } catch {
+          themeSearch?.focus();
+        }
       }
     });
 

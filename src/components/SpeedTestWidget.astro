@@ -849,6 +849,15 @@
     }
     updateCaretAppearance();
 
+    // Helper to safely focus input without jumping/scrolling the window
+    const focusInputSafely = () => {
+      try {
+        inputEl?.focus({ preventScroll: true });
+      } catch {
+        inputEl?.focus();
+      }
+    };
+
     // 6. Sound Switcher Sync
     const updateSoundUI = () => {
       const cur = soundEngine.getSwitch();
@@ -938,7 +947,9 @@
       renderWordsDOM();
       requestAnimationFrame(() => {
         positionCaret();
-        inputEl?.focus();
+        if (window.location.pathname.startsWith('/speed-test')) {
+          focusInputSafely();
+        }
       });
     }
 
@@ -1507,7 +1518,7 @@
     // 14. Focus Management & Single Input Dispatcher
     const onViewportClick = () => {
       soundEngine.initContext();
-      inputEl?.focus();
+      focusInputSafely();
       focusOverlay?.classList.add('hidden');
       positionCaret();
     };
@@ -1548,6 +1559,8 @@
 
     // Global Key Listener for Quick Focus / Command Palette / Tab Restart
     const onGlobalKeyDown = (e: KeyboardEvent) => {
+      const isSpeedTestPage = window.location.pathname.startsWith('/speed-test');
+
       // Don't intercept if user is typing in a modal textfield or search box
       const target = e.target as HTMLElement | null;
       if (target && target !== inputEl && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
@@ -1560,6 +1573,11 @@
         (customTextModal && !customTextModal.classList.contains('hidden')) ||
         (replayModal && !replayModal.classList.contains('hidden'))
       ) {
+        return;
+      }
+
+      // If on homepage and not focused in speed test, do not hijack global keys
+      if (!isSpeedTestPage && document.activeElement !== inputEl && !isTestRunning) {
         return;
       }
 
@@ -1580,7 +1598,7 @@
       if (e.key === 'Tab') {
         e.preventDefault();
         generateWords();
-        inputEl?.focus();
+        focusInputSafely();
         return;
       }
 
@@ -1595,7 +1613,7 @@
       if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Enter' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
         e.preventDefault();
         if (document.activeElement !== inputEl) {
-          inputEl?.focus();
+          focusInputSafely();
         }
         handleKey(e.key);
       }
@@ -1626,11 +1644,15 @@
         renderCommandList('');
         if (cmdSearch) {
           cmdSearch.value = '';
-          cmdSearch.focus();
+          try {
+            cmdSearch.focus({ preventScroll: true });
+          } catch {
+            cmdSearch.focus();
+          }
         }
       } else {
         cmdPalette.classList.add('hidden');
-        inputEl.focus();
+        focusInputSafely();
       }
     }
 
@@ -1806,7 +1828,7 @@
       }
 
       generateWords();
-      inputEl?.focus();
+      focusInputSafely();
     }
 
     function setTimeMode(seconds: number) {
@@ -1829,7 +1851,7 @@
         else if (pool === 'code') poolLabel.textContent = 'code';
       }
       generateWords();
-      inputEl?.focus();
+      focusInputSafely();
     }
 
     function setSound(sw: SwitchSoundType) {
@@ -1898,7 +1920,7 @@
           (btn as HTMLElement).style.color = 'var(--mt-main)';
           subOption = parseInt(btn.getAttribute('data-sub') || '30', 10);
           generateWords();
-          inputEl?.focus();
+          focusInputSafely();
         });
       });
 
@@ -1913,7 +1935,7 @@
           (btn as HTMLElement).style.color = 'var(--mt-main)';
           quoteLength = (btn.getAttribute('data-qlen') || 'all') as any;
           generateWords();
-          inputEl?.focus();
+          focusInputSafely();
         });
       });
 
@@ -1941,7 +1963,11 @@
         }
       }
       customModal.classList.remove('hidden');
-      customValInput?.focus();
+      try {
+        customValInput?.focus({ preventScroll: true });
+      } catch {
+        customValInput?.focus();
+      }
     }
 
     customCloseBtn?.addEventListener('click', () => customModal?.classList.add('hidden'));
@@ -1952,7 +1978,7 @@
         subOption = val;
         customModal?.classList.add('hidden');
         generateWords();
-        inputEl?.focus();
+        focusInputSafely();
       }
     });
 
@@ -1961,7 +1987,11 @@
       if (!customTextModal) return;
       if (customTextarea) customTextarea.value = customTextBuffer;
       customTextModal.classList.remove('hidden');
-      customTextarea?.focus();
+      try {
+        customTextarea?.focus({ preventScroll: true });
+      } catch {
+        customTextarea?.focus();
+      }
     }
 
     customTextCloseBtn?.addEventListener('click', () => customTextModal?.classList.add('hidden'));
@@ -2029,23 +2059,23 @@
     // Master Restart Button
     masterRestartBtn?.addEventListener('click', () => {
       generateWords();
-      inputEl.focus();
+      focusInputSafely();
     });
 
     // Restart Button
     restartBtn?.addEventListener('click', () => {
       generateWords();
-      inputEl.focus();
+      focusInputSafely();
     });
 
     // Result Screen Buttons
     resNextBtn?.addEventListener('click', () => {
       generateWords();
-      inputEl.focus();
+      focusInputSafely();
     });
     resRepeatBtn?.addEventListener('click', () => {
       generateWords();
-      inputEl.focus();
+      focusInputSafely();
     });
 
     // Practice Missed Words
@@ -2069,7 +2099,7 @@
 
       renderWordsDOM();
       requestAnimationFrame(() => positionCaret());
-      inputEl.focus();
+      focusInputSafely();
     });
 
     // Replay Modal Playback
@@ -2173,7 +2203,9 @@
     // Initial setup
     bindSubOptionButtons();
     generateWords();
-    inputEl?.focus();
+    if (window.location.pathname.startsWith('/speed-test')) {
+      focusInputSafely();
+    }
   }
 
   if (document.readyState === 'loading') {
