@@ -61,19 +61,47 @@
         <!-- Dropdown Menu -->
         <div
           id="mt-pool-menu"
-          class="absolute left-0 top-full mt-1 hidden min-w-40 rounded-xl p-1.5 shadow-xl z-50 border text-xs"
+          class="absolute left-0 top-full mt-1 hidden min-w-48 rounded-xl p-1.5 shadow-xl z-50 border text-xs"
           style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt);"
         >
           <button type="button" data-pool="english" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] active-pool">
-            <span>English 200</span>
+            <span>🇺🇸 English 200</span>
             <span class="check text-[var(--mt-main)]">✓</span>
           </button>
           <button type="button" data-pool="english1k" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
-            <span>English 1k</span>
+            <span>🇺🇸 English 1k</span>
             <span class="check text-[var(--mt-main)] hidden">✓</span>
           </button>
-          <button type="button" data-pool="code" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
-            <span>Code Snippets</span>
+          <button type="button" data-pool="hindi" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇳 हिन्दी (Hindi)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="spanish" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇪🇸 Español (Spanish)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="french" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇫🇷 Français (French)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="german" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇩🇪 Deutsch (German)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="japanese" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇯🇵 日本語 (Romaji)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="portuguese" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇧🇷 Português</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="russian" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇷🇺 Русский (Russian)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="code" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] border-t border-hairline mt-1">
+            <span>💻 Code Snippets</span>
             <span class="check text-[var(--mt-main)] hidden">✓</span>
           </button>
         </div>
@@ -782,7 +810,7 @@
     let mode: 'time' | 'words' | 'quote' | 'zen' | 'custom' = 'time';
     let subOption: number = 30; // default 30s
     let quoteLength: 'all' | 'short' | 'medium' | 'long' | 'thicc' = 'all';
-    let wordPool: 'english' | 'english1k' | 'code' = 'english';
+    let wordPool: string = 'english';
     let includePunc = false;
     let includeNum = false;
     let caretStyle: 'line' | 'block' | 'underline' | 'outline' | 'carrot' = (localStorage.getItem('monkeytype_caret') as any) || 'line';
@@ -1035,11 +1063,11 @@
         words = customTextBuffer.trim().split(/\s+/).filter(Boolean);
         if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
       } else if (mode === 'zen') {
-        words = generateMonkeytypeWordList(100, wordPool === 'english1k' ? 'english1k' : 'english', includePunc, includeNum);
+        words = generateMonkeytypeWordList(100, wordPool, includePunc, includeNum);
         if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
       } else {
         const count = mode === 'words' ? subOption : Math.max(120, subOption * 4);
-        words = generateMonkeytypeWordList(count, wordPool === 'english1k' ? 'english1k' : 'english', includePunc, includeNum);
+        words = generateMonkeytypeWordList(count, wordPool, includePunc, includeNum);
         if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
       }
 
@@ -1505,7 +1533,7 @@
 
           // Infinite Zen mode word append
           if (mode === 'zen' && currentWordIndex >= words.length - 10) {
-            const moreWords = generateMonkeytypeWordList(50, wordPool === 'english1k' ? 'english1k' : 'english', includePunc, includeNum);
+            const moreWords = generateMonkeytypeWordList(50, wordPool, includePunc, includeNum);
             words.push(...moreWords);
             moreWords.forEach(w => wordCharStates.push(new Array(w.length).fill(null)));
             moreWords.forEach((w, idx) => {
@@ -2000,13 +2028,39 @@
       switchMode('words');
     }
 
-    function setWordPool(pool: 'english' | 'english1k' | 'code') {
+    function setWordPool(pool: string) {
       wordPool = pool;
       if (poolLabel) {
-        if (pool === 'english') poolLabel.textContent = 'english 200';
-        else if (pool === 'english1k') poolLabel.textContent = 'english 1k';
-        else if (pool === 'code') poolLabel.textContent = 'code';
+        const poolLabels: Record<string, string> = {
+          english: 'english 200',
+          english1k: 'english 1k',
+          hindi: 'हिन्दी (hindi)',
+          spanish: 'español',
+          french: 'français',
+          german: 'deutsch',
+          japanese: '日本語 (romaji)',
+          portuguese: 'português',
+          russian: 'русский',
+          code: 'code'
+        };
+        poolLabel.textContent = poolLabels[pool] || pool;
       }
+
+      // Update checkmark in dropdown
+      document.querySelectorAll('.mt-pool-opt').forEach(opt => {
+        const p = opt.getAttribute('data-pool');
+        const check = opt.querySelector('.check');
+        if (check) {
+          if (p === pool) {
+            check.classList.remove('hidden');
+            opt.classList.add('active-pool', 'font-bold');
+          } else {
+            check.classList.add('hidden');
+            opt.classList.remove('active-pool', 'font-bold');
+          }
+        }
+      });
+
       generateWords();
       focusInputSafely();
     }
@@ -2356,6 +2410,27 @@
     const onResize = () => positionCaret();
     window.addEventListener('resize', onResize);
     activeCleanups.push(() => window.removeEventListener('resize', onResize));
+
+    // Global Language Change Sync
+    const onLangChange = (e: any) => {
+      const lang = e.detail?.lang;
+      if (lang && wordPool !== 'code') {
+        const langMap: Record<string, string> = {
+          en: 'english',
+          hi: 'hindi',
+          es: 'spanish',
+          fr: 'french',
+          de: 'german',
+          ja: 'japanese',
+          pt: 'portuguese',
+          ru: 'russian'
+        };
+        const targetPool = langMap[lang] || 'english';
+        setWordPool(targetPool);
+      }
+    };
+    window.addEventListener('typing:language-change', onLangChange);
+    activeCleanups.push(() => window.removeEventListener('typing:language-change', onLangChange));
 
     // Initial setup
     bindSubOptionButtons();

@@ -64,6 +64,7 @@
   import { MONKEYTYPE_THEMES, applyThemeGlobal } from '../lib/monkeytypeThemes';
   import { ALL_GAMES } from '../lib/games/gameRegistry';
   import { soundEngine } from '../lib/soundEngine';
+  import { SUPPORTED_LANGUAGES, setLanguage } from '../lib/i18n';
 
   interface PaletteCommand {
     id: string;
@@ -128,7 +129,17 @@
       { id: 'sound-typewriter', label: 'Switch Sound: Mechanical Typewriter Bell', category: 'sounds', icon: '📻', action: () => { soundEngine.setSwitch('typewriter'); soundEngine.initContext(); soundEngine.playKey(false, true); } },
       { id: 'sound-pop', label: 'Switch Sound: Bubble Pop', category: 'sounds', icon: '🫧', action: () => { soundEngine.setSwitch('pop'); soundEngine.initContext(); soundEngine.playKey(); } },
       { id: 'sound-beep', label: 'Switch Sound: 8-Bit Digital Beep', category: 'sounds', icon: '👾', action: () => { soundEngine.setSwitch('beep'); soundEngine.initContext(); soundEngine.playKey(); } },
-      { id: 'sound-off', label: 'Switch Sound: Mute Audio', category: 'sounds', icon: '🔇', action: () => { soundEngine.setSwitch('off'); } }
+      { id: 'sound-off', label: 'Switch Sound: Mute Audio', category: 'sounds', icon: '🔇', action: () => { soundEngine.setSwitch('off'); } },
+
+      // Languages (8 supported)
+      ...SUPPORTED_LANGUAGES.map(l => ({
+        id: `lang-${l.code}`,
+        label: `Switch Language: ${l.name} (${l.nativeName})`,
+        category: 'pages' as const,
+        icon: l.flag,
+        badge: l.code.toUpperCase(),
+        action: () => setLanguage(l.code)
+      }))
     ];
 
     function renderList(query = '') {

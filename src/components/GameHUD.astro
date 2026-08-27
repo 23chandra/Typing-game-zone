@@ -33,25 +33,25 @@ const { gameTitle, gameId } = Astro.props;
   <div class="flex items-center gap-4 sm:gap-6 font-mono text-xs">
     <!-- Score -->
     <div class="flex flex-col items-center sm:items-start">
-      <span class="text-[10px] text-mute uppercase">Score</span>
+      <span class="text-[10px] text-mute uppercase" data-i18n="game.score">Score</span>
       <span id="hud-score" class="text-sm font-bold text-ink">0</span>
     </div>
 
     <!-- WPM -->
     <div class="flex flex-col items-center sm:items-start">
-      <span class="text-[10px] text-mute uppercase">Net WPM</span>
+      <span class="text-[10px] text-mute uppercase" data-i18n="st.wpm">Net WPM</span>
       <span id="hud-wpm" class="text-sm font-bold text-success">0</span>
     </div>
 
     <!-- Accuracy -->
     <div class="flex flex-col items-center sm:items-start">
-      <span class="text-[10px] text-mute uppercase">Accuracy</span>
+      <span class="text-[10px] text-mute uppercase" data-i18n="st.acc">Accuracy</span>
       <span id="hud-accuracy" class="text-sm font-bold text-ink">100%</span>
     </div>
 
     <!-- Streak -->
     <div class="flex flex-col items-center sm:items-start">
-      <span class="text-[10px] text-mute uppercase">Streak</span>
+      <span class="text-[10px] text-mute uppercase" data-i18n="nav.activeStreak">Streak</span>
       <div class="flex items-center gap-1 text-sm font-bold text-warning">
         <span>🔥</span>
         <span id="hud-streak">0</span>
@@ -61,7 +61,7 @@ const { gameTitle, gameId } = Astro.props;
     <!-- Health Shield -->
     <div class="hidden md:flex flex-col items-start w-28">
       <div class="flex w-full justify-between text-[10px] text-mute uppercase mb-0.5">
-        <span>Shield</span>
+        <span data-i18n="game.health">Shield</span>
         <span id="hud-health-pct">100%</span>
       </div>
       <div class="h-2 w-full rounded-full bg-canvas-soft-2 border border-hairline overflow-hidden">

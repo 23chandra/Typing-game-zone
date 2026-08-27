@@ -153,6 +153,7 @@ const {
 <script>
   import { initGlobalTheme } from '../lib/monkeytypeThemes';
   import { soundEngine } from '../lib/soundEngine';
+  import { initI18n } from '../lib/i18n';
 
   // Global AudioContext unlocker on first user gesture
   const unlockAudioContext = () => {
@@ -170,12 +171,20 @@ const {
     if (e.key === 'monkeytype_theme') {
       initGlobalTheme();
     }
+    if (e.key === 'typing_game_zone_lang') {
+      initI18n();
+    }
   });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGlobalTheme);
-  } else {
+  function initApp() {
     initGlobalTheme();
+    initI18n();
   }
-  document.addEventListener('astro:page-load', initGlobalTheme);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
+  }
+  document.addEventListener('astro:page-load', initApp);
 </script>

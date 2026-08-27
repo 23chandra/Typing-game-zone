@@ -1,6 +1,7 @@
 ---
-// Footer following DESIGN.md 4-column specification with Monkeytype Themes bar
+// Footer following DESIGN.md 4-column specification with Monkeytype Themes & Language bar
 import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
+import { SUPPORTED_LANGUAGES } from '../lib/i18n';
 
 const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
 ---
@@ -8,35 +9,58 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
 <footer class="border-t border-hairline bg-canvas mt-auto select-none font-mono text-xs">
   <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
     
-    <!-- Quick Theme Switcher Bar in Footer -->
-    <div class="mb-10 rounded-2xl border border-hairline bg-canvas-soft p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="text-lg">🎨</span>
-        <div>
-          <span class="font-bold text-ink text-xs block">Quick Theme Switcher</span>
-          <span class="text-[10px] text-mute">Choose from 17 curated color themes</span>
+    <!-- Quick Theme & Language Selector Bar in Footer -->
+    <div class="mb-10 flex flex-col gap-4">
+      <!-- Theme Bar -->
+      <div class="rounded-2xl border border-hairline bg-canvas-soft p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🎨</span>
+          <div>
+            <span class="font-bold text-ink text-xs block" data-i18n="footer.quickTheme">Quick Theme Switcher</span>
+            <span class="text-[10px] text-mute" data-i18n="footer.themeSubtitle">Choose from 17 curated color themes</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5 justify-center">
+          {popularThemes.map(t => (
+            <button
+              type="button"
+              data-footer-theme={t.id}
+              class="footer-theme-btn flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1 text-[11px] font-bold text-body hover:text-ink hover:scale-105 transition cursor-pointer"
+              style={`border-left: 3px solid ${t.main};`}
+            >
+              <span>{t.name}</span>
+            </button>
+          ))}
+          <button
+            type="button"
+            id="footer-all-themes-btn"
+            class="flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold transition cursor-pointer hover:opacity-90"
+            style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+          >
+            <span data-i18n="footer.allThemes">All 17 Themes →</span>
+          </button>
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-1.5 justify-center">
-        {popularThemes.map(t => (
-          <button
-            type="button"
-            data-footer-theme={t.id}
-            class="footer-theme-btn flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1 text-[11px] font-bold text-body hover:text-ink hover:scale-105 transition cursor-pointer"
-            style={`border-left: 3px solid ${t.main};`}
-          >
-            <span>{t.name}</span>
-          </button>
-        ))}
-        <button
-          type="button"
-          id="footer-all-themes-btn"
-          class="flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold transition cursor-pointer hover:opacity-90"
-          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
-        >
-          <span>All 17 Themes →</span>
-        </button>
+      <!-- Language Bar -->
+      <div class="rounded-2xl border border-hairline bg-canvas-soft p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🌐</span>
+          <span class="font-bold text-ink text-xs">Language / भाषा:</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5 justify-center">
+          {SUPPORTED_LANGUAGES.map(lang => (
+            <button
+              type="button"
+              data-footer-lang={lang.code}
+              class="footer-lang-btn flex items-center gap-1 rounded-xl border border-hairline bg-canvas px-2.5 py-1 text-[11px] font-medium text-body hover:text-ink hover:bg-canvas-soft-2 transition cursor-pointer"
+            >
+              <span>{lang.flag}</span>
+              <span>{lang.nativeName}</span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
 
@@ -52,7 +76,7 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
           </div>
           <span class="text-sm font-semibold tracking-tight text-ink font-mono">Typing Game Zone</span>
         </div>
-        <p class="text-xs text-body leading-relaxed">
+        <p class="text-xs text-body leading-relaxed" data-i18n="hero.subtitle">
           The ultimate 2D typing game arcade & speed testing platform. Practice, compete, and master the keyboard.
         </p>
         <div class="flex items-center gap-2 mt-2 font-mono">
@@ -60,52 +84,52 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--site-primary, #e2b714);"></span>
             <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: var(--site-primary, #e2b714);"></span>
           </span>
-          <span class="text-[11px] text-mute uppercase">Systems Operational • 60 FPS</span>
+          <span class="text-[11px] text-mute uppercase" data-i18n="footer.operational">Systems Operational • 60 FPS</span>
         </div>
       </div>
 
       <!-- Column 2: Game Categories -->
       <div class="flex flex-col gap-3">
-        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Game Genres</span>
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute" data-i18n="footer.gameGenres">Game Genres</span>
         <ul class="flex flex-col gap-2 text-xs text-body">
-          <li><a href="/?cat=arcade" class="transition hover:text-ink">Arcade Shooters (4)</a></li>
-          <li><a href="/?cat=action" class="transition hover:text-ink">Action & Survival (5)</a></li>
-          <li><a href="/?cat=adventure" class="transition hover:text-ink">Adventure & Runner (4)</a></li>
-          <li><a href="/?cat=fighting" class="transition hover:text-ink">Fighting & Duels (4)</a></li>
-          <li><a href="/?cat=puzzle" class="transition hover:text-ink">Puzzle & Rhythm (3)</a></li>
-          <li><a href="/?cat=practice" class="transition hover:text-ink">Practice & Drills (1)</a></li>
+          <li><a href="/?cat=arcade" class="transition hover:text-ink" data-i18n="cat.arcade">Arcade (4)</a></li>
+          <li><a href="/?cat=action" class="transition hover:text-ink" data-i18n="cat.action">Action (5)</a></li>
+          <li><a href="/?cat=adventure" class="transition hover:text-ink" data-i18n="cat.adventure">Adventure (4)</a></li>
+          <li><a href="/?cat=fighting" class="transition hover:text-ink" data-i18n="cat.fighting">Fighting (4)</a></li>
+          <li><a href="/?cat=puzzle" class="transition hover:text-ink" data-i18n="cat.puzzle">Puzzle (3)</a></li>
+          <li><a href="/?cat=practice" class="transition hover:text-ink" data-i18n="cat.practice">Practice (1)</a></li>
         </ul>
       </div>
 
       <!-- Column 3: Tools & Practice -->
       <div class="flex flex-col gap-3">
-        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Practice & Tools</span>
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute" data-i18n="footer.practiceAndTools">Practice & Tools</span>
         <ul class="flex flex-col gap-2 text-xs text-body">
-          <li><a href="/speed-test" class="transition hover:text-ink">Typing Speed Benchmark</a></li>
-          <li><a href="/practice" class="transition hover:text-ink">Home Row Mastery</a></li>
+          <li><a href="/speed-test" class="transition hover:text-ink" data-i18n="nav.speedTest">Speed Test</a></li>
+          <li><a href="/practice" class="transition hover:text-ink" data-i18n="nav.practiceLab">Practice Lab</a></li>
           <li><a href="/game/key-master" class="transition hover:text-ink">3D Heatmap Keyboard</a></li>
-          <li><a href="/leaderboards" class="transition hover:text-ink">High Scores & Badges</a></li>
-          <li><a href="/arcade" class="transition hover:text-ink">Retro Arcade Lounge</a></li>
+          <li><a href="/leaderboards" class="transition hover:text-ink" data-i18n="nav.leaderboards">Leaderboards</a></li>
+          <li><a href="/arcade" class="transition hover:text-ink" data-i18n="nav.arcade">Arcade Lounge</a></li>
         </ul>
       </div>
 
       <!-- Column 4: Sound & Platform -->
       <div class="flex flex-col gap-3">
-        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Audio Synthesizer</span>
-        <p class="text-xs text-body leading-relaxed">
-          Real-time Web Audio synthesis simulates Cherry MX Blue clicks, Holy Panda thocks, Linear Reds, and mechanical typewriters with carriage return chimes.
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute" data-i18n="footer.audioSynthesizer">Audio Synthesizer</span>
+        <p class="text-xs text-body leading-relaxed" data-i18n="footer.audioDesc">
+          Real-time Web Audio synthesis simulates Cherry MX Blue clicks, Holy Panda thocks, Linear Reds, and mechanical typewriters.
         </p>
         <div class="flex items-center gap-1.5 mt-1 font-mono">
           <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">Web Audio API</span>
           <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">17 Themes</span>
-          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">Astro 7</span>
+          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">8 Languages</span>
         </div>
       </div>
     </div>
 
     <!-- Bottom Copyright & Domain -->
     <div class="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-hairline pt-6 text-xs text-mute font-mono">
-      <p>© {new Date().getFullYear()} Typing Game Zone (typinggamezone.com). All rights reserved.</p>
+      <p>© {new Date().getFullYear()} Typing Game Zone (typinggamezone.com). <span data-i18n="footer.rights">All rights reserved.</span></p>
       <p class="mt-2 sm:mt-0">Engineered with speed and precision.</p>
     </div>
   </div>
@@ -113,8 +137,9 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
 
 <script>
   import { getThemeById, applyThemeGlobal } from '../lib/monkeytypeThemes';
+  import { setLanguage, getCurrentLanguage } from '../lib/i18n';
 
-  function initFooterThemes() {
+  function initFooter() {
     document.querySelectorAll('.footer-theme-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const tId = btn.getAttribute('data-footer-theme');
@@ -125,18 +150,46 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
       });
     });
 
-    const allBtn = document.getElementById('footer-all-themes-btn');
-    allBtn?.addEventListener('click', () => {
-      if ((window as any).toggleGlobalCommandPalette) {
-        (window as any).toggleGlobalCommandPalette();
-      }
+    const allThemesBtn = document.getElementById('footer-all-themes-btn');
+    allThemesBtn?.addEventListener('click', () => {
+      const navThemeBtn = document.getElementById('nav-theme-btn');
+      navThemeBtn?.click();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    const updateFooterLangUI = (code?: string) => {
+      const cur = code || getCurrentLanguage();
+      document.querySelectorAll('.footer-lang-btn').forEach(btn => {
+        const lCode = btn.getAttribute('data-footer-lang');
+        if (lCode === cur) {
+          btn.classList.add('border-[var(--site-primary)]', 'font-bold', 'text-ink');
+        } else {
+          btn.classList.remove('border-[var(--site-primary)]', 'font-bold', 'text-ink');
+        }
+      });
+    };
+
+    document.querySelectorAll('.footer-lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lCode = btn.getAttribute('data-footer-lang');
+        if (lCode) {
+          setLanguage(lCode);
+          updateFooterLangUI(lCode);
+        }
+      });
+    });
+
+    window.addEventListener('typing:language-change', (e: any) => {
+      updateFooterLangUI(e.detail?.lang);
+    });
+
+    updateFooterLangUI();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initFooterThemes);
+    document.addEventListener('DOMContentLoaded', initFooter);
   } else {
-    initFooterThemes();
+    initFooter();
   }
-  document.addEventListener('astro:page-load', initFooterThemes);
+  document.addEventListener('astro:page-load', initFooter);
 </script>

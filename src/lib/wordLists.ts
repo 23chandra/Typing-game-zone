@@ -336,6 +336,98 @@ export const WORD_LISTS = {
   }
 };
 
+export const MONKEYTYPE_HINDI_200 = [
+  'aur', 'hai', 'ki', 'ke', 'ka', 'mein', 'ko', 'se', 'yeh', 'bhi',
+  'tha', 'kuch', 'karte', 'nahi', 'toh', 'par', 'aap', 'hum', 'woh', 'kar',
+  'rahe', 'kya', 'apne', 'saath', 'baad', 'hoga', 'lekin', 'sab', 'agar', 'jab',
+  'phir', 'hota', 'paas', 'hume', 'diya', 'baat', 'karte', 'log', 'karte', 'liye',
+  'accha', 'pehla', 'samay', 'din', 'naam', 'kam', 'zyada', 'duniya', 'ghar', 'kam',
+  'shuru', 'bana', 'badi', 'chota', 'dekh', 'naya', 'purana', 'desh', 'shahar', 'pyaar',
+  'raasta', 'soch', 'jeevan', 'dost', 'aaj', 'kal', 'suno', 'padho', 'likho', 'seekho',
+  'paani', 'roshni', 'hawa', 'aag', 'zameen', 'aasmaan', 'suraj', 'chand', 'tara', 'sach',
+  'jhooth', 'khushi', 'umeed', 'sapna', 'jeet', 'haar', 'koshish', 'himmat', 'taqat', 'rang',
+  'gaadi', 'kitab', 'kalam', 'awaaz', 'khel', 'jeet', 'safalta', 'mehnat', 'vishwas', 'shanti'
+];
+
+export const MONKEYTYPE_SPANISH_200 = [
+  'de', 'la', 'que', 'el', 'en', 'y', 'a', 'los', 'se', 'del',
+  'las', 'un', 'por', 'con', 'no', 'una', 'su', 'para', 'es', 'al',
+  'lo', 'como', 'más', 'pero', 'sus', 'le', 'ya', 'o', 'este', 'sí',
+  'porque', 'esta', 'son', 'entre', 'está', 'cuando', 'muy', 'sin', 'sobre', 'ser',
+  'tiene', 'también', 'me', 'hasta', 'hay', 'donde', 'quien', 'desde', 'todo', 'nos',
+  'durante', 'todos', 'uno', 'les', 'ni', 'contra', 'otros', 'ese', 'eso', 'ante',
+  'ellos', 'e', 'esto', 'mí', 'antes', 'algunos', 'qué', 'unos', 'yo', 'otro',
+  'otras', 'otra', 'él', 'tanto', 'esa', 'estos', 'mucho', 'quienes', 'nada', 'muchos',
+  'cual', 'sea', 'poco', 'ella', 'estar', 'haber', 'estas', 'estaba', 'tiempo', 'vida',
+  'mundo', 'casa', 'día', 'hombre', 'mujer', 'trabajo', 'luz', 'mano', 'fuerza', 'camino'
+];
+
+export const MONKEYTYPE_FRENCH_200 = [
+  'de', 'la', 'le', 'et', 'les', 'des', 'en', 'un', 'du', 'une',
+  'que', 'est', 'pour', 'qui', 'dans', 'a', 'par', 'sur', 'au', 'plus',
+  'ne', 'pas', 'avec', 'ce', 'son', 'se', 'aux', 'ses', 'ou', 'il',
+  'sa', 'nous', 'comme', 'mais', 'ils', 'tout', 'on', 'tout', 'leur', 'bien',
+  'sans', 'peut', 'faire', 'cette', 'aussi', 'si', 'leur', 'temps', 'deux', 'autre',
+  'apres', 'meme', 'encore', 'entre', 'mon', 'tous', 'premier', 'dire', 'sous', 'vers',
+  'notre', 'pendant', 'donc', 'vie', 'monde', 'jour', 'homme', 'femme', 'enfant', 'grand',
+  'petit', 'voir', 'savoir', 'pouvoir', 'vouloir', 'venir', 'prendre', 'donner', 'parler', 'trouver',
+  'passer', 'croire', 'aimer', 'falloir', 'mettre', 'main', 'chose', 'lieu', 'part', 'force'
+];
+
+export const MONKEYTYPE_GERMAN_200 = [
+  'der', 'die', 'und', 'in', 'den', 'von', 'zu', 'das', 'mit', 'sich',
+  'des', 'auf', 'für', 'ist', 'im', 'dem', 'nicht', 'ein', 'eine', 'als',
+  'auch', 'es', 'an', 'werden', 'aus', 'er', 'hat', 'dass', 'sie', 'nach',
+  'wird', 'bei', 'einer', 'um', 'am', 'sind', 'noch', 'wie', 'einem', 'über',
+  'einen', 'so', 'sie', 'war', 'haben', 'nur', 'oder', 'aber', 'vor', 'zur',
+  'bis', 'mehr', 'durch', 'man', 'sein', 'wurde', 'sei', 'prozent', 'hatte', 'kann',
+  'gegen', 'vom', 'können', 'schon', 'wenn', 'habe', 'seine', 'ihre', 'dann', 'unter',
+  'wir', 'soll', 'ich', 'eines', 'jahr', 'zwei', 'zeit', 'leben', 'mensch', 'hand',
+  'auge', 'welt', 'stadt', 'arbeit', 'tag', 'nacht', 'licht', 'kraft', 'weg', 'woche'
+];
+
+export const MONKEYTYPE_JAPANESE_200 = [
+  'kore', 'sore', 'are', 'watashi', 'anata', 'kare', 'kanojo', 'hito', 'toki', 'koto',
+  'mono', 'basho', 'sekai', 'nihon', 'kyou', 'ashita', 'kinou', 'ima', 'korekara', 'zutto',
+  'kokoro', 'yume', 'kibou', 'ai', 'tomo', 'kazoku', 'ie', 'michi', 'sora', 'umi',
+  'yama', 'kawa', 'hana', 'ki', 'kaze', 'ame', 'hikari', 'yoru', 'asa', 'koe',
+  'te', 'me', 'mimi', 'chikara', 'kotoba', 'hon', 'uta', 'oto', 'iro', 'shigoto',
+  'mirai', 'kako', 'genki', 'tanoshii', 'hayai', 'tsuyoi', 'yasashii', 'atarashii', 'furui', 'ookii',
+  'chiisai', 'omoshiroi', 'utsukushii', 'arigatou', 'ganbare', 'daisuki', 'yoroshiku', 'hajime', 'owari', 'jikan'
+];
+
+export const MONKEYTYPE_PORTUGUESE_200 = [
+  'de', 'a', 'o', 'que', 'e', 'do', 'da', 'em', 'um', 'para',
+  'com', 'não', 'uma', 'os', 'no', 'se', 'na', 'por', 'mais', 'as',
+  'dos', 'como', 'mas', 'foi', 'ao', 'ele', 'das', 'tem', 'à', 'seu',
+  'sua', 'ou', 'quando', 'muito', 'nos', 'já', 'eu', 'também', 'só', 'pelo',
+  'pela', 'até', 'isso', 'ela', 'entre', 'depois', 'sem', 'mesmo', 'aos', 'seus',
+  'quem', 'me', 'esse', 'eles', 'você', 'essa', 'num', 'nem', 'suas', 'meu',
+  'minha', 'numa', 'pelos', 'tempo', 'vida', 'mundo', 'dia', 'homem', 'mulher', 'trabalho',
+  'mão', 'luz', 'força', 'caminho', 'cidade', 'casa', 'noite', 'amor', 'olho', 'palavra'
+];
+
+export const MONKEYTYPE_RUSSIAN_200 = [
+  'i', 'v', 'ne', 'na', 'ya', 'chto', 'on', 's', 'po', 'eto',
+  'kak', 'no', 'oni', 'k', 'u', 'ty', 'iz', 'my', 'za', 'vy',
+  'tak', 'zhe', 'ot', 'o', 'vot', 'dlya', 'da', 'byl', 'tolko', 'ee',
+  'mne', 'bylo', 'vot', 'ego', 'esli', 'uzhe', 'tot', 'vam', 'sebya', 'odin',
+  'vse', 'kak', 'odin', 'den', 'vremya', 'zhizn', 'ruka', 'slovo', 'glaza', 'chelovek',
+  'mir', 'dom', 'noch', 'svet', 'gorod', 'put', 'mesto', 'rabota', 'drug', 'golos',
+  'zemlya', 'solntse', 'doroga', 'serdtse', 'sila', 'dusha', 'delo', 'vopros', 'mysl', 'kniga'
+];
+
+export function getWordPoolForLanguage(lang: string, poolType = '200'): string[] {
+  if (lang === 'hi') return MONKEYTYPE_HINDI_200;
+  if (lang === 'es') return MONKEYTYPE_SPANISH_200;
+  if (lang === 'fr') return MONKEYTYPE_FRENCH_200;
+  if (lang === 'de') return MONKEYTYPE_GERMAN_200;
+  if (lang === 'ja') return MONKEYTYPE_JAPANESE_200;
+  if (lang === 'pt') return MONKEYTYPE_PORTUGUESE_200;
+  if (lang === 'ru') return MONKEYTYPE_RUSSIAN_200;
+  return poolType === '1k' ? MONKEYTYPE_ENGLISH_1K : MONKEYTYPE_ENGLISH_200;
+}
+
 export function getRandomWord(category: 'easy' | 'medium' | 'hard' | 'space' | 'cyber' | 'fantasy' | 'combat' = 'medium'): string {
   const list = WORD_LISTS[category] || WORD_LISTS.medium;
   const index = Math.floor(Math.random() * list.length);
@@ -353,15 +445,37 @@ export function getRandomWords(count: number, category: 'easy' | 'medium' | 'har
 }
 
 /**
- * Generate Monkeytype Words with optional punctuation and numbers
+ * Generate Monkeytype Words with optional punctuation, numbers, and multi-language support
  */
 export function generateMonkeytypeWordList(
   count: number,
-  language: 'english' | 'english1k' = 'english',
+  language = 'english',
   includePunc = false,
-  includeNum = false
+  includeNum = false,
+  langCode = 'en'
 ): string[] {
-  const pool = language === 'english1k' ? MONKEYTYPE_ENGLISH_1K : MONKEYTYPE_ENGLISH_200;
+  let pool = MONKEYTYPE_ENGLISH_200;
+
+  if (langCode && langCode !== 'en') {
+    pool = getWordPoolForLanguage(langCode);
+  } else if (language === 'english1k') {
+    pool = MONKEYTYPE_ENGLISH_1K;
+  } else if (language === 'hindi') {
+    pool = MONKEYTYPE_HINDI_200;
+  } else if (language === 'spanish') {
+    pool = MONKEYTYPE_SPANISH_200;
+  } else if (language === 'french') {
+    pool = MONKEYTYPE_FRENCH_200;
+  } else if (language === 'german') {
+    pool = MONKEYTYPE_GERMAN_200;
+  } else if (language === 'japanese') {
+    pool = MONKEYTYPE_JAPANESE_200;
+  } else if (language === 'portuguese') {
+    pool = MONKEYTYPE_PORTUGUESE_200;
+  } else if (language === 'russian') {
+    pool = MONKEYTYPE_RUSSIAN_200;
+  }
+
   const words: string[] = [];
   const puncs = ['.', ',', '!', '?', ';', ':', '-', '...', '—', '"'];
 

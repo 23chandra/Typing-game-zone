@@ -27,16 +27,77 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     <!-- Desktop Nav Links (Hidden on small tablets, clean pill on large desktop) -->
     <nav class="hidden xl:flex items-center gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1">
-      <a href="/#games-section" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
-      <a href="/arcade" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
-      <a href="/speed-test" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
-      <a href="/practice" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
-      <a href="/leaderboards" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
+      <a href="/#games-section" data-i18n="nav.games" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
+      <a href="/arcade" data-i18n="nav.arcade" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
+      <a href="/speed-test" data-i18n="nav.speedTest" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
+      <a href="/practice" data-i18n="nav.practiceLab" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
+      <a href="/leaderboards" data-i18n="nav.leaderboards" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
     </nav>
 
-    <!-- Controls: Global Theme Switcher + Sound Switcher + Command Hint + Play CTA -->
+    <!-- Controls: Language + Global Theme + Sound Switcher + Command Hint + Play CTA -->
     <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5">
       
+      <!-- Global Language Picker Dropdown -->
+      <div class="relative" id="nav-lang-container">
+        <button
+          id="nav-lang-btn"
+          type="button"
+          class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2.5 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          title="Switch Language / भाषा बदलें"
+          aria-expanded="false"
+        >
+          <span id="nav-lang-flag" class="text-sm">🇺🇸</span>
+          <span id="nav-lang-current-label" class="hidden md:inline font-bold">EN</span>
+          <svg class="h-3.5 w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          id="nav-lang-menu"
+          class="absolute right-0 mt-2 hidden w-48 rounded-2xl border border-hairline bg-canvas p-2 shadow-level-4 z-50 font-mono text-xs flex flex-col gap-1"
+          style="background-color: var(--site-canvas, #2c2e31);"
+        >
+          <div class="flex items-center justify-between pb-1.5 mb-1 border-b border-hairline px-1.5 text-[10px] text-mute uppercase font-bold">
+            <span>Language (8)</span>
+          </div>
+
+          <button type="button" data-lang="en" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇺🇸</span><span>English</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+          <button type="button" data-lang="hi" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇮🇳</span><span>हिन्दी</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+          <button type="button" data-lang="es" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇪🇸</span><span>Español</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+          <button type="button" data-lang="fr" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇫🇷</span><span>Français</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+          <button type="button" data-lang="de" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇩🇪</span><span>Deutsch</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+          <button type="button" data-lang="ja" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇯🇵</span><span>日本語</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+          <button type="button" data-lang="pt" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇧🇷</span><span>Português</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+          <button type="button" data-lang="ru" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
+            <span class="flex items-center gap-2"><span>🇷🇺</span><span>Русский</span></span>
+            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Global Theme Picker Dropdown -->
       <div class="relative" id="nav-theme-container">
         <button
@@ -60,7 +121,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
           style="background-color: var(--site-canvas, #2c2e31);"
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1">
-            <span class="text-[11px] font-bold text-mute uppercase">Site Theme (17)</span>
+            <span class="text-[11px] font-bold text-mute uppercase" data-i18n="nav.siteTheme">Site Theme (17)</span>
             <span class="text-[10px] text-mute">Typing Game Zone</span>
           </div>
 
@@ -119,7 +180,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
           class="absolute right-0 mt-2 hidden w-52 rounded-2xl border border-hairline bg-canvas p-1.5 shadow-level-4 z-50 font-mono text-xs"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
-          <div class="px-2 py-1 text-[11px] text-mute uppercase border-b border-hairline mb-1">
+          <div class="px-2 py-1 text-[11px] text-mute uppercase border-b border-hairline mb-1" data-i18n="nav.switchSynthesis">
             Switch Synthesis
           </div>
           <button data-switch="clicky" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
@@ -170,7 +231,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         <span class="h-3.5 w-px bg-hairline"></span>
         <span class="flex items-center gap-1.5">
           <span id="nav-level-badge" class="px-1.5 py-0.5 rounded-md text-[10px] font-bold" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">Lvl 1</span>
-          <span id="nav-rank-title" class="hidden 2xl:inline text-mute font-normal text-[11px]">Novice</span>
+          <span id="nav-rank-title" class="hidden 2xl:inline text-mute font-normal text-[11px]" data-i18n="nav.novice">Novice</span>
         </span>
       </a>
 
@@ -191,7 +252,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 whitespace-nowrap"
         style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
       >
-        <span>Play</span>
+        <span data-i18n="nav.play">Play</span>
         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
@@ -214,11 +275,11 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
   <!-- Mobile Dropdown Navigation -->
   <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 xl:hidden font-mono text-xs">
     <div class="flex flex-col gap-1.5 font-medium mb-3">
-      <a href="/#games-section" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🎮 All Games (21)</a>
-      <a href="/arcade" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🕹️ Arcade Lounge</a>
-      <a href="/speed-test" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">⚡ Speed Test</a>
-      <a href="/practice" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">⌨️ Practice Lab</a>
-      <a href="/leaderboards" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🏆 Leaderboards</a>
+      <a href="/#games-section" data-i18n="nav.games" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🎮 All Games (21)</a>
+      <a href="/arcade" data-i18n="nav.arcade" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🕹️ Arcade Lounge</a>
+      <a href="/speed-test" data-i18n="nav.speedTest" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">⚡ Speed Test</a>
+      <a href="/practice" data-i18n="nav.practiceLab" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">⌨️ Practice Lab</a>
+      <a href="/leaderboards" data-i18n="nav.leaderboards" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🏆 Leaderboards</a>
     </div>
 
     <!-- Mobile Command & Play Quick Actions -->
@@ -228,7 +289,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         id="mobile-cmd-btn"
         class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-2 text-xs font-mono font-bold text-ink cursor-pointer hover:bg-canvas transition"
       >
-        <span>>_ Command Palette</span>
+        <span data-i18n="nav.commandPalette">>_ Command Palette</span>
         <kbd class="text-[10px] opacity-60">⌘K</kbd>
       </button>
       <a
@@ -236,7 +297,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         class="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95"
         style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
       >
-        <span>Play Game</span>
+        <span data-i18n="nav.playGame">Play Game</span>
         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
@@ -249,8 +310,11 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
   import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
   import { applyThemeGlobal, getThemeById, type MonkeytypeTheme } from '../lib/monkeytypeThemes';
   import { storage } from '../lib/storage';
+  import { getCurrentLanguage, setLanguage, getLanguageDef, initI18n } from '../lib/i18n';
 
   function initNavbar() {
+    initI18n();
+
     const streakValEl = document.getElementById('nav-streak-val');
     const levelBadgeEl = document.getElementById('nav-level-badge');
     const rankTitleEl = document.getElementById('nav-rank-title');
@@ -270,6 +334,11 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     updatePlayerTelemetryUI();
     window.addEventListener('typing:xp-gained', updatePlayerTelemetryUI);
+
+    const langBtn = document.getElementById('nav-lang-btn');
+    const langMenu = document.getElementById('nav-lang-menu');
+    const langFlag = document.getElementById('nav-lang-flag');
+    const langLabel = document.getElementById('nav-lang-current-label');
 
     const soundBtn = document.getElementById('sound-menu-btn');
     const soundMenu = document.getElementById('sound-menu');
@@ -303,6 +372,50 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       openCmd();
     });
 
+    // --- LANGUAGE SWITCHER UI SYNC ---
+    const updateLangUI = (code?: string) => {
+      const cur = code || getCurrentLanguage();
+      const def = getLanguageDef(cur);
+      if (langFlag) langFlag.textContent = def.flag;
+      if (langLabel) langLabel.textContent = def.code.toUpperCase();
+
+      document.querySelectorAll('.nav-lang-opt').forEach((el) => {
+        const lCode = el.getAttribute('data-lang');
+        const check = el.querySelector('.nav-lang-check');
+        if (check) {
+          if (lCode === cur) {
+            check.classList.remove('hidden');
+            el.classList.add('font-bold');
+          } else {
+            check.classList.add('hidden');
+            el.classList.remove('font-bold');
+          }
+        }
+      });
+    };
+
+    langBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      soundMenu?.classList.add('hidden');
+      themeMenu?.classList.add('hidden');
+      langMenu?.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('.nav-lang-opt').forEach((el) => {
+      el.addEventListener('click', () => {
+        const lCode = el.getAttribute('data-lang');
+        if (lCode) {
+          setLanguage(lCode);
+          updateLangUI(lCode);
+          langMenu?.classList.add('hidden');
+        }
+      });
+    });
+
+    window.addEventListener('typing:language-change', (e: any) => {
+      updateLangUI(e.detail?.lang);
+    });
+
     // --- SOUND ENGINE UI SYNC ---
     const updateSoundUI = () => {
       const cur = soundEngine.getSwitch();
@@ -334,6 +447,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     soundBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
       soundEngine.initContext();
+      langMenu?.classList.add('hidden');
       themeMenu?.classList.add('hidden');
       soundMenu?.classList.toggle('hidden');
     });
@@ -385,6 +499,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     themeBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
+      langMenu?.classList.add('hidden');
       soundMenu?.classList.add('hidden');
       themeMenu?.classList.toggle('hidden');
       if (!themeMenu?.classList.contains('hidden')) {
@@ -425,6 +540,9 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     // Close on click outside
     document.addEventListener('click', (e) => {
+      if (!langMenu?.contains(e.target as Node) && !langBtn?.contains(e.target as Node)) {
+        langMenu?.classList.add('hidden');
+      }
       if (!soundMenu?.contains(e.target as Node) && !soundBtn?.contains(e.target as Node)) {
         soundMenu?.classList.add('hidden');
       }
@@ -433,6 +551,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       }
     });
 
+    updateLangUI();
     updateSoundUI();
     updateThemeUI();
   }

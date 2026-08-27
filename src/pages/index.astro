@@ -15,29 +15,28 @@ const totalGames = ALL_GAMES.length;
       <!-- Announcement Eyebrow Badge -->
       <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/90 px-3.5 py-1 text-xs font-mono text-body shadow-level-1 backdrop-blur mb-6">
         <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span>Version 2.0 Live</span>
-        <span class="text-mute">•</span>
-        <span class="text-ink font-semibold">21 Games & 105 Levels</span>
+        <span data-i18n="hero.badge">21 2D TYPING GAMES • SPEED TEST SUITE • PRACTICE LAB</span>
       </div>
 
-      <!-- Main Display Headline (Vercel-inspired negative tracking & period termination) -->
+      <!-- Main Display Headline -->
       <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-ink leading-[1.08] max-w-4xl mx-auto">
-        Master the keyboard. <br class="hidden sm:inline" />
-        <span class="text-gradient-develop">One game</span> at a time.
+        <span data-i18n="hero.title1">Master the keyboard.</span> <br class="hidden sm:inline" />
+        <span class="text-gradient-develop" data-i18n="hero.title2">Play 21 Retro 2D Games.</span>
       </h1>
 
       <!-- Body Lead Paragraph -->
-      <p class="mt-6 text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed">
-        Level up your typing speed and accuracy with 21 immersive 2D arcade, adventure, action, and fighting games. Featuring authentic mechanical keyboard acoustic synthesis.
+      <p class="mt-6 text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
+        Immerse yourself in arcade boss battles, neon slicing, zombie shootouts, and Monkeytype-grade speed tests with realistic mechanical switch audio synthesis.
       </p>
 
-      <!-- CTA Buttons Row (100px Marketing Pill Radius) -->
+      <!-- CTA Buttons Row -->
       <div class="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
         <a
           href="/game/type-defender"
           class="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm sm:text-base font-medium text-on-primary shadow-level-3 transition hover:opacity-90 active:scale-95"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
         >
-          <span>Play Type Defender</span>
+          <span data-i18n="hero.browseGames">Browse 21 Games</span>
           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
@@ -47,34 +46,34 @@ const totalGames = ALL_GAMES.length;
           href="/speed-test"
           class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-6 py-3.5 text-sm sm:text-base font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95"
         >
-          <span>Speed Test (30s)</span>
+          <span data-i18n="hero.startTest">Start Typing Test</span>
         </a>
 
         <a
           href="/arcade"
           class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3.5 text-sm sm:text-base font-medium text-body transition hover:text-ink hover:bg-canvas active:scale-95"
         >
-          <span>🕹️ Arcade Lounge</span>
+          <span data-i18n="nav.arcade">🕹️ Arcade Lounge</span>
         </a>
       </div>
 
       <!-- Quick Platform Telemetry Bar -->
       <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-left font-mono">
         <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider">Available Games</div>
+          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.gamesCount">Free 2D Games</div>
           <div class="text-2xl font-bold text-ink mt-1">21 Titles</div>
         </div>
         <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider">Playable Levels</div>
-          <div class="text-2xl font-bold text-ink mt-1">105 Levels</div>
+          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.activeTypists">Active Typists</div>
+          <div class="text-2xl font-bold text-ink mt-1">10,000+</div>
         </div>
         <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider">Audio Synthesizer</div>
-          <div class="text-2xl font-bold text-success mt-1">4 Switches</div>
+          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.switchSounds">Audio Profiles</div>
+          <div class="text-2xl font-bold text-success mt-1">7 Switches</div>
         </div>
         <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider">Engine Latency</div>
-          <div class="text-2xl font-bold text-link mt-1">&lt; 1 ms</div>
+          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.colorThemes">Color Themes</div>
+          <div class="text-2xl font-bold text-link mt-1">17 Themes</div>
         </div>
       </div>
 
@@ -88,11 +87,11 @@ const totalGames = ALL_GAMES.length;
       <!-- Section Header -->
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-hairline">
         <div>
-          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Game Library</span>
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link" data-i18n="lead.gameRecords">Game Library</span>
           <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
             Choose Your Arena ({totalGames} Games)
           </h2>
-          <p class="text-sm text-body mt-1">
+          <p class="text-sm text-body mt-1" data-i18n="lead.gameRecordsDesc">
             Each game features unique 2D canvas physics, visual animations, and 5 level tiers.
           </p>
         </div>
@@ -113,26 +112,26 @@ const totalGames = ALL_GAMES.length;
 
       <!-- Filter Tabs Row -->
       <div class="flex flex-wrap items-center gap-2 pt-6 pb-8">
-        <button data-filter="all" class="cat-filter-btn active rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-on-primary shadow-level-1 transition">
+        <button data-filter="all" data-i18n="cat.all" class="cat-filter-btn active rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-on-primary shadow-level-1 transition">
           All Games (21)
         </button>
-        <button data-filter="arcade" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          🛸 Arcade Shooters (4)
+        <button data-filter="arcade" data-i18n="cat.arcade" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          Arcade (4)
         </button>
-        <button data-filter="action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          ⚔️ Action & Survival (5)
+        <button data-filter="action" data-i18n="cat.action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          Action (5)
         </button>
-        <button data-filter="adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          🗝️ Adventure & Runners (4)
+        <button data-filter="adventure" data-i18n="cat.adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          Adventure (4)
         </button>
-        <button data-filter="fighting" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          🥊 Fighting & Duels (4)
+        <button data-filter="fighting" data-i18n="cat.fighting" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          Fighting (4)
         </button>
-        <button data-filter="puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          🧩 Puzzle & Rhythm (3)
+        <button data-filter="puzzle" data-i18n="cat.puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          Puzzle (3)
         </button>
-        <button data-filter="practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          ⌨️ Practice & Drills (1)
+        <button data-filter="practice" data-i18n="cat.practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+          Practice (1)
         </button>
       </div>
 
