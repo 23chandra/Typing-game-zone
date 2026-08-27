@@ -72,54 +72,8 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       </button>
     </div>
 
-    <!-- Right: Controls (Theme Picker, Word Count & Metronome) -->
+    <!-- Right: Controls (Word Count & Metronome) -->
     <div class="flex items-center gap-2">
-      
-      <!-- Theme Switcher Dropdown -->
-      <div class="relative" id="prac-theme-dropdown-container">
-        <button
-          type="button"
-          id="prac-theme-menu-btn"
-          class="flex items-center gap-1.5 rounded-xl border border-hairline px-2.5 py-1.5 text-xs font-mono font-medium transition cursor-pointer hover:text-ink"
-          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
-          title="Change Global Website & Keyboard Theme"
-        >
-          <span class="h-2 w-2 rounded-full shadow-sm" style="background-color: var(--mt-main, #e2b714);"></span>
-          <span id="prac-current-theme-name" class="font-bold text-[11px]">Serika Dark</span>
-          <svg class="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-
-        <!-- Dropdown Menu with 17 Monkeytype Themes -->
-        <div
-          id="prac-theme-menu"
-          class="absolute right-0 top-full mt-1.5 hidden w-60 max-h-72 overflow-y-auto rounded-2xl border border-hairline p-1.5 shadow-2xl z-50 text-xs font-mono"
-          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); border-color: var(--site-hairline);"
-        >
-          <div class="px-2.5 py-1 text-[10px] text-mute uppercase font-bold tracking-wider border-b border-hairline mb-1">
-            Choose Theme (17 Palettes)
-          </div>
-          {MONKEYTYPE_THEMES.map(t => (
-            <button
-              type="button"
-              data-theme-id={t.id}
-              class="prac-theme-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer"
-            >
-              <div class="flex flex-col">
-                <span class="font-bold text-xs" style={`color: ${t.main};`}>{t.name}</span>
-                <span class="text-[9px] opacity-60 uppercase">{t.category}</span>
-              </div>
-              <div class="flex items-center gap-1">
-                <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${t.main};`}></span>
-                <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${t.sub};`}></span>
-                <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${t.text};`}></span>
-                <span class="prac-theme-check ml-1 text-xs font-bold text-success hidden">✓</span>
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
 
       <!-- Drill Length Toggle -->
       <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));">
@@ -229,15 +183,17 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         ></div>
       </div>
 
-      <!-- Single Hidden Input Dispatcher -->
+      <!-- Single Hidden Input Dispatcher (Full area coverage for instant focus) -->
       <input
         id="prac-unified-input"
         type="text"
-        class="absolute -top-40 left-0 w-1 h-1 opacity-0 pointer-events-none"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-text z-10"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
+        tabindex="0"
+        aria-label="Type here"
       />
 
       <!-- Out-of-Focus Overlay -->
@@ -535,10 +491,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     const handSideEl = document.getElementById('prac-hand-side');
     const handFingerEl = document.getElementById('prac-hand-finger');
 
-    // Theme Switcher Elements
-    const themeMenuBtn = document.getElementById('prac-theme-menu-btn');
-    const themeMenu = document.getElementById('prac-theme-menu');
-    const currentThemeNameEl = document.getElementById('prac-current-theme-name');
+    // Keyboard Mode Switcher Elements
     const modeThemeBtn = document.getElementById('prac-mode-theme-btn');
     const modeQuadBtn = document.getElementById('prac-mode-quad-btn');
 
@@ -585,27 +538,12 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     let isDrillComplete = false;
     let wordCharStates: (boolean | null)[][] = [];
 
+    // Deduplication tracker
+    let lastPracticeKeyTime = 0;
+    let lastPracticeKey = '';
+
     // Map for O(1) Keycap Lookups
     const keycapsMap = new Map<string, HTMLElement>();
-
-    // Helper: Update Theme Name Label
-    function updateThemeNameDisplay() {
-      const activeThemeId = document.documentElement.getAttribute('data-theme') || 'serika_dark';
-      const activeTheme = getThemeById(activeThemeId);
-      if (currentThemeNameEl) {
-        currentThemeNameEl.textContent = activeTheme.name;
-      }
-      // Update checkmarks in theme menu
-      document.querySelectorAll('.prac-theme-opt').forEach(opt => {
-        const id = opt.getAttribute('data-theme-id');
-        const check = opt.querySelector('.prac-theme-check');
-        if (id === activeThemeId) {
-          check?.classList.remove('hidden');
-        } else {
-          check?.classList.add('hidden');
-        }
-      });
-    }
 
     // Render Physical On-Screen Keyboard Styled According to Website Theme
     function renderVirtualKeyboardDOM() {
@@ -756,6 +694,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       requestAnimationFrame(() => {
         positionCaret();
         updateInstructorAndKeyboard();
+        inputEl?.focus();
       });
     }
 
@@ -886,6 +825,14 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     // Keystroke Processor
     function handleKey(key: string) {
       if (isDrillComplete) return;
+
+      // Deduplication guard: ignore duplicate event within 30ms
+      const now = performance.now();
+      if (now - lastPracticeKeyTime < 30 && key === lastPracticeKey) {
+        return;
+      }
+      lastPracticeKeyTime = now;
+      lastPracticeKey = key;
 
       if (!isDrillRunning) {
         isDrillRunning = true;
@@ -1086,7 +1033,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     // Focus Handlers
     const focusPracticeInput = () => {
       soundEngine.initContext();
-      inputEl.focus();
+      inputEl?.focus();
       focusOverlay?.classList.add('hidden');
       positionCaret();
       updateInstructorAndKeyboard();
@@ -1099,10 +1046,10 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       focusOverlay?.removeEventListener('click', focusPracticeInput);
     });
 
-    inputEl.addEventListener('blur', () => {
+    inputEl?.addEventListener('blur', () => {
       if (isDrillRunning && !isDrillComplete) focusOverlay?.classList.remove('hidden');
     });
-    inputEl.addEventListener('focus', () => {
+    inputEl?.addEventListener('focus', () => {
       focusOverlay?.classList.add('hidden');
       positionCaret();
     });
@@ -1117,50 +1064,53 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         handleKey(e.key);
       }
     };
-    inputEl.addEventListener('keydown', onInputKeyDown);
-    activeCleanups.push(() => inputEl.removeEventListener('keydown', onInputKeyDown));
+    inputEl?.addEventListener('keydown', onInputKeyDown);
+    activeCleanups.push(() => inputEl?.removeEventListener('keydown', onInputKeyDown));
 
     // Global Keybinds
     const onGlobalKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && target !== inputEl && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+        return;
+      }
+
+      if (customModal && !customModal.classList.contains('hidden')) {
+        return;
+      }
+
       // Tab restart
       if (e.key === 'Tab') {
         e.preventDefault();
         generateDrillWords();
-        inputEl.focus();
+        inputEl?.focus();
         return;
       }
 
-      // Auto-focus if user types outside
-      if (document.activeElement !== inputEl && !customModal?.classList.contains('hidden') === false) {
-        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-          inputEl.focus();
+      // Forward any printable keystroke or Space/Backspace directly to handleKey
+      if (e.key === ' ' || e.key === 'Backspace' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        if (document.activeElement !== inputEl) {
+          inputEl?.focus();
         }
+        handleKey(e.key);
       }
     };
     window.addEventListener('keydown', onGlobalKey);
     activeCleanups.push(() => window.removeEventListener('keydown', onGlobalKey));
 
-    // Theme Switcher Menu Handlers
-    themeMenuBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      themeMenu?.classList.toggle('hidden');
-    });
-    document.addEventListener('click', (e) => {
-      if (!themeMenu?.contains(e.target as Node) && !themeMenuBtn?.contains(e.target as Node)) {
-        themeMenu?.classList.add('hidden');
-      }
-    });
-
-    document.querySelectorAll('.prac-theme-opt').forEach(opt => {
-      opt.addEventListener('click', () => {
-        const themeId = opt.getAttribute('data-theme-id');
-        if (themeId) {
-          const theme = getThemeById(themeId);
-          applyThemeGlobal(theme);
-          themeMenu?.classList.add('hidden');
+    // Fallback for virtual keyboards & mobile IME input
+    const onPracticeInputValue = (e: Event) => {
+      soundEngine.initContext();
+      const val = (e.target as HTMLInputElement).value;
+      if (val.length > 0) {
+        for (let i = 0; i < val.length; i++) {
+          handleKey(val[i]);
         }
-      });
-    });
+        (e.target as HTMLInputElement).value = '';
+      }
+    };
+    inputEl?.addEventListener('input', onPracticeInputValue);
+    activeCleanups.push(() => inputEl?.removeEventListener('input', onPracticeInputValue));
 
     // Keyboard Appearance Mode Toggle Handlers
     modeThemeBtn?.addEventListener('click', () => {
@@ -1384,7 +1334,6 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     // Live Global Theme Change Event Listener (Syncs keyboard theme dynamically)
     const onThemeChange = () => {
-      updateThemeNameDisplay();
       activateDrillButton(currentDrillType);
       renderVirtualKeyboardDOM();
       updateInstructorAndKeyboard();
@@ -1394,6 +1343,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     // Initial setup
     generateDrillWords();
+    inputEl?.focus();
   }
 
   if (document.readyState === 'loading') {

@@ -184,7 +184,7 @@
       id="mt-words-viewport"
       class="relative h-36 sm:h-44 overflow-hidden rounded-2xl p-4 sm:p-6 text-xl sm:text-2xl lg:text-3xl leading-[1.8] tracking-wide cursor-text select-none border transition-all"
       style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt);"
-      aria-label="Monkeytype Typing Arena"
+      aria-label="Speed Typing Arena"
     >
       <!-- Flowing Words Wrapper (Smooth line jumps with translateY) -->
       <div
@@ -200,19 +200,20 @@
         <!-- Words injected dynamically via JavaScript -->
       </div>
 
-      <!-- Single Unified Invisible Input (Prevents double events / mobile keyboard friendly) -->
+      <!-- Single Unified Invisible Input (Full area coverage for instant focus & zero latency) -->
       <input
         id="mt-unified-input"
         type="text"
-        class="absolute -top-40 left-0 w-1 h-1 opacity-0 pointer-events-none"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-text z-10"
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
-        aria-hidden="true"
+        tabindex="0"
+        aria-label="Type here"
       />
 
-      <!-- Blur / Out-of-Focus Overlay (Monkeytype signature focus prompt) -->
+      <!-- Blur / Out-of-Focus Overlay (Signature focus prompt) -->
       <div
         id="mt-focus-overlay"
         class="absolute inset-0 flex items-center justify-center backdrop-blur-xs transition-opacity duration-200 cursor-pointer z-30 hidden"
@@ -282,20 +283,8 @@
         <span>Caps Lock is ON</span>
       </div>
 
-      <!-- Quick Settings Buttons (Theme, Caret, Sound) -->
+      <!-- Quick Settings Buttons (Sound, Caret) -->
       <div class="flex items-center gap-2">
-        <!-- Theme Switcher Button -->
-        <button
-          type="button"
-          id="mt-theme-modal-btn"
-          class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition cursor-pointer hover:text-[var(--mt-text)]"
-          style="background-color: var(--mt-sub-alt);"
-          title="Change Theme (Serika Dark, Matrix, Carbon, Dracula, etc.)"
-        >
-          <span>🎨</span>
-          <span id="mt-current-theme-label" class="hidden md:inline font-bold">serika_dark</span>
-        </button>
-
         <!-- Switch Sound Selector -->
         <button
           type="button"
@@ -515,39 +504,6 @@
     </div>
   </div>
 
-  <!-- Theme Selector Modal -->
-  <div
-    id="mt-theme-modal"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/60 hidden select-none"
-  >
-    <div
-      class="w-full max-w-2xl rounded-3xl p-6 sm:p-8 border shadow-2xl font-mono relative max-h-[85vh] flex flex-col"
-      style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt); color: var(--mt-text);"
-    >
-      <div class="flex items-center justify-between pb-4 border-b mb-4" style="border-color: var(--mt-sub-alt);">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🎨</span>
-          <h3 class="text-base font-bold" style="color: var(--mt-main);">Monkeytype Color Themes</h3>
-        </div>
-        <button type="button" id="mt-theme-close-btn" class="text-lg px-2 hover:text-[var(--mt-main)] cursor-pointer">✕</button>
-      </div>
-
-      <!-- Search themes filter -->
-      <input
-        type="text"
-        id="mt-theme-search"
-        placeholder="Search themes (serika, matrix, carbon, dracula...)"
-        class="w-full rounded-xl px-4 py-2.5 text-xs border mb-4 focus:outline-none"
-        style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-text);"
-      />
-
-      <!-- Themes Grid -->
-      <div id="mt-themes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto pr-1 flex-1">
-        <!-- Injected via JavaScript -->
-      </div>
-    </div>
-  </div>
-
   <!-- Custom Duration / Custom Words Modal -->
   <div
     id="mt-custom-modal"
@@ -731,9 +687,7 @@
     const restartBtn = document.getElementById('mt-restart-btn');
     const cmdHintBtn = document.getElementById('mt-cmd-hint-btn');
 
-    // Theme & Settings Elements
-    const themeModalBtn = document.getElementById('mt-theme-modal-btn');
-    const currentThemeLabel = document.getElementById('mt-current-theme-label');
+    // Settings Elements
     const soundCycleBtn = document.getElementById('mt-sound-cycle-btn');
     const soundIcon = document.getElementById('mt-sound-icon');
     const soundLabel = document.getElementById('mt-sound-label');
@@ -741,11 +695,6 @@
     const caretLabel = document.getElementById('mt-caret-label');
 
     // Modals
-    const themeModal = document.getElementById('mt-theme-modal');
-    const themeCloseBtn = document.getElementById('mt-theme-close-btn');
-    const themeSearch = document.getElementById('mt-theme-search') as HTMLInputElement | null;
-    const themesGrid = document.getElementById('mt-themes-grid');
-
     const customModal = document.getElementById('mt-custom-modal');
     const customCloseBtn = document.getElementById('mt-custom-close-btn');
     const customCancelBtn = document.getElementById('mt-custom-cancel-btn');
@@ -839,7 +788,6 @@
       currentTheme = theme;
       applyThemeGlobal(theme);
       applyThemeToElement(rootEl, theme);
-      if (currentThemeLabel) currentThemeLabel.textContent = theme.id;
       updateCaretAppearance();
       if (isTestComplete && trajectory.length > 0) drawSplineChart(trajectory);
     };
@@ -849,7 +797,6 @@
       if (e.detail) {
         currentTheme = e.detail;
         applyThemeToElement(rootEl, currentTheme);
-        if (currentThemeLabel) currentThemeLabel.textContent = currentTheme.id;
         updateCaretAppearance();
         if (isTestComplete && trajectory.length > 0) drawSplineChart(trajectory);
       }
@@ -985,6 +932,7 @@
       renderWordsDOM();
       requestAnimationFrame(() => {
         positionCaret();
+        inputEl?.focus();
       });
     }
 
@@ -1553,7 +1501,7 @@
     // 14. Focus Management & Single Input Dispatcher
     const onViewportClick = () => {
       soundEngine.initContext();
-      inputEl.focus();
+      inputEl?.focus();
       focusOverlay?.classList.add('hidden');
       positionCaret();
     };
@@ -1569,23 +1517,50 @@
         focusOverlay?.classList.remove('hidden');
       }
     };
-    inputEl.addEventListener('blur', onInputBlur);
-    activeCleanups.push(() => inputEl.removeEventListener('blur', onInputBlur));
+    inputEl?.addEventListener('blur', onInputBlur);
+    activeCleanups.push(() => inputEl?.removeEventListener('blur', onInputBlur));
 
     const onInputFocus = () => {
       focusOverlay?.classList.add('hidden');
       positionCaret();
     };
-    inputEl.addEventListener('focus', onInputFocus);
-    activeCleanups.push(() => inputEl.removeEventListener('focus', onInputFocus));
+    inputEl?.addEventListener('focus', onInputFocus);
+    activeCleanups.push(() => inputEl?.removeEventListener('focus', onInputFocus));
+
+    // Input Keydown Handler (strictly on unified input)
+    const onInputKeyDown = (e: KeyboardEvent) => {
+      soundEngine.initContext();
+
+      if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Enter' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        e.stopPropagation();
+        handleKey(e.key);
+      }
+    };
+    inputEl?.addEventListener('keydown', onInputKeyDown);
+    activeCleanups.push(() => inputEl?.removeEventListener('keydown', onInputKeyDown));
 
     // Global Key Listener for Quick Focus / Command Palette / Tab Restart
     const onGlobalKeyDown = (e: KeyboardEvent) => {
+      // Don't intercept if user is typing in a modal textfield or search box
+      const target = e.target as HTMLElement | null;
+      if (target && target !== inputEl && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+        return;
+      }
+
+      if (
+        (cmdPalette && !cmdPalette.classList.contains('hidden')) ||
+        (customModal && !customModal.classList.contains('hidden')) ||
+        (customTextModal && !customTextModal.classList.contains('hidden')) ||
+        (replayModal && !replayModal.classList.contains('hidden'))
+      ) {
+        return;
+      }
+
       // Caps Lock detection
       const isCaps = e.getModifierState && e.getModifierState('CapsLock');
       if (capsWarning) {
-        if (isCaps) capsWarning.classList.remove('hidden');
-        else capsWarning.classList.add('hidden');
+        capsWarning.classList.toggle('hidden', !isCaps);
       }
 
       // Esc or Ctrl+Shift+P opens Command Palette
@@ -1599,7 +1574,7 @@
       if (e.key === 'Tab') {
         e.preventDefault();
         generateWords();
-        inputEl.focus();
+        inputEl?.focus();
         return;
       }
 
@@ -1610,30 +1585,19 @@
         return;
       }
 
-      // If typing arena is not focused, focus it on standard printable keys
-      if (document.activeElement !== inputEl && !themeModal?.classList.contains('hidden') === false && !cmdPalette?.classList.contains('hidden') === false) {
-        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-          inputEl.focus();
+      // Forward any printable keystroke or Space/Backspace directly to handleKey
+      if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Enter' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        if (document.activeElement !== inputEl) {
+          inputEl?.focus();
         }
+        handleKey(e.key);
       }
     };
     window.addEventListener('keydown', onGlobalKeyDown);
     activeCleanups.push(() => window.removeEventListener('keydown', onGlobalKeyDown));
 
-    // Input Keydown Handler (strictly on unified input)
-    const onInputKeyDown = (e: KeyboardEvent) => {
-      soundEngine.initContext();
-
-      if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Enter' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
-        e.preventDefault();
-        e.stopPropagation();
-        handleKey(e.key);
-      }
-    };
-    inputEl.addEventListener('keydown', onInputKeyDown);
-    activeCleanups.push(() => inputEl.removeEventListener('keydown', onInputKeyDown));
-
-    // Fallback for virtual keyboards
+    // Fallback for virtual keyboards & mobile IME input
     const onInputValue = (e: Event) => {
       soundEngine.initContext();
       const val = (e.target as HTMLInputElement).value;
@@ -1644,17 +1608,8 @@
         (e.target as HTMLInputElement).value = '';
       }
     };
-    inputEl.addEventListener('input', onInputValue);
-    activeCleanups.push(() => inputEl.removeEventListener('input', onInputValue));
-
-    const onBeforeInput = (e: any) => {
-      if (e.inputType === 'deleteContentBackward') {
-        soundEngine.initContext();
-        handleKey('Backspace');
-      }
-    };
-    inputEl.addEventListener('beforeinput', onBeforeInput);
-    activeCleanups.push(() => inputEl.removeEventListener('beforeinput', onBeforeInput));
+    inputEl?.addEventListener('input', onInputValue);
+    activeCleanups.push(() => inputEl?.removeEventListener('input', onInputValue));
 
     // 15. Command Palette System
     function toggleCommandPalette() {
@@ -2015,49 +1970,6 @@
       }
     });
 
-    // 19. Theme Modal Rendering
-    function renderThemesGrid(filter = '') {
-      if (!themesGrid) return;
-      themesGrid.innerHTML = '';
-      const f = filter.toLowerCase().trim();
-      const list = f ? MONKEYTYPE_THEMES.filter(t => t.name.toLowerCase().includes(f) || t.id.toLowerCase().includes(f)) : MONKEYTYPE_THEMES;
-
-      list.forEach(t => {
-        const item = document.createElement('button');
-        item.type = 'button';
-        item.className = `flex items-center justify-between p-3 rounded-2xl border text-left transition cursor-pointer hover:scale-[1.02] shadow-sm ${t.id === currentTheme.id ? 'ring-2 ring-offset-2' : ''}`;
-        item.style.backgroundColor = t.bg;
-        item.style.borderColor = t.subAlt;
-        item.style.color = t.text;
-        item.innerHTML = `
-          <div class="flex flex-col">
-            <span class="font-bold text-xs" style="color: ${t.main};">${t.name}</span>
-            <span class="text-[10px] opacity-60">${t.category}</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span class="h-3 w-3 rounded-full" style="background-color: ${t.main};"></span>
-            <span class="h-3 w-3 rounded-full" style="background-color: ${t.sub};"></span>
-            <span class="h-3 w-3 rounded-full" style="background-color: ${t.text};"></span>
-            <span class="h-3 w-3 rounded-full" style="background-color: ${t.error};"></span>
-          </div>
-        `;
-        item.addEventListener('click', () => {
-          applyCurrentTheme(t);
-          themeModal?.classList.add('hidden');
-          inputEl?.focus();
-        });
-        themesGrid.appendChild(item);
-      });
-    }
-
-    themeModalBtn?.addEventListener('click', () => {
-      themeModal?.classList.remove('hidden');
-      renderThemesGrid('');
-      themeSearch?.focus();
-    });
-    themeCloseBtn?.addEventListener('click', () => themeModal?.classList.add('hidden'));
-    themeSearch?.addEventListener('input', (e) => renderThemesGrid((e.target as HTMLInputElement).value));
-
     // Sound Cycle Button
     soundCycleBtn?.addEventListener('click', () => {
       const cycle: SwitchSoundType[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
@@ -2255,6 +2167,7 @@
     // Initial setup
     bindSubOptionButtons();
     generateWords();
+    inputEl?.focus();
   }
 
   if (document.readyState === 'loading') {

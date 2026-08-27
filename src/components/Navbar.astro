@@ -43,10 +43,10 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
           id="nav-theme-btn"
           type="button"
           class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer"
-          title="Switch Website Color Theme (17 Monkeytype Themes)"
+          title="Switch Website Color Theme (17 Themes)"
           aria-expanded="false"
         >
-          <span>🎨</span>
+          <span id="nav-theme-dot" class="h-2 w-2 rounded-full shadow-xs transition-colors" style="background-color: var(--site-primary, #e2b714);"></span>
           <span id="nav-theme-current-label" class="hidden sm:inline font-bold">Serika Dark</span>
           <svg class="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -61,7 +61,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1">
             <span class="text-[11px] font-bold text-mute uppercase">Site Theme (17)</span>
-            <span class="text-[10px] text-mute">Monkeytype</span>
+            <span class="text-[10px] text-mute">Typing Game Zone</span>
           </div>
 
           <!-- Quick Search Filter -->
@@ -304,6 +304,8 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       const curTheme = theme || getThemeById(curId);
 
       if (themeLabel) themeLabel.textContent = curTheme.name;
+      const themeDot = document.getElementById('nav-theme-dot');
+      if (themeDot) themeDot.style.backgroundColor = curTheme.main;
 
       // Update active checkmarks
       document.querySelectorAll('.nav-theme-opt').forEach((el) => {
