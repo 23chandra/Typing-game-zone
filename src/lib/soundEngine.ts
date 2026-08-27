@@ -1,7 +1,7 @@
 
 // Web Audio API procedural sound synthesizer for mechanical switches & arcade effects
 
-export type SwitchSoundType = 'clicky' | 'thock' | 'linear' | 'typewriter' | 'off';
+export type SwitchSoundType = 'clicky' | 'thock' | 'linear' | 'typewriter' | 'pop' | 'beep' | 'off';
 
 class SoundEngine {
   private ctx: AudioContext | null = null;
@@ -98,6 +98,12 @@ class SoundEngine {
         break;
       case 'typewriter':
         this.playTypewriter(now, gainNode, isSpace, isEnter);
+        break;
+      case 'pop':
+        this.playPop(now, gainNode, isSpace);
+        break;
+      case 'beep':
+        this.playBeep(now, gainNode, isSpace);
         break;
     }
   }
@@ -217,6 +223,43 @@ class SoundEngine {
 
     // Heavy typewriter strike
     this.playBlueSwitch(now, masterGain, isSpace);
+  }
+
+  // Playful Bubble Pop (like popcat / osu pop)
+  private playPop(now: number, masterGain: GainNode, isSpace: boolean) {
+    if (!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const oscGain = this.ctx.createGain();
+    const startFreq = isSpace ? 350 : 500 + Math.random() * 200;
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(startFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(startFreq * 2.2, now + 0.035);
+
+    oscGain.gain.setValueAtTime(0.7, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+    osc.connect(oscGain);
+    oscGain.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + 0.045);
+  }
+
+  // Digital Blip / Osu Beep
+  private playBeep(now: number, masterGain: GainNode, isSpace: boolean) {
+    if (!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const oscGain = this.ctx.createGain();
+    const baseFreq = isSpace ? 440 : 880 + (Math.random() * 60 - 30);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(baseFreq, now);
+
+    oscGain.gain.setValueAtTime(0.25, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+
+    osc.connect(oscGain);
+    oscGain.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + 0.03);
   }
 
   /**

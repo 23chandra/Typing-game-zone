@@ -1,460 +1,986 @@
 ---
-// Live Speed Test Bench Widget — Pro Performance Suite (Rock-Solid No-Double-Typing Engine)
+// Authentic Monkeytype Speed Test Widget — 1:1 Monkeytype Engine
+// Complete with Themes, Command Palette, Smooth Caret, Live Telemetry, Spline Graphs, Replays & Custom Modes
 ---
 
-<div class="speed-test-bench-root w-full max-w-5xl mx-auto rounded-3xl border border-hairline bg-canvas p-6 sm:p-10 shadow-level-4 transition-all relative overflow-hidden select-none">
-  
-  <!-- Subtle Ambient Backdrop Glow -->
-  <div class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-link/5 blur-3xl pointer-events-none"></div>
-  <div class="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-teal-500/5 blur-3xl pointer-events-none"></div>
+<div
+  id="monkeytype-root"
+  class="monkeytype-widget-root w-full max-w-5xl mx-auto rounded-3xl p-4 sm:p-8 font-mono transition-colors duration-300 relative select-none"
+  style="--mt-bg: #323437; --mt-main: #e2b714; --mt-caret: #e2b714; --mt-sub: #646669; --mt-sub-alt: #2c2e31; --mt-text: #d1d0c5; --mt-error: #ca4754; --mt-error-extra: #7e2a33; background-color: var(--mt-bg); color: var(--mt-text);"
+>
+  <!-- Ambient backdrop soft glow based on main theme color -->
+  <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full opacity-10 blur-3xl pointer-events-none transition-all duration-500" style="background-color: var(--mt-main);"></div>
 
-  <!-- Top Control Bar -->
-  <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 border-b border-hairline pb-5 font-mono text-xs relative z-10">
-    
-    <!-- Mode & Filter Group -->
-    <div class="flex flex-wrap items-center gap-2">
-      <!-- Mode Toggle Buttons -->
-      <div class="flex items-center gap-1 rounded-xl bg-canvas-soft p-1 border border-hairline shadow-level-1">
-        <button
-          type="button"
-          data-mode="time"
-          class="st-mode-btn active flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-semibold bg-ink text-on-primary shadow-level-1 transition cursor-pointer"
-        >
-          <span>⏱️</span>
-          <span>Time</span>
-        </button>
-        <button
-          type="button"
-          data-mode="words"
-          class="st-mode-btn flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-semibold text-body hover:text-ink transition cursor-pointer"
-        >
-          <span>📝</span>
-          <span>Words</span>
-        </button>
-        <button
-          type="button"
-          data-mode="quote"
-          class="st-mode-btn flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-semibold text-body hover:text-ink transition cursor-pointer"
-        >
-          <span>📜</span>
-          <span>Quotes</span>
-        </button>
-        <button
-          type="button"
-          data-mode="code"
-          class="st-mode-btn flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-semibold text-body hover:text-ink transition cursor-pointer"
-        >
-          <span>💻</span>
-          <span>Code</span>
-        </button>
-      </div>
-
-      <!-- Sub-options (15s, 30s, 60s, 120s / 10w, 25w, 50w, 100w) -->
-      <div id="st-sub-container" class="flex items-center gap-1 bg-canvas-soft p-1 rounded-xl border border-hairline">
-        <button type="button" data-sub="15" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">15s</button>
-        <button type="button" data-sub="30" class="st-sub-btn active rounded-lg px-2.5 py-1 text-ink bg-canvas font-bold shadow-level-1 transition cursor-pointer">30s</button>
-        <button type="button" data-sub="60" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">60s</button>
-        <button type="button" data-sub="120" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">120s</button>
-      </div>
-
-      <!-- Punctuation & Numbers Toggles -->
-      <div id="st-modifiers-container" class="flex items-center gap-1.5 text-[11px] text-mute">
-        <label class="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-hairline bg-canvas-soft hover:text-ink cursor-pointer transition select-none">
-          <input type="checkbox" id="st-toggle-punc" class="rounded border-hairline text-link focus:ring-0 cursor-pointer" />
-          <span>@ punc</span>
-        </label>
-        <label class="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-hairline bg-canvas-soft hover:text-ink cursor-pointer transition select-none">
-          <input type="checkbox" id="st-toggle-num" class="rounded border-hairline text-link focus:ring-0 cursor-pointer" />
-          <span># 123</span>
-        </label>
-      </div>
-    </div>
-
-    <!-- Acoustic Switch & Telemetry Pill -->
-    <div class="flex flex-wrap items-center gap-3">
-      <!-- Acoustic Switch Selector -->
-      <button
-        type="button"
-        id="st-sound-btn"
-        class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-1.5 text-xs font-mono text-body hover:text-ink shadow-level-1 transition cursor-pointer"
-        title="Cycle Mechanical Switch Sounds"
-      >
-        <span id="st-sound-icon">🔊</span>
-        <span id="st-sound-label" class="text-[11px] font-semibold">Clicky</span>
-      </button>
-
-      <!-- Live Telemetry Pill -->
-      <div class="flex items-center gap-3 rounded-xl border border-hairline bg-canvas-soft px-4 py-1.5 shadow-level-1">
-        <div class="flex items-center gap-1.5">
-          <span class="text-[10px] text-mute uppercase">TIME</span>
-          <span id="st-timer" class="font-bold text-ink text-sm">30</span>
-        </div>
-        <span class="text-hairline">•</span>
-        <div class="flex items-center gap-1.5">
-          <span class="text-[10px] text-mute uppercase">WPM</span>
-          <span id="st-wpm" class="font-bold text-success text-sm">0</span>
-        </div>
-        <span class="text-hairline">•</span>
-        <div class="flex items-center gap-1.5">
-          <span class="text-[10px] text-mute uppercase">ACC</span>
-          <span id="st-acc" class="font-bold text-ink text-sm">100%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Words Display Arena -->
+  <!-- Top Floating Monkeytype Config Bar -->
   <div
-    id="words-display-box"
-    class="relative my-6 h-48 overflow-hidden rounded-2xl bg-canvas-soft p-6 font-mono text-xl sm:text-2xl leading-relaxed text-neutral-400 cursor-text select-none border border-hairline transition-all"
-    aria-label="Speed test typing arena"
+    id="mt-config-bar"
+    class="relative z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 transition-opacity duration-300 text-xs font-semibold select-none shadow-sm"
+    style="background-color: var(--mt-sub-alt); color: var(--mt-sub);"
   >
-    <!-- Flowing Words Wrapper -->
-    <div id="words-wrapper" class="relative transition-transform duration-150 ease-out select-none">
-      <!-- Smooth Caret is injected directly inside words-wrapper so coordinates and translateY are 1:1 in sync -->
-      <div
-        id="st-caret"
-        class="absolute top-0 left-0 w-[3px] rounded-full bg-cyan shadow-[0_0_10px_rgba(0,223,216,0.9)] transition-all duration-75 ease-out pointer-events-none z-20 opacity-0"
-      ></div>
-      <!-- Words injected dynamically via JavaScript -->
-    </div>
-
-    <!-- Unified Single Hidden Input (Prevents double-firing across all devices) -->
-    <input
-      id="speed-unified-input"
-      type="text"
-      class="absolute -top-40 left-0 w-1 h-1 opacity-0 pointer-events-none"
-      autocomplete="off"
-      autocorrect="off"
-      autocapitalize="off"
-      spellcheck="false"
-      aria-hidden="true"
-    />
-  </div>
-
-  <!-- Bottom Helper Bar -->
-  <div class="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs font-mono text-mute border-t border-hairline">
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-1.5">
-        <kbd class="rounded bg-canvas-soft px-2 py-0.5 border border-hairline font-semibold text-ink shadow-level-1">Tab</kbd>
-        <span>+</span>
-        <kbd class="rounded bg-canvas-soft px-2 py-0.5 border border-hairline font-semibold text-ink shadow-level-1">Enter</kbd>
-        <span class="ml-1">to restart</span>
-      </div>
-      <span class="hidden sm:inline text-hairline">•</span>
-      <span class="hidden sm:inline">Space to advance word</span>
-    </div>
-
-    <div class="flex items-center gap-2">
+    <!-- Left: Modifiers & Word Pool -->
+    <div class="flex flex-wrap items-center gap-1.5">
+      <!-- Punctuation Toggle -->
       <button
         type="button"
-        id="st-restart-btn"
-        class="flex items-center gap-2 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-semibold text-body hover:text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95 cursor-pointer"
+        id="mt-toggle-punc"
+        class="mt-config-pill flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
+        title="Toggle Punctuation (@)"
+      >
+        <span class="font-bold">@</span>
+        <span class="hidden sm:inline">punctuation</span>
+      </button>
+
+      <!-- Numbers Toggle -->
+      <button
+        type="button"
+        id="mt-toggle-num"
+        class="mt-config-pill flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
+        title="Toggle Numbers (#)"
+      >
+        <span class="font-bold">#</span>
+        <span class="hidden sm:inline">numbers</span>
+      </button>
+
+      <span class="h-4 w-px mx-1" style="background-color: var(--mt-sub); opacity: 0.3;"></span>
+
+      <!-- Word Pool Language Selector -->
+      <div class="relative" id="mt-pool-dropdown-wrapper">
+        <button
+          type="button"
+          id="mt-pool-btn"
+          class="flex items-center gap-1 rounded-xl px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
+          title="Change Word List / Language"
+        >
+          <span>🌐</span>
+          <span id="mt-pool-label">english 200</span>
+          <svg class="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          id="mt-pool-menu"
+          class="absolute left-0 top-full mt-1 hidden min-w-40 rounded-xl p-1.5 shadow-xl z-50 border text-xs"
+          style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt);"
+        >
+          <button type="button" data-pool="english" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] active-pool">
+            <span>English 200</span>
+            <span class="check text-[var(--mt-main)]">✓</span>
+          </button>
+          <button type="button" data-pool="english1k" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>English 1k</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="code" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>Code Snippets</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Modes Switcher -->
+    <div class="flex items-center gap-1 rounded-xl p-0.5" style="background-color: var(--mt-bg);">
+      <button
+        type="button"
+        data-mode="time"
+        class="mt-mode-btn active flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-bold transition cursor-pointer"
+        style="color: var(--mt-main);"
       >
         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span>Restart Test</span>
+        <span>time</span>
+      </button>
+
+      <button
+        type="button"
+        data-mode="words"
+        class="mt-mode-btn flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-bold transition cursor-pointer hover:text-[var(--mt-text)]"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>words</span>
+      </button>
+
+      <button
+        type="button"
+        data-mode="quote"
+        class="mt-mode-btn flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-bold transition cursor-pointer hover:text-[var(--mt-text)]"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+        <span>quote</span>
+      </button>
+
+      <button
+        type="button"
+        data-mode="zen"
+        class="mt-mode-btn flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-bold transition cursor-pointer hover:text-[var(--mt-text)]"
+      >
+        <span class="text-sm leading-none">☯</span>
+        <span>zen</span>
+      </button>
+
+      <button
+        type="button"
+        data-mode="custom"
+        class="mt-mode-btn flex items-center gap-1.5 rounded-lg px-3 py-1.5 font-bold transition cursor-pointer hover:text-[var(--mt-text)]"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        <span>custom</span>
       </button>
     </div>
+
+    <!-- Right: Sub-options (15, 30, 60, 120 / 10, 25, 50, 100 / short, medium, long, thicc) -->
+    <div id="mt-sub-container" class="flex items-center gap-1">
+      <button type="button" data-sub="15" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">15</button>
+      <button type="button" data-sub="30" class="mt-sub-btn active rounded-lg px-2 py-1 font-bold transition cursor-pointer" style="color: var(--mt-main);">30</button>
+      <button type="button" data-sub="60" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">60</button>
+      <button type="button" data-sub="120" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">120</button>
+      <button type="button" id="mt-custom-sub-btn" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]" title="Custom Duration">⚙</button>
+    </div>
   </div>
 
-  <!-- Test Performance Result Card & Velocity Graph -->
-  <div id="st-result-card" class="mt-8 hidden rounded-2xl border border-hairline bg-canvas-soft p-6 sm:p-8 shadow-level-3 animate-in fade-in slide-in-from-bottom-3 duration-300 font-mono relative">
+  <!-- Main Speed Test Live Arena -->
+  <div id="mt-typing-view" class="relative my-8 transition-opacity duration-300">
     
-    <!-- Result Header -->
-    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-hairline pb-4 mb-6">
-      <div>
-        <div class="flex items-center gap-2">
-          <span id="st-result-icon" class="text-2xl">🏆</span>
-          <h4 class="text-lg font-bold text-ink">Benchmark Complete!</h4>
+    <!-- Big Floating Counter / Mini Telemetry Row -->
+    <div class="flex items-end justify-between mb-4 px-2 select-none">
+      <!-- Live Counter (e.g. 30s countdown or 12/50 words) -->
+      <div class="flex items-baseline gap-3">
+        <div id="mt-live-counter" class="text-3xl sm:text-4xl font-bold tracking-tight transition-all" style="color: var(--mt-main);">
+          30
         </div>
-        <p id="st-result-subtitle" class="text-xs text-mute mt-1">Excellent burst typing speed and cadence consistency.</p>
+        <div id="mt-live-wpm-pill" class="hidden sm:flex items-center gap-2 text-xs font-semibold opacity-0 transition-opacity" style="color: var(--mt-sub);">
+          <span>live wpm: <span id="mt-live-wpm" style="color: var(--mt-main);">0</span></span>
+          <span>•</span>
+          <span>acc: <span id="mt-live-acc" style="color: var(--mt-text);">100%</span></span>
+        </div>
       </div>
 
+      <!-- Quick Action Indicators (Zen finish button / Quote author citation) -->
       <div class="flex items-center gap-3">
-        <!-- New Personal Record Badge -->
-        <span id="st-pb-badge" class="hidden items-center gap-1 rounded-full bg-amber-500/10 border border-amber-500/30 px-3 py-1 text-xs font-bold text-amber-500 animate-pulse">
-          <span>👑</span>
-          <span>NEW PERSONAL BEST!</span>
-        </span>
-        <!-- Rank Grade -->
-        <span id="st-result-badge" class="rounded-full bg-emerald-500 text-white px-4 py-1 text-xs font-bold shadow-level-2">
-          RANK S+
-        </span>
+        <div id="mt-quote-author" class="hidden text-xs italic" style="color: var(--mt-sub);"></div>
+        <button
+          type="button"
+          id="mt-zen-finish-btn"
+          class="hidden items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold border transition cursor-pointer hover:brightness-125"
+          style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-main);"
+        >
+          <span>Shift+Enter to finish</span>
+          <span>✓</span>
+        </button>
       </div>
     </div>
 
-    <!-- Core Metrics Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-      <div class="rounded-xl bg-canvas p-4 border border-hairline shadow-level-1">
-        <div class="text-[10px] text-mute uppercase tracking-wider">Net Speed</div>
-        <div class="flex items-baseline gap-1 mt-1">
-          <span id="st-res-net" class="text-3xl font-bold text-success">0</span>
-          <span class="text-xs text-mute">WPM</span>
-        </div>
-        <div id="st-res-net-delta" class="text-[10px] text-mute mt-1">Top Tier Speed</div>
+    <!-- Word Arena Viewport -->
+    <div
+      id="mt-words-viewport"
+      class="relative h-36 sm:h-44 overflow-hidden rounded-2xl p-4 sm:p-6 text-xl sm:text-2xl lg:text-3xl leading-[1.8] tracking-wide cursor-text select-none border transition-all"
+      style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt);"
+      aria-label="Monkeytype Typing Arena"
+    >
+      <!-- Flowing Words Wrapper (Smooth line jumps with translateY) -->
+      <div
+        id="mt-words-wrapper"
+        class="relative transition-transform duration-100 ease-out select-none flex flex-wrap"
+      >
+        <!-- Gliding Smooth Caret -->
+        <div
+          id="mt-caret"
+          class="absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0 caret-idle"
+          style="background-color: var(--mt-caret);"
+        ></div>
+        <!-- Words injected dynamically via JavaScript -->
       </div>
 
-      <div class="rounded-xl bg-canvas p-4 border border-hairline shadow-level-1">
-        <div class="text-[10px] text-mute uppercase tracking-wider">Accuracy</div>
-        <div class="flex items-baseline gap-1 mt-1">
-          <span id="st-res-acc" class="text-3xl font-bold text-ink">100%</span>
+      <!-- Single Unified Invisible Input (Prevents double events / mobile keyboard friendly) -->
+      <input
+        id="mt-unified-input"
+        type="text"
+        class="absolute -top-40 left-0 w-1 h-1 opacity-0 pointer-events-none"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-hidden="true"
+      />
+
+      <!-- Blur / Out-of-Focus Overlay (Monkeytype signature focus prompt) -->
+      <div
+        id="mt-focus-overlay"
+        class="absolute inset-0 flex items-center justify-center backdrop-blur-xs transition-opacity duration-200 cursor-pointer z-30 hidden"
+        style="background-color: rgba(0, 0, 0, 0.4);"
+      >
+        <div class="flex items-center gap-2.5 rounded-full px-5 py-2.5 shadow-2xl border text-sm font-semibold animate-pulse" style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-text);">
+          <svg class="h-4 w-4" style="color: var(--mt-main);" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+          </svg>
+          <span>Click or press any key to focus</span>
         </div>
-        <div id="st-res-acc-detail" class="text-[10px] text-mute mt-1">0 missed keystrokes</div>
       </div>
 
-      <div class="rounded-xl bg-canvas p-4 border border-hairline shadow-level-1">
-        <div class="text-[10px] text-mute uppercase tracking-wider">Raw Speed</div>
-        <div class="flex items-baseline gap-1 mt-1">
-          <span id="st-res-raw" class="text-3xl font-bold text-body">0</span>
-          <span class="text-xs text-mute">WPM</span>
+      <!-- Master Mode Failed Banner -->
+      <div
+        id="mt-master-fail-overlay"
+        class="absolute inset-0 flex flex-col items-center justify-center backdrop-blur-sm z-40 hidden animate-in fade-in zoom-in-95 duration-200"
+        style="background-color: rgba(202, 71, 84, 0.25);"
+      >
+        <div class="rounded-2xl p-6 text-center border shadow-2xl max-w-sm" style="background-color: var(--mt-bg); border-color: var(--mt-error);">
+          <div class="text-3xl mb-2">❌</div>
+          <h4 class="text-lg font-bold" style="color: var(--mt-error);">Master Mode Failed!</h4>
+          <p class="text-xs mt-1 mb-4" style="color: var(--mt-sub);">A typo was made. Master mode demands 100% perfection.</p>
+          <button type="button" id="mt-master-restart-btn" class="rounded-full px-5 py-2 text-xs font-bold transition hover:scale-105 active:scale-95 cursor-pointer" style="background-color: var(--mt-main); color: var(--mt-bg);">
+            Restart Test (Tab + Enter)
+          </button>
         </div>
-        <div class="text-[10px] text-mute mt-1">Gross velocity</div>
-      </div>
-
-      <div class="rounded-xl bg-canvas p-4 border border-hairline shadow-level-1">
-        <div class="text-[10px] text-mute uppercase tracking-wider">Consistency</div>
-        <div class="flex items-baseline gap-1 mt-1">
-          <span id="st-res-consistency" class="text-3xl font-bold text-link">94%</span>
-        </div>
-        <div class="text-[10px] text-mute mt-1">Cadence smoothness</div>
       </div>
     </div>
 
-    <!-- Secondary Diagnostics (Keys, Errors, Duration, CPS) -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 py-3 border-t border-b border-hairline text-xs mb-6">
-      <div>
-        <span class="text-mute text-[10px] block uppercase">Key Breakdown</span>
-        <span id="st-res-keys" class="font-bold text-ink">0 / 0 / 0</span>
-        <span class="text-[10px] text-mute block font-sans">correct/err/extra</span>
+    <!-- Live Helper Footer Bar (Keybind Hints & Caps Lock Warning) -->
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs select-none" style="color: var(--mt-sub);">
+      <div class="flex items-center gap-4">
+        <!-- Restart Button & Keybind hint -->
+        <button
+          type="button"
+          id="mt-restart-btn"
+          class="flex items-center gap-2 rounded-xl px-3 py-1.5 transition cursor-pointer hover:text-[var(--mt-text)]"
+          style="background-color: var(--mt-sub-alt);"
+          title="Restart Test (Tab + Enter)"
+        >
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span class="hidden sm:inline"><kbd class="font-bold">tab</kbd> + <kbd class="font-bold">enter</kbd> - restart</span>
+          <span class="sm:hidden">Restart</span>
+        </button>
+
+        <!-- Command Line shortcut hint -->
+        <button
+          type="button"
+          id="mt-cmd-hint-btn"
+          class="hidden sm:flex items-center gap-1.5 rounded-xl px-3 py-1.5 transition cursor-pointer hover:text-[var(--mt-text)]"
+          style="background-color: var(--mt-sub-alt);"
+          title="Open Command Line (Esc / Ctrl+Shift+P)"
+        >
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span><kbd class="font-bold">esc</kbd> - commands</span>
+        </button>
       </div>
-      <div>
-        <span class="text-mute text-[10px] block uppercase">Total Keystrokes</span>
-        <span id="st-res-total-keys" class="font-bold text-ink">0</span>
+
+      <!-- Caps Lock Warning Badge -->
+      <div id="mt-caps-warning" class="hidden items-center gap-1.5 rounded-xl px-3 py-1 text-xs font-bold animate-bounce shadow-lg" style="background-color: var(--mt-main); color: var(--mt-bg);">
+        <span>⇪</span>
+        <span>Caps Lock is ON</span>
       </div>
-      <div>
-        <span class="text-mute text-[10px] block uppercase">Test Duration</span>
-        <span id="st-res-time" class="font-bold text-ink">30s</span>
-      </div>
-      <div>
-        <span class="text-mute text-[10px] block uppercase">Speed in CPS</span>
-        <span id="st-res-cps" class="font-bold text-link">0 CPS</span>
+
+      <!-- Quick Settings Buttons (Theme, Caret, Sound) -->
+      <div class="flex items-center gap-2">
+        <!-- Theme Switcher Button -->
+        <button
+          type="button"
+          id="mt-theme-modal-btn"
+          class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition cursor-pointer hover:text-[var(--mt-text)]"
+          style="background-color: var(--mt-sub-alt);"
+          title="Change Theme (Serika Dark, Matrix, Carbon, Dracula, etc.)"
+        >
+          <span>🎨</span>
+          <span id="mt-current-theme-label" class="hidden md:inline font-bold">serika_dark</span>
+        </button>
+
+        <!-- Switch Sound Selector -->
+        <button
+          type="button"
+          id="mt-sound-cycle-btn"
+          class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition cursor-pointer hover:text-[var(--mt-text)]"
+          style="background-color: var(--mt-sub-alt);"
+          title="Switch Sound Profile"
+        >
+          <span id="mt-sound-icon">🔊</span>
+          <span id="mt-sound-label" class="hidden md:inline font-bold">clicky</span>
+        </button>
+
+        <!-- Caret Style Switcher -->
+        <button
+          type="button"
+          id="mt-caret-cycle-btn"
+          class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition cursor-pointer hover:text-[var(--mt-text)]"
+          style="background-color: var(--mt-sub-alt);"
+          title="Cycle Caret Style (Line, Block, Underline, Outline, Carrot)"
+        >
+          <span>🥕</span>
+          <span id="mt-caret-label" class="hidden md:inline font-bold">line</span>
+        </button>
       </div>
     </div>
 
-    <!-- Velocity Spline Graph (Canvas) -->
-    <div class="rounded-xl bg-canvas p-4 border border-hairline shadow-level-1 mb-6">
-      <div class="flex items-center justify-between text-xs text-mute mb-2">
-        <span>WPM Velocity Trajectory Over Time</span>
-        <div class="flex items-center gap-3 text-[10px]">
-          <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-emerald-400 inline-block"></span> Net WPM</span>
-          <span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-rose-500 inline-block"></span> Error</span>
+  </div>
+
+  <!-- Iconic Monkeytype Results Screen -->
+  <div
+    id="mt-result-view"
+    class="hidden my-6 rounded-3xl p-6 sm:p-10 transition-all duration-300 font-mono relative border animate-in fade-in slide-in-from-bottom-4 duration-300"
+    style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt);"
+  >
+    
+    <!-- Top Result Hero Grid (Left stats + Right Spline Chart) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-8">
+      
+      <!-- Left Column: Big Bold Metrics -->
+      <div class="lg:col-span-4 flex flex-col gap-6">
+        
+        <!-- Net WPM Hero -->
+        <div>
+          <div class="text-xs uppercase tracking-widest" style="color: var(--mt-sub);">wpm</div>
+          <div class="flex items-baseline gap-3">
+            <span id="mt-res-wpm" class="text-6xl sm:text-7xl font-bold tracking-tight" style="color: var(--mt-main);">0</span>
+            <div id="mt-pb-badge" class="hidden items-center gap-1 rounded-full px-3 py-1 text-xs font-bold animate-pulse shadow-md" style="background-color: var(--mt-main); color: var(--mt-bg);">
+              <span>👑</span>
+              <span>PB!</span>
+            </div>
+          </div>
+          <div class="text-xs mt-1" style="color: var(--mt-sub);">
+            raw: <span id="mt-res-raw" class="font-bold" style="color: var(--mt-text);">0</span> wpm
+          </div>
+        </div>
+
+        <!-- Accuracy Hero -->
+        <div>
+          <div class="text-xs uppercase tracking-widest" style="color: var(--mt-sub);">acc</div>
+          <div class="flex items-baseline gap-3">
+            <span id="mt-res-acc" class="text-6xl sm:text-7xl font-bold tracking-tight" style="color: var(--mt-main);">100%</span>
+          </div>
+          <div class="text-xs mt-1" style="color: var(--mt-sub);">
+            consistency: <span id="mt-res-consistency" class="font-bold" style="color: var(--mt-text);">94%</span>
+          </div>
+        </div>
+
+        <!-- Secondary Diagnostic Table -->
+        <div class="flex flex-col gap-2 pt-4 border-t text-xs" style="border-color: var(--mt-sub-alt); color: var(--mt-sub);">
+          <div class="flex items-center justify-between">
+            <span>test type</span>
+            <span id="mt-res-test-type" class="font-bold" style="color: var(--mt-text);">time 30 • english</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>characters</span>
+            <span id="mt-res-chars" class="font-bold" style="color: var(--mt-text);">0/0/0/0</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>time</span>
+            <span id="mt-res-time" class="font-bold" style="color: var(--mt-text);">30s</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive Velocity Spline Graph -->
+      <div class="lg:col-span-8 flex flex-col gap-2">
+        <div class="flex items-center justify-between text-xs px-1 select-none" style="color: var(--mt-sub);">
+          <span class="font-bold uppercase tracking-wider">Velocity Curve</span>
+          <div class="flex items-center gap-4 text-[11px]">
+            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full inline-block" style="background-color: var(--mt-main);"></span> wpm</span>
+            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full inline-block" style="background-color: var(--mt-sub);"></span> raw</span>
+            <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full inline-block" style="background-color: var(--mt-error);"></span> errors</span>
+          </div>
+        </div>
+
+        <!-- Canvas Container with Interactive Tooltip -->
+        <div class="relative rounded-2xl p-4 border overflow-hidden shadow-inner" style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); border-opacity: 0.2;">
+          <canvas id="mt-chart-canvas" class="w-full h-48 block cursor-crosshair"></canvas>
+          <div id="mt-chart-tooltip" class="absolute hidden pointer-events-none rounded-lg p-2 text-xs font-mono shadow-2xl border z-30 transform -translate-x-1/2 -translate-y-full mb-2" style="background-color: var(--mt-bg); border-color: var(--mt-main); color: var(--mt-text);"></div>
         </div>
       </div>
-      <canvas id="st-graph-canvas" class="w-full h-32 block"></canvas>
+
     </div>
 
-    <!-- Action Buttons Row -->
-    <div class="flex flex-wrap items-center justify-between gap-3">
+    <!-- Action Toolbar (Next, Repeat, Practice Missed, Replay, Copy Share) -->
+    <div class="flex flex-wrap items-center justify-between gap-3 pt-6 border-t select-none" style="border-color: var(--mt-sub-alt);">
+      
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Next Test Button -->
+        <button
+          type="button"
+          id="mt-res-next-btn"
+          class="flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold transition hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+          style="background-color: var(--mt-main); color: var(--mt-bg);"
+        >
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+          </svg>
+          <span>Next Test (Tab + Enter)</span>
+        </button>
+
+        <!-- Repeat Test Button -->
+        <button
+          type="button"
+          id="mt-res-repeat-btn"
+          class="flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition hover:text-[var(--mt-text)] cursor-pointer"
+          style="background-color: var(--mt-sub-alt); color: var(--mt-sub);"
+          title="Repeat Same Test (Tab)"
+        >
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Repeat Test</span>
+        </button>
+
+        <!-- Practice Missed Words Button (only appears if there are missed words) -->
+        <button
+          type="button"
+          id="mt-res-practice-missed-btn"
+          class="hidden items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition hover:text-[var(--mt-text)] cursor-pointer border"
+          style="background-color: var(--mt-sub-alt); border-color: var(--mt-error); color: var(--mt-error);"
+          title="Practice Only Words With Typos"
+        >
+          <span>⚠️</span>
+          <span>Practice Missed (<span id="mt-missed-count">0</span>)</span>
+        </button>
+
+        <!-- Interactive Replay Button -->
+        <button
+          type="button"
+          id="mt-res-replay-btn"
+          class="flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition hover:text-[var(--mt-text)] cursor-pointer"
+          style="background-color: var(--mt-sub-alt); color: var(--mt-sub);"
+          title="Watch Keystroke Replay"
+        >
+          <span>▶️</span>
+          <span>Watch Replay</span>
+        </button>
+      </div>
+
+      <!-- Share / Copy Score Button -->
       <button
         type="button"
-        id="st-share-btn"
-        class="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-semibold text-body hover:text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95 cursor-pointer"
+        id="mt-res-share-btn"
+        class="flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition hover:text-[var(--mt-text)] cursor-pointer"
+        style="background-color: var(--mt-sub-alt); color: var(--mt-sub);"
       >
-        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
         </svg>
-        <span id="st-share-text">Copy Result</span>
+        <span id="mt-share-label">Copy Result</span>
       </button>
 
-      <button
-        type="button"
-        id="st-next-btn"
-        class="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-2.5 text-xs font-bold text-on-primary shadow-level-2 transition hover:opacity-90 active:scale-95 cursor-pointer"
-      >
-        <span>Take Next Test</span>
-        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </button>
     </div>
 
   </div>
+
+  <!-- Replay Modal View (When clicking Watch Replay) -->
+  <div
+    id="mt-replay-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/60 hidden select-none"
+  >
+    <div
+      class="w-full max-w-3xl rounded-3xl p-6 sm:p-8 border shadow-2xl font-mono relative"
+      style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt); color: var(--mt-text);"
+    >
+      <div class="flex items-center justify-between pb-4 border-b mb-6" style="border-color: var(--mt-sub-alt);">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">▶️</span>
+          <h3 class="text-base font-bold" style="color: var(--mt-main);">Test Keystroke Replay</h3>
+        </div>
+        <button type="button" id="mt-replay-close-btn" class="text-lg px-2 hover:text-[var(--mt-main)] cursor-pointer">✕</button>
+      </div>
+
+      <!-- Replay Display Area -->
+      <div id="mt-replay-words-box" class="h-32 overflow-hidden rounded-xl p-4 text-xl leading-relaxed border mb-6" style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub);">
+        <div id="mt-replay-words-wrapper" class="relative flex flex-wrap"></div>
+      </div>
+
+      <!-- Replay Controls Row -->
+      <div class="flex items-center justify-between text-xs" style="color: var(--mt-sub);">
+        <div class="flex items-center gap-3">
+          <button type="button" id="mt-replay-play-btn" class="rounded-xl px-4 py-2 font-bold cursor-pointer transition hover:scale-105" style="background-color: var(--mt-main); color: var(--mt-bg);">
+            Play Replay
+          </button>
+          <div class="flex items-center gap-1 rounded-lg p-1" style="background-color: var(--mt-sub-alt);">
+            <button type="button" data-speed="1" class="mt-replay-speed active px-2 py-1 rounded font-bold cursor-pointer" style="color: var(--mt-main);">1x</button>
+            <button type="button" data-speed="2" class="mt-replay-speed px-2 py-1 rounded font-bold hover:text-[var(--mt-text)] cursor-pointer">2x</button>
+            <button type="button" data-speed="4" class="mt-replay-speed px-2 py-1 rounded font-bold hover:text-[var(--mt-text)] cursor-pointer">4x</button>
+          </div>
+        </div>
+        <div>
+          <span>Progress: <span id="mt-replay-time">0.0s</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Selector Modal -->
+  <div
+    id="mt-theme-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/60 hidden select-none"
+  >
+    <div
+      class="w-full max-w-2xl rounded-3xl p-6 sm:p-8 border shadow-2xl font-mono relative max-h-[85vh] flex flex-col"
+      style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt); color: var(--mt-text);"
+    >
+      <div class="flex items-center justify-between pb-4 border-b mb-4" style="border-color: var(--mt-sub-alt);">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🎨</span>
+          <h3 class="text-base font-bold" style="color: var(--mt-main);">Monkeytype Color Themes</h3>
+        </div>
+        <button type="button" id="mt-theme-close-btn" class="text-lg px-2 hover:text-[var(--mt-main)] cursor-pointer">✕</button>
+      </div>
+
+      <!-- Search themes filter -->
+      <input
+        type="text"
+        id="mt-theme-search"
+        placeholder="Search themes (serika, matrix, carbon, dracula...)"
+        class="w-full rounded-xl px-4 py-2.5 text-xs border mb-4 focus:outline-none"
+        style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-text);"
+      />
+
+      <!-- Themes Grid -->
+      <div id="mt-themes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto pr-1 flex-1">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Duration / Custom Words Modal -->
+  <div
+    id="mt-custom-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/60 hidden select-none"
+  >
+    <div
+      class="w-full max-w-md rounded-3xl p-6 border shadow-2xl font-mono relative"
+      style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt); color: var(--mt-text);"
+    >
+      <div class="flex items-center justify-between pb-3 border-b mb-4" style="border-color: var(--mt-sub-alt);">
+        <h3 id="mt-custom-modal-title" class="text-sm font-bold" style="color: var(--mt-main);">Custom Test Settings</h3>
+        <button type="button" id="mt-custom-close-btn" class="text-lg px-2 hover:text-[var(--mt-main)] cursor-pointer">✕</button>
+      </div>
+
+      <div class="mb-4">
+        <label id="mt-custom-input-label" class="block text-xs mb-2" style="color: var(--mt-sub);">Enter custom duration (seconds):</label>
+        <input
+          type="number"
+          id="mt-custom-val-input"
+          min="5"
+          max="3600"
+          value="45"
+          class="w-full rounded-xl px-4 py-2.5 text-sm font-bold border focus:outline-none"
+          style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-text);"
+        />
+      </div>
+
+      <div class="flex items-center justify-end gap-2">
+        <button type="button" id="mt-custom-cancel-btn" class="rounded-xl px-4 py-2 text-xs font-bold cursor-pointer" style="background-color: var(--mt-sub-alt); color: var(--mt-sub);">Cancel</button>
+        <button type="button" id="mt-custom-save-btn" class="rounded-xl px-5 py-2 text-xs font-bold shadow-md cursor-pointer" style="background-color: var(--mt-main); color: var(--mt-bg);">Apply & Start</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Text Input Modal (for Custom Mode) -->
+  <div
+    id="mt-custom-text-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/60 hidden select-none"
+  >
+    <div
+      class="w-full max-w-xl rounded-3xl p-6 sm:p-8 border shadow-2xl font-mono relative"
+      style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt); color: var(--mt-text);"
+    >
+      <div class="flex items-center justify-between pb-3 border-b mb-4" style="border-color: var(--mt-sub-alt);">
+        <h3 class="text-sm font-bold" style="color: var(--mt-main);">Custom Text Drill</h3>
+        <button type="button" id="mt-custom-text-close-btn" class="text-lg px-2 hover:text-[var(--mt-main)] cursor-pointer">✕</button>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-xs mb-2" style="color: var(--mt-sub);">Paste or type your own practice text or drill:</label>
+        <textarea
+          id="mt-custom-textarea"
+          rows="5"
+          placeholder="Paste articles, code, tongue twisters, or lyrics here..."
+          class="w-full rounded-xl p-3 text-xs leading-relaxed border focus:outline-none font-mono"
+          style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-text);"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-end gap-2">
+        <button type="button" id="mt-custom-text-cancel-btn" class="rounded-xl px-4 py-2 text-xs font-bold cursor-pointer" style="background-color: var(--mt-sub-alt); color: var(--mt-sub);">Cancel</button>
+        <button type="button" id="mt-custom-text-save-btn" class="rounded-xl px-5 py-2 text-xs font-bold shadow-md cursor-pointer" style="background-color: var(--mt-main); color: var(--mt-bg);">Set Custom Text</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authentic Monkeytype Command Palette (Esc / Ctrl+Shift+P) -->
+  <div
+    id="mt-cmd-palette"
+    class="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 backdrop-blur-md bg-black/60 hidden select-none"
+  >
+    <div
+      class="w-full max-w-xl rounded-3xl p-4 sm:p-6 border shadow-2xl font-mono relative flex flex-col max-h-[70vh]"
+      style="background-color: var(--mt-bg); border-color: var(--mt-main); color: var(--mt-text);"
+    >
+      <!-- Search Input with command prompt icon -->
+      <div class="relative mb-3">
+        <span class="absolute left-3.5 top-3 text-sm font-bold" style="color: var(--mt-main);">></span>
+        <input
+          type="text"
+          id="mt-cmd-search"
+          placeholder="Type a command or search (theme, mode, time, sound, restart...)"
+          class="w-full rounded-2xl pl-8 pr-4 py-2.5 text-xs font-mono border focus:outline-none shadow-inner"
+          style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-text);"
+        />
+      </div>
+
+      <!-- Commands List (keyboard navigable with arrow keys) -->
+      <div id="mt-cmd-list" class="overflow-y-auto flex-1 pr-1 flex flex-col gap-1 text-xs">
+        <!-- Injected via JavaScript -->
+      </div>
+      
+      <div class="pt-3 border-t mt-2 flex items-center justify-between text-[10px]" style="border-color: var(--mt-sub-alt); color: var(--mt-sub);">
+        <span><kbd class="font-bold">↑</kbd> <kbd class="font-bold">↓</kbd> navigate</span>
+        <span><kbd class="font-bold">enter</kbd> select</span>
+        <span><kbd class="font-bold">esc</kbd> close</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
+<style>
+  @keyframes caret-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+  }
+  .caret-idle {
+    animation: caret-pulse 1s infinite ease-in-out;
+  }
+</style>
+
 <script>
-  import { getRandomWords, WORD_LISTS } from '../lib/wordLists';
-  import { soundEngine } from '../lib/soundEngine';
+  import {
+    MONKEYTYPE_ENGLISH_200,
+    MONKEYTYPE_ENGLISH_1K,
+    MONKEYTYPE_CODE_SNIPPETS,
+    generateMonkeytypeWordList,
+    getMonkeytypeQuote,
+    type CategorizedQuote
+  } from '../lib/wordLists';
+  import { MONKEYTYPE_THEMES, getThemeById, applyThemeToElement, applyThemeGlobal, type MonkeytypeTheme } from '../lib/monkeytypeThemes';
+  import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
   import confetti from 'canvas-confetti';
 
-  interface WpmSnapshot {
+  interface KeystrokeEvent {
+    char: string;
+    expected: string;
+    isCorrect: boolean;
+    timestamp: number;
+    wordIdx: number;
+    charIdx: number;
+  }
+
+  interface TrajectoryPoint {
     second: number;
     wpm: number;
     rawWpm: number;
     errors: number;
   }
 
-  // Global instance cleanup tracking
   let activeSpeedTestTimer: number | null = null;
   let activeCleanups: (() => void)[] = [];
 
-  function setupSpeedTest() {
-    // 1. Clean up any prior running timers or event listeners
+  function initMonkeytypeEngine() {
+    // 1. Cleanup old active timers / listeners
     if (activeSpeedTestTimer) {
       clearInterval(activeSpeedTestTimer);
       activeSpeedTestTimer = null;
     }
-    activeCleanups.forEach(cleanup => cleanup());
+    activeCleanups.forEach(c => c());
     activeCleanups = [];
 
-    // 2. Query DOM Elements
-    const rootEl = document.querySelector('.speed-test-bench-root');
+    const rootEl = document.getElementById('monkeytype-root');
     if (!rootEl) return;
 
-    const displayBox = document.getElementById('words-display-box');
-    const wordsWrapper = document.getElementById('words-wrapper');
-    const caret = document.getElementById('st-caret');
-    const inputEl = document.getElementById('speed-unified-input') as HTMLInputElement | null;
-    const timerLabel = document.getElementById('st-timer');
-    const wpmLabel = document.getElementById('st-wpm');
-    const accLabel = document.getElementById('st-acc');
-    const restartBtn = document.getElementById('st-restart-btn');
-    const resultCard = document.getElementById('st-result-card');
-    const puncToggle = document.getElementById('st-toggle-punc') as HTMLInputElement | null;
-    const numToggle = document.getElementById('st-toggle-num') as HTMLInputElement | null;
-    const soundBtn = document.getElementById('st-sound-btn');
-    const soundIconEl = document.getElementById('st-sound-icon');
-    const soundLabelEl = document.getElementById('st-sound-label');
-    const nextBtn = document.getElementById('st-next-btn');
-    const shareBtn = document.getElementById('st-share-btn');
-    const shareText = document.getElementById('st-share-text');
-    const subContainer = document.getElementById('st-sub-container');
-    const modifiersContainer = document.getElementById('st-modifiers-container');
+    // 2. DOM Elements
+    const wordsViewport = document.getElementById('mt-words-viewport');
+    const wordsWrapper = document.getElementById('mt-words-wrapper');
+    const caret = document.getElementById('mt-caret');
+    const inputEl = document.getElementById('mt-unified-input') as HTMLInputElement | null;
+    const liveCounter = document.getElementById('mt-live-counter');
+    const liveWpmPill = document.getElementById('mt-live-wpm-pill');
+    const liveWpm = document.getElementById('mt-live-wpm');
+    const liveAcc = document.getElementById('mt-live-acc');
+    const focusOverlay = document.getElementById('mt-focus-overlay');
+    const capsWarning = document.getElementById('mt-caps-warning');
+    const configBar = document.getElementById('mt-config-bar');
+    const typingView = document.getElementById('mt-typing-view');
+    const resultView = document.getElementById('mt-result-view');
+    const quoteAuthorEl = document.getElementById('mt-quote-author');
+    const zenFinishBtn = document.getElementById('mt-zen-finish-btn');
+    const masterFailOverlay = document.getElementById('mt-master-fail-overlay');
+    const masterRestartBtn = document.getElementById('mt-master-restart-btn');
 
-    if (!displayBox || !wordsWrapper || !inputEl) return;
+    // Modifiers & Options
+    const togglePuncBtn = document.getElementById('mt-toggle-punc');
+    const toggleNumBtn = document.getElementById('mt-toggle-num');
+    const subContainer = document.getElementById('mt-sub-container');
+    const restartBtn = document.getElementById('mt-restart-btn');
+    const cmdHintBtn = document.getElementById('mt-cmd-hint-btn');
 
-    // 3. Test State Variables
-    let mode: 'time' | 'words' | 'quote' | 'code' = 'time';
+    // Theme & Settings Elements
+    const themeModalBtn = document.getElementById('mt-theme-modal-btn');
+    const currentThemeLabel = document.getElementById('mt-current-theme-label');
+    const soundCycleBtn = document.getElementById('mt-sound-cycle-btn');
+    const soundIcon = document.getElementById('mt-sound-icon');
+    const soundLabel = document.getElementById('mt-sound-label');
+    const caretCycleBtn = document.getElementById('mt-caret-cycle-btn');
+    const caretLabel = document.getElementById('mt-caret-label');
+
+    // Modals
+    const themeModal = document.getElementById('mt-theme-modal');
+    const themeCloseBtn = document.getElementById('mt-theme-close-btn');
+    const themeSearch = document.getElementById('mt-theme-search') as HTMLInputElement | null;
+    const themesGrid = document.getElementById('mt-themes-grid');
+
+    const customModal = document.getElementById('mt-custom-modal');
+    const customCloseBtn = document.getElementById('mt-custom-close-btn');
+    const customCancelBtn = document.getElementById('mt-custom-cancel-btn');
+    const customSaveBtn = document.getElementById('mt-custom-save-btn');
+    const customValInput = document.getElementById('mt-custom-val-input') as HTMLInputElement | null;
+    const customSubBtn = document.getElementById('mt-custom-sub-btn');
+
+    const customTextModal = document.getElementById('mt-custom-text-modal');
+    const customTextCloseBtn = document.getElementById('mt-custom-text-close-btn');
+    const customTextCancelBtn = document.getElementById('mt-custom-text-cancel-btn');
+    const customTextSaveBtn = document.getElementById('mt-custom-text-save-btn');
+    const customTextarea = document.getElementById('mt-custom-textarea') as HTMLTextAreaElement | null;
+
+    const cmdPalette = document.getElementById('mt-cmd-palette');
+    const cmdSearch = document.getElementById('mt-cmd-search') as HTMLInputElement | null;
+    const cmdList = document.getElementById('mt-cmd-list');
+
+    // Result Elements
+    const resWpm = document.getElementById('mt-res-wpm');
+    const resRaw = document.getElementById('mt-res-raw');
+    const resAcc = document.getElementById('mt-res-acc');
+    const resConsistency = document.getElementById('mt-res-consistency');
+    const resTestType = document.getElementById('mt-res-test-type');
+    const resChars = document.getElementById('mt-res-chars');
+    const resTime = document.getElementById('mt-res-time');
+    const pbBadge = document.getElementById('mt-pb-badge');
+    const resNextBtn = document.getElementById('mt-res-next-btn');
+    const resRepeatBtn = document.getElementById('mt-res-repeat-btn');
+    const resPracticeMissedBtn = document.getElementById('mt-res-practice-missed-btn');
+    const missedCountEl = document.getElementById('mt-missed-count');
+    const resReplayBtn = document.getElementById('mt-res-replay-btn');
+    const resShareBtn = document.getElementById('mt-res-share-btn');
+    const shareLabel = document.getElementById('mt-share-label');
+    const chartCanvas = document.getElementById('mt-chart-canvas') as HTMLCanvasElement | null;
+    const chartTooltip = document.getElementById('mt-chart-tooltip');
+
+    // Replay Modal
+    const replayModal = document.getElementById('mt-replay-modal');
+    const replayCloseBtn = document.getElementById('mt-replay-close-btn');
+    const replayWordsBox = document.getElementById('mt-replay-words-box');
+    const replayWordsWrapper = document.getElementById('mt-replay-words-wrapper');
+    const replayPlayBtn = document.getElementById('mt-replay-play-btn');
+    const replayTime = document.getElementById('mt-replay-time');
+
+    // Pool Selector
+    const poolBtn = document.getElementById('mt-pool-btn');
+    const poolMenu = document.getElementById('mt-pool-menu');
+    const poolLabel = document.getElementById('mt-pool-label');
+
+    if (!wordsViewport || !wordsWrapper || !inputEl) return;
+
+    // 3. State Management
+    let currentTheme: MonkeytypeTheme = getThemeById(localStorage.getItem('monkeytype_theme') || 'serika_dark');
+    let mode: 'time' | 'words' | 'quote' | 'zen' | 'custom' = 'time';
     let subOption: number = 30; // default 30s
+    let quoteLength: 'all' | 'short' | 'medium' | 'long' | 'thicc' = 'all';
+    let wordPool: 'english' | 'english1k' | 'code' = 'english';
     let includePunc = false;
     let includeNum = false;
-    
+    let caretStyle: 'line' | 'block' | 'underline' | 'outline' | 'carrot' = (localStorage.getItem('monkeytype_caret') as any) || 'line';
+    let masterMode = false;
+    let confidenceMode = false;
+    let blindMode = false;
+    let customTextBuffer = '';
+
+    // Active Test Runtime State
     let words: string[] = [];
     let currentWordIndex = 0;
     let currentCharIndex = 0;
     let correctChars = 0;
     let errorChars = 0;
     let extraCharsCount = 0;
+    let missedCharsCount = 0;
     let totalKeystrokes = 0;
     let startTime: number = 0;
     let timeRemaining = 30;
     let isTestRunning = false;
     let isTestComplete = false;
-
-    // Hardware/Software Event Deduplication Tracker (blocks double events within 35ms)
-    let lastProcessedTime = 0;
-    let lastProcessedKey = '';
-
-    // Validation state tracking: true = correct, false = error, null = pending
     let wordCharStates: (boolean | null)[][] = [];
-    let trajectory: WpmSnapshot[] = [];
+    let trajectory: TrajectoryPoint[] = [];
+    let keystrokeLog: KeystrokeEvent[] = [];
+    let missedWordsSet: Set<string> = new Set();
+    let isReplayingMissed = false;
 
-    // 4. Sound UI Synchronization
+    // Deduplication tracker
+    let lastKeyProcessedTime = 0;
+    let lastKeyProcessed = '';
+
+    // 4. Apply Initial Theme & Sync with Site-wide Theming
+    const applyCurrentTheme = (theme: MonkeytypeTheme) => {
+      currentTheme = theme;
+      applyThemeGlobal(theme);
+      applyThemeToElement(rootEl, theme);
+      if (currentThemeLabel) currentThemeLabel.textContent = theme.id;
+      updateCaretAppearance();
+      if (isTestComplete && trajectory.length > 0) drawSplineChart(trajectory);
+    };
+
+    // Listen for site-wide theme changes from Navbar, Footer, or Command Palette
+    const onSiteThemeChange = (e: any) => {
+      if (e.detail) {
+        currentTheme = e.detail;
+        applyThemeToElement(rootEl, currentTheme);
+        if (currentThemeLabel) currentThemeLabel.textContent = currentTheme.id;
+        updateCaretAppearance();
+        if (isTestComplete && trajectory.length > 0) drawSplineChart(trajectory);
+      }
+    };
+    window.addEventListener('monkeytype:theme-change', onSiteThemeChange);
+    activeCleanups.push(() => window.removeEventListener('monkeytype:theme-change', onSiteThemeChange));
+
+    applyCurrentTheme(currentTheme);
+
+    // 5. Caret Appearance
+    function updateCaretAppearance() {
+      if (!caret) return;
+      caret.className = 'absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0 caret-idle';
+      caret.textContent = '';
+      if (caretLabel) caretLabel.textContent = caretStyle;
+      localStorage.setItem('monkeytype_caret', caretStyle);
+
+      switch (caretStyle) {
+        case 'line':
+          caret.style.width = '3px';
+          caret.style.borderRadius = '9999px';
+          caret.style.backgroundColor = 'var(--mt-caret)';
+          break;
+        case 'block':
+          caret.style.width = '1.2ch';
+          caret.style.borderRadius = '2px';
+          caret.style.backgroundColor = 'var(--mt-caret)';
+          caret.style.opacity = '0.5';
+          break;
+        case 'underline':
+          caret.style.width = '1.2ch';
+          caret.style.height = '3px';
+          caret.style.borderRadius = '9999px';
+          caret.style.backgroundColor = 'var(--mt-caret)';
+          break;
+        case 'outline':
+          caret.style.width = '1.2ch';
+          caret.style.borderRadius = '3px';
+          caret.style.border = '2px solid var(--mt-caret)';
+          caret.style.backgroundColor = 'transparent';
+          break;
+        case 'carrot':
+          caret.style.width = 'auto';
+          caret.style.height = 'auto';
+          caret.style.backgroundColor = 'transparent';
+          caret.textContent = '🥕';
+          caret.style.fontSize = '1rem';
+          break;
+      }
+    }
+    updateCaretAppearance();
+
+    // 6. Sound Switcher Sync
     const updateSoundUI = () => {
       const cur = soundEngine.getSwitch();
       const isMuted = soundEngine.getIsMuted() || cur === 'off';
-      if (soundIconEl) soundIconEl.textContent = isMuted ? '🔇' : '🔊';
-      const labels: Record<string, string> = {
-        clicky: 'Clicky',
-        thock: 'Thock',
-        linear: 'Linear',
-        typewriter: 'Typewriter',
-        off: 'Muted'
-      };
-      if (soundLabelEl) soundLabelEl.textContent = labels[cur] || 'Sound';
+      if (soundIcon) soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      if (soundLabel) soundLabel.textContent = cur;
     };
     updateSoundUI();
 
-    const onSoundClick = () => {
-      const cycle: ('clicky' | 'thock' | 'linear' | 'typewriter' | 'off')[] = ['clicky', 'thock', 'linear', 'typewriter', 'off'];
-      const cur = soundEngine.getSwitch();
-      const nextIdx = (cycle.indexOf(cur) + 1) % cycle.length;
-      const nextSwitch = cycle[nextIdx];
-      soundEngine.setSwitch(nextSwitch);
-      soundEngine.initContext();
-      soundEngine.playKey(false, nextSwitch === 'typewriter');
-      updateSoundUI();
-    };
-    soundBtn?.addEventListener('click', onSoundClick);
-    activeCleanups.push(() => soundBtn?.removeEventListener('click', onSoundClick));
-
-    const onPuncChange = () => {
-      includePunc = !!puncToggle?.checked;
-      generateWords();
-    };
-    puncToggle?.addEventListener('change', onPuncChange);
-    activeCleanups.push(() => puncToggle?.removeEventListener('change', onPuncChange));
-
-    const onNumChange = () => {
-      includeNum = !!numToggle?.checked;
-      generateWords();
-    };
-    numToggle?.addEventListener('change', onNumChange);
-    activeCleanups.push(() => numToggle?.removeEventListener('change', onNumChange));
-
-    // 5. Generate Words Function
+    // 7. Word Generation
     function generateWords() {
-      if (mode === 'quote') {
-        const q = WORD_LISTS.quotes[Math.floor(Math.random() * WORD_LISTS.quotes.length)];
-        words = q.text.trim().split(/\s+/);
-      } else if (mode === 'code') {
-        const c = WORD_LISTS.codeSnippets[Math.floor(Math.random() * WORD_LISTS.codeSnippets.length)];
-        words = c.code.replace(/\r\n/g, '\n').split('\n').flatMap((line, idx, arr) => {
-          const lineWords = line.trim().split(/\s+/).filter(Boolean);
-          if (idx < arr.length - 1) {
-            lineWords.push('↵');
-          }
-          return lineWords;
-        }).filter(Boolean);
-      } else {
-        const count = mode === 'words' ? subOption : Math.max(120, subOption * 4);
-        const baseWords = getRandomWords(count, 'easy');
-        
-        words = baseWords.map((w, idx) => {
-          let modified = w;
-          if (includeNum && Math.random() < 0.18) {
-            modified = `${Math.floor(Math.random() * 899 + 100)}`;
-          } else if (includePunc && idx > 0 && Math.random() < 0.22) {
-            const puncs = [',', '.', '!', '?', ';', ':', '-'];
-            modified = `${w}${puncs[Math.floor(Math.random() * puncs.length)]}`;
-          }
-          return modified;
-        });
-      }
-
+      missedWordsSet.clear();
+      isTestRunning = false;
+      isTestComplete = false;
       currentWordIndex = 0;
       currentCharIndex = 0;
       correctChars = 0;
       errorChars = 0;
       extraCharsCount = 0;
+      missedCharsCount = 0;
       totalKeystrokes = 0;
-      timeRemaining = mode === 'time' ? subOption : 0;
-      isTestRunning = false;
-      isTestComplete = false;
       trajectory = [];
-      wordCharStates = words.map(w => new Array(w.length).fill(null));
+      keystrokeLog = [];
 
       if (activeSpeedTestTimer) {
         clearInterval(activeSpeedTestTimer);
         activeSpeedTestTimer = null;
       }
 
-      if (timerLabel) timerLabel.textContent = mode === 'time' ? `${timeRemaining}` : '0';
-      if (wpmLabel) wpmLabel.textContent = '0';
-      if (accLabel) accLabel.textContent = '100%';
-      resultCard?.classList.add('hidden');
+      masterFailOverlay?.classList.add('hidden');
+      resultView?.classList.add('hidden');
+      typingView?.classList.remove('hidden');
+      configBar?.classList.remove('opacity-15');
+
+      if (isReplayingMissed) {
+        isReplayingMissed = false;
+      } else if (mode === 'quote') {
+        const q = getMonkeytypeQuote(quoteLength);
+        words = q.text.trim().split(/\s+/);
+        if (quoteAuthorEl) {
+          quoteAuthorEl.textContent = `— ${q.author}`;
+          quoteAuthorEl.classList.remove('hidden');
+        }
+      } else if (mode === 'code' || wordPool === 'code') {
+        const c = MONKEYTYPE_CODE_SNIPPETS[Math.floor(Math.random() * MONKEYTYPE_CODE_SNIPPETS.length)];
+        words = c.code.replace(/\r\n/g, '\n').split('\n').flatMap((line, idx, arr) => {
+          const lineWords = line.trim().split(/\s+/).filter(Boolean);
+          if (idx < arr.length - 1) lineWords.push('↵');
+          return lineWords;
+        }).filter(Boolean);
+        if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
+      } else if (mode === 'custom') {
+        if (!customTextBuffer) customTextBuffer = 'The quick brown fox jumps over the lazy dog.';
+        words = customTextBuffer.trim().split(/\s+/).filter(Boolean);
+        if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
+      } else if (mode === 'zen') {
+        words = generateMonkeytypeWordList(100, wordPool === 'english1k' ? 'english1k' : 'english', includePunc, includeNum);
+        if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
+      } else {
+        const count = mode === 'words' ? subOption : Math.max(120, subOption * 4);
+        words = generateMonkeytypeWordList(count, wordPool === 'english1k' ? 'english1k' : 'english', includePunc, includeNum);
+        if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
+      }
+
+      wordCharStates = words.map(w => new Array(w.length).fill(null));
+      timeRemaining = mode === 'time' ? subOption : 0;
+
+      if (liveCounter) {
+        if (mode === 'time') liveCounter.textContent = `${subOption}`;
+        else if (mode === 'words') liveCounter.textContent = `0 / ${subOption}`;
+        else if (mode === 'zen') liveCounter.textContent = `zen`;
+        else liveCounter.textContent = `${words.length}w`;
+      }
+
+      if (liveWpmPill) liveWpmPill.classList.add('opacity-0');
+      if (zenFinishBtn) {
+        if (mode === 'zen') zenFinishBtn.classList.remove('hidden');
+        else zenFinishBtn.classList.add('hidden');
+      }
 
       renderWordsDOM();
       requestAnimationFrame(() => {
@@ -462,87 +988,90 @@
       });
     }
 
-    // 6. Render Words into DOM
+    // 8. Render Words DOM (Exact Monkeytype Letter structure)
     function renderWordsDOM() {
       if (!wordsWrapper) return;
-      // Preserve caret element inside wrapper
       const caretEl = caret;
       wordsWrapper.innerHTML = '';
       if (caretEl) wordsWrapper.appendChild(caretEl);
       wordsWrapper.style.transform = 'translateY(0px)';
 
       words.forEach((w, wIdx) => {
-        const wordSpan = document.createElement('span');
-        wordSpan.className = `word-span mr-3.5 mb-2 inline-block transition-colors ${wIdx === currentWordIndex ? 'text-ink font-semibold active-word' : 'text-neutral-500'}`;
-        wordSpan.setAttribute('data-word-idx', `${wIdx}`);
+        const wordDiv = document.createElement('div');
+        wordDiv.className = `mt-word inline-block mr-3 mb-1.5 transition-colors duration-150 ${wIdx === currentWordIndex ? 'active-word' : ''}`;
+        wordDiv.setAttribute('data-word-idx', `${wIdx}`);
 
         w.split('').forEach((ch, cIdx) => {
-          const charSpan = document.createElement('span');
-          charSpan.textContent = ch;
-          charSpan.className = 'char-span transition-colors';
-          charSpan.setAttribute('data-char-idx', `${cIdx}`);
-          wordSpan.appendChild(charSpan);
+          const letterSpan = document.createElement('span');
+          letterSpan.textContent = ch;
+          letterSpan.className = 'mt-letter transition-colors';
+          letterSpan.setAttribute('data-char-idx', `${cIdx}`);
+          letterSpan.style.color = 'var(--mt-sub)';
+          wordDiv.appendChild(letterSpan);
         });
 
-        wordsWrapper.appendChild(wordSpan);
+        wordsWrapper.appendChild(wordDiv);
       });
     }
 
-    // 7. Caret Positioning & True Line-by-Line Scrolling
+    // 9. Gliding Smooth Caret Positioning & True Line Jumping
     function positionCaret() {
       if (!caret || !wordsWrapper || isTestComplete) {
         if (caret) caret.style.opacity = '0';
         return;
       }
 
-      const activeWordSpan = wordsWrapper.querySelector('.active-word') as HTMLElement | null;
-      if (!activeWordSpan) {
+      const activeWordDiv = wordsWrapper.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+      if (!activeWordDiv) {
         caret.style.opacity = '0';
         return;
       }
 
-      const charSpans = activeWordSpan.querySelectorAll('.char-span:not(.extra-char)');
-      let targetX = activeWordSpan.offsetLeft;
-      let targetY = activeWordSpan.offsetTop;
-      const targetH = activeWordSpan.offsetHeight || 32;
+      const letters = activeWordDiv.querySelectorAll('.mt-letter:not(.extra-char)') as NodeListOf<HTMLElement>;
+      let targetX = activeWordDiv.offsetLeft;
+      let targetY = activeWordDiv.offsetTop;
+      const targetH = activeWordDiv.offsetHeight || 38;
 
-      if (currentCharIndex < charSpans.length) {
-        const activeChar = charSpans[currentCharIndex] as HTMLElement;
-        targetX = activeChar.offsetLeft;
-        targetY = activeChar.offsetTop;
-      } else if (charSpans.length > 0) {
-        const lastChar = charSpans[charSpans.length - 1] as HTMLElement;
-        targetX = lastChar.offsetLeft + lastChar.offsetWidth;
-        targetY = lastChar.offsetTop;
+      if (currentCharIndex < letters.length) {
+        const activeLetter = letters[currentCharIndex];
+        targetX = activeLetter.offsetLeft;
+        targetY = activeLetter.offsetTop;
+      } else if (letters.length > 0) {
+        const lastLetter = letters[letters.length - 1];
+        targetX = lastLetter.offsetLeft + lastLetter.offsetWidth;
+        targetY = lastLetter.offsetTop;
       }
 
-      // Smooth caret placement directly inside words-wrapper coordinate system
+      // Smooth caret translation
       caret.style.transform = `translate(${targetX}px, ${targetY + 4}px)`;
-      caret.style.height = `${targetH - 8}px`;
+      if (caretStyle === 'line' || caretStyle === 'block' || caretStyle === 'outline') {
+        caret.style.height = `${targetH - 8}px`;
+      }
       caret.style.opacity = '1';
 
-      // Clean Line-by-Line Auto-Scroll:
-      // When on Line 1 or 2 (offsetTop <= single line height), scrollOffset = 0
-      // When on Line 3 or greater, scrollOffset shifts by exactly 1 line at a time
-      const singleLineHeight = targetH || 38;
-      const scrollOffset = Math.max(0, activeWordSpan.offsetTop - singleLineHeight);
+      // Line scrolling:
+      // When current line is line 2 or more, shift container up by 1 line height
+      const singleLineHeight = targetH || 40;
+      const scrollOffset = Math.max(0, activeWordDiv.offsetTop - singleLineHeight);
       wordsWrapper.style.transform = `translateY(-${scrollOffset}px)`;
     }
 
-    // 8. Start Test Timer
+    // 10. Start Test Timer
     function startTest() {
       if (isTestRunning) return;
       isTestRunning = true;
       startTime = Date.now();
       trajectory = [{ second: 0, wpm: 0, rawWpm: 0, errors: 0 }];
 
+      configBar?.classList.add('opacity-15');
+      if (liveWpmPill) liveWpmPill.classList.remove('opacity-0');
+
       if (activeSpeedTestTimer) clearInterval(activeSpeedTestTimer);
 
       activeSpeedTestTimer = window.setInterval(() => {
         const elapsedSec = (Date.now() - startTime) / 1000;
         const minutes = Math.max(0.016, elapsedSec / 60);
-        
-        // Stabilized initial WPM to avoid huge spike in the first 1-2 seconds
+
         const grossWpm = Math.round((totalKeystrokes / 5) / minutes) || 0;
         const netWpm = Math.max(0, Math.round(((correctChars - errorChars) / 5) / minutes)) || 0;
         const acc = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
@@ -554,24 +1083,28 @@
           errors: errorChars
         });
 
+        if (liveWpm) liveWpm.textContent = `${netWpm}`;
+        if (liveAcc) liveAcc.textContent = `${acc}%`;
+
         if (mode === 'time') {
           timeRemaining = Math.max(0, subOption - Math.floor(elapsedSec));
-          if (timerLabel) timerLabel.textContent = `${timeRemaining}`;
+          if (liveCounter) liveCounter.textContent = `${timeRemaining}`;
 
           if (timeRemaining <= 0) {
             finishTest();
             return;
           }
+        } else if (mode === 'words') {
+          if (liveCounter) liveCounter.textContent = `${currentWordIndex} / ${subOption}`;
+        } else if (mode === 'zen') {
+          if (liveCounter) liveCounter.textContent = `${Math.floor(elapsedSec)}s`;
         } else {
-          if (timerLabel) timerLabel.textContent = `${Math.floor(elapsedSec)}`;
+          if (liveCounter) liveCounter.textContent = `${Math.floor(elapsedSec)}s`;
         }
-
-        if (wpmLabel) wpmLabel.textContent = `${netWpm}`;
-        if (accLabel) accLabel.textContent = `${acc}%`;
       }, 500);
     }
 
-    // 9. Finish Test & Calculate Diagnostics
+    // 11. Finish Test & Diagnostics
     function finishTest() {
       if (activeSpeedTestTimer) {
         clearInterval(activeSpeedTestTimer);
@@ -580,18 +1113,18 @@
       isTestRunning = false;
       isTestComplete = true;
       if (caret) caret.style.opacity = '0';
+      configBar?.classList.remove('opacity-15');
 
       const elapsedSec = mode === 'time' ? subOption : Math.max(1, (Date.now() - startTime) / 1000);
       const minutes = elapsedSec / 60;
-      const rawWpm = Math.round((totalKeystrokes / 5) / minutes) || 0;
-      const netWpm = Math.max(0, Math.round(((correctChars - errorChars) / 5) / minutes)) || 0;
-      const accuracy = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
-      const cps = (correctChars / elapsedSec).toFixed(1);
+      const rawWpmVal = Math.round((totalKeystrokes / 5) / minutes) || 0;
+      const netWpmVal = Math.max(0, Math.round(((correctChars - errorChars) / 5) / minutes)) || 0;
+      const accuracyVal = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
 
-      // Consistency formula: 100 - Coefficient of Variation
+      // Consistency formula
       let consistency = 92;
       if (trajectory.length > 3) {
-        const wpms = trajectory.slice(2).map(t => t.wpm);
+        const wpms = trajectory.slice(1).map(t => t.wpm);
         const mean = Math.max(1, wpms.reduce((a, b) => a + b, 0) / wpms.length);
         const variance = wpms.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / wpms.length;
         const stdDev = Math.sqrt(variance);
@@ -599,69 +1132,17 @@
         consistency = Math.max(40, Math.min(99, Math.round(100 - cv)));
       }
 
-      // Populate Result card
-      const resNet = document.getElementById('st-res-net');
-      const resAcc = document.getElementById('st-res-acc');
-      const resRaw = document.getElementById('st-res-raw');
-      const resConsistency = document.getElementById('st-res-consistency');
-      const resBadge = document.getElementById('st-result-badge');
-      const resKeys = document.getElementById('st-res-keys');
-      const resTotalKeys = document.getElementById('st-res-total-keys');
-      const resTime = document.getElementById('st-res-time');
-      const resCps = document.getElementById('st-res-cps');
-      const resIcon = document.getElementById('st-result-icon');
-      const resSubtitle = document.getElementById('st-result-subtitle');
-      const pbBadge = document.getElementById('st-pb-badge');
-      const resAccDetail = document.getElementById('st-res-acc-detail');
-      const resNetDelta = document.getElementById('st-res-net-delta');
-
-      if (resNet) resNet.textContent = `${netWpm}`;
-      if (resAcc) resAcc.textContent = `${accuracy}%`;
-      if (resRaw) resRaw.textContent = `${rawWpm}`;
+      // Populate Result Hero
+      if (resWpm) resWpm.textContent = `${netWpmVal}`;
+      if (resRaw) resRaw.textContent = `${rawWpmVal}`;
+      if (resAcc) resAcc.textContent = `${accuracyVal}%`;
       if (resConsistency) resConsistency.textContent = `${consistency}%`;
-      if (resKeys) resKeys.textContent = `${correctChars} / ${errorChars} / ${extraCharsCount}`;
-      if (resTotalKeys) resTotalKeys.textContent = `${totalKeystrokes}`;
+      if (resTestType) resTestType.textContent = `${mode} ${mode === 'time' ? subOption + 's' : mode === 'words' ? subOption + 'w' : ''} • ${wordPool} ${includePunc ? '• punc' : ''} ${includeNum ? '• num' : ''}`;
+      if (resChars) resChars.textContent = `${correctChars} / ${errorChars} / ${extraCharsCount} / ${missedCharsCount}`;
       if (resTime) resTime.textContent = `${Math.round(elapsedSec)}s`;
-      if (resCps) resCps.textContent = `${cps} CPS`;
-      if (resAccDetail) resAccDetail.textContent = `${errorChars} missed keystrokes`;
 
-      // Tier rank grading
-      let rank = 'RANK S+';
-      let rankColor = 'bg-emerald-500';
-      if (accuracy >= 98 && netWpm >= 85) {
-        rank = '👑 RANK S+ (TITAN)';
-        rankColor = 'bg-gradient-to-r from-amber-500 to-rose-500';
-        if (resIcon) resIcon.textContent = '👑';
-        if (resSubtitle) resSubtitle.textContent = 'Godlike typing velocity! Top 1% Worldwide.';
-      } else if (accuracy >= 95 && netWpm >= 65) {
-        rank = '💎 RANK S (ELITE)';
-        rankColor = 'bg-emerald-500';
-        if (resIcon) resIcon.textContent = '💎';
-        if (resSubtitle) resSubtitle.textContent = 'Professional level speed and flawless precision.';
-      } else if (accuracy >= 90 && netWpm >= 45) {
-        rank = '⚡ RANK A (PRO)';
-        rankColor = 'bg-blue-500';
-        if (resIcon) resIcon.textContent = '⚡';
-        if (resSubtitle) resSubtitle.textContent = 'Fast cadence! Above global touch-typing average.';
-      } else if (accuracy >= 80) {
-        rank = '🎯 RANK B (GOOD)';
-        rankColor = 'bg-amber-500';
-        if (resIcon) resIcon.textContent = '🎯';
-        if (resSubtitle) resSubtitle.textContent = 'Solid baseline. Keep building muscle memory!';
-      } else {
-        rank = '🌱 RANK C (PRACTICE)';
-        rankColor = 'bg-rose-500';
-        if (resIcon) resIcon.textContent = '🌱';
-        if (resSubtitle) resSubtitle.textContent = 'Focus on accuracy first before increasing raw speed.';
-      }
-
-      if (resBadge) {
-        resBadge.textContent = rank;
-        resBadge.className = `rounded-full text-white px-4 py-1 text-xs font-bold shadow-level-2 ${rankColor}`;
-      }
-
-      // Record to LocalStorage
-      const recResult = storage.recordGameResult('speed-test', netWpm * 10, netWpm, accuracy, 1, currentWordIndex, totalKeystrokes, errorChars);
+      // Save to Storage & Check PB
+      const recResult = storage.recordGameResult('speed-test', netWpmVal * 10, netWpmVal, accuracyVal, 1, currentWordIndex, totalKeystrokes, errorChars);
       if (pbBadge) {
         if (recResult.newBestWPM || recResult.newHighScore) {
           pbBadge.classList.remove('hidden');
@@ -672,40 +1153,45 @@
         }
       }
 
-      if (resNetDelta) {
-        const profile = storage.getProfile();
-        resNetDelta.textContent = `Career Avg: ${profile.averageWPM} WPM`;
+      // Missed words button toggle
+      if (resPracticeMissedBtn && missedCountEl) {
+        if (missedWordsSet.size > 0) {
+          missedCountEl.textContent = `${missedWordsSet.size}`;
+          resPracticeMissedBtn.classList.remove('hidden');
+          resPracticeMissedBtn.classList.add('inline-flex');
+        } else {
+          resPracticeMissedBtn.classList.add('hidden');
+          resPracticeMissedBtn.classList.remove('inline-flex');
+        }
       }
 
-      resultCard?.classList.remove('hidden');
+      typingView?.classList.add('hidden');
+      resultView?.classList.remove('hidden');
 
       soundEngine.playVictory();
-      if (netWpm >= 50) {
+      if (netWpmVal >= 50) {
         try {
-          confetti({ particleCount: 100, spread: 75, origin: { y: 0.6 } });
+          confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 } });
         } catch {}
       }
 
-      // Draw Spline Trajectory Curve
-      drawVelocityChart(trajectory);
+      // Draw Spline Chart
+      drawSplineChart(trajectory);
     }
 
-    // 10. Canvas Spline Chart Drawing
-    function drawVelocityChart(data: WpmSnapshot[]) {
-      const canvas = document.getElementById('st-graph-canvas') as HTMLCanvasElement | null;
-      if (!canvas) return;
-
+    // 12. Spline Velocity Chart Drawing with Hover Tooltip
+    function drawSplineChart(data: TrajectoryPoint[]) {
+      if (!chartCanvas) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const rect = canvas.getBoundingClientRect();
+      const rect = chartCanvas.getBoundingClientRect();
       const w = Math.max(300, Math.floor(rect.width || 600));
-      const h = Math.max(100, Math.floor(rect.height || 130));
+      const h = Math.max(120, Math.floor(rect.height || 180));
 
-      canvas.width = Math.round(w * dpr);
-      canvas.height = Math.round(h * dpr);
-      const ctx = canvas.getContext('2d');
+      chartCanvas.width = Math.round(w * dpr);
+      chartCanvas.height = Math.round(h * dpr);
+      const ctx = chartCanvas.getContext('2d');
       if (!ctx) return;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
       ctx.clearRect(0, 0, w, h);
 
       const chartData = data.length > 1 ? data : [
@@ -713,15 +1199,16 @@
         { second: 1, wpm: data[0]?.wpm || 30, rawWpm: data[0]?.rawWpm || 30, errors: 0 }
       ];
 
-      const padX = 40;
+      const padX = 35;
       const padY = 20;
       const graphW = w - padX * 2;
       const graphH = h - padY * 2;
 
       const maxWpm = Math.max(50, ...chartData.map(d => Math.max(d.wpm, d.rawWpm))) * 1.15;
 
-      // Horizontal dashed guidelines
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      // Background grid lines
+      ctx.strokeStyle = currentTheme.sub;
+      ctx.globalAlpha = 0.15;
       ctx.lineWidth = 1;
       ctx.setLineDash([4, 4]);
 
@@ -732,23 +1219,46 @@
         ctx.lineTo(w - padX, gy);
         ctx.stroke();
 
-        ctx.font = '9px "Geist Mono", monospace';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.fillText(`${Math.round(maxWpm * p)}`, 8, gy + 3);
+        ctx.globalAlpha = 0.5;
+        ctx.font = '10px monospace';
+        ctx.fillStyle = currentTheme.sub;
+        ctx.fillText(`${Math.round(maxWpm * p)}`, 6, gy + 3);
+        ctx.globalAlpha = 0.15;
       });
       ctx.setLineDash([]);
+      ctx.globalAlpha = 1.0;
 
       const points = chartData.map((d, i) => ({
         x: padX + (i / (chartData.length - 1)) * graphW,
-        y: padY + graphH * (1 - d.wpm / maxWpm)
+        y: padY + graphH * (1 - d.wpm / maxWpm),
+        rawY: padY + graphH * (1 - d.rawWpm / maxWpm),
+        data: d
       }));
 
-      // Area gradient
-      const areaGrad = ctx.createLinearGradient(0, padY, 0, padY + graphH);
-      areaGrad.addColorStop(0, 'rgba(80, 227, 194, 0.35)');
-      areaGrad.addColorStop(1, 'rgba(80, 227, 194, 0)');
+      // Raw WPM dotted curve
+      ctx.strokeStyle = currentTheme.sub;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = 0.6;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      for (let i = 0; i < points.length; i++) {
+        if (i === 0) ctx.moveTo(points[i].x, points[i].rawY);
+        else {
+          const xc = (points[i].x + points[i - 1].x) / 2;
+          const yc = (points[i].rawY + points[i - 1].rawY) / 2;
+          ctx.quadraticCurveTo(points[i - 1].x, points[i - 1].rawY, xc, yc);
+        }
+      }
+      ctx.lineTo(points[points.length - 1].x, points[points.length - 1].rawY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1.0;
 
-      ctx.fillStyle = areaGrad;
+      // Area gradient under Net WPM curve
+      const grad = ctx.createLinearGradient(0, padY, 0, padY + graphH);
+      grad.addColorStop(0, currentTheme.main + '44');
+      grad.addColorStop(1, currentTheme.main + '00');
+      ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.moveTo(points[0].x, padY + graphH);
       for (let i = 0; i < points.length; i++) {
@@ -765,10 +1275,8 @@
       ctx.fill();
 
       // Net WPM stroke line
-      ctx.strokeStyle = '#50e3c2';
+      ctx.strokeStyle = currentTheme.main;
       ctx.lineWidth = 2.5;
-      ctx.shadowColor = '#50e3c2';
-      ctx.shadowBlur = 8;
       ctx.beginPath();
       for (let i = 0; i < points.length; i++) {
         if (i === 0) ctx.moveTo(points[i].x, points[i].y);
@@ -780,79 +1288,131 @@
       }
       ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
       ctx.stroke();
-      ctx.shadowBlur = 0;
 
-      // Error scatter dots
+      // Error marker dots
       chartData.forEach((d, i) => {
         if (d.errors > 0 && i > 0 && d.errors > chartData[i - 1].errors) {
           const pt = points[i];
-          ctx.fillStyle = '#ff0080';
-          ctx.shadowColor = '#ff0080';
-          ctx.shadowBlur = 10;
+          ctx.fillStyle = currentTheme.error;
           ctx.beginPath();
           ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
           ctx.fill();
-          ctx.shadowBlur = 0;
         }
       });
+
+      // Interactive hover listener
+      const onChartMouseMove = (e: MouseEvent) => {
+        if (!chartTooltip) return;
+        const cRect = chartCanvas.getBoundingClientRect();
+        const mx = e.clientX - cRect.left;
+        
+        // Find closest point
+        let closest = points[0];
+        let minDist = Math.abs(points[0].x - mx);
+        for (const pt of points) {
+          const dist = Math.abs(pt.x - mx);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = pt;
+          }
+        }
+
+        if (closest && minDist < 30) {
+          chartTooltip.style.left = `${closest.x}px`;
+          chartTooltip.style.top = `${closest.y}px`;
+          chartTooltip.innerHTML = `
+            <div class="font-bold text-[var(--mt-main)]">${closest.data.second}s</div>
+            <div>wpm: <span class="font-bold">${closest.data.wpm}</span></div>
+            <div>raw: <span class="font-bold">${closest.data.rawWpm}</span></div>
+            ${closest.data.errors > 0 ? `<div style="color: var(--mt-error)">err: ${closest.data.errors}</div>` : ''}
+          `;
+          chartTooltip.classList.remove('hidden');
+        } else {
+          chartTooltip.classList.add('hidden');
+        }
+      };
+
+      const onChartMouseLeave = () => {
+        chartTooltip?.classList.add('hidden');
+      };
+
+      chartCanvas.onmousemove = onChartMouseMove;
+      chartCanvas.onmouseleave = onChartMouseLeave;
     }
 
-    // 11. Core Keystroke Handler (Zero Double-Firing Guarantee)
+    // 13. Core Keystroke Handler
     function handleKey(key: string) {
       if (isTestComplete) return;
 
-      // Deduplication Guard: if the same key was processed within 35ms, drop it
+      // Deduplication guard: ignore duplicate event within 30ms
       const now = performance.now();
-      if (now - lastProcessedTime < 35 && key === lastProcessedKey) {
+      if (now - lastKeyProcessedTime < 30 && key === lastKeyProcessed) {
         return;
       }
-      lastProcessedTime = now;
-      lastProcessedKey = key;
+      lastKeyProcessedTime = now;
+      lastKeyProcessed = key;
 
       if (!isTestRunning) startTest();
 
       const currentWord = words[currentWordIndex];
       if (!currentWord) return;
 
-      const activeWordSpan = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
-      const charSpans = activeWordSpan?.querySelectorAll('.char-span:not(.extra-char)') as NodeListOf<HTMLElement> | undefined;
-      const extraSpans = activeWordSpan?.querySelectorAll('.extra-char') as NodeListOf<HTMLElement> | undefined;
+      const activeWordDiv = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+      const letters = activeWordDiv?.querySelectorAll('.mt-letter:not(.extra-char)') as NodeListOf<HTMLElement> | undefined;
+      const extraLetters = activeWordDiv?.querySelectorAll('.extra-char') as NodeListOf<HTMLElement> | undefined;
 
-      // Advance Word via Space or Enter (for Code newline token)
+      // Space key -> advance word
       if (key === ' ' || (key === 'Enter' && currentWord === '↵')) {
         soundEngine.playKey(true);
 
         if (currentCharIndex > 0 || currentWord === '↵') {
-          // If word was left partially un-typed, penalize remaining characters
-          if (charSpans && currentCharIndex < charSpans.length && currentWord !== '↵') {
-            for (let i = currentCharIndex; i < charSpans.length; i++) {
-              charSpans[i].className = 'char-span text-rose-400/60 font-medium';
-              errorChars++;
-              if (wordCharStates[currentWordIndex]) {
-                wordCharStates[currentWordIndex][i] = false;
+          // If word incomplete, penalize missing characters
+          if (letters && currentCharIndex < letters.length && currentWord !== '↵') {
+            missedWordsSet.add(currentWord);
+            for (let i = currentCharIndex; i < letters.length; i++) {
+              if (!blindMode) {
+                letters[i].style.color = 'var(--mt-error)';
+                letters[i].style.opacity = '0.5';
               }
+              missedCharsCount++;
+              errorChars++;
+              if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][i] = false;
             }
           }
 
-          if (activeWordSpan) {
-            activeWordSpan.classList.remove('active-word', 'text-ink', 'font-semibold');
-            activeWordSpan.classList.add('text-neutral-500');
-          }
-
+          if (activeWordDiv) activeWordDiv.classList.remove('active-word');
           currentWordIndex++;
           currentCharIndex = 0;
 
-          if (currentWordIndex >= words.length) {
+          // Infinite Zen mode word append
+          if (mode === 'zen' && currentWordIndex >= words.length - 10) {
+            const moreWords = generateMonkeytypeWordList(50, wordPool === 'english1k' ? 'english1k' : 'english', includePunc, includeNum);
+            words.push(...moreWords);
+            moreWords.forEach(w => wordCharStates.push(new Array(w.length).fill(null)));
+            moreWords.forEach((w, idx) => {
+              const globalIdx = words.length - moreWords.length + idx;
+              const wDiv = document.createElement('div');
+              wDiv.className = 'mt-word inline-block mr-3 mb-1.5 transition-colors duration-150';
+              wDiv.setAttribute('data-word-idx', `${globalIdx}`);
+              w.split('').forEach((ch, cIdx) => {
+                const lSpan = document.createElement('span');
+                lSpan.textContent = ch;
+                lSpan.className = 'mt-letter transition-colors';
+                lSpan.setAttribute('data-char-idx', `${cIdx}`);
+                lSpan.style.color = 'var(--mt-sub)';
+                wDiv.appendChild(lSpan);
+              });
+              wordsWrapper?.appendChild(wDiv);
+            });
+          }
+
+          if (currentWordIndex >= words.length && mode !== 'zen') {
             finishTest();
             return;
           }
 
-          const nextWordSpan = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
-          if (nextWordSpan) {
-            nextWordSpan.classList.add('active-word', 'text-ink', 'font-semibold');
-            nextWordSpan.classList.remove('text-neutral-500');
-          }
-
+          const nextWordDiv = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+          if (nextWordDiv) nextWordDiv.classList.add('active-word');
           positionCaret();
         }
         return;
@@ -860,11 +1420,12 @@
 
       // Backspace Handler
       if (key === 'Backspace') {
+        if (confidenceMode) return; // In confidence mode, backspace is disabled
         soundEngine.playKey();
 
-        // A. If extra characters exist on active word, remove last extra character
-        if (extraSpans && extraSpans.length > 0) {
-          const lastExtra = extraSpans[extraSpans.length - 1];
+        // 1. Remove extra character if present
+        if (extraLetters && extraLetters.length > 0) {
+          const lastExtra = extraLetters[extraLetters.length - 1];
           lastExtra.remove();
           currentCharIndex = Math.max(currentWord.length, currentCharIndex - 1);
           extraCharsCount = Math.max(0, extraCharsCount - 1);
@@ -873,42 +1434,32 @@
           return;
         }
 
-        // B. If within current word characters
+        // 2. Erase inside current word
         if (currentCharIndex > 0) {
           currentCharIndex--;
           const prevStatus = wordCharStates[currentWordIndex]?.[currentCharIndex];
-          if (prevStatus === true) {
-            correctChars = Math.max(0, correctChars - 1);
-          } else if (prevStatus === false) {
-            errorChars = Math.max(0, errorChars - 1);
-          }
-          if (wordCharStates[currentWordIndex]) {
-            wordCharStates[currentWordIndex][currentCharIndex] = null;
-          }
+          if (prevStatus === true) correctChars = Math.max(0, correctChars - 1);
+          else if (prevStatus === false) errorChars = Math.max(0, errorChars - 1);
 
-          if (charSpans && charSpans[currentCharIndex]) {
-            charSpans[currentCharIndex].className = 'char-span text-neutral-400';
+          if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = null;
+          if (letters && letters[currentCharIndex]) {
+            letters[currentCharIndex].style.color = 'var(--mt-sub)';
+            letters[currentCharIndex].style.opacity = '1';
           }
           positionCaret();
           return;
         }
 
-        // C. Jump back to previous word ONLY if previous word had errors
+        // 3. Jump to previous word if previous word had errors
         if (currentCharIndex === 0 && currentWordIndex > 0) {
           const prevStates = wordCharStates[currentWordIndex - 1];
-          const hasErrors = prevStates?.some(s => s === false);
-          if (hasErrors) {
-            if (activeWordSpan) {
-              activeWordSpan.classList.remove('active-word', 'text-ink', 'font-semibold');
-              activeWordSpan.classList.add('text-neutral-500');
-            }
+          const hadErrors = prevStates?.some(s => s === false);
+          if (hadErrors) {
+            if (activeWordDiv) activeWordDiv.classList.remove('active-word');
             currentWordIndex--;
             const prevWord = words[currentWordIndex];
-            const prevWordSpan = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
-            if (prevWordSpan) {
-              prevWordSpan.classList.add('active-word', 'text-ink', 'font-semibold');
-              prevWordSpan.classList.remove('text-neutral-500');
-            }
+            const prevWordDiv = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+            if (prevWordDiv) prevWordDiv.classList.add('active-word');
             currentCharIndex = prevWord.length;
             positionCaret();
           }
@@ -916,36 +1467,75 @@
         return;
       }
 
-      // Normal Printable Character
+      // Printable single character
       if (key.length === 1) {
         totalKeystrokes++;
         const expected = currentWord[currentCharIndex];
+        const isMatch = key === expected;
 
-        if (charSpans && currentCharIndex < charSpans.length) {
-          const charSpan = charSpans[currentCharIndex];
+        // Keystroke telemetry log for Replay
+        keystrokeLog.push({
+          char: key,
+          expected: expected || '',
+          isCorrect: isMatch,
+          timestamp: Date.now() - (startTime || Date.now()),
+          wordIdx: currentWordIndex,
+          charIdx: currentCharIndex
+        });
 
-          if (key === expected) {
+        if (letters && currentCharIndex < letters.length) {
+          const letterEl = letters[currentCharIndex];
+
+          if (isMatch) {
             correctChars++;
             if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = true;
             soundEngine.playKey();
-            charSpan.className = 'char-span text-emerald-400 font-semibold';
+            if (!blindMode) {
+              letterEl.style.color = 'var(--mt-text)';
+              letterEl.style.fontWeight = 'bold';
+            }
           } else {
             errorChars++;
+            missedWordsSet.add(currentWord);
             if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = false;
             soundEngine.playError();
-            charSpan.className = 'char-span text-rose-500 bg-rose-500/10 rounded-xs font-semibold';
+            if (!blindMode) {
+              letterEl.style.color = 'var(--mt-error)';
+              letterEl.style.fontWeight = 'bold';
+            }
+
+            // Master Mode fail check
+            if (masterMode) {
+              if (activeSpeedTestTimer) clearInterval(activeSpeedTestTimer);
+              isTestRunning = false;
+              isTestComplete = true;
+              masterFailOverlay?.classList.remove('hidden');
+              return;
+            }
           }
         } else {
-          // Extra characters beyond word limit (capped to 6 extra chars)
-          if ((extraSpans?.length || 0) < 6) {
+          // Extra characters beyond word bounds (up to 8)
+          if ((extraLetters?.length || 0) < 8) {
             extraCharsCount++;
             errorChars++;
+            missedWordsSet.add(currentWord);
             soundEngine.playError();
-            if (activeWordSpan) {
+
+            if (activeWordDiv) {
               const extraSpan = document.createElement('span');
               extraSpan.textContent = key;
-              extraSpan.className = 'char-span extra-char text-purple-400 font-semibold underline';
-              activeWordSpan.appendChild(extraSpan);
+              extraSpan.className = 'mt-letter extra-char font-bold';
+              extraSpan.style.color = 'var(--mt-error-extra)';
+              extraSpan.style.textDecoration = 'underline';
+              activeWordDiv.appendChild(extraSpan);
+            }
+
+            if (masterMode) {
+              if (activeSpeedTestTimer) clearInterval(activeSpeedTestTimer);
+              isTestRunning = false;
+              isTestComplete = true;
+              masterFailOverlay?.classList.remove('hidden');
+              return;
             }
           }
         }
@@ -953,38 +1543,88 @@
         currentCharIndex++;
         positionCaret();
 
-        // In Word/Quote/Code mode, auto-finish if on the very last character of the test
-        if (currentWordIndex === words.length - 1 && currentCharIndex >= currentWord.length && mode !== 'time') {
+        // Auto-finish on final char if word / quote / code mode
+        if (currentWordIndex === words.length - 1 && currentCharIndex >= currentWord.length && mode !== 'time' && mode !== 'zen') {
           finishTest();
         }
       }
     }
 
-    // 12. Focus & Single Unified Input Dispatcher (Eliminates All Double Typing & Bubbling)
-    const onDisplayClick = () => {
+    // 14. Focus Management & Single Input Dispatcher
+    const onViewportClick = () => {
       soundEngine.initContext();
       inputEl.focus();
+      focusOverlay?.classList.add('hidden');
       positionCaret();
     };
-    displayBox.addEventListener('click', onDisplayClick);
-    activeCleanups.push(() => displayBox.removeEventListener('click', onDisplayClick));
+    wordsViewport.addEventListener('click', onViewportClick);
+    focusOverlay?.addEventListener('click', onViewportClick);
+    activeCleanups.push(() => {
+      wordsViewport.removeEventListener('click', onViewportClick);
+      focusOverlay?.removeEventListener('click', onViewportClick);
+    });
 
-    // Handle physical keyboard input strictly on the unified input element
-    const onInputKeyDown = (e: KeyboardEvent) => {
-      soundEngine.initContext();
+    const onInputBlur = () => {
+      if (!isTestComplete && isTestRunning) {
+        focusOverlay?.classList.remove('hidden');
+      }
+    };
+    inputEl.addEventListener('blur', onInputBlur);
+    activeCleanups.push(() => inputEl.removeEventListener('blur', onInputBlur));
 
-      // Tab + Enter quick restart
+    const onInputFocus = () => {
+      focusOverlay?.classList.add('hidden');
+      positionCaret();
+    };
+    inputEl.addEventListener('focus', onInputFocus);
+    activeCleanups.push(() => inputEl.removeEventListener('focus', onInputFocus));
+
+    // Global Key Listener for Quick Focus / Command Palette / Tab Restart
+    const onGlobalKeyDown = (e: KeyboardEvent) => {
+      // Caps Lock detection
+      const isCaps = e.getModifierState && e.getModifierState('CapsLock');
+      if (capsWarning) {
+        if (isCaps) capsWarning.classList.remove('hidden');
+        else capsWarning.classList.add('hidden');
+      }
+
+      // Esc or Ctrl+Shift+P opens Command Palette
+      if (e.key === 'Escape' || (e.key === 'P' && e.ctrlKey && e.shiftKey)) {
+        e.preventDefault();
+        toggleCommandPalette();
+        return;
+      }
+
+      // Tab + Enter or single Tab restart
       if (e.key === 'Tab') {
         e.preventDefault();
-        e.stopPropagation();
         generateWords();
         inputEl.focus();
         return;
       }
 
-      // Check if it's a printable key, backspace, space, or enter
+      // Shift + Enter in Zen mode
+      if (e.key === 'Enter' && e.shiftKey && mode === 'zen') {
+        e.preventDefault();
+        finishTest();
+        return;
+      }
+
+      // If typing arena is not focused, focus it on standard printable keys
+      if (document.activeElement !== inputEl && !themeModal?.classList.contains('hidden') === false && !cmdPalette?.classList.contains('hidden') === false) {
+        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          inputEl.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', onGlobalKeyDown);
+    activeCleanups.push(() => window.removeEventListener('keydown', onGlobalKeyDown));
+
+    // Input Keydown Handler (strictly on unified input)
+    const onInputKeyDown = (e: KeyboardEvent) => {
+      soundEngine.initContext();
+
       if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Enter' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
-        // ALWAYS PREVENT DEFAULT & STOP PROPAGATION
         e.preventDefault();
         e.stopPropagation();
         handleKey(e.key);
@@ -993,8 +1633,8 @@
     inputEl.addEventListener('keydown', onInputKeyDown);
     activeCleanups.push(() => inputEl.removeEventListener('keydown', onInputKeyDown));
 
-    // Mobile Virtual/Soft Keyboard Fallback (When keydown is Unidentified / IME composition)
-    const onInputEvent = (e: Event) => {
+    // Fallback for virtual keyboards
+    const onInputValue = (e: Event) => {
       soundEngine.initContext();
       const val = (e.target as HTMLInputElement).value;
       if (val.length > 0) {
@@ -1004,8 +1644,8 @@
         (e.target as HTMLInputElement).value = '';
       }
     };
-    inputEl.addEventListener('input', onInputEvent);
-    activeCleanups.push(() => inputEl.removeEventListener('input', onInputEvent));
+    inputEl.addEventListener('input', onInputValue);
+    activeCleanups.push(() => inputEl.removeEventListener('input', onInputValue));
 
     const onBeforeInput = (e: any) => {
       if (e.inputType === 'deleteContentBackward') {
@@ -1016,121 +1656,619 @@
     inputEl.addEventListener('beforeinput', onBeforeInput);
     activeCleanups.push(() => inputEl.removeEventListener('beforeinput', onBeforeInput));
 
-    // 13. Restart, Next, and Share Buttons
-    const onRestartClick = () => {
-      generateWords();
-      inputEl.focus();
-    };
-    restartBtn?.addEventListener('click', onRestartClick);
-    nextBtn?.addEventListener('click', onRestartClick);
-    activeCleanups.push(() => {
-      restartBtn?.removeEventListener('click', onRestartClick);
-      nextBtn?.removeEventListener('click', onRestartClick);
-    });
-
-    const onShareClick = () => {
-      const netWpm = document.getElementById('st-res-net')?.textContent || '0';
-      const acc = document.getElementById('st-res-acc')?.textContent || '100%';
-      const text = `⚡ I just scored ${netWpm} WPM with ${acc} accuracy on Typing Game Zone! 🎮 Test your speed: https://typinggamezone.com/speed-test`;
-      navigator.clipboard.writeText(text).then(() => {
-        if (shareText) shareText.textContent = 'Copied to Clipboard! ✓';
-        setTimeout(() => {
-          if (shareText) shareText.textContent = 'Copy Result';
-        }, 2000);
-      });
-    };
-    shareBtn?.addEventListener('click', onShareClick);
-    activeCleanups.push(() => shareBtn?.removeEventListener('click', onShareClick));
-
-    // 14. Responsive Window Resize Handler
-    const onResize = () => {
-      positionCaret();
-    };
-    window.addEventListener('resize', onResize);
-    activeCleanups.push(() => window.removeEventListener('resize', onResize));
-
-    // 15. Mode Switch Tabs
-    const modeBtns = rootEl.querySelectorAll('.st-mode-btn');
-    modeBtns.forEach(btn => {
-      const onModeClick = () => {
-        modeBtns.forEach(b => {
-          b.classList.remove('bg-ink', 'text-on-primary', 'active', 'shadow-level-1');
-          b.classList.add('text-body');
-        });
-        btn.classList.add('bg-ink', 'text-on-primary', 'active', 'shadow-level-1');
-        btn.classList.remove('text-body');
-
-        mode = (btn.getAttribute('data-mode') || 'time') as 'time' | 'words' | 'quote' | 'code';
-
-        if (subContainer) {
-          if (mode === 'time') {
-            subContainer.innerHTML = `
-              <button type="button" data-sub="15" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">15s</button>
-              <button type="button" data-sub="30" class="st-sub-btn active rounded-lg px-2.5 py-1 text-ink bg-canvas font-bold shadow-level-1 transition cursor-pointer">30s</button>
-              <button type="button" data-sub="60" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">60s</button>
-              <button type="button" data-sub="120" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">120s</button>
-            `;
-            subOption = 30;
-            if (modifiersContainer) modifiersContainer.style.display = 'flex';
-          } else if (mode === 'words') {
-            subContainer.innerHTML = `
-              <button type="button" data-sub="10" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">10w</button>
-              <button type="button" data-sub="25" class="st-sub-btn active rounded-lg px-2.5 py-1 text-ink bg-canvas font-bold shadow-level-1 transition cursor-pointer">25w</button>
-              <button type="button" data-sub="50" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">50w</button>
-              <button type="button" data-sub="100" class="st-sub-btn rounded-lg px-2.5 py-1 text-mute hover:text-ink font-bold transition cursor-pointer">100w</button>
-            `;
-            subOption = 25;
-            if (modifiersContainer) modifiersContainer.style.display = 'flex';
-          } else {
-            subContainer.innerHTML = '';
-            if (modifiersContainer) modifiersContainer.style.display = 'none';
-          }
-          bindSubButtons();
+    // 15. Command Palette System
+    function toggleCommandPalette() {
+      if (!cmdPalette) return;
+      const isHidden = cmdPalette.classList.contains('hidden');
+      if (isHidden) {
+        cmdPalette.classList.remove('hidden');
+        renderCommandList('');
+        if (cmdSearch) {
+          cmdSearch.value = '';
+          cmdSearch.focus();
         }
-
-        generateWords();
+      } else {
+        cmdPalette.classList.add('hidden');
         inputEl.focus();
-      };
-      btn.addEventListener('click', onModeClick);
-      activeCleanups.push(() => btn.removeEventListener('click', onModeClick));
-    });
+      }
+    }
 
-    function bindSubButtons() {
-      if (!subContainer) return;
-      const subBtns = subContainer.querySelectorAll('.st-sub-btn');
-      subBtns.forEach(btn => {
-        const onSubClick = () => {
-          subBtns.forEach(b => {
-            b.classList.remove('text-ink', 'bg-canvas', 'active', 'shadow-level-1');
-            b.classList.add('text-mute');
-          });
-          btn.classList.add('text-ink', 'bg-canvas', 'active', 'shadow-level-1');
-          btn.classList.remove('text-mute');
-          subOption = parseInt(btn.getAttribute('data-sub') || '30', 10);
-          generateWords();
-          inputEl.focus();
-        };
-        btn.addEventListener('click', onSubClick);
-        activeCleanups.push(() => btn.removeEventListener('click', onSubClick));
+    cmdHintBtn?.addEventListener('click', toggleCommandPalette);
+
+    const commands = [
+      ...MONKEYTYPE_THEMES.map(t => ({ label: `Theme: ${t.name}`, action: () => applyCurrentTheme(t), icon: '🎨' })),
+      { label: 'Time: 15s', action: () => setTimeMode(15), icon: '⏱️' },
+      { label: 'Time: 30s', action: () => setTimeMode(30), icon: '⏱️' },
+      { label: 'Time: 60s', action: () => setTimeMode(60), icon: '⏱️' },
+      { label: 'Time: 120s', action: () => setTimeMode(120), icon: '⏱️' },
+      { label: 'Words: 10', action: () => setWordsMode(10), icon: '📝' },
+      { label: 'Words: 25', action: () => setWordsMode(25), icon: '📝' },
+      { label: 'Words: 50', action: () => setWordsMode(50), icon: '📝' },
+      { label: 'Words: 100', action: () => setWordsMode(100), icon: '📝' },
+      { label: 'Mode: Time', action: () => switchMode('time'), icon: '⏱️' },
+      { label: 'Mode: Words', action: () => switchMode('words'), icon: '📝' },
+      { label: 'Mode: Quotes', action: () => switchMode('quote'), icon: '💬' },
+      { label: 'Mode: Zen', action: () => switchMode('zen'), icon: '☯' },
+      { label: 'Mode: Custom Drill', action: () => openCustomTextModal(), icon: '✏️' },
+      { label: 'Language: English 200', action: () => setWordPool('english'), icon: '🌐' },
+      { label: 'Language: English 1k', action: () => setWordPool('english1k'), icon: '🌐' },
+      { label: 'Language: Code Snippets', action: () => setWordPool('code'), icon: '💻' },
+      { label: 'Sound: Clicky Blue', action: () => setSound('clicky'), icon: '🔊' },
+      { label: 'Sound: Thock Panda', action: () => setSound('thock'), icon: '🔊' },
+      { label: 'Sound: Red Linear', action: () => setSound('linear'), icon: '🔊' },
+      { label: 'Sound: Typewriter', action: () => setSound('typewriter'), icon: '🔊' },
+      { label: 'Sound: Pop Bubble', action: () => setSound('pop'), icon: '🔊' },
+      { label: 'Sound: Digital Beep', action: () => setSound('beep'), icon: '🔊' },
+      { label: 'Sound: Mute', action: () => setSound('off'), icon: '🔇' },
+      { label: 'Caret: Line (|)', action: () => setCaretStyle('line'), icon: '🥕' },
+      { label: 'Caret: Block (█)', action: () => setCaretStyle('block'), icon: '🥕' },
+      { label: 'Caret: Underline (_)', action: () => setCaretStyle('underline'), icon: '🥕' },
+      { label: 'Caret: Outline (▯)', action: () => setCaretStyle('outline'), icon: '🥕' },
+      { label: 'Caret: Carrot (🥕)', action: () => setCaretStyle('carrot'), icon: '🥕' },
+      { label: 'Toggle Punctuation', action: () => togglePunctuation(), icon: '@' },
+      { label: 'Toggle Numbers', action: () => toggleNumbers(), icon: '#' },
+      { label: 'Toggle Confidence Mode (No Backspace)', action: () => toggleConfidenceMode(), icon: '🔒' },
+      { label: 'Toggle Master Mode (Fail on 1 Error)', action: () => toggleMasterMode(), icon: '👑' },
+      { label: 'Toggle Blind Mode (No Colors Until End)', action: () => toggleBlindMode(), icon: '🙈' },
+      { label: 'Restart Test', action: () => generateWords(), icon: '⟲' }
+    ];
+
+    let activeCmdIndex = 0;
+    let filteredCmds = [...commands];
+
+    function renderCommandList(query: string) {
+      if (!cmdList) return;
+      const q = query.toLowerCase().trim();
+      filteredCmds = q ? commands.filter(c => c.label.toLowerCase().includes(q)) : commands;
+      activeCmdIndex = 0;
+
+      cmdList.innerHTML = '';
+      if (filteredCmds.length === 0) {
+        cmdList.innerHTML = `<div class="p-3 text-center opacity-50">No matching commands</div>`;
+        return;
+      }
+
+      filteredCmds.forEach((cmd, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `flex items-center justify-between p-2.5 rounded-xl text-left transition cursor-pointer ${idx === activeCmdIndex ? 'font-bold' : ''}`;
+        btn.style.backgroundColor = idx === activeCmdIndex ? 'var(--mt-main)' : 'var(--mt-sub-alt)';
+        btn.style.color = idx === activeCmdIndex ? 'var(--mt-bg)' : 'var(--mt-text)';
+        btn.innerHTML = `
+          <span class="flex items-center gap-2"><span>${cmd.icon}</span> <span>${cmd.label}</span></span>
+          <span class="text-[10px] opacity-60">enter ↵</span>
+        `;
+        btn.addEventListener('click', () => {
+          cmd.action();
+          toggleCommandPalette();
+        });
+        cmdList.appendChild(btn);
       });
     }
 
-    bindSubButtons();
+    cmdSearch?.addEventListener('input', (e) => {
+      renderCommandList((e.target as HTMLInputElement).value);
+    });
+
+    cmdSearch?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeCmdIndex = (activeCmdIndex + 1) % filteredCmds.length;
+        updateCmdSelection();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeCmdIndex = (activeCmdIndex - 1 + filteredCmds.length) % filteredCmds.length;
+        updateCmdSelection();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (filteredCmds[activeCmdIndex]) {
+          filteredCmds[activeCmdIndex].action();
+          toggleCommandPalette();
+        }
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+    });
+
+    function updateCmdSelection() {
+      if (!cmdList) return;
+      const items = cmdList.querySelectorAll('button');
+      items.forEach((btn, idx) => {
+        if (idx === activeCmdIndex) {
+          btn.style.backgroundColor = 'var(--mt-main)';
+          btn.style.color = 'var(--mt-bg)';
+          btn.classList.add('font-bold');
+          btn.scrollIntoView({ block: 'nearest' });
+        } else {
+          btn.style.backgroundColor = 'var(--mt-sub-alt)';
+          btn.style.color = 'var(--mt-text)';
+          btn.classList.remove('font-bold');
+        }
+      });
+    }
+
+    cmdPalette?.addEventListener('click', (e) => {
+      if (e.target === cmdPalette) toggleCommandPalette();
+    });
+
+    // 16. Mode Switching Functions
+    function switchMode(newMode: 'time' | 'words' | 'quote' | 'zen' | 'custom') {
+      mode = newMode;
+      const modeBtns = rootEl?.querySelectorAll('.mt-mode-btn');
+      modeBtns?.forEach(btn => {
+        const bMode = btn.getAttribute('data-mode');
+        if (bMode === mode) {
+          btn.classList.add('active');
+          (btn as HTMLElement).style.color = 'var(--mt-main)';
+        } else {
+          btn.classList.remove('active');
+          (btn as HTMLElement).style.color = 'var(--mt-sub)';
+        }
+      });
+
+      if (subContainer) {
+        if (mode === 'time') {
+          subContainer.innerHTML = `
+            <button type="button" data-sub="15" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">15</button>
+            <button type="button" data-sub="30" class="mt-sub-btn active rounded-lg px-2 py-1 font-bold transition cursor-pointer" style="color: var(--mt-main);">30</button>
+            <button type="button" data-sub="60" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">60</button>
+            <button type="button" data-sub="120" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">120</button>
+            <button type="button" id="mt-custom-sub-btn" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">⚙</button>
+          `;
+          subOption = 30;
+        } else if (mode === 'words') {
+          subContainer.innerHTML = `
+            <button type="button" data-sub="10" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">10</button>
+            <button type="button" data-sub="25" class="mt-sub-btn active rounded-lg px-2 py-1 font-bold transition cursor-pointer" style="color: var(--mt-main);">25</button>
+            <button type="button" data-sub="50" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">50</button>
+            <button type="button" data-sub="100" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">100</button>
+            <button type="button" id="mt-custom-sub-btn" class="mt-sub-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">⚙</button>
+          `;
+          subOption = 25;
+        } else if (mode === 'quote') {
+          subContainer.innerHTML = `
+            <button type="button" data-qlen="all" class="mt-qlen-btn active rounded-lg px-2 py-1 font-bold transition cursor-pointer" style="color: var(--mt-main);">all</button>
+            <button type="button" data-qlen="short" class="mt-qlen-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">short</button>
+            <button type="button" data-qlen="medium" class="mt-qlen-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">medium</button>
+            <button type="button" data-qlen="long" class="mt-qlen-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">long</button>
+            <button type="button" data-qlen="thicc" class="mt-qlen-btn rounded-lg px-2 py-1 transition cursor-pointer hover:text-[var(--mt-text)]">thicc</button>
+          `;
+        } else if (mode === 'custom') {
+          subContainer.innerHTML = `
+            <button type="button" id="mt-edit-custom-text-btn" class="rounded-lg px-2.5 py-1 text-xs font-bold transition cursor-pointer" style="background-color: var(--mt-bg); color: var(--mt-main);">change text ✏️</button>
+          `;
+        } else {
+          subContainer.innerHTML = '';
+        }
+        bindSubOptionButtons();
+      }
+
+      generateWords();
+      inputEl?.focus();
+    }
+
+    function setTimeMode(seconds: number) {
+      mode = 'time';
+      subOption = seconds;
+      switchMode('time');
+    }
+
+    function setWordsMode(count: number) {
+      mode = 'words';
+      subOption = count;
+      switchMode('words');
+    }
+
+    function setWordPool(pool: 'english' | 'english1k' | 'code') {
+      wordPool = pool;
+      if (poolLabel) {
+        if (pool === 'english') poolLabel.textContent = 'english 200';
+        else if (pool === 'english1k') poolLabel.textContent = 'english 1k';
+        else if (pool === 'code') poolLabel.textContent = 'code';
+      }
+      generateWords();
+      inputEl?.focus();
+    }
+
+    function setSound(sw: SwitchSoundType) {
+      soundEngine.setSwitch(sw);
+      soundEngine.initContext();
+      soundEngine.playKey(false, sw === 'typewriter');
+      updateSoundUI();
+    }
+
+    function setCaretStyle(style: 'line' | 'block' | 'underline' | 'outline' | 'carrot') {
+      caretStyle = style;
+      updateCaretAppearance();
+      positionCaret();
+    }
+
+    function togglePunctuation() {
+      includePunc = !includePunc;
+      if (togglePuncBtn) {
+        if (includePunc) {
+          togglePuncBtn.style.color = 'var(--mt-main)';
+          togglePuncBtn.classList.add('font-bold');
+        } else {
+          togglePuncBtn.style.color = 'var(--mt-sub)';
+          togglePuncBtn.classList.remove('font-bold');
+        }
+      }
+      generateWords();
+    }
+
+    function toggleNumbers() {
+      includeNum = !includeNum;
+      if (toggleNumBtn) {
+        if (includeNum) {
+          toggleNumBtn.style.color = 'var(--mt-main)';
+          toggleNumBtn.classList.add('font-bold');
+        } else {
+          toggleNumBtn.style.color = 'var(--mt-sub)';
+          toggleNumBtn.classList.remove('font-bold');
+        }
+      }
+      generateWords();
+    }
+
+    function toggleConfidenceMode() {
+      confidenceMode = !confidenceMode;
+    }
+
+    function toggleMasterMode() {
+      masterMode = !masterMode;
+    }
+
+    function toggleBlindMode() {
+      blindMode = !blindMode;
+    }
+
+    // 17. Bind Sub-Option Buttons
+    function bindSubOptionButtons() {
+      const subBtns = subContainer?.querySelectorAll('.mt-sub-btn:not(#mt-custom-sub-btn)');
+      subBtns?.forEach(btn => {
+        btn.addEventListener('click', () => {
+          subBtns.forEach(b => {
+            b.classList.remove('active', 'font-bold');
+            (b as HTMLElement).style.color = 'var(--mt-sub)';
+          });
+          btn.classList.add('active', 'font-bold');
+          (btn as HTMLElement).style.color = 'var(--mt-main)';
+          subOption = parseInt(btn.getAttribute('data-sub') || '30', 10);
+          generateWords();
+          inputEl?.focus();
+        });
+      });
+
+      const qlenBtns = subContainer?.querySelectorAll('.mt-qlen-btn');
+      qlenBtns?.forEach(btn => {
+        btn.addEventListener('click', () => {
+          qlenBtns.forEach(b => {
+            b.classList.remove('active', 'font-bold');
+            (b as HTMLElement).style.color = 'var(--mt-sub)';
+          });
+          btn.classList.add('active', 'font-bold');
+          (btn as HTMLElement).style.color = 'var(--mt-main)';
+          quoteLength = (btn.getAttribute('data-qlen') || 'all') as any;
+          generateWords();
+          inputEl?.focus();
+        });
+      });
+
+      const editCustomBtn = document.getElementById('mt-edit-custom-text-btn');
+      editCustomBtn?.addEventListener('click', openCustomTextModal);
+
+      const customBtn = document.getElementById('mt-custom-sub-btn');
+      customBtn?.addEventListener('click', openCustomModal);
+    }
+
+    // 18. Custom Modal Handlers
+    function openCustomModal() {
+      if (!customModal) return;
+      const title = document.getElementById('mt-custom-modal-title');
+      const label = document.getElementById('mt-custom-input-label');
+      if (title && label) {
+        if (mode === 'time') {
+          title.textContent = 'Custom Test Time';
+          label.textContent = 'Enter custom time (seconds):';
+          if (customValInput) customValInput.value = `${subOption}`;
+        } else {
+          title.textContent = 'Custom Word Count';
+          label.textContent = 'Enter custom word count:';
+          if (customValInput) customValInput.value = `${subOption}`;
+        }
+      }
+      customModal.classList.remove('hidden');
+      customValInput?.focus();
+    }
+
+    customCloseBtn?.addEventListener('click', () => customModal?.classList.add('hidden'));
+    customCancelBtn?.addEventListener('click', () => customModal?.classList.add('hidden'));
+    customSaveBtn?.addEventListener('click', () => {
+      const val = parseInt(customValInput?.value || '30', 10);
+      if (val > 0) {
+        subOption = val;
+        customModal?.classList.add('hidden');
+        generateWords();
+        inputEl?.focus();
+      }
+    });
+
+    // Custom Text Modal
+    function openCustomTextModal() {
+      if (!customTextModal) return;
+      if (customTextarea) customTextarea.value = customTextBuffer;
+      customTextModal.classList.remove('hidden');
+      customTextarea?.focus();
+    }
+
+    customTextCloseBtn?.addEventListener('click', () => customTextModal?.classList.add('hidden'));
+    customTextCancelBtn?.addEventListener('click', () => customTextModal?.classList.add('hidden'));
+    customTextSaveBtn?.addEventListener('click', () => {
+      const text = customTextarea?.value.trim() || '';
+      if (text) {
+        customTextBuffer = text;
+        mode = 'custom';
+        customTextModal?.classList.add('hidden');
+        switchMode('custom');
+      }
+    });
+
+    // 19. Theme Modal Rendering
+    function renderThemesGrid(filter = '') {
+      if (!themesGrid) return;
+      themesGrid.innerHTML = '';
+      const f = filter.toLowerCase().trim();
+      const list = f ? MONKEYTYPE_THEMES.filter(t => t.name.toLowerCase().includes(f) || t.id.toLowerCase().includes(f)) : MONKEYTYPE_THEMES;
+
+      list.forEach(t => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = `flex items-center justify-between p-3 rounded-2xl border text-left transition cursor-pointer hover:scale-[1.02] shadow-sm ${t.id === currentTheme.id ? 'ring-2 ring-offset-2' : ''}`;
+        item.style.backgroundColor = t.bg;
+        item.style.borderColor = t.subAlt;
+        item.style.color = t.text;
+        item.innerHTML = `
+          <div class="flex flex-col">
+            <span class="font-bold text-xs" style="color: ${t.main};">${t.name}</span>
+            <span class="text-[10px] opacity-60">${t.category}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="h-3 w-3 rounded-full" style="background-color: ${t.main};"></span>
+            <span class="h-3 w-3 rounded-full" style="background-color: ${t.sub};"></span>
+            <span class="h-3 w-3 rounded-full" style="background-color: ${t.text};"></span>
+            <span class="h-3 w-3 rounded-full" style="background-color: ${t.error};"></span>
+          </div>
+        `;
+        item.addEventListener('click', () => {
+          applyCurrentTheme(t);
+          themeModal?.classList.add('hidden');
+          inputEl?.focus();
+        });
+        themesGrid.appendChild(item);
+      });
+    }
+
+    themeModalBtn?.addEventListener('click', () => {
+      themeModal?.classList.remove('hidden');
+      renderThemesGrid('');
+      themeSearch?.focus();
+    });
+    themeCloseBtn?.addEventListener('click', () => themeModal?.classList.add('hidden'));
+    themeSearch?.addEventListener('input', (e) => renderThemesGrid((e.target as HTMLInputElement).value));
+
+    // Sound Cycle Button
+    soundCycleBtn?.addEventListener('click', () => {
+      const cycle: SwitchSoundType[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
+      const cur = soundEngine.getSwitch();
+      const nextIdx = (cycle.indexOf(cur) + 1) % cycle.length;
+      setSound(cycle[nextIdx]);
+    });
+
+    // Caret Cycle Button
+    caretCycleBtn?.addEventListener('click', () => {
+      const cycle: ('line' | 'block' | 'underline' | 'outline' | 'carrot')[] = ['line', 'block', 'underline', 'outline', 'carrot'];
+      const nextIdx = (cycle.indexOf(caretStyle) + 1) % cycle.length;
+      setCaretStyle(cycle[nextIdx]);
+    });
+
+    // Word Pool Dropdown
+    poolBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      poolMenu?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!poolMenu?.contains(e.target as Node) && !poolBtn?.contains(e.target as Node)) {
+        poolMenu?.classList.add('hidden');
+      }
+    });
+    const poolOptions = document.querySelectorAll('.mt-pool-opt');
+    poolOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const pool = (opt.getAttribute('data-pool') || 'english') as any;
+        setWordPool(pool);
+        poolMenu?.classList.add('hidden');
+      });
+    });
+
+    // Modifiers Buttons
+    togglePuncBtn?.addEventListener('click', togglePunctuation);
+    toggleNumBtn?.addEventListener('click', toggleNumbers);
+
+    // Mode Buttons Top
+    const modeBtns = rootEl.querySelectorAll('.mt-mode-btn');
+    modeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const m = (btn.getAttribute('data-mode') || 'time') as any;
+        switchMode(m);
+      });
+    });
+
+    // Zen Finish Button
+    zenFinishBtn?.addEventListener('click', finishTest);
+
+    // Master Restart Button
+    masterRestartBtn?.addEventListener('click', () => {
+      generateWords();
+      inputEl.focus();
+    });
+
+    // Restart Button
+    restartBtn?.addEventListener('click', () => {
+      generateWords();
+      inputEl.focus();
+    });
+
+    // Result Screen Buttons
+    resNextBtn?.addEventListener('click', () => {
+      generateWords();
+      inputEl.focus();
+    });
+    resRepeatBtn?.addEventListener('click', () => {
+      generateWords();
+      inputEl.focus();
+    });
+
+    // Practice Missed Words
+    resPracticeMissedBtn?.addEventListener('click', () => {
+      if (missedWordsSet.size === 0) return;
+      isReplayingMissed = true;
+      words = Array.from(missedWordsSet);
+      wordCharStates = words.map(w => new Array(w.length).fill(null));
+      currentWordIndex = 0;
+      currentCharIndex = 0;
+      correctChars = 0;
+      errorChars = 0;
+      extraCharsCount = 0;
+      totalKeystrokes = 0;
+      trajectory = [];
+      keystrokeLog = [];
+
+      resultView?.classList.add('hidden');
+      typingView?.classList.remove('hidden');
+      if (liveCounter) liveCounter.textContent = `${words.length}w missed`;
+
+      renderWordsDOM();
+      requestAnimationFrame(() => positionCaret());
+      inputEl.focus();
+    });
+
+    // Replay Modal Playback
+    resReplayBtn?.addEventListener('click', () => {
+      if (!replayModal || !replayWordsWrapper) return;
+      replayModal.classList.remove('hidden');
+      let replaySpeed = 1;
+      let replayTimer: number | null = null;
+
+      // Render replay words
+      replayWordsWrapper.innerHTML = '';
+      words.forEach((w, wIdx) => {
+        const wDiv = document.createElement('div');
+        wDiv.className = 'inline-block mr-3 mb-1.5';
+        wDiv.setAttribute('data-rep-word', `${wIdx}`);
+        w.split('').forEach((ch, cIdx) => {
+          const lSpan = document.createElement('span');
+          lSpan.textContent = ch;
+          lSpan.setAttribute('data-rep-char', `${cIdx}`);
+          lSpan.style.color = 'var(--mt-sub)';
+          wDiv.appendChild(lSpan);
+        });
+        replayWordsWrapper.appendChild(wDiv);
+      });
+
+      const playReplay = () => {
+        if (replayTimer) clearInterval(replayTimer);
+        let logIdx = 0;
+        const totalEvents = keystrokeLog.length;
+        if (totalEvents === 0) return;
+
+        const replayStart = Date.now();
+        const firstTime = keystrokeLog[0].timestamp;
+
+        replayTimer = window.setInterval(() => {
+          const currentElapsed = (Date.now() - replayStart) * replaySpeed;
+          if (replayTime) replayTime.textContent = `${(currentElapsed / 1000).toFixed(1)}s`;
+
+          while (logIdx < totalEvents && keystrokeLog[logIdx].timestamp - firstTime <= currentElapsed) {
+            const ev = keystrokeLog[logIdx];
+            const wEl = replayWordsWrapper.querySelector(`[data-rep-word="${ev.wordIdx}"]`);
+            const cEl = wEl?.querySelector(`[data-rep-char="${ev.charIdx}"]`) as HTMLElement | null;
+            if (cEl) {
+              cEl.style.color = ev.isCorrect ? 'var(--mt-text)' : 'var(--mt-error)';
+              cEl.style.fontWeight = 'bold';
+            }
+            logIdx++;
+          }
+
+          if (logIdx >= totalEvents) {
+            if (replayTimer) clearInterval(replayTimer);
+            if (replayPlayBtn) replayPlayBtn.textContent = 'Replay Again';
+          }
+        }, 16);
+      };
+
+      replayPlayBtn?.addEventListener('click', playReplay);
+
+      const speedBtns = replayModal.querySelectorAll('.mt-replay-speed');
+      speedBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          speedBtns.forEach(b => {
+            b.classList.remove('active');
+            (b as HTMLElement).style.color = 'var(--mt-sub)';
+          });
+          btn.classList.add('active');
+          (btn as HTMLElement).style.color = 'var(--mt-main)';
+          replaySpeed = parseInt(btn.getAttribute('data-speed') || '1', 10);
+        });
+      });
+
+      playReplay();
+    });
+
+    replayCloseBtn?.addEventListener('click', () => {
+      replayModal?.classList.add('hidden');
+    });
+
+    // Share / Copy Results
+    resShareBtn?.addEventListener('click', () => {
+      const net = resWpm?.textContent || '0';
+      const raw = resRaw?.textContent || '0';
+      const acc = resAcc?.textContent || '100%';
+      const cons = resConsistency?.textContent || '90%';
+      const ttype = resTestType?.textContent || 'time 30';
+      const text = `⚡ Monkeytype Result\n🏆 WPM: ${net} (raw ${raw}) | ACC: ${acc}\n🎯 Mode: ${ttype} | Consistency: ${cons}\n🎨 Theme: ${currentTheme.name}\n🎮 Test your speed: https://typinggamezone.com/speed-test`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        if (shareLabel) shareLabel.textContent = 'Copied to Clipboard! ✓';
+        setTimeout(() => {
+          if (shareLabel) shareLabel.textContent = 'Copy Result';
+        }, 2000);
+      });
+    });
+
+    // Window Resize -> Re-position caret
+    const onResize = () => positionCaret();
+    window.addEventListener('resize', onResize);
+    activeCleanups.push(() => window.removeEventListener('resize', onResize));
+
+    // Initial setup
+    bindSubOptionButtons();
     generateWords();
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupSpeedTest);
+    document.addEventListener('DOMContentLoaded', initMonkeytypeEngine);
   } else {
-    setupSpeedTest();
+    initMonkeytypeEngine();
   }
-  document.addEventListener('astro:page-load', setupSpeedTest);
+  document.addEventListener('astro:page-load', initMonkeytypeEngine);
   document.addEventListener('astro:before-swap', () => {
     if (activeSpeedTestTimer) {
       clearInterval(activeSpeedTestTimer);
       activeSpeedTestTimer = null;
     }
-    activeCleanups.forEach(cleanup => cleanup());
+    activeCleanups.forEach(c => c());
     activeCleanups = [];
   });
 </script>

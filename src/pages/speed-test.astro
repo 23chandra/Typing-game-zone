@@ -4,36 +4,68 @@ import SpeedTestWidget from '../components/SpeedTestWidget.astro';
 ---
 
 <Layout
-  title="Typing Speed Test (15s, 30s, 60s, Code, Quotes) — Typing Game Zone"
-  description="Test your typing speed (WPM) and accuracy in real-time with customizable durations, quote mode, and programming language code syntax drills."
+  title="Typing Speed Test — Monkeytype Benchmark Lab (15s, 30s, 60s, Code, Quotes)"
+  description="Experience the ultimate Monkeytype-inspired typing speed test with authentic themes, zero-latency keystroke telemetry, mechanical switch sounds, custom drills, and interactive performance charts."
 >
-  <div class="py-12 sm:py-16 bg-canvas-soft min-h-screen relative overflow-hidden">
-    <!-- Radial background light -->
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(0,112,243,0.08),rgba(255,255,255,0))] pointer-events-none"></div>
+  <div class="py-10 sm:py-14 bg-canvas-soft min-h-screen relative overflow-hidden">
+    <!-- Atmospheric subtle ambient mesh lighting -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-15%,rgba(226,183,20,0.07),rgba(0,112,243,0.05),transparent)] pointer-events-none"></div>
 
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
       
-      <!-- Page Header -->
-      <div class="text-center max-w-3xl mx-auto mb-10">
+      <!-- Monkeytype Suite Banner -->
+      <div class="text-center max-w-3xl mx-auto mb-8">
         <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-body shadow-level-1 backdrop-blur mb-3">
-          <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-ink font-semibold">Pro WPM Benchmark Lab</span>
+          <span class="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span class="text-ink font-semibold">Monkeytype Pro Engine</span>
           <span class="text-mute">•</span>
-          <span>Zero Input Lag</span>
+          <span>17 Themes</span>
+          <span class="text-mute">•</span>
+          <span>Zero Latency</span>
         </div>
         <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink">
           Typing Speed Benchmark.
         </h1>
-        <p class="mt-3 text-sm text-body leading-relaxed">
-          Measure your Words Per Minute (WPM), typing cadence consistency, and character precision in real-time. Switch between timed sprints, word quotas, inspirational quotes, and code syntax drills.
+        <p class="mt-2 text-sm text-body leading-relaxed max-w-2xl mx-auto">
+          Benchmark your Words Per Minute (WPM), typing cadence consistency, and character accuracy in real time with customizable themes, smooth carets, switch audio synthesis, and velocity trajectory curves.
         </p>
       </div>
 
-      <!-- Main Speed Test Widget Component -->
+      <!-- Main Monkeytype Speed Test Widget -->
       <SpeedTestWidget />
 
-      <!-- Speed Tiers & Information Grid -->
-      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-sans">
+      <!-- Keyboard Shortcuts & Power Features Strip -->
+      <div class="mt-12 rounded-2xl border border-hairline bg-canvas p-6 shadow-level-1 max-w-5xl mx-auto font-mono text-xs text-body">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-hairline pb-4 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-base">⌨️</span>
+            <span class="font-bold text-ink uppercase tracking-wider">Monkeytype Hotkeys & Shortcuts</span>
+          </div>
+          <span class="text-[11px] text-mute">Press anywhere on page to focus typing</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">tab + enter</kbd>
+            <span class="text-mute">Restart test</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">esc</kbd>
+            <span class="text-mute">Command palette</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">shift + enter</kbd>
+            <span class="text-mute">Finish zen mode</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">tab</kbd>
+            <span class="text-mute">Repeat test</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speed Tiers & Telemetry Science Grid -->
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-sans">
         
         <!-- WPM Speed Ranking Scale -->
         <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-2">
@@ -41,7 +73,7 @@ import SpeedTestWidget from '../components/SpeedTestWidget.astro';
             <span class="text-xl">📊</span>
             <h3 class="text-sm font-semibold uppercase font-mono text-ink">Global Speed Tiers</h3>
           </div>
-          <p class="text-xs text-mute mb-4">Standardized touch typing distribution:</p>
+          <p class="text-xs text-mute mb-4">Standardized touch-typing distribution:</p>
           <ul class="flex flex-col gap-2.5 font-mono text-xs text-body">
             <li class="flex items-center justify-between border-b border-hairline pb-1.5">
               <span class="flex items-center gap-1.5"><span>🌱</span> <span>Novice</span></span>
@@ -76,7 +108,7 @@ import SpeedTestWidget from '../components/SpeedTestWidget.astro';
           <ul class="flex flex-col gap-3 text-xs text-body leading-relaxed">
             <li class="flex items-start gap-2">
               <span class="text-success font-bold">✓</span>
-              <span><strong>Wrist Elevation:</strong> Keep wrists floating slightly above your desk to reduce friction and strain.</span>
+              <span><strong>Wrist Elevation:</strong> Keep wrists floating slightly above your desk to reduce friction and tendon strain.</span>
             </li>
             <li class="flex items-start gap-2">
               <span class="text-success font-bold">✓</span>
@@ -95,7 +127,7 @@ import SpeedTestWidget from '../components/SpeedTestWidget.astro';
             <span class="text-xl">📐</span>
             <h3 class="text-sm font-semibold uppercase font-mono text-ink">Formula & Telemetry</h3>
           </div>
-          <p class="text-xs text-mute mb-3">Official international typing standard:</p>
+          <p class="text-xs text-mute mb-3">International standard formula:</p>
           <div class="rounded-xl bg-canvas-soft p-3 border border-hairline font-mono text-[11px] text-body leading-relaxed mb-3">
             <div class="text-link font-bold">Net WPM:</div>
             <div>((Correct Chars - Errors) / 5) / Minutes</div>
@@ -111,7 +143,7 @@ import SpeedTestWidget from '../components/SpeedTestWidget.astro';
       <div class="mt-12 rounded-2xl border border-hairline bg-canvas p-8 shadow-level-2 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-5xl mx-auto">
         <div>
           <h4 class="text-base font-bold text-ink">Ready to test your speed in combat?</h4>
-          <p class="text-xs text-body mt-1">Practice with 21 2D arcade, adventure, and fighting games.</p>
+          <p class="text-xs text-body mt-1">Challenge yourself with 21 2D arcade, adventure, and fighting typing games.</p>
         </div>
         <div class="flex items-center gap-3">
           <a

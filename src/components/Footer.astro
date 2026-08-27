@@ -1,30 +1,66 @@
 ---
-// Footer following DESIGN.md 4-column specification
+// Footer following DESIGN.md 4-column specification with Monkeytype Themes bar
+import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
+
+const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
 ---
 
-<footer class="border-t border-hairline bg-canvas mt-auto">
+<footer class="border-t border-hairline bg-canvas mt-auto select-none font-mono text-xs">
   <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-4">
+    
+    <!-- Quick Theme Switcher Bar in Footer -->
+    <div class="mb-10 rounded-2xl border border-hairline bg-canvas-soft p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">🎨</span>
+        <div>
+          <span class="font-bold text-ink text-xs block">Quick Theme Switcher</span>
+          <span class="text-[10px] text-mute">Choose from 17 authentic Monkeytype color palettes</span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-1.5 justify-center">
+        {popularThemes.map(t => (
+          <button
+            type="button"
+            data-footer-theme={t.id}
+            class="footer-theme-btn flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1 text-[11px] font-bold text-body hover:text-ink hover:scale-105 transition cursor-pointer"
+            style={`border-left: 3px solid ${t.main};`}
+          >
+            <span>{t.name}</span>
+          </button>
+        ))}
+        <button
+          type="button"
+          id="footer-all-themes-btn"
+          class="flex items-center gap-1 rounded-xl px-2.5 py-1 text-[11px] font-bold transition cursor-pointer hover:opacity-90"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        >
+          <span>All 17 Themes →</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-4 font-sans text-xs">
       <!-- Column 1: Brand & Status -->
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-2">
-          <div class="flex h-7 w-7 items-center justify-center rounded bg-ink text-canvas">
+          <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-ink text-on-primary" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <rect x="2" y="4" width="20" height="16" rx="2"></rect>
               <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M18 12h.01M8 16h8"></path>
             </svg>
           </div>
-          <span class="text-sm font-semibold tracking-tight text-ink">Typing Game Zone</span>
+          <span class="text-sm font-semibold tracking-tight text-ink font-mono">Typing Game Zone</span>
         </div>
         <p class="text-xs text-body leading-relaxed">
           The ultimate 2D typing game arcade & speed testing platform. Practice, compete, and master the keyboard.
         </p>
-        <div class="flex items-center gap-2 mt-2">
+        <div class="flex items-center gap-2 mt-2 font-mono">
           <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--site-primary, #e2b714);"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: var(--site-primary, #e2b714);"></span>
           </span>
-          <span class="text-[11px] font-mono text-mute uppercase">Systems Operational • 60 FPS</span>
+          <span class="text-[11px] text-mute uppercase">Systems Operational • 60 FPS</span>
         </div>
       </div>
 
@@ -44,7 +80,7 @@
       <div class="flex flex-col gap-3">
         <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Practice & Tools</span>
         <ul class="flex flex-col gap-2 text-xs text-body">
-          <li><a href="/speed-test" class="transition hover:text-ink">15s / 60s Speed Test</a></li>
+          <li><a href="/speed-test" class="transition hover:text-ink">Monkeytype Benchmark Suite</a></li>
           <li><a href="/practice" class="transition hover:text-ink">Home Row Mastery</a></li>
           <li><a href="/game/key-master" class="transition hover:text-ink">3D Heatmap Keyboard</a></li>
           <li><a href="/leaderboards" class="transition hover:text-ink">High Scores & Badges</a></li>
@@ -58,10 +94,10 @@
         <p class="text-xs text-body leading-relaxed">
           Real-time Web Audio synthesis simulates Cherry MX Blue clicks, Holy Panda thocks, Linear Reds, and mechanical typewriters with carriage return chimes.
         </p>
-        <div class="flex items-center gap-1.5 mt-1">
-          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">Web Audio API</span>
-          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">Tailwind v4</span>
-          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">Astro 7</span>
+        <div class="flex items-center gap-1.5 mt-1 font-mono">
+          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">Web Audio API</span>
+          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">17 Themes</span>
+          <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">Astro 7</span>
         </div>
       </div>
     </div>
@@ -73,3 +109,33 @@
     </div>
   </div>
 </footer>
+
+<script>
+  import { getThemeById, applyThemeGlobal } from '../lib/monkeytypeThemes';
+
+  function initFooterThemes() {
+    document.querySelectorAll('.footer-theme-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tId = btn.getAttribute('data-footer-theme');
+        if (tId) {
+          const theme = getThemeById(tId);
+          applyThemeGlobal(theme);
+        }
+      });
+    });
+
+    const allBtn = document.getElementById('footer-all-themes-btn');
+    allBtn?.addEventListener('click', () => {
+      if ((window as any).toggleGlobalCommandPalette) {
+        (window as any).toggleGlobalCommandPalette();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFooterThemes);
+  } else {
+    initFooterThemes();
+  }
+  document.addEventListener('astro:page-load', initFooterThemes);
+</script>

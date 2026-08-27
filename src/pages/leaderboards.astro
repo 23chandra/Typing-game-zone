@@ -139,15 +139,15 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         const card = document.createElement('div');
         card.className = `rounded-xl p-4 border transition-all ${
           ach.unlocked
-            ? 'bg-canvas border-emerald-200 shadow-level-1'
+            ? 'bg-canvas border-[var(--site-primary)] shadow-level-1'
             : 'bg-canvas-soft border-hairline opacity-60'
         }`;
 
         card.innerHTML = `
           <div class="flex items-center justify-between mb-2">
             <span class="text-2xl">${ach.icon}</span>
-            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full ${
-              ach.unlocked ? 'bg-emerald-100 text-emerald-800' : 'bg-canvas-soft-2 text-mute'
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full font-bold ${
+              ach.unlocked ? 'bg-primary text-on-primary' : 'bg-canvas-soft-2 text-mute'
             }">
               ${ach.unlocked ? 'UNLOCKED' : 'LOCKED'}
             </span>

@@ -1,0 +1,297 @@
+---
+// Global Monkeytype Command Palette & Quick Switcher
+// Accessible from any page on typinggamezone.com via Esc, Ctrl+Shift+P, or Cmd+K
+import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+---
+
+<div
+  id="global-cmd-palette"
+  class="fixed inset-0 z-100 flex items-start justify-center pt-16 sm:pt-24 p-4 backdrop-blur-md bg-black/60 hidden select-none font-mono text-xs"
+  aria-modal="true"
+  role="dialog"
+>
+  <div
+    class="w-full max-w-xl rounded-3xl p-4 sm:p-6 border shadow-2xl relative flex flex-col max-h-[75vh] animate-in fade-in zoom-in-95 duration-150"
+    style="background-color: var(--site-bg, #323437); border-color: var(--site-primary, #e2b714); color: var(--site-ink, #d1d0c5);"
+  >
+    <!-- Search Input Row -->
+    <div class="relative mb-3">
+      <span class="absolute left-3.5 top-3 text-sm font-bold" style="color: var(--site-primary, #e2b714);">></span>
+      <input
+        type="text"
+        id="global-cmd-search"
+        placeholder="Type to search themes, games, sounds, pages... (e.g. matrix, dracula, arcade)"
+        class="w-full rounded-2xl pl-8 pr-8 py-2.5 text-xs font-mono border focus:outline-none shadow-inner"
+        style="background-color: var(--site-canvas, #2c2e31); border-color: var(--site-mute, #646669); color: var(--site-ink, #d1d0c5);"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button
+        type="button"
+        id="global-cmd-close"
+        class="absolute right-3 top-2.5 text-sm opacity-60 hover:opacity-100 cursor-pointer"
+        title="Close (Esc)"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Filter Category Chips -->
+    <div class="flex items-center gap-1.5 pb-2 mb-2 border-b text-[11px] overflow-x-auto" style="border-color: var(--site-hairline, rgba(255,255,255,0.08));">
+      <button type="button" data-cmd-filter="all" class="cmd-filter-pill active px-2.5 py-1 rounded-full font-bold transition cursor-pointer" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">All</button>
+      <button type="button" data-cmd-filter="themes" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🎨 Themes (17)</button>
+      <button type="button" data-cmd-filter="games" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🎮 Games (21)</button>
+      <button type="button" data-cmd-filter="sounds" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🔊 Sounds</button>
+      <button type="button" data-cmd-filter="pages" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🧭 Pages</button>
+    </div>
+
+    <!-- Commands List -->
+    <div id="global-cmd-list" class="overflow-y-auto flex-1 pr-1 flex flex-col gap-1.5 text-xs">
+      <!-- Dynamically populated via JavaScript -->
+    </div>
+
+    <!-- Footer Instructions -->
+    <div class="pt-3 border-t mt-3 flex items-center justify-between text-[11px] select-none" style="border-color: var(--site-hairline, rgba(255,255,255,0.08)); color: var(--site-mute, #646669);">
+      <div class="flex items-center gap-3">
+        <span><kbd class="font-bold border px-1 py-0.5 rounded" style="border-color: var(--site-mute);">↑</kbd> <kbd class="font-bold border px-1 py-0.5 rounded" style="border-color: var(--site-mute);">↓</kbd> navigate</span>
+        <span><kbd class="font-bold border px-1.5 py-0.5 rounded" style="border-color: var(--site-mute);">↵</kbd> select</span>
+      </div>
+      <span><kbd class="font-bold border px-1.5 py-0.5 rounded" style="border-color: var(--site-mute);">esc</kbd> close</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { MONKEYTYPE_THEMES, applyThemeGlobal, getThemeById } from '../lib/monkeytypeThemes';
+  import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
+
+  interface PaletteCommand {
+    id: string;
+    label: string;
+    category: 'themes' | 'games' | 'sounds' | 'pages';
+    icon: string;
+    badge?: string;
+    paletteDots?: string[];
+    action: () => void;
+  }
+
+  function initGlobalCommandPalette() {
+    const palette = document.getElementById('global-cmd-palette');
+    const searchInput = document.getElementById('global-cmd-search') as HTMLInputElement | null;
+    const listContainer = document.getElementById('global-cmd-list');
+    const closeBtn = document.getElementById('global-cmd-close');
+    const filterPills = document.querySelectorAll('.cmd-filter-pill');
+
+    if (!palette || !searchInput || !listContainer) return;
+
+    let activeFilter = 'all';
+    let selectedIndex = 0;
+    let filteredList: PaletteCommand[] = [];
+
+    // Build all available commands
+    const allCommands: PaletteCommand[] = [
+      // 17 Themes
+      ...MONKEYTYPE_THEMES.map(t => ({
+        id: `theme-${t.id}`,
+        label: `Theme: ${t.name}`,
+        category: 'themes' as const,
+        icon: '🎨',
+        badge: t.category,
+        paletteDots: [t.main, t.sub, t.text, t.error],
+        action: () => applyThemeGlobal(t)
+      })),
+
+      // Navigation Pages
+      { id: 'nav-home', label: 'Go to Games Hub (21 Games)', category: 'pages', icon: '🎮', action: () => { window.location.href = '/'; } },
+      { id: 'nav-speed', label: 'Go to Speed Test Benchmark', category: 'pages', icon: '⚡', action: () => { window.location.href = '/speed-test'; } },
+      { id: 'nav-arcade', label: 'Go to Retro Arcade Lounge', category: 'pages', icon: '🕹️', action: () => { window.location.href = '/arcade'; } },
+      { id: 'nav-practice', label: 'Go to Touch Typing Practice Lab', category: 'pages', icon: '⌨️', action: () => { window.location.href = '/practice'; } },
+      { id: 'nav-leaderboards', label: 'Go to Leaderboards & Achievements', category: 'pages', icon: '🏆', action: () => { window.location.href = '/leaderboards'; } },
+
+      // Switch Sounds
+      { id: 'sound-clicky', label: 'Switch Sound: Cherry MX Blue (Clicky)', category: 'sounds', icon: '🔵', action: () => { soundEngine.setSwitch('clicky'); soundEngine.initContext(); soundEngine.playKey(); } },
+      { id: 'sound-thock', label: 'Switch Sound: Holy Panda (Thock)', category: 'sounds', icon: '🐼', action: () => { soundEngine.setSwitch('thock'); soundEngine.initContext(); soundEngine.playKey(); } },
+      { id: 'sound-linear', label: 'Switch Sound: Cherry MX Red (Linear)', category: 'sounds', icon: '🔴', action: () => { soundEngine.setSwitch('linear'); soundEngine.initContext(); soundEngine.playKey(); } },
+      { id: 'sound-typewriter', label: 'Switch Sound: Mechanical Typewriter Bell', category: 'sounds', icon: '📻', action: () => { soundEngine.setSwitch('typewriter'); soundEngine.initContext(); soundEngine.playKey(false, true); } },
+      { id: 'sound-pop', label: 'Switch Sound: Bubble Pop', category: 'sounds', icon: '🫧', action: () => { soundEngine.setSwitch('pop'); soundEngine.initContext(); soundEngine.playKey(); } },
+      { id: 'sound-beep', label: 'Switch Sound: 8-Bit Digital Beep', category: 'sounds', icon: '👾', action: () => { soundEngine.setSwitch('beep'); soundEngine.initContext(); soundEngine.playKey(); } },
+      { id: 'sound-off', label: 'Switch Sound: Mute Audio', category: 'sounds', icon: '🔇', action: () => { soundEngine.setSwitch('off'); } }
+    ];
+
+    function renderList(query = '') {
+      const q = query.toLowerCase().trim();
+      const currentThemeId = localStorage.getItem('monkeytype_theme') || 'serika_dark';
+
+      filteredList = allCommands.filter(c => {
+        const matchesCategory = activeFilter === 'all' || c.category === activeFilter;
+        const matchesQuery = !q || c.label.toLowerCase().includes(q) || c.id.toLowerCase().includes(q);
+        return matchesCategory && matchesQuery;
+      });
+
+      selectedIndex = 0;
+      listContainer.innerHTML = '';
+
+      if (filteredList.length === 0) {
+        listContainer.innerHTML = `
+          <div class="py-8 text-center" style="color: var(--site-mute);">
+            <div class="text-2xl mb-1">🔍</div>
+            <div>No matching commands found</div>
+          </div>
+        `;
+        return;
+      }
+
+      filteredList.forEach((cmd, idx) => {
+        const isCurrentTheme = cmd.id === `theme-${currentThemeId}`;
+        const itemBtn = document.createElement('button');
+        itemBtn.type = 'button';
+        itemBtn.className = `flex items-center justify-between p-2.5 rounded-2xl text-left transition cursor-pointer ${
+          idx === selectedIndex ? 'font-bold shadow-md' : 'opacity-85 hover:opacity-100'
+        }`;
+        itemBtn.style.backgroundColor = idx === selectedIndex ? 'var(--site-primary, #e2b714)' : 'var(--site-canvas, #2c2e31)';
+        itemBtn.style.color = idx === selectedIndex ? 'var(--site-on-primary, #323437)' : 'var(--site-ink, #d1d0c5)';
+        itemBtn.setAttribute('data-cmd-idx', `${idx}`);
+
+        let dotsHtml = '';
+        if (cmd.paletteDots) {
+          dotsHtml = `
+            <div class="flex items-center gap-1 ml-2">
+              ${cmd.paletteDots.map(c => `<span class="h-2.5 w-2.5 rounded-full inline-block border border-black/20" style="background-color: ${c};"></span>`).join('')}
+            </div>
+          `;
+        }
+
+        itemBtn.innerHTML = `
+          <div class="flex items-center gap-2.5 truncate">
+            <span class="text-base">${cmd.icon}</span>
+            <span class="truncate">${cmd.label}</span>
+            ${isCurrentTheme ? '<span class="text-[10px] px-1.5 py-0.5 rounded font-mono font-bold uppercase" style="background-color: var(--site-canvas-soft-2); color: var(--site-ink);">active</span>' : ''}
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            ${dotsHtml}
+            ${cmd.badge ? `<span class="text-[10px] opacity-60 font-mono">${cmd.badge}</span>` : ''}
+            <span class="text-[10px] opacity-40">↵</span>
+          </div>
+        `;
+
+        itemBtn.addEventListener('click', () => {
+          cmd.action();
+          closePalette();
+        });
+
+        listContainer.appendChild(itemBtn);
+      });
+    }
+
+    function updateHighlight() {
+      const items = listContainer.querySelectorAll('button');
+      items.forEach((btn, idx) => {
+        if (idx === selectedIndex) {
+          btn.style.backgroundColor = 'var(--site-primary, #e2b714)';
+          btn.style.color = 'var(--site-on-primary, #323437)';
+          btn.classList.add('font-bold', 'shadow-md');
+          btn.scrollIntoView({ block: 'nearest' });
+        } else {
+          btn.style.backgroundColor = 'var(--site-canvas, #2c2e31)';
+          btn.style.color = 'var(--site-ink, #d1d0c5)';
+          btn.classList.remove('font-bold', 'shadow-md');
+        }
+      });
+    }
+
+    function openPalette() {
+      palette.classList.remove('hidden');
+      renderList(searchInput?.value || '');
+      searchInput?.focus();
+    }
+
+    function closePalette() {
+      palette.classList.add('hidden');
+    }
+
+    // Toggle Palette export to window so Navbar and any button can open it
+    (window as any).toggleGlobalCommandPalette = () => {
+      if (palette.classList.contains('hidden')) openPalette();
+      else closePalette();
+    };
+
+    closeBtn?.addEventListener('click', closePalette);
+    palette.addEventListener('click', (e) => {
+      if (e.target === palette) closePalette();
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      renderList((e.target as HTMLInputElement).value);
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (filteredList.length > 0) {
+          selectedIndex = (selectedIndex + 1) % filteredList.length;
+          updateHighlight();
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (filteredList.length > 0) {
+          selectedIndex = (selectedIndex - 1 + filteredList.length) % filteredList.length;
+          updateHighlight();
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (filteredList[selectedIndex]) {
+          filteredList[selectedIndex].action();
+          closePalette();
+        }
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closePalette();
+      }
+    });
+
+    // Category Filter Pills
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => {
+          p.classList.remove('active');
+          (p as HTMLElement).style.backgroundColor = 'transparent';
+          (p as HTMLElement).style.color = 'var(--site-ink)';
+          p.classList.add('opacity-60');
+        });
+        pill.classList.add('active');
+        (pill as HTMLElement).style.backgroundColor = 'var(--site-primary, #e2b714)';
+        (pill as HTMLElement).style.color = 'var(--site-on-primary, #323437)';
+        pill.classList.remove('opacity-60');
+        activeFilter = pill.getAttribute('data-cmd-filter') || 'all';
+        renderList(searchInput.value);
+      });
+    });
+
+    // Global Key Listener for Esc / Ctrl+K / Ctrl+Shift+P
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in a textarea or input outside of palette
+      const isInput = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
+
+      if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === 'P' && e.ctrlKey && e.shiftKey)) {
+        e.preventDefault();
+        (window as any).toggleGlobalCommandPalette();
+        return;
+      }
+
+      // If user presses Esc and palette is open, close it
+      if (e.key === 'Escape' && !palette.classList.contains('hidden')) {
+        e.preventDefault();
+        closePalette();
+        return;
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGlobalCommandPalette);
+  } else {
+    initGlobalCommandPalette();
+  }
+  document.addEventListener('astro:page-load', initGlobalCommandPalette);
+</script>
