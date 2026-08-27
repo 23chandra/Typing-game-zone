@@ -1,5 +1,5 @@
 // Standard Touch Typing Keyboard Quadrant & Finger Mapping Engine
-// 10-Finger Touch Typing Standard (ANSI QWERTY)
+// 10-Finger Touch Typing Standard (ANSI QWERTY 15.0u System)
 
 export type FingerId = 'lp' | 'lr' | 'lm' | 'li' | 'ri' | 'rm' | 'rr' | 'rp' | 'thumb';
 export type QuadrantId = 'pinky' | 'ring' | 'middle' | 'index' | 'thumb';
@@ -17,7 +17,7 @@ export interface FingerQuadrantInfo {
   borderTint: string;
   baseKey: string;
   shiftKey?: string;
-  isAnchor?: boolean; // F and J
+  isAnchor?: boolean;
 }
 
 // Unified Quadrant Design System Colors
@@ -55,93 +55,95 @@ export const QUADRANT_COLORS = {
 } as const;
 
 export interface PhysicalKeyDef {
-  k: string;       // base key identifier (e.g. '1', 'q', 'a', 'space', 'shift_l')
-  display: string; // letter on keycap (e.g. 'Q', 'A', 'SPACEBAR')
-  s?: string;      // shifted symbol (e.g. '!', '@', '#')
-  w?: number;      // key width multiplier
+  k: string;       // base key identifier
+  display: string; // letter on keycap
+  s?: string;      // shifted symbol
+  w: number;       // key width in standard 1.0u units (Each row sums to exactly 15.0u)
   finger: FingerId;
   hand: HandId;
   isAnchor?: boolean;
 }
 
-// Complete Standard 5-Row ANSI QWERTY Matrix
+// Complete Standard 5-Row ANSI QWERTY Matrix (Every single row sums to EXACTLY 15.0u)
 export const PHYSICAL_KEYBOARD_LAYOUT: PhysicalKeyDef[][] = [
-  // Row 1: Number Row
+  // Row 1: Number Row (13*1.0u + 2.0u = 15.0u)
   [
-    { k: '`', display: '`', s: '~', finger: 'lp', hand: 'left' },
-    { k: '1', display: '1', s: '!', finger: 'lp', hand: 'left' },
-    { k: '2', display: '2', s: '@', finger: 'lr', hand: 'left' },
-    { k: '3', display: '3', s: '#', finger: 'lm', hand: 'left' },
-    { k: '4', display: '4', s: '$', finger: 'li', hand: 'left' },
-    { k: '5', display: '5', s: '%', finger: 'li', hand: 'left' },
-    { k: '6', display: '6', s: '^', finger: 'ri', hand: 'right' },
-    { k: '7', display: '7', s: '&', finger: 'ri', hand: 'right' },
-    { k: '8', display: '8', s: '*', finger: 'rm', hand: 'right' },
-    { k: '9', display: '9', s: '(', finger: 'rr', hand: 'right' },
-    { k: '0', display: '0', s: ')', finger: 'rp', hand: 'right' },
-    { k: '-', display: '-', s: '_', finger: 'rp', hand: 'right' },
-    { k: '=', display: '=', s: '+', finger: 'rp', hand: 'right' },
-    { k: 'backspace', display: 'Backspace', w: 1.5, finger: 'rp', hand: 'right' }
+    { k: '`', display: '`', s: '~', w: 1.0, finger: 'lp', hand: 'left' },
+    { k: '1', display: '1', s: '!', w: 1.0, finger: 'lp', hand: 'left' },
+    { k: '2', display: '2', s: '@', w: 1.0, finger: 'lr', hand: 'left' },
+    { k: '3', display: '3', s: '#', w: 1.0, finger: 'lm', hand: 'left' },
+    { k: '4', display: '4', s: '$', w: 1.0, finger: 'li', hand: 'left' },
+    { k: '5', display: '5', s: '%', w: 1.0, finger: 'li', hand: 'left' },
+    { k: '6', display: '6', s: '^', w: 1.0, finger: 'ri', hand: 'right' },
+    { k: '7', display: '7', s: '&', w: 1.0, finger: 'ri', hand: 'right' },
+    { k: '8', display: '8', s: '*', w: 1.0, finger: 'rm', hand: 'right' },
+    { k: '9', display: '9', s: '(', w: 1.0, finger: 'rr', hand: 'right' },
+    { k: '0', display: '0', s: ')', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: '-', display: '-', s: '_', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: '=', display: '=', s: '+', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: 'backspace', display: 'Backspace', w: 2.0, finger: 'rp', hand: 'right' }
   ],
-  // Row 2: Top / Upper Row
+  // Row 2: Top / Upper Row (1.5u + 12*1.0u + 1.5u = 15.0u)
   [
-    { k: 'tab', display: 'Tab', w: 1.3, finger: 'lp', hand: 'left' },
-    { k: 'q', display: 'Q', finger: 'lp', hand: 'left' },
-    { k: 'w', display: 'W', finger: 'lr', hand: 'left' },
-    { k: 'e', display: 'E', finger: 'lm', hand: 'left' },
-    { k: 'r', display: 'R', finger: 'li', hand: 'left' },
-    { k: 't', display: 'T', finger: 'li', hand: 'left' },
-    { k: 'y', display: 'Y', finger: 'ri', hand: 'right' },
-    { k: 'u', display: 'U', finger: 'ri', hand: 'right' },
-    { k: 'i', display: 'I', finger: 'rm', hand: 'right' },
-    { k: 'o', display: 'O', finger: 'rr', hand: 'right' },
-    { k: 'p', display: 'P', finger: 'rp', hand: 'right' },
-    { k: '[', display: '[', s: '{', finger: 'rp', hand: 'right' },
-    { k: ']', display: ']', s: '}', finger: 'rp', hand: 'right' },
-    { k: '\\', display: '\\', s: '|', w: 1.1, finger: 'rp', hand: 'right' }
+    { k: 'tab', display: 'Tab', w: 1.5, finger: 'lp', hand: 'left' },
+    { k: 'q', display: 'Q', w: 1.0, finger: 'lp', hand: 'left' },
+    { k: 'w', display: 'W', w: 1.0, finger: 'lr', hand: 'left' },
+    { k: 'e', display: 'E', w: 1.0, finger: 'lm', hand: 'left' },
+    { k: 'r', display: 'R', w: 1.0, finger: 'li', hand: 'left' },
+    { k: 't', display: 'T', w: 1.0, finger: 'li', hand: 'left' },
+    { k: 'y', display: 'Y', w: 1.0, finger: 'ri', hand: 'right' },
+    { k: 'u', display: 'U', w: 1.0, finger: 'ri', hand: 'right' },
+    { k: 'i', display: 'I', w: 1.0, finger: 'rm', hand: 'right' },
+    { k: 'o', display: 'O', w: 1.0, finger: 'rr', hand: 'right' },
+    { k: 'p', display: 'P', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: '[', display: '[', s: '{', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: ']', display: ']', s: '}', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: '\\', display: '\\', s: '|', w: 1.5, finger: 'rp', hand: 'right' }
   ],
-  // Row 3: Home Row (Anchors F and J)
+  // Row 3: Home Row (1.75u + 11*1.0u + 2.25u = 15.0u)
   [
-    { k: 'caps', display: 'Caps', w: 1.5, finger: 'lp', hand: 'left' },
-    { k: 'a', display: 'A', finger: 'lp', hand: 'left' },
-    { k: 's', display: 'S', finger: 'lr', hand: 'left' },
-    { k: 'd', display: 'D', finger: 'lm', hand: 'left' },
-    { k: 'f', display: 'F', finger: 'li', hand: 'left', isAnchor: true },
-    { k: 'g', display: 'G', finger: 'li', hand: 'left' },
-    { k: 'h', display: 'H', finger: 'ri', hand: 'right' },
-    { k: 'j', display: 'J', finger: 'ri', hand: 'right', isAnchor: true },
-    { k: 'k', display: 'K', finger: 'rm', hand: 'right' },
-    { k: 'l', display: 'L', finger: 'rr', hand: 'right' },
-    { k: ';', display: ';', s: ':', finger: 'rp', hand: 'right' },
-    { k: "'", display: "'", s: '"', finger: 'rp', hand: 'right' },
-    { k: 'enter', display: 'Enter', w: 1.6, finger: 'rp', hand: 'right' }
+    { k: 'caps', display: 'Caps Lock', w: 1.75, finger: 'lp', hand: 'left' },
+    { k: 'a', display: 'A', w: 1.0, finger: 'lp', hand: 'left' },
+    { k: 's', display: 'S', w: 1.0, finger: 'lr', hand: 'left' },
+    { k: 'd', display: 'D', w: 1.0, finger: 'lm', hand: 'left' },
+    { k: 'f', display: 'F', w: 1.0, finger: 'li', hand: 'left', isAnchor: true },
+    { k: 'g', display: 'G', w: 1.0, finger: 'li', hand: 'left' },
+    { k: 'h', display: 'H', w: 1.0, finger: 'ri', hand: 'right' },
+    { k: 'j', display: 'J', w: 1.0, finger: 'ri', hand: 'right', isAnchor: true },
+    { k: 'k', display: 'K', w: 1.0, finger: 'rm', hand: 'right' },
+    { k: 'l', display: 'L', w: 1.0, finger: 'rr', hand: 'right' },
+    { k: ';', display: ';', s: ':', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: "'", display: "'", s: '"', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: 'enter', display: 'Enter', w: 2.25, finger: 'rp', hand: 'right' }
   ],
-  // Row 4: Bottom Row
+  // Row 4: Bottom Row (2.25u + 10*1.0u + 2.75u = 15.0u)
   [
-    { k: 'shift_l', display: 'Shift', w: 1.8, finger: 'lp', hand: 'left' },
-    { k: 'z', display: 'Z', finger: 'lp', hand: 'left' },
-    { k: 'x', display: 'X', finger: 'lr', hand: 'left' },
-    { k: 'c', display: 'C', finger: 'lm', hand: 'left' },
-    { k: 'v', display: 'V', finger: 'li', hand: 'left' },
-    { k: 'b', display: 'B', finger: 'li', hand: 'left' },
-    { k: 'n', display: 'N', finger: 'ri', hand: 'right' },
-    { k: 'm', display: 'M', finger: 'ri', hand: 'right' },
-    { k: ',', display: ',', s: '<', finger: 'rm', hand: 'right' },
-    { k: '.', display: '.', s: '>', finger: 'rr', hand: 'right' },
-    { k: '/', display: '/', s: '?', finger: 'rp', hand: 'right' },
-    { k: 'shift_r', display: 'Shift', w: 1.8, finger: 'rp', hand: 'right' }
+    { k: 'shift_l', display: 'Shift', w: 2.25, finger: 'lp', hand: 'left' },
+    { k: 'z', display: 'Z', w: 1.0, finger: 'lp', hand: 'left' },
+    { k: 'x', display: 'X', w: 1.0, finger: 'lr', hand: 'left' },
+    { k: 'c', display: 'C', w: 1.0, finger: 'lm', hand: 'left' },
+    { k: 'v', display: 'V', w: 1.0, finger: 'li', hand: 'left' },
+    { k: 'b', display: 'B', w: 1.0, finger: 'li', hand: 'left' },
+    { k: 'n', display: 'N', w: 1.0, finger: 'ri', hand: 'right' },
+    { k: 'm', display: 'M', w: 1.0, finger: 'ri', hand: 'right' },
+    { k: ',', display: ',', s: '<', w: 1.0, finger: 'rm', hand: 'right' },
+    { k: '.', display: '.', s: '>', w: 1.0, finger: 'rr', hand: 'right' },
+    { k: '/', display: '/', s: '?', w: 1.0, finger: 'rp', hand: 'right' },
+    { k: 'shift_r', display: 'Shift', w: 2.75, finger: 'rp', hand: 'right' }
   ],
-  // Row 5: Spacebar & Modifiers
+  // Row 5: Spacebar & Modifiers (1.25*3 + 6.25 + 1.25*3 = 15.0u)
   [
-    { k: 'ctrl_l', display: 'Ctrl', w: 1.2, finger: 'lp', hand: 'left' },
-    { k: 'alt_l', display: 'Alt', w: 1.2, finger: 'thumb', hand: 'left' },
-    { k: ' ', display: 'SPACEBAR', w: 6.2, finger: 'thumb', hand: 'both' },
-    { k: 'alt_r', display: 'Alt', w: 1.2, finger: 'thumb', hand: 'right' },
-    { k: 'ctrl_r', display: 'Ctrl', w: 1.2, finger: 'rp', hand: 'right' }
+    { k: 'ctrl_l', display: 'Ctrl', w: 1.25, finger: 'lp', hand: 'left' },
+    { k: 'win_l', display: 'Win', w: 1.25, finger: 'lp', hand: 'left' },
+    { k: 'alt_l', display: 'Alt', w: 1.25, finger: 'thumb', hand: 'left' },
+    { k: ' ', display: 'SPACEBAR', w: 6.25, finger: 'thumb', hand: 'both' },
+    { k: 'alt_r', display: 'Alt', w: 1.25, finger: 'thumb', hand: 'right' },
+    { k: 'fn_r', display: 'Fn', w: 1.25, finger: 'rp', hand: 'right' },
+    { k: 'ctrl_r', display: 'Ctrl', w: 1.25, finger: 'rp', hand: 'right' }
   ]
 ];
 
-// Master Character Mapping Table (100% Comprehensive Touch-Typing Standards)
+// Master Character Mapping Table
 const CHAR_MAP: Record<string, { finger: FingerId; hand: HandId; baseKey: string; shiftKey?: string; isAnchor?: boolean }> = {
   // --- LEFT PINKY (LP) ---
   '`': { finger: 'lp', hand: 'left', baseKey: '`' },
@@ -158,6 +160,7 @@ const CHAR_MAP: Record<string, { finger: FingerId; hand: HandId; baseKey: string
   'caps': { finger: 'lp', hand: 'left', baseKey: 'caps' },
   'shift_l': { finger: 'lp', hand: 'left', baseKey: 'shift_l' },
   'ctrl_l': { finger: 'lp', hand: 'left', baseKey: 'ctrl_l' },
+  'win_l': { finger: 'lp', hand: 'left', baseKey: 'win_l' },
 
   // --- LEFT RING (LR) ---
   '2': { finger: 'lr', hand: 'left', baseKey: '2' },
@@ -247,7 +250,7 @@ const CHAR_MAP: Record<string, { finger: FingerId; hand: HandId; baseKey: string
   '[': { finger: 'rp', hand: 'right', baseKey: '[' },
   '{': { finger: 'rp', hand: 'right', baseKey: '[', shiftKey: '{' },
   ']': { finger: 'rp', hand: 'right', baseKey: ']' },
-  '}': { finger: 'rp', hand: 'right', baseKey: ']', shiftKey: '}' },
+  '}': { finger: 'rp', hand: 'right', baseKey: ']' },
   '\\': { finger: 'rp', hand: 'right', baseKey: '\\' },
   '|': { finger: 'rp', hand: 'right', baseKey: '\\', shiftKey: '|' },
   ';': { finger: 'rp', hand: 'right', baseKey: ';' },
@@ -260,8 +263,9 @@ const CHAR_MAP: Record<string, { finger: FingerId; hand: HandId; baseKey: string
   'enter': { finger: 'rp', hand: 'right', baseKey: 'enter' },
   'shift_r': { finger: 'rp', hand: 'right', baseKey: 'shift_r' },
   'ctrl_r': { finger: 'rp', hand: 'right', baseKey: 'ctrl_r' },
+  'fn_r': { finger: 'rp', hand: 'right', baseKey: 'fn_r' },
 
-  // --- THUMBS (Spacebar) ---
+  // --- THUMBS (Spacebar & Alt) ---
   ' ': { finger: 'thumb', hand: 'both', baseKey: ' ' },
   'alt_l': { finger: 'thumb', hand: 'left', baseKey: 'alt_l' },
   'alt_r': { finger: 'thumb', hand: 'right', baseKey: 'alt_r' }

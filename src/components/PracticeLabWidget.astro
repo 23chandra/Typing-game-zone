@@ -1,22 +1,24 @@
 ---
 // Interactive Touch Typing Practice Lab Widget
-// Powered by standard ANSI QWERTY Keyboard Quadrant Mapping
+// Powered by standard ANSI QWERTY 15.0u Grid Engine with 17 Authentic Monkeytype Themes
 import { QUADRANT_COLORS } from '../lib/fingerMapping';
+import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 ---
 
 <div
   id="practice-lab-root"
   class="w-full max-w-5xl mx-auto rounded-3xl p-4 sm:p-8 font-mono transition-colors duration-300 relative select-none border border-hairline shadow-level-3"
-  style="background-color: var(--site-canvas, #2c2e31); color: var(--site-ink, #d1d0c5);"
+  style="background-color: var(--mt-bg, var(--site-canvas-soft, #323437)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
 >
   <!-- Top Drill Selector & Controls Bar -->
   <div
-    class="flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 text-xs font-semibold select-none border border-hairline shadow-sm mb-6"
-    style="background-color: var(--site-canvas-soft, #323437);"
+    id="prac-top-controls"
+    class="flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 text-xs font-semibold select-none border border-hairline shadow-sm mb-6 transition-colors"
+    style="background-color: var(--mt-sub-alt, var(--site-canvas, #2c2e31)); color: var(--mt-sub, var(--site-mute, #646669));"
   >
     <!-- Left: Drill Categories -->
     <div class="flex flex-wrap items-center gap-1" id="prac-categories-bar">
-      <button type="button" data-drill="homeRow" class="prac-cat-btn active flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">
+      <button type="button" data-drill="homeRow" class="prac-cat-btn active flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer" style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));">
         <span>🏠</span>
         <span>Home Row</span>
       </button>
@@ -66,12 +68,59 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
       </button>
     </div>
 
-    <!-- Right: Drill Options (Word Count & Metronome Rhythm) -->
+    <!-- Right: Controls (Theme Picker, Word Count & Metronome) -->
     <div class="flex items-center gap-2">
+      
+      <!-- Theme Switcher Dropdown -->
+      <div class="relative" id="prac-theme-dropdown-container">
+        <button
+          type="button"
+          id="prac-theme-menu-btn"
+          class="flex items-center gap-1.5 rounded-xl border border-hairline px-2.5 py-1.5 text-xs font-mono font-medium transition cursor-pointer hover:text-ink"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
+          title="Change Global Website & Keyboard Theme"
+        >
+          <span class="h-2 w-2 rounded-full shadow-sm" style="background-color: var(--mt-main, #e2b714);"></span>
+          <span id="prac-current-theme-name" class="font-bold text-[11px]">Serika Dark</span>
+          <svg class="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu with 17 Monkeytype Themes -->
+        <div
+          id="prac-theme-menu"
+          class="absolute right-0 top-full mt-1.5 hidden w-60 max-h-72 overflow-y-auto rounded-2xl border border-hairline p-1.5 shadow-2xl z-50 text-xs font-mono"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); border-color: var(--site-hairline);"
+        >
+          <div class="px-2.5 py-1 text-[10px] text-mute uppercase font-bold tracking-wider border-b border-hairline mb-1">
+            Choose Theme (17 Palettes)
+          </div>
+          {MONKEYTYPE_THEMES.map(t => (
+            <button
+              type="button"
+              data-theme-id={t.id}
+              class="prac-theme-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer"
+            >
+              <div class="flex flex-col">
+                <span class="font-bold text-xs" style={`color: ${t.main};`}>{t.name}</span>
+                <span class="text-[9px] opacity-60 uppercase">{t.category}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${t.main};`}></span>
+                <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${t.sub};`}></span>
+                <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${t.text};`}></span>
+                <span class="prac-theme-check ml-1 text-xs font-bold text-success hidden">✓</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <!-- Drill Length Toggle -->
-      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--site-canvas, #2c2e31);">
+      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));">
         <button type="button" data-count="10" class="prac-count-btn px-2 py-1 rounded-lg transition cursor-pointer text-[11px] opacity-75 hover:opacity-100">10w</button>
-        <button type="button" data-count="20" class="prac-count-btn active px-2 py-1 rounded-lg font-bold transition cursor-pointer text-[11px]" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">20w</button>
+        <button type="button" data-count="20" class="prac-count-btn active px-2 py-1 rounded-lg font-bold transition cursor-pointer text-[11px]" style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));">20w</button>
         <button type="button" data-count="40" class="prac-count-btn px-2 py-1 rounded-lg transition cursor-pointer text-[11px] opacity-75 hover:opacity-100">40w</button>
       </div>
 
@@ -81,7 +130,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
           type="button"
           id="prac-metronome-btn"
           class="flex items-center gap-1 rounded-xl border border-hairline px-2.5 py-1.5 text-xs font-mono font-medium transition cursor-pointer hover:bg-canvas"
-          style="background-color: var(--site-canvas, #2c2e31);"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
           title="Metronome Typing Cadence Guide"
         >
           <span>⏱️</span>
@@ -91,7 +140,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
         <div
           id="prac-metronome-menu"
           class="absolute right-0 mt-1 hidden min-w-32 rounded-xl border border-hairline p-1 shadow-xl z-50 text-xs font-mono"
-          style="background-color: var(--site-canvas, #2c2e31);"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));"
         >
           <button type="button" data-bpm="0" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft active font-bold">
             <span>OFF</span>
@@ -125,20 +174,20 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
     <div class="flex items-center justify-between mb-3 px-1 text-xs select-none">
       <div class="flex items-center gap-4">
         <div>
-          <span class="text-mute uppercase text-[10px] block">Progress</span>
-          <span id="prac-live-progress" class="font-bold text-sm text-ink">0 / 20</span>
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Progress</span>
+          <span id="prac-live-progress" class="font-bold text-sm" style="color: var(--mt-text, #d1d0c5);">0 / 20</span>
         </div>
         <div>
-          <span class="text-mute uppercase text-[10px] block">Live WPM</span>
-          <span id="prac-live-wpm" class="font-bold text-sm" style="color: var(--site-primary, #e2b714);">0</span>
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Live WPM</span>
+          <span id="prac-live-wpm" class="font-bold text-sm" style="color: var(--mt-main, var(--site-primary, #e2b714));">0</span>
         </div>
         <div>
-          <span class="text-mute uppercase text-[10px] block">Accuracy</span>
-          <span id="prac-live-acc" class="font-bold text-sm text-ink">100%</span>
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Accuracy</span>
+          <span id="prac-live-acc" class="font-bold text-sm" style="color: var(--mt-text, #d1d0c5);">100%</span>
         </div>
         <div>
-          <span class="text-mute uppercase text-[10px] block">Streak</span>
-          <span class="font-bold text-sm text-warning flex items-center gap-0.5">
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Streak</span>
+          <span class="font-bold text-sm flex items-center gap-0.5" style="color: var(--mt-main, #e2b714);">
             <span>🔥</span>
             <span id="prac-live-streak">0</span>
           </span>
@@ -149,11 +198,12 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
       <button
         type="button"
         id="prac-restart-btn"
-        class="flex items-center gap-1.5 rounded-xl border border-hairline px-3 py-1.5 text-xs font-bold transition hover:text-ink hover:bg-canvas-soft cursor-pointer"
-        title="Restart Drill (Tab + Enter)"
+        class="flex items-center gap-1.5 rounded-xl border border-hairline px-3 py-1.5 text-xs font-bold transition hover:opacity-100 opacity-80 cursor-pointer"
+        style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-text, #d1d0c5);"
+        title="Restart Drill (Tab)"
       >
         <span>⟲</span>
-        <span class="hidden sm:inline">Restart</span>
+        <span class="hidden sm:inline">Restart (Tab)</span>
       </button>
     </div>
 
@@ -161,7 +211,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
     <div
       id="prac-words-viewport"
       class="relative h-32 sm:h-36 overflow-hidden rounded-2xl p-4 sm:p-6 text-xl sm:text-2xl leading-[1.8] tracking-wide cursor-text select-none border border-hairline transition-all shadow-inner"
-      style="background-color: var(--site-canvas-soft, #323437);"
+      style="background-color: var(--mt-sub-alt, #2c2e31); border-color: var(--site-hairline);"
     >
       <div
         id="prac-words-wrapper"
@@ -171,9 +221,8 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
         <div
           id="prac-caret"
           class="absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0"
-          style="background-color: var(--site-primary, #e2b714); width: 3px; border-radius: 9999px;"
+          style="background-color: var(--mt-caret, var(--mt-main, #e2b714)); width: 3px; border-radius: 9999px;"
         ></div>
-        <!-- Injected dynamically via JS -->
       </div>
 
       <!-- Single Hidden Input Dispatcher -->
@@ -193,7 +242,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
         class="absolute inset-0 flex items-center justify-center backdrop-blur-xs transition-opacity duration-200 cursor-pointer z-30 hidden"
         style="background-color: rgba(0, 0, 0, 0.45);"
       >
-        <div class="flex items-center gap-2 rounded-full px-5 py-2 shadow-2xl border border-hairline text-xs font-semibold animate-pulse" style="background-color: var(--site-canvas, #2c2e31); color: var(--site-ink, #d1d0c5);">
+        <div class="flex items-center gap-2 rounded-full px-5 py-2 shadow-2xl border border-hairline text-xs font-semibold animate-pulse" style="background-color: var(--mt-bg, #323437); color: var(--mt-text, #d1d0c5);">
           <span>🔒 Click or press any key to focus practice</span>
         </div>
       </div>
@@ -204,61 +253,91 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
   <div
     id="prac-instructor-ribbon"
     class="rounded-2xl p-3.5 mb-6 border border-hairline flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs shadow-sm transition-all"
-    style="background-color: var(--site-canvas-soft, #323437);"
+    style="background-color: var(--mt-sub-alt, #2c2e31);"
   >
     <div class="flex items-center gap-3">
-      <div id="prac-finger-dot" class="h-4 w-4 rounded-full border border-black/30 shadow-md animate-pulse" style="background-color: #10b981;"></div>
+      <div id="prac-finger-dot" class="h-4 w-4 rounded-full border border-black/30 shadow-md animate-pulse" style="background-color: var(--mt-main, #e2b714);"></div>
       <div class="flex flex-col">
-        <span class="text-[10px] text-mute uppercase tracking-wider font-semibold">Live Finger Guidance:</span>
-        <span id="prac-finger-instruction" class="font-bold text-sm text-ink">👉 Rest Index Fingers on [F] & [J] Tactile Bumps</span>
+        <span class="text-[10px] text-mute uppercase tracking-wider font-semibold" style="color: var(--mt-sub, #646669);">Live Finger Guidance:</span>
+        <span id="prac-finger-instruction" class="font-bold text-sm" style="color: var(--mt-text, #d1d0c5);">👉 Rest Index Fingers on [F] & [J] Tactile Bumps</span>
       </div>
     </div>
 
     <!-- Hand & Quadrant Zone Badge -->
-    <div id="prac-hand-badge" class="flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold border border-hairline shadow-sm" style="background-color: var(--site-canvas, #2c2e31);">
-      <span id="prac-hand-side" class="text-ink">Left Hand</span>
+    <div id="prac-hand-badge" class="flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold border border-hairline shadow-sm" style="background-color: var(--mt-bg, #323437);">
+      <span id="prac-hand-side" style="color: var(--mt-text, #d1d0c5);">Left Hand</span>
       <span>•</span>
-      <span id="prac-hand-finger" style="color: #10b981;">Index Quadrant</span>
+      <span id="prac-hand-finger" style="color: var(--mt-main, #e2b714);">Index Quadrant</span>
     </div>
   </div>
 
   <!-- Interactive QWERTY Visual Keyboard with Real-time Key Highlights -->
-  <div class="rounded-2xl border border-hairline p-3.5 sm:p-6 shadow-inner select-none overflow-x-auto" style="background-color: var(--site-canvas-soft, #323437);">
+  <div
+    id="prac-keyboard-card"
+    class="rounded-3xl border border-hairline p-4 sm:p-6 shadow-level-2 select-none overflow-x-auto transition-colors"
+    style="background-color: var(--mt-sub-alt, #2c2e31);"
+  >
     
-    <!-- Quadrant Color Legend Filter Bar -->
-    <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] mb-4 pb-3 border-b border-hairline min-w-[560px] sm:min-w-0">
-      <div class="flex items-center gap-2">
-        <span class="font-bold uppercase tracking-wider text-ink text-xs">Keyboard Quadrant Mapping</span>
+    <!-- Top Legend & Appearance Controls Bar -->
+    <div class="flex flex-wrap items-center justify-between gap-3 text-[11px] mb-5 pb-3 border-b border-hairline min-w-[620px] sm:min-w-0">
+      
+      <!-- Left: Title & Mode Toggle -->
+      <div class="flex items-center gap-2.5">
+        <span class="font-bold uppercase tracking-wider text-xs" style="color: var(--mt-text, #d1d0c5);">Mechanical Keyboard</span>
+        
+        <!-- Mode Switcher Pill (Theme vs Quadrant) -->
+        <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, #323437);">
+          <button
+            type="button"
+            id="prac-mode-theme-btn"
+            class="prac-style-toggle active px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
+            style="background-color: var(--mt-main, #e2b714); color: var(--site-on-primary, var(--mt-bg, #323437));"
+            title="Keys 100% styled to match website theme"
+          >
+            🎨 Theme Match
+          </button>
+          <button
+            type="button"
+            id="prac-mode-quad-btn"
+            class="prac-style-toggle px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer opacity-70 hover:opacity-100"
+            style="color: var(--mt-text, #d1d0c5);"
+            title="Keys show color-coded finger quadrants"
+          >
+            🌈 Quadrants
+          </button>
+        </div>
       </div>
       
-      <!-- Clickable Quadrant Filter Chips -->
+      <!-- Right: Clickable Quadrant Filter Chips -->
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <button type="button" data-filter-quadrant="pinkyDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #f43f5e; color: #f43f5e;">
+        <button type="button" data-filter-quadrant="pinkyDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #f43f5e; color: #f43f5e;">
           <span class="h-2 w-2 rounded-full" style="background-color: #f43f5e;"></span>
-          <span>Pinky Quadrant</span>
+          <span>Pinky</span>
         </button>
-        <button type="button" data-filter-quadrant="ringDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #a855f7; color: #a855f7;">
+        <button type="button" data-filter-quadrant="ringDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #a855f7; color: #a855f7;">
           <span class="h-2 w-2 rounded-full" style="background-color: #a855f7;"></span>
-          <span>Ring Quadrant</span>
+          <span>Ring</span>
         </button>
-        <button type="button" data-filter-quadrant="middleDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #3b82f6; color: #3b82f6;">
+        <button type="button" data-filter-quadrant="middleDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #3b82f6; color: #3b82f6;">
           <span class="h-2 w-2 rounded-full" style="background-color: #3b82f6;"></span>
-          <span>Middle Quadrant</span>
+          <span>Middle</span>
         </button>
-        <button type="button" data-filter-quadrant="indexDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #10b981; color: #10b981;">
+        <button type="button" data-filter-quadrant="indexDrills" class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline hover:scale-105 transition cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #10b981; color: #10b981;">
           <span class="h-2 w-2 rounded-full" style="background-color: #10b981;"></span>
-          <span>Index Quadrant</span>
+          <span>Index</span>
         </button>
-        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline bg-canvas font-bold text-[10px] sm:text-[11px]" style="border-left: 3px solid #eab308; color: #eab308;">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-hairline font-bold text-[10px] sm:text-[11px] shadow-sm" style="background-color: var(--mt-bg, #323437); border-left: 3px solid #eab308; color: #eab308;">
           <span class="h-2 w-2 rounded-full" style="background-color: #eab308;"></span>
-          <span>Thumbs (Space)</span>
+          <span>Thumbs</span>
         </div>
       </div>
     </div>
 
-    <!-- Keycaps Matrix -->
-    <div id="prac-keyboard-matrix" class="flex flex-col gap-1.5 text-xs font-mono min-w-[560px] sm:min-w-0 select-none">
-      <!-- Injected dynamically via JavaScript with exact quadrant color tokens -->
+    <!-- Keycaps Matrix Wrapper (Centered & Perfectly Proportioned 15.0u System) -->
+    <div class="flex justify-center w-full">
+      <div id="prac-keyboard-matrix" class="flex flex-col gap-1.5 text-xs font-mono select-none w-full max-w-[760px] items-center">
+        <!-- Injected dynamically via JavaScript with exact mathematical 15.0u grid -->
+      </div>
     </div>
   </div>
 
@@ -266,14 +345,14 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
   <div
     id="prac-result-view"
     class="hidden my-4 rounded-3xl p-6 sm:p-8 border border-hairline shadow-2xl font-mono text-xs animate-in fade-in zoom-in-95 duration-200"
-    style="background-color: var(--site-canvas-soft, #323437);"
+    style="background-color: var(--mt-sub-alt, #2c2e31);"
   >
     <div class="flex items-center justify-between pb-4 border-b border-hairline mb-6">
       <div class="flex items-center gap-2.5">
         <span id="prac-scorecard-icon" class="text-3xl">🎉</span>
         <div>
-          <h3 id="prac-scorecard-title" class="text-lg font-bold text-ink">Drill Completed!</h3>
-          <p class="text-[11px] text-mute">Touch-typing muscle memory reinforced.</p>
+          <h3 id="prac-scorecard-title" class="text-lg font-bold" style="color: var(--mt-text, #d1d0c5);">Drill Completed!</h3>
+          <p class="text-[11px]" style="color: var(--mt-sub, #646669);">Touch-typing muscle memory reinforced.</p>
         </div>
       </div>
 
@@ -284,20 +363,20 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
 
     <!-- Metrics Hero -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
-        <span class="text-[10px] text-mute uppercase">Net WPM</span>
-        <div id="prac-res-wpm" class="text-3xl font-bold mt-1" style="color: var(--site-primary, #e2b714);">0</div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Net WPM</span>
+        <div id="prac-res-wpm" class="text-3xl font-bold mt-1" style="color: var(--mt-main, #e2b714);">0</div>
       </div>
-      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
-        <span class="text-[10px] text-mute uppercase">Accuracy</span>
-        <div id="prac-res-acc" class="text-3xl font-bold mt-1 text-ink">100%</div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Accuracy</span>
+        <div id="prac-res-acc" class="text-3xl font-bold mt-1" style="color: var(--mt-text, #d1d0c5);">100%</div>
       </div>
-      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
-        <span class="text-[10px] text-mute uppercase">Max Streak</span>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Max Streak</span>
         <div id="prac-res-streak" class="text-3xl font-bold mt-1 text-warning">0x</div>
       </div>
-      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--site-canvas, #2c2e31);">
-        <span class="text-[10px] text-mute uppercase">Errors</span>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Errors</span>
         <div id="prac-res-errors" class="text-3xl font-bold mt-1 text-error">0</div>
       </div>
     </div>
@@ -309,7 +388,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
           type="button"
           id="prac-next-drill-btn"
           class="flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold shadow-lg transition hover:scale-105 active:scale-95 cursor-pointer"
-          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+          style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));"
         >
           <span>Next Drill →</span>
         </button>
@@ -338,38 +417,56 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
   >
     <div
       class="w-full max-w-lg rounded-3xl p-6 border border-hairline shadow-2xl font-mono relative"
-      style="background-color: var(--site-canvas, #2c2e31); color: var(--site-ink, #d1d0c5);"
+      style="background-color: var(--mt-bg, #323437); color: var(--mt-text, #d1d0c5);"
     >
       <div class="flex items-center justify-between pb-3 border-b border-hairline mb-4">
-        <h3 class="text-sm font-bold" style="color: var(--site-primary, #e2b714);">Custom Practice Text</h3>
+        <h3 class="text-sm font-bold" style="color: var(--mt-main, #e2b714);">Custom Practice Text</h3>
         <button type="button" id="prac-custom-close" class="text-base px-2 hover:opacity-75 cursor-pointer">✕</button>
       </div>
 
       <div class="mb-4">
-        <label class="block text-xs text-mute mb-2">Paste any custom passage or programming drill:</label>
+        <label class="block text-xs mb-2" style="color: var(--mt-sub, #646669);">Paste any custom passage or programming drill:</label>
         <textarea
           id="prac-custom-textarea"
           rows="5"
           placeholder="Paste articles, code snippets, vocabulary lists, or numbers here..."
           class="w-full rounded-xl p-3 text-xs leading-relaxed border border-hairline focus:outline-none font-mono"
-          style="background-color: var(--site-canvas-soft, #323437); color: var(--site-ink, #d1d0c5);"
+          style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-text, #d1d0c5);"
         ></textarea>
       </div>
 
       <div class="flex items-center justify-end gap-2 text-xs">
         <button type="button" id="prac-custom-cancel" class="rounded-xl px-4 py-2 font-bold cursor-pointer hover:bg-canvas-soft">Cancel</button>
-        <button type="button" id="prac-custom-apply" class="rounded-xl px-5 py-2 font-bold shadow-md cursor-pointer" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">Set & Practice</button>
+        <button type="button" id="prac-custom-apply" class="rounded-xl px-5 py-2 font-bold shadow-md cursor-pointer" style="background-color: var(--mt-main, #e2b714); color: var(--site-on-primary, var(--mt-bg, #323437));">Set & Practice</button>
       </div>
     </div>
   </div>
 
 </div>
 
+<style>
+  #prac-keyboard-matrix {
+    --key-unit: clamp(26px, 4.3vw, 44px);
+    --key-gap: clamp(3px, 0.5vw, 6px);
+    --key-height: clamp(38px, 4.8vw, 48px);
+  }
+  .prac-keycap {
+    font-family: 'Geist Mono', monospace;
+    user-select: none;
+    touch-action: manipulation;
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+  .prac-keycap:hover {
+    filter: brightness(1.15);
+  }
+</style>
+
 <script>
   import { WORD_LISTS } from '../lib/wordLists';
   import { soundEngine } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
   import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import { MONKEYTYPE_THEMES, applyThemeGlobal, getThemeById } from '../lib/monkeytypeThemes';
   import confetti from 'canvas-confetti';
 
   let metronomeTimer: number | null = null;
@@ -410,6 +507,13 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
     const handSideEl = document.getElementById('prac-hand-side');
     const handFingerEl = document.getElementById('prac-hand-finger');
 
+    // Theme Switcher Elements
+    const themeMenuBtn = document.getElementById('prac-theme-menu-btn');
+    const themeMenu = document.getElementById('prac-theme-menu');
+    const currentThemeNameEl = document.getElementById('prac-current-theme-name');
+    const modeThemeBtn = document.getElementById('prac-mode-theme-btn');
+    const modeQuadBtn = document.getElementById('prac-mode-quad-btn');
+
     // Scorecard Elements
     const resWpm = document.getElementById('prac-res-wpm');
     const resAcc = document.getElementById('prac-res-acc');
@@ -438,6 +542,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
     let targetWordCount = 20;
     let customBuffer = '';
     let selectedBPM = 0;
+    let keyboardColorMode: 'theme' | 'quadrant' = (localStorage.getItem('prac_keyboard_mode') as any) || 'theme';
 
     let words: string[] = [];
     let currentWordIndex = 0;
@@ -452,10 +557,29 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
     let isDrillComplete = false;
     let wordCharStates: (boolean | null)[][] = [];
 
-    // Map for O(1) Keycap Lookups without any querySelector syntax bugs
+    // Map for O(1) Keycap Lookups
     const keycapsMap = new Map<string, HTMLElement>();
 
-    // Render Physical On-Screen Keyboard with Standard Touch Typing Quadrant Mapping
+    // Helper: Update Theme Name Label
+    function updateThemeNameDisplay() {
+      const activeThemeId = document.documentElement.getAttribute('data-theme') || 'serika_dark';
+      const activeTheme = getThemeById(activeThemeId);
+      if (currentThemeNameEl) {
+        currentThemeNameEl.textContent = activeTheme.name;
+      }
+      // Update checkmarks in theme menu
+      document.querySelectorAll('.prac-theme-opt').forEach(opt => {
+        const id = opt.getAttribute('data-theme-id');
+        const check = opt.querySelector('.prac-theme-check');
+        if (id === activeThemeId) {
+          check?.classList.remove('hidden');
+        } else {
+          check?.classList.add('hidden');
+        }
+      });
+    }
+
+    // Render Physical On-Screen Keyboard Styled According to Website Theme
     function renderVirtualKeyboardDOM() {
       if (!keyboardMatrix) return;
       keyboardMatrix.innerHTML = '';
@@ -463,48 +587,66 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
 
       PHYSICAL_KEYBOARD_LAYOUT.forEach(row => {
         const rowDiv = document.createElement('div');
-        rowDiv.className = 'flex justify-center gap-1 sm:gap-1.5 w-full';
+        rowDiv.className = 'flex justify-center w-full select-none';
+        rowDiv.style.gap = 'var(--key-gap)';
 
         row.forEach((keyDef: PhysicalKeyDef) => {
           const btn = document.createElement('button');
           btn.type = 'button';
           const fData = getFingerQuadrantData(keyDef.k);
-          const flexGrow = keyDef.w ? `flex-grow: ${keyDef.w}; min-width: ${Math.round(keyDef.w * 28)}px;` : 'flex-1 min-width: 26px; max-width: 44px;';
+          const u = keyDef.w;
           
-          btn.className = `prac-keycap relative flex flex-col items-center justify-center h-10 sm:h-11 rounded-xl border font-bold text-xs shadow-sm transition duration-100 active:scale-95 cursor-pointer select-none`;
+          btn.className = 'prac-keycap relative flex flex-col items-center justify-center rounded-xl font-bold cursor-pointer';
           
-          // Apply exact Quadrant Tint and Top Accent Bar
+          // Apply Dynamic Theme Styling
+          const topAccentColor = keyboardColorMode === 'theme' ? 'var(--mt-sub, #646669)' : fData.color;
+          const borderColor = keyboardColorMode === 'theme' ? 'var(--site-hairline, rgba(255, 255, 255, 0.08))' : fData.borderTint;
+
           btn.style.cssText = `
-            ${flexGrow}
-            background-color: var(--site-canvas, #2c2e31);
-            color: var(--site-ink, #d1d0c5);
-            border-color: ${fData.borderTint};
-            border-top: 3.5px solid ${fData.color};
+            width: calc(${u} * var(--key-unit) + ${(u - 1)} * var(--key-gap));
+            height: var(--key-height);
+            flex-shrink: 0;
+            flex-grow: 0;
+            background-color: var(--mt-bg, var(--site-canvas, #2c2e31));
+            color: var(--mt-text, var(--site-ink, #d1d0c5));
+            border: 1px solid ${borderColor};
+            border-top: 3px solid ${topAccentColor};
+            box-shadow: 0 3px 0 0 rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.25);
           `;
           btn.setAttribute('data-base-key', keyDef.k.toLowerCase());
           if (keyDef.s) btn.setAttribute('data-shift-key', keyDef.s);
-          btn.setAttribute('data-default-border', fData.borderTint);
+          btn.setAttribute('data-default-border', borderColor);
           btn.setAttribute('data-quadrant-color', fData.color);
 
-          // Render Dual Label if shifted symbol
+          // Labels with clean theme typography
+          const subTextColor = keyboardColorMode === 'theme' ? 'var(--mt-sub, #646669)' : fData.color;
+
           if (keyDef.s) {
             btn.innerHTML = `
-              <span class="text-[9px] leading-none opacity-80" style="color: ${fData.color};">${keyDef.s}</span>
-              <span class="text-[11px] sm:text-xs leading-none font-bold mt-0.5">${keyDef.display}</span>
+              <span class="text-[9px] sm:text-[10px] leading-none opacity-80" style="color: ${subTextColor};">${keyDef.s}</span>
+              <span class="text-xs sm:text-sm font-bold leading-none mt-1" style="color: var(--mt-text, #d1d0c5);">${keyDef.display}</span>
             `;
           } else if (keyDef.k === ' ') {
-            btn.innerHTML = `<span class="text-[10px] tracking-widest font-bold opacity-75" style="color: ${fData.color};">SPACEBAR</span>`;
-          } else if (keyDef.isAnchor) {
-            // Tactile bump marker indicator for F and J
             btn.innerHTML = `
-              <span class="text-xs font-bold leading-none">${keyDef.display}</span>
-              <span class="w-3.5 h-1 rounded-full mt-1 shadow-sm" style="background-color: ${fData.color};"></span>
+              <span class="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold opacity-80" style="color: ${subTextColor};">SPACEBAR</span>
+            `;
+          } else if (keyDef.isAnchor) {
+            const anchorBumpColor = keyboardColorMode === 'theme' ? 'var(--mt-main, #e2b714)' : fData.color;
+            btn.innerHTML = `
+              <span class="text-xs sm:text-sm font-bold leading-none" style="color: var(--mt-text, #d1d0c5);">${keyDef.display}</span>
+              <span class="w-3.5 sm:w-4 h-1 rounded-full mt-1.5 shadow-sm" style="background-color: ${anchorBumpColor};"></span>
+            `;
+          } else if (keyDef.w > 1.0) {
+            btn.innerHTML = `
+              <span class="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider opacity-85" style="color: var(--mt-sub, #646669);">${keyDef.display}</span>
             `;
           } else {
-            btn.innerHTML = `<span class="text-xs leading-none">${keyDef.display}</span>`;
+            btn.innerHTML = `
+              <span class="text-xs sm:text-sm font-bold leading-none" style="color: var(--mt-text, #d1d0c5);">${keyDef.display}</span>
+            `;
           }
 
-          // Register in Keycaps Map for fast O(1) character lookup
+          // Register in Keycaps Map for fast O(1) lookup
           keycapsMap.set(keyDef.k.toLowerCase(), btn);
           if (keyDef.s) keycapsMap.set(keyDef.s, btn);
           keycapsMap.set(keyDef.display.toLowerCase(), btn);
@@ -529,9 +671,12 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
 
         keyboardMatrix.appendChild(rowDiv);
       });
+
+      updateInstructorAndKeyboard();
     }
 
     renderVirtualKeyboardDOM();
+    updateThemeNameDisplay();
 
     // Generate Drill Word List
     function generateDrillWords() {
@@ -604,7 +749,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
           letterSpan.textContent = ch;
           letterSpan.className = 'prac-letter transition-colors';
           letterSpan.setAttribute('data-char-idx', `${cIdx}`);
-          letterSpan.style.color = 'var(--site-mute, #646669)';
+          letterSpan.style.color = 'var(--mt-sub, #646669)';
           wordDiv.appendChild(letterSpan);
         });
 
@@ -665,29 +810,34 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
       if (!targetChar) return;
 
       const fData = getFingerQuadrantData(targetChar);
+      const highlightColor = keyboardColorMode === 'theme' ? 'var(--mt-main, var(--site-primary, #e2b714))' : fData.color;
 
       // Update Ribbon
-      if (fingerDot) fingerDot.style.backgroundColor = fData.color;
+      if (fingerDot) fingerDot.style.backgroundColor = highlightColor;
       if (fingerInstruction) {
         const displayChar = targetChar === ' ' ? 'SPACEBAR' : targetChar;
         const shiftHint = fData.shiftKey ? `(Shift + ${fData.baseKey.toUpperCase()})` : '';
-        fingerInstruction.innerHTML = `👉 Strike <span class="font-bold underline" style="color: ${fData.color};">[${displayChar}]</span> ${shiftHint} using your <strong style="color: ${fData.color};">${fData.fingerName}</strong>`;
+        fingerInstruction.innerHTML = `👉 Strike <span class="font-bold underline" style="color: ${highlightColor};">[${displayChar}]</span> ${shiftHint} using your <strong style="color: ${highlightColor};">${fData.fingerName}</strong>`;
       }
       if (handSideEl) handSideEl.textContent = fData.hand;
       if (handFingerEl) {
         handFingerEl.textContent = fData.quadrantName;
-        handFingerEl.style.color = fData.color;
+        handFingerEl.style.color = highlightColor;
       }
 
-      // Reset all keycaps back to their default state
+      // Reset all keycaps back to their default theme state
       keyboardMatrix?.querySelectorAll('.prac-keycap').forEach(kc => {
         const el = kc as HTMLElement;
         const defaultBorder = el.getAttribute('data-default-border') || 'var(--site-hairline)';
-        el.style.boxShadow = 'none';
-        el.style.transform = 'scale(1)';
-        el.style.backgroundColor = 'var(--site-canvas, #2c2e31)';
-        el.style.color = 'var(--site-ink, #d1d0c5)';
+        const quadColor = el.getAttribute('data-quadrant-color') || '#ffffff';
+        const topColor = keyboardColorMode === 'theme' ? 'var(--mt-sub, #646669)' : quadColor;
+
+        el.style.boxShadow = '0 3px 0 0 rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.25)';
+        el.style.transform = 'translateY(0px) scale(1)';
+        el.style.backgroundColor = 'var(--mt-bg, var(--site-canvas, #2c2e31))';
+        el.style.color = 'var(--mt-text, var(--site-ink, #d1d0c5))';
         el.style.borderColor = defaultBorder;
+        el.style.borderTop = `3px solid ${topColor}`;
         el.classList.remove('ring-2', 'ring-offset-1');
       });
 
@@ -695,11 +845,12 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
       const matchedKeycap = keycapsMap.get(targetChar) || keycapsMap.get(targetChar.toLowerCase());
 
       if (matchedKeycap) {
-        matchedKeycap.style.boxShadow = `0 0 20px ${fData.color}, inset 0 0 10px ${fData.color}`;
-        matchedKeycap.style.transform = 'translateY(-2px) scale(1.08)';
-        matchedKeycap.style.backgroundColor = fData.color;
-        matchedKeycap.style.color = '#ffffff';
-        matchedKeycap.style.borderColor = '#ffffff';
+        matchedKeycap.style.boxShadow = `0 0 24px 4px ${highlightColor}, 0 3px 0 0 rgba(0, 0, 0, 0.5)`;
+        matchedKeycap.style.transform = 'translateY(-3px) scale(1.05)';
+        matchedKeycap.style.backgroundColor = highlightColor;
+        matchedKeycap.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+        matchedKeycap.style.borderColor = highlightColor;
+        matchedKeycap.style.borderTop = `3px solid ${highlightColor}`;
         matchedKeycap.classList.add('ring-2');
       }
     }
@@ -722,10 +873,13 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
       // Visual press on keycap
       const pressedKeycap = keycapsMap.get(key) || keycapsMap.get(key.toLowerCase());
       if (pressedKeycap) {
-        pressedKeycap.style.transform = 'translateY(2px) scale(0.96)';
+        pressedKeycap.style.transform = 'translateY(2px) scale(0.97)';
+        pressedKeycap.style.boxShadow = '0 1px 0 0 rgba(0, 0, 0, 0.3)';
         setTimeout(() => {
-          if (!isDrillComplete) positionCaret();
-        }, 80);
+          if (!isDrillComplete) {
+            updateInstructorAndKeyboard();
+          }
+        }, 90);
       }
 
       // Space Key -> Advance Word
@@ -736,7 +890,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
           if (letters && currentCharIndex < letters.length) {
             // Penalize untyped characters
             for (let i = currentCharIndex; i < letters.length; i++) {
-              letters[i].style.color = 'var(--site-error, #ca4754)';
+              letters[i].style.color = 'var(--mt-error, #ca4754)';
               letters[i].style.opacity = '0.5';
               errorChars++;
               if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][i] = false;
@@ -774,7 +928,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
 
           if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = null;
           if (letters && letters[currentCharIndex]) {
-            letters[currentCharIndex].style.color = 'var(--site-mute, #646669)';
+            letters[currentCharIndex].style.color = 'var(--mt-sub, #646669)';
             letters[currentCharIndex].style.opacity = '1';
           }
           positionCaret();
@@ -798,14 +952,14 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
             maxStreak = Math.max(maxStreak, currentStreak);
             if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = true;
             soundEngine.playKey();
-            letterEl.style.color = 'var(--site-ink, #d1d0c5)';
+            letterEl.style.color = 'var(--mt-text, #d1d0c5)';
             letterEl.style.fontWeight = 'bold';
           } else {
             errorChars++;
             currentStreak = 0;
             if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = false;
             soundEngine.playError();
-            letterEl.style.color = 'var(--site-error, #ca4754)';
+            letterEl.style.color = 'var(--mt-error, #ca4754)';
             letterEl.style.fontWeight = 'bold';
           }
         }
@@ -940,7 +1094,7 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
 
     // Global Keybinds
     const onGlobalKey = (e: KeyboardEvent) => {
-      // Tab + Enter / Tab restart
+      // Tab restart
       if (e.key === 'Tab') {
         e.preventDefault();
         generateDrillWords();
@@ -957,6 +1111,63 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
     };
     window.addEventListener('keydown', onGlobalKey);
     activeCleanups.push(() => window.removeEventListener('keydown', onGlobalKey));
+
+    // Theme Switcher Menu Handlers
+    themeMenuBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      themeMenu?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!themeMenu?.contains(e.target as Node) && !themeMenuBtn?.contains(e.target as Node)) {
+        themeMenu?.classList.add('hidden');
+      }
+    });
+
+    document.querySelectorAll('.prac-theme-opt').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const themeId = opt.getAttribute('data-theme-id');
+        if (themeId) {
+          const theme = getThemeById(themeId);
+          applyThemeGlobal(theme);
+          themeMenu?.classList.add('hidden');
+        }
+      });
+    });
+
+    // Keyboard Appearance Mode Toggle Handlers
+    modeThemeBtn?.addEventListener('click', () => {
+      keyboardColorMode = 'theme';
+      localStorage.setItem('prac_keyboard_mode', 'theme');
+      modeThemeBtn.classList.add('active');
+      modeThemeBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+      modeThemeBtn.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+      modeThemeBtn.classList.remove('opacity-70');
+      
+      modeQuadBtn?.classList.remove('active');
+      if (modeQuadBtn) {
+        modeQuadBtn.style.backgroundColor = 'transparent';
+        modeQuadBtn.style.color = 'var(--mt-text, #d1d0c5)';
+        modeQuadBtn.classList.add('opacity-70');
+      }
+      renderVirtualKeyboardDOM();
+    });
+
+    modeQuadBtn?.addEventListener('click', () => {
+      keyboardColorMode = 'quadrant';
+      localStorage.setItem('prac_keyboard_mode', 'quadrant');
+      modeQuadBtn.classList.add('active');
+      modeQuadBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+      modeQuadBtn.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+      modeQuadBtn.classList.remove('opacity-70');
+
+      modeThemeBtn?.classList.remove('active');
+      if (modeThemeBtn) {
+        modeThemeBtn.style.backgroundColor = 'transparent';
+        modeThemeBtn.style.color = 'var(--mt-text, #d1d0c5)';
+        modeThemeBtn.classList.add('opacity-70');
+      }
+      renderVirtualKeyboardDOM();
+    });
 
     // Metronome Menu
     metroBtn?.addEventListener('click', (e) => {
@@ -984,14 +1195,14 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
       catBtns.forEach(b => {
         b.classList.remove('active');
         (b as HTMLElement).style.backgroundColor = 'transparent';
-        (b as HTMLElement).style.color = 'var(--site-ink, #d1d0c5)';
+        (b as HTMLElement).style.color = 'var(--mt-text, var(--site-ink, #d1d0c5))';
         b.classList.add('opacity-75');
       });
       const matchBtn = root.querySelector(`[data-drill="${drillName}"]`) as HTMLElement | null;
       if (matchBtn) {
         matchBtn.classList.add('active');
-        matchBtn.style.backgroundColor = 'var(--site-primary, #e2b714)';
-        matchBtn.style.color = 'var(--site-on-primary, #323437)';
+        matchBtn.style.backgroundColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+        matchBtn.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
         matchBtn.classList.remove('opacity-75');
       }
     }
@@ -1035,12 +1246,12 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
         countBtns.forEach(b => {
           b.classList.remove('active', 'font-bold');
           (b as HTMLElement).style.backgroundColor = 'transparent';
-          (b as HTMLElement).style.color = 'var(--site-ink, #d1d0c5)';
+          (b as HTMLElement).style.color = 'var(--mt-text, var(--site-ink, #d1d0c5))';
           b.classList.add('opacity-75');
         });
         btn.classList.add('active', 'font-bold');
-        (btn as HTMLElement).style.backgroundColor = 'var(--site-primary, #e2b714)';
-        (btn as HTMLElement).style.color = 'var(--site-on-primary, #323437)';
+        (btn as HTMLElement).style.backgroundColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+        (btn as HTMLElement).style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
         btn.classList.remove('opacity-75');
 
         targetWordCount = parseInt(btn.getAttribute('data-count') || '20', 10);
@@ -1098,6 +1309,16 @@ import { QUADRANT_COLORS } from '../lib/fingerMapping';
       root.scrollIntoView({ behavior: 'smooth', block: 'center' });
       inputEl.focus();
     };
+
+    // Live Global Theme Change Event Listener (Syncs keyboard theme dynamically)
+    const onThemeChange = () => {
+      updateThemeNameDisplay();
+      activateDrillButton(currentDrillType);
+      renderVirtualKeyboardDOM();
+      updateInstructorAndKeyboard();
+    };
+    window.addEventListener('monkeytype:theme-change', onThemeChange);
+    activeCleanups.push(() => window.removeEventListener('monkeytype:theme-change', onThemeChange));
 
     // Initial setup
     generateDrillWords();

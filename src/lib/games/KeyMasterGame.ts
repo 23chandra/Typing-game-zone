@@ -2,7 +2,7 @@
 import { BaseGame, type GameLevelDef } from './GameEngine';
 import { WORD_LISTS } from '../wordLists';
 import { soundEngine } from '../soundEngine';
-import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, QUADRANT_COLORS, type PhysicalKeyDef } from '../fingerMapping';
+import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, type PhysicalKeyDef } from '../fingerMapping';
 
 interface KeyCap {
   key: string;
@@ -72,23 +72,21 @@ export class KeyMasterGame extends BaseGame {
     this.keycaps = {};
     this.uniqueKeycaps = [];
 
-    const maxRowWidthUnits = 14.5;
-    const baseKeySize = Math.min(36, Math.max(22, (this.width - 60) / maxRowWidthUnits));
-    const startY = this.height * 0.35;
+    const totalRowUnits = 15.0;
     const keyGap = 4;
+    const baseKeySize = Math.min(36, Math.max(20, (this.width - 50 - 14 * keyGap) / totalRowUnits));
+    const startY = this.height * 0.35;
+    const totalKeyboardWidth = 15.0 * baseKeySize + 14 * keyGap;
+    const startX = (this.width - totalKeyboardWidth) / 2;
 
     PHYSICAL_KEYBOARD_LAYOUT.forEach((row, rIdx) => {
-      // Calculate total width of this row
-      let totalRowUnits = 0;
-      row.forEach(kd => { totalRowUnits += kd.w || 1; });
-      const rowPixelWidth = totalRowUnits * baseKeySize + (row.length - 1) * keyGap;
-      let curX = (this.width - rowPixelWidth) / 2;
+      let curX = startX;
 
       row.forEach(keyDef => {
         const fData = getFingerQuadrantData(keyDef.k);
         const wUnits = keyDef.w || 1;
-        const kw = wUnits * baseKeySize;
-        const kh = baseKeySize;
+        const kw = wUnits * baseKeySize + (wUnits - 1) * keyGap;
+        const kh = baseKeySize * 1.1;
 
         const cap: KeyCap = {
           key: keyDef.k,
@@ -127,8 +125,26 @@ export class KeyMasterGame extends BaseGame {
     return undefined;
   }
 
+  // Get active website theme colors from root CSS variables
+  private getThemeColors() {
+    if (typeof document === 'undefined') {
+      return { bg: '#323437', subAlt: '#2c2e31', main: '#e2b714', text: '#d1d0c5', sub: '#646669', isLight: false };
+    }
+    const rootEl = document.documentElement;
+    const computed = getComputedStyle(rootEl);
+    const bg = computed.getPropertyValue('--mt-bg').trim() || '#323437';
+    const subAlt = computed.getPropertyValue('--mt-sub-alt').trim() || '#2c2e31';
+    const main = computed.getPropertyValue('--mt-main').trim() || '#e2b714';
+    const text = computed.getPropertyValue('--mt-text').trim() || '#d1d0c5';
+    const sub = computed.getPropertyValue('--mt-sub').trim() || '#646669';
+    const isLight = !rootEl.classList.contains('dark');
+
+    return { bg, subAlt, main, text, sub, isLight };
+  }
+
   public handleInputChar(char: string): void {
     soundEngine.playKey(char === ' ');
+    const theme = this.getThemeColors();
 
     const currentWord = this.targetWords[this.currentWordIndex] || '';
     const expected = currentWord[this.currentTypedIndex];
@@ -141,7 +157,7 @@ export class KeyMasterGame extends BaseGame {
         y: cap.y + cap.h / 2,
         r: 10,
         alpha: 0.9,
-        color: cap.color
+        color: theme.main
       });
     }
 
@@ -158,7 +174,7 @@ export class KeyMasterGame extends BaseGame {
         this.wordsCompletedInLevel++;
         this.score += 50;
         soundEngine.playChime();
-        this.addFloatingText(this.width / 2, this.height * 0.28, '✨ DRILL MASTERED! +50', '#10b981', 20);
+        this.addFloatingText(this.width / 2, this.height * 0.28, '✨ DRILL MASTERED! +50', theme.main, 20);
 
         if (this.currentWordIndex >= this.targetWords.length) {
           this.triggerLevelClear();
@@ -198,10 +214,12 @@ export class KeyMasterGame extends BaseGame {
   }
 
   public renderGame(ctx: CanvasRenderingContext2D): void {
-    // 1. Studio Mechanical Canvas Background
+    const theme = this.getThemeColors();
+
+    // 1. Dynamic Theme-Aware Canvas Background
     const bg = ctx.createLinearGradient(0, 0, 0, this.height);
-    bg.addColorStop(0, '#090d14');
-    bg.addColorStop(1, '#111827');
+    bg.addColorStop(0, theme.subAlt);
+    bg.addColorStop(1, theme.bg);
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, this.width, this.height);
 
@@ -210,14 +228,14 @@ export class KeyMasterGame extends BaseGame {
     const activeCap = this.getKeyCapForChar(expectedChar);
 
     // 2. Active Target Pangram Word Box (Top)
-    this.drawWordBadge(ctx, currentWord, this.currentTypedIndex, this.width / 2, 60, true, '#10b981', 24);
+    this.drawWordBadge(ctx, currentWord, this.currentTypedIndex, this.width / 2, 60, true, theme.main, 24);
 
-    // Dynamic Finger Placement Guide Banner
+    // Dynamic Finger Placement Guide Banner with Theme Primary Color
     if (activeCap) {
       ctx.font = 'bold 13px "Geist Mono", monospace';
       ctx.textAlign = 'center';
-      ctx.fillStyle = activeCap.color;
-      ctx.shadowColor = activeCap.color;
+      ctx.fillStyle = theme.main;
+      ctx.shadowColor = theme.main;
       ctx.shadowBlur = 10;
       const isShift = activeCap.shiftKey && expectedChar === activeCap.shiftKey;
       const keyPrompt = isShift ? `[${activeCap.shiftKey} (Shift + ${activeCap.display})]` : `[KEY: ${activeCap.display}]`;
@@ -244,55 +262,55 @@ export class KeyMasterGame extends BaseGame {
     // 4. Render 3D Keycaps
     for (const cap of this.uniqueKeycaps) {
       const isTarget = cap === activeCap;
-      this.renderKeycap(ctx, cap, isTarget);
+      this.renderKeycap(ctx, cap, isTarget, theme);
     }
   }
 
-  private renderKeycap(ctx: CanvasRenderingContext2D, k: KeyCap, isTarget: boolean): void {
+  private renderKeycap(ctx: CanvasRenderingContext2D, k: KeyCap, isTarget: boolean, theme: ReturnType<typeof this.getThemeColors>): void {
     ctx.save();
     const pressOffset = k.isPressed ? 2 : 0;
     const ky = k.y + pressOffset;
 
     // Key Shadow / Bottom Bevel
-    ctx.fillStyle = '#05070a';
+    ctx.fillStyle = theme.isLight ? 'rgba(0,0,0,0.15)' : '#000000';
     ctx.fillRect(k.x, ky + 3, k.w, k.h);
 
     // Keycap Top Surface
     if (isTarget) {
-      // Glowing Target Key
-      ctx.fillStyle = k.color;
-      ctx.shadowColor = k.color;
-      ctx.shadowBlur = 18;
+      // Glowing Target Key matching theme main
+      ctx.fillStyle = theme.main;
+      ctx.shadowColor = theme.main;
+      ctx.shadowBlur = 20;
     } else {
-      ctx.fillStyle = '#1e293b';
+      ctx.fillStyle = theme.isLight ? '#ffffff' : theme.bg;
     }
 
     ctx.beginPath();
     ctx.roundRect(k.x, ky, k.w, k.h, 4);
     ctx.fill();
 
-    // Finger Quadrant Color Accent Bar on keycap top
-    ctx.fillStyle = k.color;
-    ctx.fillRect(k.x + 2, ky + 2, k.w - 4, 3);
+    // Theme / Finger Accent Bar on keycap top
+    ctx.fillStyle = isTarget ? theme.main : theme.sub;
+    ctx.fillRect(k.x + 2, ky + 2, k.w - 4, 2.5);
     ctx.shadowBlur = 0;
 
     // Keycap Letter Text
     const fontSize = k.key === ' ' ? 9 : k.shiftKey ? 10 : 11;
     ctx.font = `bold ${fontSize}px "Geist Mono", monospace`;
-    ctx.fillStyle = isTarget ? '#ffffff' : '#e2e8f0';
+    ctx.fillStyle = isTarget ? (theme.isLight ? '#ffffff' : theme.bg) : theme.text;
     ctx.textAlign = 'center';
 
     if (k.shiftKey) {
-      // Render dual label (Shifted symbol on top in color, Base letter below)
-      ctx.fillStyle = isTarget ? '#ffffff' : k.color;
+      // Render dual label (Shifted symbol on top in sub color, Base letter below)
+      ctx.fillStyle = isTarget ? (theme.isLight ? '#ffffff' : theme.bg) : theme.sub;
       ctx.fillText(k.shiftKey, k.x + k.w / 2, ky + k.h * 0.42);
-      ctx.fillStyle = isTarget ? '#ffffff' : '#e2e8f0';
+      ctx.fillStyle = isTarget ? (theme.isLight ? '#ffffff' : theme.bg) : theme.text;
       ctx.font = `9px "Geist Mono", monospace`;
       ctx.fillText(k.display, k.x + k.w / 2, ky + k.h * 0.82);
     } else if (k.isAnchor) {
       ctx.fillText(k.display, k.x + k.w / 2, ky + k.h / 2 + 2);
       // Tactile bump dot on F and J
-      ctx.fillStyle = isTarget ? '#ffffff' : k.color;
+      ctx.fillStyle = isTarget ? (theme.isLight ? '#ffffff' : theme.bg) : theme.main;
       ctx.fillRect(k.x + k.w / 2 - 3, ky + k.h - 5, 6, 2);
     } else {
       ctx.fillText(k.display, k.x + k.w / 2, ky + k.h / 2 + 4);
