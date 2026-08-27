@@ -28,7 +28,6 @@ export class NeonNinjaGame extends BaseGame {
   private slicedCount: number = 0;
   private sliceGoal: number = 12;
   private idleTime: number = 0;
-  private ninjaDashProgress: number = 0;
   private ninjaTargetPos: { x: number; y: number } = { x: 120, y: 380 };
 
   public getLevels(): GameLevelDef[] {

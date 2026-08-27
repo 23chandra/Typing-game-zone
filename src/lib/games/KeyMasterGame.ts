@@ -2,7 +2,7 @@
 import { BaseGame, type GameLevelDef } from './GameEngine';
 import { WORD_LISTS } from '../wordLists';
 import { soundEngine } from '../soundEngine';
-import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, type PhysicalKeyDef } from '../fingerMapping';
+import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData } from '../fingerMapping';
 
 interface KeyCap {
   key: string;
@@ -66,6 +66,11 @@ export class KeyMasterGame extends BaseGame {
     this.initKeyboardLayout();
     this.ripples = [];
     this.idleTime = 0;
+  }
+
+  public override handleResize(): void {
+    super.handleResize();
+    this.initKeyboardLayout();
   }
 
   private initKeyboardLayout(): void {

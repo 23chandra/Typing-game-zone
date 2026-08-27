@@ -29,7 +29,6 @@ export class StreetFighterGame extends BaseGame {
   private animTimer: number = 0;
   private fireball: { x: number; y: number; vx: number; radius: number; active: boolean; isSuper: boolean } | null = null;
   private idleTime: number = 0;
-  private groundSparks: { x: number; y: number; life: number }[] = [];
 
   private opponents: OpponentDef[] = [
     { name: 'Ryuuto The Brawler', title: 'Street Boxing Champion', hp: 100, attackInterval: 4.5, skinColor: '#fcd3a1', giColor: '#c53030', hairColor: '#2d3748', style: 'boxer' },

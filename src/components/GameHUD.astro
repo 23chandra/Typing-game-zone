@@ -7,7 +7,7 @@ interface Props {
 const { gameTitle, gameId } = Astro.props;
 ---
 
-<div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-canvas p-4 shadow-level-2">
+<div id="game-hud-root" data-game-id={gameId} class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-hairline bg-canvas p-4 shadow-level-2">
   <!-- Game Info & Title -->
   <div class="flex items-center gap-3">
     <a

@@ -12,6 +12,8 @@ const { game } = Astro.props;
   class="group relative flex flex-col justify-between rounded-xl border border-hairline bg-canvas p-6 shadow-level-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-level-4"
   data-category={game.category}
   data-title={game.title.toLowerCase()}
+  data-tags={game.tags.join(' ').toLowerCase()}
+  data-desc={game.description.toLowerCase()}
 >
   <!-- Card Header -->
   <div>
@@ -24,10 +26,10 @@ const { game } = Astro.props;
           {game.categoryName}
         </span>
         <span class={`rounded-full px-2.5 py-1 text-[11px] font-mono font-medium border ${
-          game.difficulty === 'Beginner' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-          game.difficulty === 'Intermediate' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-          game.difficulty === 'Advanced' ? 'bg-amber-50 text-amber-700 border-amber-200' :
-          'bg-rose-50 text-rose-700 border-rose-200'
+          game.difficulty === 'Beginner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' :
+          game.difficulty === 'Intermediate' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
+          game.difficulty === 'Advanced' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
+          'bg-rose-500/10 text-rose-400 border-rose-500/30'
         }`}>
           {game.difficulty}
         </span>
@@ -44,7 +46,7 @@ const { game } = Astro.props;
 
     <!-- Tags -->
     <div class="mt-4 flex flex-wrap gap-1.5">
-      {game.tags.map(tag => (
+      {game.tags.map((tag: string) => (
         <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">
           #{tag}
         </span>

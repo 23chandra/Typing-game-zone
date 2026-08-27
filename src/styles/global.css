@@ -250,3 +250,10 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--site-primary, #e2b714);
 }
+
+/* Zero Horizontal Overflow Enforcer */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+}

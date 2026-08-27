@@ -288,7 +288,7 @@ export class CyberHackerGame extends BaseGame {
     ctx.save();
     const isTarget = this.currentTarget === node;
     const timePct = Math.max(0, node.timeRemaining / node.timeLimit);
-    const pulse = Math.sin(node.pulsePhase) * 4;
+    const pulse = isTarget ? Math.sin(node.pulsePhase) * 3 : 0;
 
     // Glowing Node Core
     ctx.translate(node.x, node.y);
@@ -299,7 +299,7 @@ export class CyberHackerGame extends BaseGame {
     ctx.shadowBlur = isTarget ? 16 : 8;
 
     // Hexagonal / Round Node Box
-    ctx.strokeRect(-55, -28, 110, 56);
+    ctx.strokeRect(-55 - pulse, -28 - pulse, 110 + pulse * 2, 56 + pulse * 2);
     ctx.fillRect(-55, -28, 110, 56);
     ctx.shadowBlur = 0;
 

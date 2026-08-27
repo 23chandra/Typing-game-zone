@@ -138,9 +138,14 @@ const { game } = Astro.props;
   import confetti from 'canvas-confetti';
 
   let activeGameInstance: BaseGame | null = null;
+  let activeCleanup: (() => void) | null = null;
 
   function initGameArena() {
-    // Cleanup previous game instance if any
+    // Cleanup previous game instance and listeners if any
+    if (activeCleanup) {
+      activeCleanup();
+      activeCleanup = null;
+    }
     if (activeGameInstance) {
       activeGameInstance.destroy();
       activeGameInstance = null;
@@ -189,6 +194,8 @@ const { game } = Astro.props;
     const modalErrors = document.getElementById('modal-errors');
     const modalTime = document.getElementById('modal-time');
     const modalNewRecord = document.getElementById('modal-new-record');
+    const modalXpEarned = document.getElementById('modal-xp-earned');
+    const modalXpText = document.getElementById('modal-xp-text');
     const modalNextBtn = document.getElementById('modal-next-btn');
     const modalRetryBtn = document.getElementById('modal-retry-btn');
 
@@ -298,6 +305,17 @@ const { game } = Astro.props;
         }
       }
 
+      if (modalXpEarned && modalXpText) {
+        if (result.xpEarned > 0) {
+          modalXpText.textContent = `+${result.xpEarned} XP Earned!`;
+          modalXpEarned.classList.remove('hidden');
+          modalXpEarned.classList.add('flex');
+        } else {
+          modalXpEarned.classList.add('hidden');
+          modalXpEarned.classList.remove('flex');
+        }
+      }
+
       // Trigger Confetti on victory or level clear
       if (isVictory || isLevelClear) {
         try {
@@ -321,14 +339,14 @@ const { game } = Astro.props;
         currentLvl++;
         updateLvlBtnUI();
         gameInstance.nextLevel();
-        canvas.focus();
+        try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
       }
     });
 
     modalRetryBtn?.addEventListener('click', () => {
       gameModal?.classList.add('hidden');
       gameInstance.start(currentLvl);
-      canvas.focus();
+      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
     function updateLvlBtnUI() {
@@ -348,7 +366,7 @@ const { game } = Astro.props;
         currentLvl = parseInt(btn.getAttribute('data-lvl-btn') || '1', 10);
         updateLvlBtnUI();
         gameInstance.start(currentLvl);
-        canvas.focus();
+        try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
       });
     });
 
@@ -366,17 +384,20 @@ const { game } = Astro.props;
         thock: 'Thock',
         linear: 'Linear',
         typewriter: 'Typewriter',
+        pop: 'Bubble Pop',
+        beep: 'Digital',
         off: 'Muted'
       };
       if (soundNameEl) soundNameEl.textContent = labels[cur] || 'Sound';
     };
 
     updateSoundToggleUI();
+    window.addEventListener('typing:sound-change', updateSoundToggleUI);
 
     soundToggleBtn?.addEventListener('click', () => {
-      const cycle: ('clicky' | 'thock' | 'linear' | 'typewriter' | 'off')[] = ['clicky', 'thock', 'linear', 'typewriter', 'off'];
+      const cycle: ('clicky' | 'thock' | 'linear' | 'typewriter' | 'pop' | 'beep' | 'off')[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
       const cur = soundEngine.getSwitch();
-      const nextIdx = (cycle.indexOf(cur) + 1) % cycle.length;
+      const nextIdx = (cycle.indexOf(cur as any) + 1) % cycle.length;
       const nextSwitch = cycle[nextIdx];
       soundEngine.setSwitch(nextSwitch);
       soundEngine.initContext();
@@ -392,18 +413,18 @@ const { game } = Astro.props;
 
     resumeBtn?.addEventListener('click', () => {
       gameInstance.resume();
-      canvas.focus();
+      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
     restartBtn?.addEventListener('click', () => {
       gameInstance.start(currentLvl);
-      canvas.focus();
+      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
     // Click canvas to focus and resume audio
     canvas.addEventListener('click', () => {
       soundEngine.initContext();
-      canvas.focus();
+      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
     // Keyboard inputs to Canvas
@@ -490,9 +511,14 @@ const { game } = Astro.props;
       soundEngine.initContext();
     });
 
+    activeCleanup = () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('typing:sound-change', updateSoundToggleUI);
+    };
+
     // Auto start level 1 and focus
     gameInstance.start(1);
-    canvas.focus();
+    try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
   }
 
   // Initialize on page load and astro transitions
@@ -503,6 +529,10 @@ const { game } = Astro.props;
   }
   document.addEventListener('astro:page-load', initGameArena);
   document.addEventListener('astro:before-swap', () => {
+    if (activeCleanup) {
+      activeCleanup();
+      activeCleanup = null;
+    }
     if (activeGameInstance) {
       activeGameInstance.destroy();
       activeGameInstance = null;

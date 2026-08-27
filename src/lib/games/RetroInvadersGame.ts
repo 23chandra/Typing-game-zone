@@ -19,13 +19,11 @@ export class RetroInvadersGame extends BaseGame {
   private invaders: PixelInvader[] = [];
   private currentTarget: PixelInvader | null = null;
   private marchDir: number = 1;
-  private marchSpeed: number = 25;
   private stepTimer: number = 0;
   private stepInterval: number = 0.6;
   private dropDistance: number = 18;
   private nextId: number = 1;
   private wordsKilled: number = 0;
-  private wordsGoal: number = 12;
   private ufo: { x: number; y: number; word: string; typedIndex: number; active: boolean } | null = null;
   private ufoTimer: number = 8;
   private idleTime: number = 0;
@@ -42,9 +40,7 @@ export class RetroInvadersGame extends BaseGame {
 
   public initLevel(levelNumber: number): void {
     const lvl = this.getLevels()[levelNumber - 1] || this.getLevels()[0];
-    this.wordsGoal = lvl.wordCount;
     this.wordsKilled = 0;
-    this.marchSpeed = lvl.speed;
     this.stepInterval = Math.max(0.25, 0.65 - levelNumber * 0.08);
     this.invaders = [];
     this.currentTarget = null;

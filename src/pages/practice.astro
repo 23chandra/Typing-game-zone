@@ -26,8 +26,39 @@ import { WORD_LISTS } from '../lib/wordLists';
       </div>
 
       <!-- 1. Interactive Touch Typing Practice Suite Arena -->
-      <div class="mb-14">
+      <div class="mb-12">
         <PracticeLabWidget />
+      </div>
+
+      <!-- 1.5. Smart AI Weak Key Diagnostic & Auto-Drill Hub -->
+      <div class="mb-12 rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 select-none" id="weak-keys-section">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-hairline pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-canvas-soft text-xl border border-hairline shadow-inner">
+              🧠
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-lg font-bold text-ink">Smart Weak Key Diagnostic</h3>
+                <span class="rounded-full bg-primary/15 text-link border border-hairline px-2 py-0.5 text-[10px] font-mono font-bold">CLIENT-SIDE AI</span>
+              </div>
+              <p class="text-xs text-body mt-0.5">Real-time keystroke error telemetry analyzing your highest friction keys.</p>
+            </div>
+          </div>
+          
+          <button
+            type="button"
+            id="launch-weak-drill-btn"
+            class="inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2.5 text-xs font-mono font-bold transition hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+            style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+          >
+            <span>⚡ Practice My Weak Keys</span>
+          </button>
+        </div>
+
+        <div id="weak-keys-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 font-mono">
+          <!-- Populated dynamically via JS -->
+        </div>
       </div>
 
       <!-- 2. Finger Placement & Quadrant Map (Interactive Filters) -->
@@ -388,15 +419,77 @@ import { WORD_LISTS } from '../lib/wordLists';
 </Layout>
 
 <script>
-  import { WORD_LISTS } from '../lib/wordLists';
+  import { WORD_LISTS, generateWeakKeysDrill } from '../lib/wordLists';
+  import { storage } from '../lib/storage';
 
   function initPracticePageInteractions() {
+    // Render Weak Keys Diagnostic Grid
+    const weakKeysGrid = document.getElementById('weak-keys-grid');
+    const launchWeakBtn = document.getElementById('launch-weak-drill-btn');
+
+    function renderWeakKeysUI() {
+      if (!weakKeysGrid) return;
+      const weakest = storage.getWeakestKeys(5);
+      weakKeysGrid.innerHTML = '';
+
+      weakest.forEach(k => {
+        const card = document.createElement('div');
+        card.className = 'rounded-2xl border border-hairline bg-canvas-soft p-4 flex flex-col justify-between shadow-xs transition hover:scale-[1.02] cursor-pointer';
+        card.style.borderTop = '3px solid var(--site-primary, #e2b714)';
+
+        const accuracy = Math.max(0, 100 - k.errorRate);
+        const color = k.errorRate > 15 ? 'text-rose-400' : k.errorRate > 8 ? 'text-amber-400' : 'text-emerald-400';
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-2xl font-black font-mono text-ink uppercase bg-canvas px-2.5 py-1 rounded-xl border border-hairline shadow-inner">${k.char}</span>
+            <span class="text-xs font-bold ${color}">${k.errorRate}% ERR</span>
+          </div>
+          <div>
+            <div class="flex items-center justify-between text-[10px] text-mute mb-1">
+              <span>Accuracy</span>
+              <span class="font-bold text-ink">${accuracy}%</span>
+            </div>
+            <div class="h-1.5 w-full rounded-full bg-canvas overflow-hidden">
+              <div class="h-full rounded-full transition-all" style="width: ${accuracy}%; background-color: var(--site-primary, #e2b714);"></div>
+            </div>
+            <div class="mt-2 text-[10px] text-mute flex justify-between">
+              <span>${k.errors} errors</span>
+              <span>${k.total} strokes</span>
+            </div>
+          </div>
+        `;
+
+        card.addEventListener('click', () => {
+          if ((window as any).loadPracticeDrill) {
+            const customWords = generateWeakKeysDrill([k.char], 20);
+            (window as any).loadPracticeDrill('custom', customWords);
+            document.getElementById('practice-lab-root')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+
+        weakKeysGrid.appendChild(card);
+      });
+    }
+
+    renderWeakKeysUI();
+
+    launchWeakBtn?.addEventListener('click', () => {
+      if ((window as any).loadPracticeDrill) {
+        const weakList = storage.getWeakestKeys(5).map(k => k.char);
+        const drillWords = generateWeakKeysDrill(weakList, 25);
+        (window as any).loadPracticeDrill('custom', drillWords);
+        document.getElementById('practice-lab-root')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
     // Clickable Drill Category Loaders
     document.querySelectorAll('[data-load-cat]').forEach(btn => {
       btn.addEventListener('click', () => {
         const cat = btn.getAttribute('data-load-cat');
         if (cat && (window as any).loadPracticeDrill) {
           (window as any).loadPracticeDrill(cat);
+          document.getElementById('practice-lab-root')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     });
@@ -408,12 +501,12 @@ import { WORD_LISTS } from '../lib/wordLists';
         const wordText = btn.textContent?.trim();
         if (drillType && (window as any).loadPracticeDrill) {
           if (wordText) {
-            // Repeat this word 15 times for high-intensity muscle memory drill
             const repeated = new Array(15).fill(wordText);
             (window as any).loadPracticeDrill(drillType, repeated);
           } else {
             (window as any).loadPracticeDrill(drillType);
           }
+          document.getElementById('practice-lab-root')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     });
@@ -424,6 +517,7 @@ import { WORD_LISTS } from '../lib/wordLists';
         const text = btn.getAttribute('data-custom-text');
         if (text && (window as any).loadPracticeDrill) {
           (window as any).loadPracticeDrill('custom', text.split(' '));
+          document.getElementById('practice-lab-root')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     });
@@ -435,6 +529,7 @@ import { WORD_LISTS } from '../lib/wordLists';
         const drillsDict = WORD_LISTS.practiceDrills as any;
         if (filterKey && drillsDict[filterKey] && (window as any).loadPracticeDrill) {
           (window as any).loadPracticeDrill('custom', drillsDict[filterKey]);
+          document.getElementById('practice-lab-root')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       });
     });

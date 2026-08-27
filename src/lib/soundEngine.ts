@@ -452,7 +452,7 @@ class SoundEngine {
    * Arcade Laser Blast (for Type Defender)
    */
   public playLaser() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -465,7 +465,7 @@ class SoundEngine {
       osc.frequency.setValueAtTime(1400, now);
       osc.frequency.exponentialRampToValueAtTime(180, now + 0.12);
 
-      gain.gain.setValueAtTime(this.volume * 0.6, now);
+      gain.gain.setValueAtTime(Math.max(0.001, this.volume * 0.6), now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.125);
 
       osc.connect(gain);
@@ -479,7 +479,7 @@ class SoundEngine {
    * Arcade Explosion / Target Destroyed
    */
   public playExplosion() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -495,7 +495,7 @@ class SoundEngine {
       filter.frequency.linearRampToValueAtTime(90, now + 0.22);
 
       const gain = ctx.createGain();
-      gain.gain.setValueAtTime(this.volume * 0.8, now);
+      gain.gain.setValueAtTime(Math.max(0.001, this.volume * 0.8), now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
 
       noise.connect(filter);
@@ -511,7 +511,7 @@ class SoundEngine {
    * Victory Fanfare Chord / Completion Chime
    */
   public playVictory() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -529,7 +529,7 @@ class SoundEngine {
         osc.frequency.setValueAtTime(freq, startTime);
 
         gain.gain.setValueAtTime(0.001, startTime);
-        gain.gain.linearRampToValueAtTime(this.volume * 0.45, startTime + 0.02);
+        gain.gain.linearRampToValueAtTime(Math.max(0.001, this.volume * 0.45), startTime + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
 
         osc.connect(gain);
@@ -545,7 +545,7 @@ class SoundEngine {
    * Ninja Katana Blade Slice / Whoosh
    */
   public playSlice() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -563,7 +563,7 @@ class SoundEngine {
       filter.frequency.setValueAtTime(1600, now);
       filter.Q.setValueAtTime(3.5, now);
 
-      gain.gain.setValueAtTime(this.volume * 0.65, now);
+      gain.gain.setValueAtTime(Math.max(0.001, this.volume * 0.65), now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.095);
 
       osc.connect(filter);
@@ -579,7 +579,7 @@ class SoundEngine {
    * Wizard Magic Spell Cast
    */
   public playMagic() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -593,7 +593,7 @@ class SoundEngine {
       osc.frequency.exponentialRampToValueAtTime(1760, now + 0.18);
 
       gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(this.volume * 0.5, now + 0.03);
+      gain.gain.linearRampToValueAtTime(Math.max(0.001, this.volume * 0.5), now + 0.03);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
 
       osc.connect(gain);
@@ -607,7 +607,7 @@ class SoundEngine {
    * Punch / Combat Hit Impact
    */
   public playHit() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -620,7 +620,7 @@ class SoundEngine {
       osc.frequency.setValueAtTime(190, now);
       osc.frequency.exponentialRampToValueAtTime(40, now + 0.075);
 
-      gain.gain.setValueAtTime(this.volume * 0.85, now);
+      gain.gain.setValueAtTime(Math.max(0.001, this.volume * 0.85), now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
 
       osc.connect(gain);
@@ -634,7 +634,7 @@ class SoundEngine {
    * Word Complete / Chime Score
    */
   public playChime() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -647,7 +647,7 @@ class SoundEngine {
       osc.frequency.setValueAtTime(880, now);
       osc.frequency.exponentialRampToValueAtTime(1320, now + 0.08);
 
-      gain.gain.setValueAtTime(this.volume * 0.5, now);
+      gain.gain.setValueAtTime(Math.max(0.001, this.volume * 0.5), now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
 
       osc.connect(gain);
@@ -661,7 +661,7 @@ class SoundEngine {
    * Game Over descending tone
    */
   public playGameOver() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -677,7 +677,7 @@ class SoundEngine {
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(freq, startTime);
 
-        gain.gain.setValueAtTime(this.volume * 0.45, startTime);
+        gain.gain.setValueAtTime(Math.max(0.001, this.volume * 0.45), startTime);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.14);
 
         osc.connect(gain);
@@ -692,7 +692,7 @@ class SoundEngine {
    * Submarine Sonar Ping
    */
   public playSonar() {
-    if (this.isMuted) return;
+    if (this.isMuted || this.volume <= 0.001 || this.currentSwitch === 'off') return;
     const ctx = this.initContext();
     if (!ctx) return;
 
@@ -705,7 +705,7 @@ class SoundEngine {
       osc.frequency.setValueAtTime(1200, now);
 
       gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(this.volume * 0.6, now + 0.02);
+      gain.gain.linearRampToValueAtTime(Math.max(0.001, this.volume * 0.6), now + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
 
       osc.connect(gain);

@@ -18,7 +18,6 @@ export class LaserTurretGame extends BaseGame {
   private drones: RadialDrone[] = [];
   private currentTarget: RadialDrone | null = null;
   private turretAngle: number = 0;
-  private targetTurretAngle: number = 0;
   private spawnTimer: number = 0;
   private spawnInterval: number = 2.4;
   private nextId: number = 1;
@@ -48,7 +47,6 @@ export class LaserTurretGame extends BaseGame {
     this.drones = [];
     this.currentTarget = null;
     this.turretAngle = 0;
-    this.targetTurretAngle = 0;
     this.idleTime = 0;
   }
 
@@ -124,7 +122,6 @@ export class LaserTurretGame extends BaseGame {
     const tx = cx + Math.cos(drone.angle) * drone.distance;
     const ty = cy + Math.sin(drone.angle) * drone.distance;
 
-    this.targetTurretAngle = drone.angle;
     this.turretAngle = drone.angle;
     this.beamTarget = { x: tx, y: ty };
     this.beamDuration = 0.14;

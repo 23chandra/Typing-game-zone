@@ -4,55 +4,201 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
 ---
 
 <Layout
-  title="Player Telemetry & Achievements Dashboard — Typing Game Zone"
-  description="View your typing stats, best WPM records, high scores per game, and unlockable achievement badges on Typing Game Zone."
+  title="Player Telemetry, Daily Quests & Activity Heatmap — Typing Game Zone"
+  description="Track your player level, daily quests, 365-day activity heatmap, weak keys diagnostics, and game records."
 >
   <div class="py-12 sm:py-16 bg-canvas-soft min-h-screen">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       
       <!-- Page Header -->
       <div class="text-center max-w-3xl mx-auto mb-10">
-        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Profile & Telemetry</span>
-        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink mt-2">
-          Leaderboards & Badges.
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-mono text-link mb-3 shadow-sm">
+          <span>⚡ PLAYER TELEMETRY & PROGRESSION</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink">
+          Career Hub & <span class="text-gradient-preview">Quests.</span>
         </h1>
         <p class="mt-3 text-sm text-body leading-relaxed">
-          Track your personal records across all 21 games, monitor overall typing milestones, and unlock prestige achievement badges.
+          Level up from Novice to Keyboard Titan, complete daily challenges, and review your 365-day activity cadence.
         </p>
       </div>
 
-      <!-- Player Profile Stats Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12 font-mono">
-        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+      <!-- 1. Player Level & XP Progression Hero Banner -->
+      <div class="mb-10 rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 select-none relative overflow-hidden" id="player-hero-card">
+        <div class="absolute -right-12 -top-12 h-48 w-48 rounded-full opacity-10 blur-2xl pointer-events-none" style="background-color: var(--site-primary, #e2b714);"></div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <!-- Left: Rank Badge & Level Indicator -->
+          <div class="lg:col-span-8 flex flex-col sm:flex-row sm:items-center gap-5">
+            <div id="prof-rank-icon" class="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-3xl text-4xl shadow-inner border border-hairline bg-canvas-soft">
+              🌱
+            </div>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2 mb-1">
+                <h2 id="prof-rank-title" class="text-2xl sm:text-3xl font-bold text-ink tracking-tight">Novice Keyer</h2>
+                <span id="prof-level-badge" class="rounded-full px-3 py-0.5 text-xs font-mono font-bold" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">Level 1</span>
+              </div>
+              <p class="text-xs text-body mb-3">Earn XP by playing games, speed tests, and completing daily quests.</p>
+              
+              <!-- XP Progress Bar -->
+              <div>
+                <div class="flex items-center justify-between text-xs font-mono mb-1.5" style="color: var(--site-mute);">
+                  <span>Level Progress</span>
+                  <span id="prof-xp-ratio" class="font-bold text-ink">0 / 150 XP (0%)</span>
+                </div>
+                <div class="h-3 w-full rounded-full bg-canvas-soft border border-hairline overflow-hidden p-0.5 shadow-inner">
+                  <div id="prof-xp-bar" class="h-full rounded-full transition-all duration-500 ease-out" style="width: 0%; background-color: var(--site-primary, #e2b714);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Streak & Words Telemetry Counter -->
+          <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 font-mono">
+            <div class="flex-1 rounded-2xl bg-canvas-soft border border-hairline p-4 flex items-center justify-between shadow-xs">
+              <div>
+                <span class="text-[10px] text-mute uppercase tracking-wider block">Active Streak</span>
+                <div class="flex items-baseline gap-1.5 mt-0.5">
+                  <span class="text-xl">🔥</span>
+                  <span id="prof-streak-count" class="text-2xl font-bold text-ink">1</span>
+                  <span class="text-xs text-mute">Days</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] text-mute block">Best Streak</span>
+                <span id="prof-best-streak" class="text-sm font-bold text-warning">1 Day</span>
+              </div>
+            </div>
+
+            <div class="flex-1 rounded-2xl bg-canvas-soft border border-hairline p-4 flex items-center justify-between shadow-xs">
+              <div>
+                <span class="text-[10px] text-mute uppercase tracking-wider block">Career Words</span>
+                <span id="prof-total-words" class="text-xl font-bold text-link block mt-0.5">0</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] text-mute block">Total Strokes</span>
+                <span id="prof-total-strokes" class="text-xs font-bold text-body">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Daily Quests Section (3 Deterministic Quests per Day) -->
+      <div class="mb-10 rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 select-none">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🎯</span>
+            <div>
+              <h3 class="text-lg font-bold text-ink">Daily Quests</h3>
+              <p class="text-xs text-body mt-0.5">3 fresh challenges refreshed every 24 hours. Complete to earn bonus XP!</p>
+            </div>
+          </div>
+          <span id="quests-date-label" class="text-xs font-mono font-bold text-mute px-3 py-1 rounded-full bg-canvas-soft border border-hairline">Today's Challenges</span>
+        </div>
+
+        <div id="quests-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- 3. GitHub-Style 365-Day Activity Heatmap Calendar -->
+      <div class="mb-10 rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 select-none">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">📅</span>
+            <div>
+              <h3 class="text-lg font-bold text-ink">Daily Typing Heatmap</h3>
+              <p class="text-xs text-body mt-0.5">Your daily activity timeline across tests, games, and practice sessions.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-xs font-mono text-mute">
+            <span><span id="heatmap-active-days" class="font-bold text-ink">0</span> active days</span>
+            <span>•</span>
+            <span><span id="heatmap-total-xp" class="font-bold text-success">0</span> total XP</span>
+          </div>
+        </div>
+
+        <!-- Heatmap Grid Viewport with Horizontal Scroll -->
+        <div class="overflow-x-auto pb-2 relative">
+          <div id="heatmap-grid" class="flex gap-1 min-w-[720px] select-none">
+            <!-- 52 columns of 7 day squares rendered via JavaScript -->
+          </div>
+          <!-- Floating Interactive Tooltip -->
+          <div id="heatmap-tooltip" class="absolute hidden pointer-events-none z-50 rounded-xl px-3 py-2 text-xs font-mono shadow-2xl border transition-opacity whitespace-nowrap" style="background-color: var(--site-canvas-soft, #2c2e31); border-color: var(--site-primary, #e2b714); color: var(--site-ink, #d1d0c5);"></div>
+        </div>
+
+        <!-- Heatmap Intensity Legend -->
+        <div class="mt-4 flex items-center justify-between text-xs font-mono text-mute pt-3 border-t border-hairline">
+          <span>52-Week Rolling Calendar</span>
+          <div class="flex items-center gap-2">
+            <span>Less</span>
+            <span class="h-3 w-3 rounded-xs border border-hairline bg-canvas-soft inline-block"></span>
+            <span class="h-3 w-3 rounded-xs inline-block" style="background-color: color-mix(in srgb, var(--site-primary, #e2b714) 25%, var(--site-canvas-soft) 75%);"></span>
+            <span class="h-3 w-3 rounded-xs inline-block" style="background-color: color-mix(in srgb, var(--site-primary, #e2b714) 50%, var(--site-canvas-soft) 50%);"></span>
+            <span class="h-3 w-3 rounded-xs inline-block" style="background-color: color-mix(in srgb, var(--site-primary, #e2b714) 75%, var(--site-canvas-soft) 25%);"></span>
+            <span class="h-3 w-3 rounded-xs inline-block" style="background-color: var(--site-primary, #e2b714);"></span>
+            <span>More</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Core Career Stats Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10 font-mono">
+        <div class="rounded-2xl border border-hairline bg-canvas p-5 shadow-level-1">
           <span class="text-[11px] text-mute uppercase">Best WPM Record</span>
           <div id="prof-best-wpm" class="text-3xl font-bold text-success mt-1">0</div>
-          <span class="text-[10px] text-mute mt-1 block">Peak typing velocity</span>
+          <span class="text-[10px] text-mute mt-1 block">Peak velocity benchmark</span>
         </div>
-        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+        <div class="rounded-2xl border border-hairline bg-canvas p-5 shadow-level-1">
           <span class="text-[11px] text-mute uppercase">Average WPM</span>
           <div id="prof-avg-wpm" class="text-3xl font-bold text-ink mt-1">0</div>
-          <span class="text-[10px] text-mute mt-1 block">Career average</span>
+          <span class="text-[10px] text-mute mt-1 block">Lifetime weighted average</span>
         </div>
-        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+        <div class="rounded-2xl border border-hairline bg-canvas p-5 shadow-level-1">
           <span class="text-[11px] text-mute uppercase">Accuracy</span>
           <div id="prof-avg-acc" class="text-3xl font-bold text-link mt-1">100%</div>
           <span class="text-[10px] text-mute mt-1 block">Keystroke precision</span>
         </div>
-        <div class="rounded-xl border border-hairline bg-canvas p-5 shadow-level-1">
+        <div class="rounded-2xl border border-hairline bg-canvas p-5 shadow-level-1">
           <span class="text-[11px] text-mute uppercase">Games Completed</span>
           <div id="prof-games-played" class="text-3xl font-bold text-warning mt-1">0</div>
           <span class="text-[10px] text-mute mt-1 block">Sessions recorded</span>
         </div>
       </div>
 
-      <!-- 20+ Unlockable Achievements Grid -->
-      <div class="mb-12 rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2">
+      <!-- 5. Weak Key AI Diagnostic & Accuracy Radar -->
+      <div class="mb-10 rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 select-none">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🔍</span>
+            <div>
+              <h3 class="text-lg font-bold text-ink">Weak Key AI Diagnostics</h3>
+              <p class="text-xs text-body mt-0.5">Real-time analysis of your most error-prone keys with custom corrective drills.</p>
+            </div>
+          </div>
+          <a
+            href="/practice"
+            class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold shadow-level-1 transition hover:opacity-90 active:scale-95"
+            style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+          >
+            <span>Practice Drills →</span>
+          </a>
+        </div>
+
+        <div id="weak-keys-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 font-mono">
+          <!-- Populated dynamically via JS from storage.getWeakestKeys() -->
+        </div>
+      </div>
+
+      <!-- 6. Prestige Achievements Grid (25 Unlockable Badges) -->
+      <div class="mb-10 rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2">
         <div class="flex items-center justify-between border-b border-hairline pb-4 mb-6">
           <div>
-            <h3 class="text-lg font-bold text-ink">Prestige Achievements</h3>
-            <p class="text-xs text-body mt-0.5">Unlock milestone badges by excelling in games and tests.</p>
+            <h3 class="text-lg font-bold text-ink">Prestige Achievements (25)</h3>
+            <p class="text-xs text-body mt-0.5">Unlock milestone badges by excelling in speed, games, and consistency.</p>
           </div>
-          <span id="prof-ach-count" class="text-xs font-mono font-bold text-link">0 / 20 UNLOCKED</span>
+          <span id="prof-ach-count" class="text-xs font-mono font-bold text-link px-3 py-1 rounded-full bg-canvas-soft border border-hairline">0 / 25 UNLOCKED</span>
         </div>
 
         <div id="achievements-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -60,10 +206,15 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         </div>
       </div>
 
-      <!-- Game Records & High Scores Table -->
-      <div class="rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 overflow-hidden">
-        <h3 class="text-lg font-bold text-ink mb-2">High Scores Per Game</h3>
-        <p class="text-xs text-body mb-6">Your local telemetry records across all 21 games.</p>
+      <!-- 7. Game Records & High Scores Table -->
+      <div class="rounded-3xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-2 overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+          <div>
+            <h3 class="text-lg font-bold text-ink">Game Records & Leaderboards</h3>
+            <p class="text-xs text-body mt-0.5">Your personal performance across all 21 games.</p>
+          </div>
+          <span class="text-xs font-mono text-mute">21 Game Arenas</span>
+        </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-left font-mono text-xs">
@@ -82,7 +233,7 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
               {ALL_GAMES.map(game => (
                 <tr class="hover:bg-canvas-soft transition-colors" data-game-row={game.id}>
                   <td class="py-3.5 font-semibold text-ink flex items-center gap-2">
-                    <span>{game.icon}</span>
+                    <span class="text-lg">{game.icon}</span>
                     <span>{game.title}</span>
                   </td>
                   <td class="py-3.5 text-mute">{game.categoryName}</td>
@@ -93,7 +244,7 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
                   <td class="py-3.5 text-right">
                     <a
                       href={`/game/${game.id}`}
-                      class="rounded-full bg-canvas-soft border border-hairline px-3 py-1 text-[11px] font-medium text-ink hover:bg-ink hover:text-on-primary transition"
+                      class="rounded-full bg-canvas-soft border border-hairline px-3.5 py-1 text-[11px] font-medium text-ink hover:bg-ink hover:text-on-primary transition"
                     >
                       Play
                     </a>
@@ -105,17 +256,245 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         </div>
       </div>
 
+      <!-- 8. Data Management & Reset Action Bar -->
+      <div class="mt-8 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-hairline font-mono text-xs text-mute">
+        <div class="flex items-center gap-2">
+          <span>💾</span>
+          <span>All telemetry securely stored in browser localStorage.</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <button
+            type="button"
+            id="export-data-btn"
+            class="rounded-xl border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-body hover:text-ink hover:bg-canvas-soft transition cursor-pointer shadow-xs"
+          >
+            Export Stats (JSON)
+          </button>
+          <button
+            type="button"
+            id="reset-profile-btn"
+            class="rounded-xl border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-error hover:bg-error/10 transition cursor-pointer shadow-xs"
+          >
+            Reset Career Stats
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </Layout>
 
 <script>
   import { storage } from '../lib/storage';
+  import confetti from 'canvas-confetti';
 
   function renderLeaderboards() {
     const profile = storage.getProfile();
+    const lvlInfo = storage.getLevelInfo(profile.xp);
 
-    // Fill profile stats
+    // 1. Fill Level & Player Progression Card
+    const rankIconEl = document.getElementById('prof-rank-icon');
+    const rankTitleEl = document.getElementById('prof-rank-title');
+    const levelBadgeEl = document.getElementById('prof-level-badge');
+    const xpRatioEl = document.getElementById('prof-xp-ratio');
+    const xpBarEl = document.getElementById('prof-xp-bar');
+    const streakCountEl = document.getElementById('prof-streak-count');
+    const bestStreakEl = document.getElementById('prof-best-streak');
+    const totalWordsEl = document.getElementById('prof-total-words');
+    const totalStrokesEl = document.getElementById('prof-total-strokes');
+
+    const isMaxLevel = lvlInfo.level === 50;
+    if (rankIconEl) rankIconEl.textContent = lvlInfo.icon;
+    if (rankTitleEl) rankTitleEl.textContent = lvlInfo.title;
+    if (levelBadgeEl) {
+      levelBadgeEl.textContent = `Level ${lvlInfo.level}`;
+      levelBadgeEl.style.backgroundColor = lvlInfo.color;
+    }
+    if (xpRatioEl) {
+      if (isMaxLevel) {
+        xpRatioEl.textContent = `${profile.xp.toLocaleString()} XP (MAX TITAN LEVEL)`;
+      } else {
+        xpRatioEl.textContent = `${profile.xp.toLocaleString()} / ${lvlInfo.maxXP.toLocaleString()} XP (${lvlInfo.progressPercent}%)`;
+      }
+    }
+    if (xpBarEl) {
+      xpBarEl.style.width = `${lvlInfo.progressPercent}%`;
+      xpBarEl.style.backgroundColor = lvlInfo.color;
+    }
+    if (streakCountEl) streakCountEl.textContent = `${profile.currentStreak || 1}`;
+    if (bestStreakEl) bestStreakEl.textContent = `${profile.bestStreak || 1} Days`;
+    if (totalWordsEl) totalWordsEl.textContent = profile.totalWordsTyped.toLocaleString();
+    if (totalStrokesEl) totalStrokesEl.textContent = profile.totalKeystrokes.toLocaleString();
+
+    // 2. Fill Daily Quests
+    const questsGrid = document.getElementById('quests-grid');
+    const questsDateLabel = document.getElementById('quests-date-label');
+    if (questsDateLabel) questsDateLabel.textContent = `Date: ${profile.dailyQuestsDate}`;
+
+    if (questsGrid) {
+      questsGrid.innerHTML = '';
+      profile.dailyQuests.forEach(quest => {
+        const card = document.createElement('div');
+        card.className = `rounded-2xl border p-5 flex flex-col justify-between transition-all ${
+          quest.completed
+            ? 'bg-canvas-soft border-[var(--site-primary)] shadow-sm'
+            : 'bg-canvas border-hairline'
+        }`;
+
+        const progressPercent = Math.min(100, Math.round((quest.current / quest.target) * 100));
+
+        let actionHtml = '';
+        if (quest.claimed) {
+          actionHtml = `<span class="text-xs text-success font-bold flex items-center gap-1">✓ Claimed (+${quest.xpReward} XP)</span>`;
+        } else if (quest.completed) {
+          actionHtml = `
+            <button
+              type="button"
+              data-claim-quest="${quest.id}"
+              class="w-full rounded-xl px-4 py-2 text-xs font-bold transition hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+              style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+            >
+              🎉 Claim +${quest.xpReward} XP
+            </button>
+          `;
+        } else {
+          actionHtml = `<span class="text-xs text-mute font-mono">In Progress (${quest.current}/${quest.target})</span>`;
+        }
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl">${quest.icon}</span>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full border border-hairline ${quest.completed ? 'text-success bg-canvas' : 'text-mute bg-canvas-soft'}">
+                +${quest.xpReward} XP
+              </span>
+            </div>
+            <h4 class="text-sm font-bold text-ink">${quest.title}</h4>
+            <p class="text-xs text-body mt-1 leading-snug">${quest.description}</p>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-hairline">
+            <div class="flex items-center justify-between text-[11px] text-mute mb-1.5">
+              <span>Progress</span>
+              <span>${progressPercent}%</span>
+            </div>
+            <div class="h-2 w-full rounded-full bg-canvas-soft overflow-hidden mb-3">
+              <div class="h-full rounded-full transition-all" style="width: ${progressPercent}%; background-color: var(--site-primary, #e2b714);"></div>
+            </div>
+            <div class="text-right">
+              ${actionHtml}
+            </div>
+          </div>
+        `;
+
+        const claimBtn = card.querySelector(`[data-claim-quest="${quest.id}"]`);
+        claimBtn?.addEventListener('click', () => {
+          const res = storage.claimQuestReward(quest.id);
+          if (res.claimed) {
+            try {
+              confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } catch {}
+            renderLeaderboards();
+          }
+        });
+
+        questsGrid.appendChild(card);
+      });
+    }
+
+    // 3. Fill GitHub-Style 365-Day Daily Activity Heatmap
+    const heatmapGrid = document.getElementById('heatmap-grid');
+    const heatmapActiveDays = document.getElementById('heatmap-active-days');
+    const heatmapTotalXP = document.getElementById('heatmap-total-xp');
+    const tooltip = document.getElementById('heatmap-tooltip');
+
+    if (heatmapGrid) {
+      heatmapGrid.innerHTML = '';
+      const today = new Date();
+      const activityMap = profile.dailyActivity || {};
+      let activeDaysCount = 0;
+      let totalXPEarned = 0;
+
+      // 52 weeks (364 days) back from today
+      const totalDays = 52 * 7;
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - totalDays + 1);
+
+      // Group days by weeks (columns)
+      for (let week = 0; week < 52; week++) {
+        const col = document.createElement('div');
+        col.className = 'flex flex-col gap-1';
+
+        for (let day = 0; day < 7; day++) {
+          const cellDate = new Date(startDate);
+          cellDate.setDate(startDate.getDate() + (week * 7 + day));
+          const y = cellDate.getFullYear();
+          const m = String(cellDate.getMonth() + 1).padStart(2, '0');
+          const d = String(cellDate.getDate()).padStart(2, '0');
+          const dateKey = `${y}-${m}-${d}`;
+
+          const record = activityMap[dateKey];
+          const words = record ? record.wordsTyped : 0;
+          const xp = record ? record.xpEarned : 0;
+          const tests = record ? record.testsCompleted : 0;
+          const games = record ? record.gamesCompleted : 0;
+
+          if (words > 0 || xp > 0) {
+            activeDaysCount++;
+            totalXPEarned += xp;
+          }
+
+          const cell = document.createElement('div');
+          cell.className = 'h-3 w-3 rounded-xs transition-transform hover:scale-125 cursor-pointer';
+
+          // Intensity calculation
+          if (words === 0 && xp === 0) {
+            cell.style.backgroundColor = 'var(--site-canvas-soft, #2c2e31)';
+            cell.style.border = '1px solid var(--site-hairline, rgba(255,255,255,0.06))';
+          } else if (words < 100) {
+            cell.style.backgroundColor = 'color-mix(in srgb, var(--site-primary, #e2b714) 25%, var(--site-canvas-soft) 75%)';
+          } else if (words < 300) {
+            cell.style.backgroundColor = 'color-mix(in srgb, var(--site-primary, #e2b714) 50%, var(--site-canvas-soft) 50%)';
+          } else if (words < 700) {
+            cell.style.backgroundColor = 'color-mix(in srgb, var(--site-primary, #e2b714) 75%, var(--site-canvas-soft) 25%)';
+          } else {
+            cell.style.backgroundColor = 'var(--site-primary, #e2b714)';
+          }
+
+          // Tooltip on Hover with horizontal scroll offset support
+          cell.addEventListener('mouseenter', () => {
+            if (tooltip) {
+              tooltip.innerHTML = `
+                <div class="font-bold text-ink">${dateKey}</div>
+                <div class="text-[11px] text-body mt-0.5">${words.toLocaleString()} words • ${tests} tests • ${games} games</div>
+                <div class="text-[10px] text-success font-bold">+${xp} XP</div>
+              `;
+              tooltip.classList.remove('hidden');
+              const rect = cell.getBoundingClientRect();
+              const parent = heatmapGrid.parentElement;
+              const parentRect = parent?.getBoundingClientRect() || rect;
+              const scrollLeft = parent?.scrollLeft || 0;
+              const scrollTop = parent?.scrollTop || 0;
+              tooltip.style.left = `${rect.left - parentRect.left + scrollLeft + 15}px`;
+              tooltip.style.top = `${rect.top - parentRect.top + scrollTop - 40}px`;
+            }
+          });
+
+          cell.addEventListener('mouseleave', () => {
+            if (tooltip) tooltip.classList.add('hidden');
+          });
+
+          col.appendChild(cell);
+        }
+
+        heatmapGrid.appendChild(col);
+      }
+
+      if (heatmapActiveDays) heatmapActiveDays.textContent = `${activeDaysCount}`;
+      if (heatmapTotalXP) heatmapTotalXP.textContent = `+${totalXPEarned.toLocaleString()}`;
+    }
+
+    // 4. Fill Core Career Stats
     const bestWpmEl = document.getElementById('prof-best-wpm');
     const avgWpmEl = document.getElementById('prof-avg-wpm');
     const avgAccEl = document.getElementById('prof-avg-acc');
@@ -127,7 +506,35 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
     if (avgAccEl) avgAccEl.textContent = `${profile.averageAccuracy}%`;
     if (gamesPlayedEl) gamesPlayedEl.textContent = `${profile.totalGamesPlayed}`;
 
-    // Fill Achievements
+    // 5. Fill Weak Key AI Diagnostics
+    const weakKeysGrid = document.getElementById('weak-keys-grid');
+    if (weakKeysGrid) {
+      weakKeysGrid.innerHTML = '';
+      const weakest = storage.getWeakestKeys(5);
+      if (weakest.length === 0) {
+        weakKeysGrid.innerHTML = `<div class="col-span-full py-6 text-center text-xs text-mute font-mono">No error data recorded yet. Play a game or speed test to activate weak key AI diagnostics!</div>`;
+      } else {
+        weakest.forEach((k) => {
+          const card = document.createElement('div');
+          card.className = 'rounded-2xl border border-hairline bg-canvas-soft p-4 flex flex-col items-center text-center shadow-xs transition hover:border-[var(--site-primary)]';
+          
+          const isHighError = k.errorRate > 15;
+          card.innerHTML = `
+            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-canvas border border-hairline shadow-md text-xl font-bold uppercase mb-2 ${isHighError ? 'text-error border-error/40' : 'text-primary'}">
+              ${k.char}
+            </div>
+            <div class="text-sm font-bold ${isHighError ? 'text-error' : 'text-warning'}">${k.errorRate}% Error</div>
+            <div class="text-[10px] text-mute mt-0.5">${k.errors} misses / ${k.total} hits</div>
+            <div class="w-full h-1.5 bg-canvas rounded-full overflow-hidden mt-2.5">
+              <div class="h-full rounded-full ${isHighError ? 'bg-error' : 'bg-warning'}" style="width: ${Math.min(100, Math.max(10, k.errorRate * 2))}%;"></div>
+            </div>
+          `;
+          weakKeysGrid.appendChild(card);
+        });
+      }
+    }
+
+    // 6. Fill Achievements
     const achGrid = document.getElementById('achievements-grid');
     if (achGrid) {
       achGrid.innerHTML = '';
@@ -137,9 +544,9 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         if (ach.unlocked) unlockedCount++;
 
         const card = document.createElement('div');
-        card.className = `rounded-xl p-4 border transition-all ${
+        card.className = `rounded-2xl p-4 border transition-all ${
           ach.unlocked
-            ? 'bg-canvas border-[var(--site-primary)] shadow-level-1'
+            ? 'bg-canvas border-[var(--site-primary)] shadow-sm'
             : 'bg-canvas-soft border-hairline opacity-60'
         }`;
 
@@ -164,7 +571,7 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
       }
     }
 
-    // Fill Table rows
+    // 7. Fill Table rows
     document.querySelectorAll('[data-game-row]').forEach(row => {
       const gId = row.getAttribute('data-game-row');
       if (gId && profile.gameRecords[gId]) {
@@ -180,6 +587,34 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         if (lvlCell) lvlCell.textContent = `Level ${rec.unlockedLevel}`;
       }
     });
+
+    // 8. Data Management (Export & Reset)
+    const exportBtn = document.getElementById('export-data-btn');
+    if (exportBtn && !exportBtn.hasAttribute('data-bound')) {
+      exportBtn.setAttribute('data-bound', 'true');
+      exportBtn.addEventListener('click', () => {
+        const curProfile = storage.getProfile();
+        const blob = new Blob([JSON.stringify(curProfile, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `typing_career_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    const resetBtn = document.getElementById('reset-profile-btn');
+    if (resetBtn && !resetBtn.hasAttribute('data-bound')) {
+      resetBtn.setAttribute('data-bound', 'true');
+      resetBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to reset your career stats, levels, and achievements? This will reset your profile back to Level 1.')) {
+          localStorage.removeItem('typing_game_zone_profile_v2');
+          localStorage.removeItem('typing_game_zone_profile_v1');
+          renderLeaderboards();
+        }
+      });
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -188,4 +623,6 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
     renderLeaderboards();
   }
   document.addEventListener('astro:page-load', renderLeaderboards);
+  window.addEventListener('typing:xp-gained', renderLeaderboards);
+  window.addEventListener('typing:quest-updated', renderLeaderboards);
 </script>

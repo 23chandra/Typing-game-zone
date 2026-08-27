@@ -1,8 +1,6 @@
 ---
 // Interactive Touch Typing Practice Lab Widget
 // Powered by standard ANSI QWERTY 15.0u Grid Engine with 17 Authentic Monkeytype Themes
-import { QUADRANT_COLORS } from '../lib/fingerMapping';
-import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 ---
 
 <div
@@ -239,7 +237,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
   >
     
     <!-- Top Legend & Appearance Controls Bar -->
-    <div class="flex flex-wrap items-center justify-between gap-3 text-[11px] mb-5 pb-3 border-b border-hairline min-w-[620px] sm:min-w-0">
+    <div class="flex flex-wrap items-center justify-between gap-3 text-[11px] mb-5 pb-3 border-b border-hairline w-full">
       
       <!-- Top Left: Title & 5 Quadrant Filter Chips (100% Theme Dynamic) -->
       <div class="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -446,11 +444,10 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 </style>
 
 <script>
-  import { WORD_LISTS } from '../lib/wordLists';
+  import { WORD_LISTS, generateWeakKeysDrill } from '../lib/wordLists';
   import { soundEngine } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
   import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, type PhysicalKeyDef } from '../lib/fingerMapping';
-  import { MONKEYTYPE_THEMES, applyThemeGlobal, getThemeById } from '../lib/monkeytypeThemes';
   import confetti from 'canvas-confetti';
 
   let metronomeTimer: number | null = null;
@@ -522,7 +519,6 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     let currentDrillType = 'homeRow';
     let targetWordCount = 20;
     let customBuffer = '';
-    let selectedBPM = 0;
     let keyboardColorMode: 'theme' | 'quadrant' = (localStorage.getItem('prac_keyboard_mode') as any) || 'theme';
 
     let words: string[] = [];
@@ -642,7 +638,6 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     }
 
     renderVirtualKeyboardDOM();
-    updateThemeNameDisplay();
 
     // Generate Drill Word List
     function generateDrillWords() {
@@ -669,6 +664,9 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         for (let i = 0; i < targetWordCount; i++) {
           words.push(rawWords[i % rawWords.length]);
         }
+      } else if (currentDrillType === 'weakKeys') {
+        const weakKeys = storage.getWeakestKeys(5).map(k => k.char);
+        words = generateWeakKeysDrill(weakKeys, targetWordCount);
       } else if (drillsDict[currentDrillType]) {
         sourceList = drillsDict[currentDrillType];
         words = [];
@@ -919,6 +917,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         totalKeystrokes++;
         const expected = currentWord[currentCharIndex];
         const isMatch = key === expected;
+        storage.recordKeystroke(expected || key, !isMatch);
 
         if (letters && currentCharIndex < letters.length) {
           const letterEl = letters[currentCharIndex];
@@ -1001,6 +1000,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
       // Record to storage
       storage.recordGameResult('practice-lab', netWpmVal * 10, netWpmVal, accuracyVal, 1, words.length, totalKeystrokes, errorChars);
+      storage.updateDailyQuestProgress('drills', 1);
 
       typingView?.classList.add('hidden');
       resultView?.classList.remove('hidden');
@@ -1015,7 +1015,6 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 
     // Metronome Cadence Synthesizer
     function setMetronomeBPM(bpm: number) {
-      selectedBPM = bpm;
       if (metronomeTimer) {
         clearInterval(metronomeTimer);
         metronomeTimer = null;
@@ -1188,7 +1187,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         (b as HTMLElement).style.color = 'var(--mt-text, var(--site-ink, #d1d0c5))';
         b.classList.add('opacity-75');
       });
-      const matchBtn = root.querySelector(`[data-drill="${drillName}"]`) as HTMLElement | null;
+      const matchBtn = root?.querySelector(`[data-drill="${drillName}"]`) as HTMLElement | null;
       if (matchBtn) {
         matchBtn.classList.add('active');
         matchBtn.style.backgroundColor = 'var(--mt-main, var(--site-primary, #e2b714))';
@@ -1197,7 +1196,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       }
 
       // 2. Synchronize the 5 keyboard quadrant filter chips
-      root.querySelectorAll('.prac-quad-filter').forEach(qf => {
+      root?.querySelectorAll('.prac-quad-filter').forEach(qf => {
         const qEl = qf as HTMLElement;
         const qDrill = qEl.getAttribute('data-filter-quadrant');
         const isMatch = qDrill === drillName;

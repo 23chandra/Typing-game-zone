@@ -197,6 +197,15 @@
           class="absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0 caret-idle"
           style="background-color: var(--mt-caret);"
         ></div>
+
+        <!-- Real-Time Ghost Racer Caret -->
+        <div
+          id="mt-ghost-caret"
+          class="absolute top-0 left-0 transition-all duration-100 ease-linear pointer-events-none z-10 hidden flex-col items-center"
+        >
+          <div class="h-7 w-0.5 rounded-full" style="background-color: var(--site-primary, #e2b714); box-shadow: 0 0 10px var(--site-primary, #e2b714);"></div>
+          <span id="mt-ghost-tag" class="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full absolute -top-4 whitespace-nowrap shadow-md" style="background-color: var(--mt-sub-alt); color: var(--mt-main);">👻 60</span>
+        </div>
         <!-- Words injected dynamically via JavaScript -->
       </div>
 
@@ -308,6 +317,18 @@
           <span>🥕</span>
           <span id="mt-caret-label" class="hidden md:inline font-bold">line</span>
         </button>
+
+        <!-- Ghost Racer Toggle Button -->
+        <button
+          type="button"
+          id="mt-ghost-cycle-btn"
+          class="flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition cursor-pointer hover:text-[var(--mt-text)]"
+          style="background-color: var(--mt-sub-alt);"
+          title="Toggle Real-Time Ghost Racer (Off, PB, 60, 80, 100, 120 WPM)"
+        >
+          <span>👻</span>
+          <span id="mt-ghost-label" class="hidden md:inline font-bold">ghost: off</span>
+        </button>
       </div>
     </div>
 
@@ -329,11 +350,18 @@
         <!-- Net WPM Hero -->
         <div>
           <div class="text-xs uppercase tracking-widest" style="color: var(--mt-sub);">wpm</div>
-          <div class="flex items-baseline gap-3">
+          <div class="flex flex-wrap items-baseline gap-2">
             <span id="mt-res-wpm" class="text-6xl sm:text-7xl font-bold tracking-tight" style="color: var(--mt-main);">0</span>
             <div id="mt-pb-badge" class="hidden items-center gap-1 rounded-full px-3 py-1 text-xs font-bold animate-pulse shadow-md" style="background-color: var(--mt-main); color: var(--mt-bg);">
               <span>👑</span>
               <span>PB!</span>
+            </div>
+            <div id="mt-ghost-badge" class="hidden items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold border shadow-xs" style="background-color: var(--mt-sub-alt); border-color: var(--site-hairline); color: var(--mt-main);">
+              <span id="mt-ghost-badge-text">👻 Ghost</span>
+            </div>
+            <div id="mt-xp-badge" class="hidden sm:flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold border shadow-xs" style="background-color: var(--mt-sub-alt); border-color: var(--mt-main); color: var(--mt-main);">
+              <span>⚡</span>
+              <span id="mt-xp-badge-text">+30 XP</span>
             </div>
           </div>
           <div class="text-xs mt-1" style="color: var(--mt-sub);">
@@ -618,12 +646,9 @@
 
 <script>
   import {
-    MONKEYTYPE_ENGLISH_200,
-    MONKEYTYPE_ENGLISH_1K,
     MONKEYTYPE_CODE_SNIPPETS,
     generateMonkeytypeWordList,
-    getMonkeytypeQuote,
-    type CategorizedQuote
+    getMonkeytypeQuote
   } from '../lib/wordLists';
   import { MONKEYTYPE_THEMES, getThemeById, applyThemeToElement, applyThemeGlobal, type MonkeytypeTheme } from '../lib/monkeytypeThemes';
   import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
@@ -693,6 +718,10 @@
     const soundLabel = document.getElementById('mt-sound-label');
     const caretCycleBtn = document.getElementById('mt-caret-cycle-btn');
     const caretLabel = document.getElementById('mt-caret-label');
+    const ghostCycleBtn = document.getElementById('mt-ghost-cycle-btn');
+    const ghostLabel = document.getElementById('mt-ghost-label');
+    const ghostCaret = document.getElementById('mt-ghost-caret');
+    const ghostTag = document.getElementById('mt-ghost-tag');
 
     // Modals
     const customModal = document.getElementById('mt-custom-modal');
@@ -700,7 +729,6 @@
     const customCancelBtn = document.getElementById('mt-custom-cancel-btn');
     const customSaveBtn = document.getElementById('mt-custom-save-btn');
     const customValInput = document.getElementById('mt-custom-val-input') as HTMLInputElement | null;
-    const customSubBtn = document.getElementById('mt-custom-sub-btn');
 
     const customTextModal = document.getElementById('mt-custom-text-modal');
     const customTextCloseBtn = document.getElementById('mt-custom-text-close-btn');
@@ -721,6 +749,10 @@
     const resChars = document.getElementById('mt-res-chars');
     const resTime = document.getElementById('mt-res-time');
     const pbBadge = document.getElementById('mt-pb-badge');
+    const ghostBadge = document.getElementById('mt-ghost-badge');
+    const ghostBadgeText = document.getElementById('mt-ghost-badge-text');
+    const xpBadge = document.getElementById('mt-xp-badge');
+    const xpBadgeText = document.getElementById('mt-xp-badge-text');
     const resNextBtn = document.getElementById('mt-res-next-btn');
     const resRepeatBtn = document.getElementById('mt-res-repeat-btn');
     const resPracticeMissedBtn = document.getElementById('mt-res-practice-missed-btn');
@@ -734,7 +766,6 @@
     // Replay Modal
     const replayModal = document.getElementById('mt-replay-modal');
     const replayCloseBtn = document.getElementById('mt-replay-close-btn');
-    const replayWordsBox = document.getElementById('mt-replay-words-box');
     const replayWordsWrapper = document.getElementById('mt-replay-words-wrapper');
     const replayPlayBtn = document.getElementById('mt-replay-play-btn');
     const replayTime = document.getElementById('mt-replay-time');
@@ -755,6 +786,7 @@
     let includePunc = false;
     let includeNum = false;
     let caretStyle: 'line' | 'block' | 'underline' | 'outline' | 'carrot' = (localStorage.getItem('monkeytype_caret') as any) || 'line';
+    let ghostMode: 'off' | 'pb' | '60' | '80' | '100' | '120' = (localStorage.getItem('mt_ghost_mode') as any) || 'off';
     let masterMode = false;
     let confidenceMode = false;
     let blindMode = false;
@@ -809,14 +841,12 @@
     // 5. Caret Appearance
     function updateCaretAppearance() {
       if (!caret) return;
-      caret.className = 'absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0 caret-idle';
-      caret.textContent = '';
+      caret.className = `absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 caret-${caretStyle} caret-idle`;
       if (caretLabel) caretLabel.textContent = caretStyle;
-      localStorage.setItem('monkeytype_caret', caretStyle);
 
       switch (caretStyle) {
         case 'line':
-          caret.style.width = '3px';
+          caret.style.width = '2.5px';
           caret.style.borderRadius = '9999px';
           caret.style.backgroundColor = 'var(--mt-caret)';
           break;
@@ -848,6 +878,91 @@
       }
     }
     updateCaretAppearance();
+
+    // Ghost Racer UI & Cycling
+    const updateGhostUI = () => {
+      if (ghostLabel) ghostLabel.textContent = `ghost: ${ghostMode}`;
+      if (ghostCycleBtn) {
+        if (ghostMode === 'off') {
+          ghostCycleBtn.style.opacity = '0.6';
+          ghostCycleBtn.style.color = 'var(--mt-sub)';
+        } else {
+          ghostCycleBtn.style.opacity = '1';
+          ghostCycleBtn.style.color = 'var(--mt-main)';
+          ghostCycleBtn.style.fontWeight = 'bold';
+        }
+      }
+      if (ghostCaret) {
+        if (ghostMode === 'off' || !isTestRunning) ghostCaret.classList.add('hidden');
+        else ghostCaret.classList.remove('hidden');
+      }
+    };
+    updateGhostUI();
+
+    ghostCycleBtn?.addEventListener('click', () => {
+      const modes: ('off' | 'pb' | '60' | '80' | '100' | '120')[] = ['off', 'pb', '60', '80', '100', '120'];
+      const nextIdx = (modes.indexOf(ghostMode) + 1) % modes.length;
+      ghostMode = modes[nextIdx];
+      localStorage.setItem('mt_ghost_mode', ghostMode);
+      updateGhostUI();
+    });
+
+    function updateGhostCaret(elapsedSec: number) {
+      if (ghostMode === 'off' || !ghostCaret || !wordsWrapper) {
+        if (ghostCaret) ghostCaret.classList.add('hidden');
+        return;
+      }
+
+      ghostCaret.classList.remove('hidden');
+
+      const profile = storage.getProfile();
+      let targetWpm = 60;
+      if (ghostMode === 'pb') {
+        targetWpm = profile.ghostPB?.wpm || profile.bestWPM || 60;
+      } else {
+        targetWpm = parseInt(ghostMode, 10) || 60;
+      }
+
+      if (ghostTag) {
+        ghostTag.textContent = `👻 ${ghostMode === 'pb' ? 'PB ' : ''}${targetWpm}`;
+      }
+
+      // Calculate target character advancement
+      const ghostCharsTotal = Math.floor((elapsedSec * (targetWpm * 5)) / 60);
+
+      let charCount = 0;
+      let targetWordEl: HTMLElement | null = null;
+      let targetLetterEl: HTMLElement | null = null;
+
+      const wordDivs = wordsWrapper.querySelectorAll('.mt-word') as NodeListOf<HTMLElement>;
+      for (let i = 0; i < wordDivs.length; i++) {
+        const wDiv = wordDivs[i];
+        const letters = wDiv.querySelectorAll('.mt-letter:not(.extra-char)') as NodeListOf<HTMLElement>;
+        const wLen = letters.length + 1; // including space
+
+        if (charCount + wLen > ghostCharsTotal || i === wordDivs.length - 1) {
+          targetWordEl = wDiv;
+          const charWithinWord = Math.max(0, ghostCharsTotal - charCount);
+          if (charWithinWord < letters.length) {
+            targetLetterEl = letters[charWithinWord];
+          } else if (letters.length > 0) {
+            targetLetterEl = letters[letters.length - 1];
+          }
+          break;
+        }
+        charCount += wLen;
+      }
+
+      if (targetWordEl) {
+        let gx = targetWordEl.offsetLeft;
+        let gy = targetWordEl.offsetTop;
+        if (targetLetterEl) {
+          gx = targetLetterEl.offsetLeft;
+          gy = targetLetterEl.offsetTop;
+        }
+        ghostCaret.style.transform = `translate(${gx}px, ${gy + 4}px)`;
+      }
+    }
 
     // Helper to safely focus input without jumping/scrolling the window
     const focusInputSafely = () => {
@@ -907,7 +1022,7 @@
           quoteAuthorEl.textContent = `— ${q.author}`;
           quoteAuthorEl.classList.remove('hidden');
         }
-      } else if (mode === 'code' || wordPool === 'code') {
+      } else if (wordPool === 'code') {
         const c = MONKEYTYPE_CODE_SNIPPETS[Math.floor(Math.random() * MONKEYTYPE_CODE_SNIPPETS.length)];
         words = c.code.replace(/\r\n/g, '\n').split('\n').flatMap((line, idx, arr) => {
           const lineWords = line.trim().split(/\s+/).filter(Boolean);
@@ -957,8 +1072,10 @@
     function renderWordsDOM() {
       if (!wordsWrapper) return;
       const caretEl = caret;
+      const ghostEl = ghostCaret;
       wordsWrapper.innerHTML = '';
       if (caretEl) wordsWrapper.appendChild(caretEl);
+      if (ghostEl) wordsWrapper.appendChild(ghostEl);
       wordsWrapper.style.transform = 'translateY(0px)';
 
       words.forEach((w, wIdx) => {
@@ -1031,6 +1148,11 @@
       configBar?.classList.add('opacity-15');
       if (liveWpmPill) liveWpmPill.classList.remove('opacity-0');
 
+      if (ghostMode !== 'off' && ghostCaret) {
+        ghostCaret.classList.remove('hidden');
+        updateGhostCaret(0);
+      }
+
       if (activeSpeedTestTimer) clearInterval(activeSpeedTestTimer);
 
       activeSpeedTestTimer = window.setInterval(() => {
@@ -1050,6 +1172,9 @@
 
         if (liveWpm) liveWpm.textContent = `${netWpm}`;
         if (liveAcc) liveAcc.textContent = `${acc}%`;
+
+        // Update Ghost Racer movement
+        updateGhostCaret(elapsedSec);
 
         if (mode === 'time') {
           timeRemaining = Math.max(0, subOption - Math.floor(elapsedSec));
@@ -1078,6 +1203,7 @@
       isTestRunning = false;
       isTestComplete = true;
       if (caret) caret.style.opacity = '0';
+      if (ghostCaret) ghostCaret.classList.add('hidden');
       configBar?.classList.remove('opacity-15');
 
       const elapsedSec = mode === 'time' ? subOption : Math.max(1, (Date.now() - startTime) / 1000);
@@ -1106,8 +1232,10 @@
       if (resChars) resChars.textContent = `${correctChars} / ${errorChars} / ${extraCharsCount} / ${missedCharsCount}`;
       if (resTime) resTime.textContent = `${Math.round(elapsedSec)}s`;
 
-      // Save to Storage & Check PB
+      // Save to Storage & Record Activities
       const recResult = storage.recordGameResult('speed-test', netWpmVal * 10, netWpmVal, accuracyVal, 1, currentWordIndex, totalKeystrokes, errorChars);
+      storage.saveGhostPB(netWpmVal, mode, elapsedSec);
+
       if (pbBadge) {
         if (recResult.newBestWPM || recResult.newHighScore) {
           pbBadge.classList.remove('hidden');
@@ -1116,6 +1244,32 @@
           pbBadge.classList.add('hidden');
           pbBadge.classList.remove('flex');
         }
+      }
+
+      // Ghost Duel Outcome Badge
+      if (ghostMode !== 'off' && ghostBadge && ghostBadgeText) {
+        const profile = storage.getProfile();
+        const targetGhostWPM = ghostMode === 'pb' ? (profile.ghostPB?.wpm || profile.bestWPM || 60) : parseInt(ghostMode, 10) || 60;
+        const won = netWpmVal >= targetGhostWPM;
+        ghostBadge.classList.remove('hidden');
+        ghostBadge.classList.add('flex');
+        if (won) {
+          ghostBadgeText.textContent = `👻 Beat Ghost (${netWpmVal} vs ${targetGhostWPM} WPM)!`;
+          ghostBadge.style.color = 'var(--site-success, #10b981)';
+        } else {
+          ghostBadgeText.textContent = `👻 Ghost Ahead (${targetGhostWPM} WPM)`;
+          ghostBadge.style.color = 'var(--mt-sub)';
+        }
+      } else if (ghostBadge) {
+        ghostBadge.classList.add('hidden');
+      }
+
+      // XP Telemetry Badge
+      if (xpBadge && xpBadgeText && recResult.xpEarned) {
+        xpBadge.classList.remove('hidden');
+        xpBadge.classList.add('flex');
+        const lvlInfo = storage.getLevelInfo(storage.getProfile().xp);
+        xpBadgeText.textContent = `+${recResult.xpEarned} XP • Lvl ${lvlInfo.level} (${lvlInfo.progressPercent}%)`;
       }
 
       // Missed words button toggle
@@ -1447,6 +1601,9 @@
           wordIdx: currentWordIndex,
           charIdx: currentCharIndex
         });
+
+        // Telemetry for Weak Key Diagnostics
+        storage.recordKeystroke(expected || key, !isMatch);
 
         if (letters && currentCharIndex < letters.length) {
           const letterEl = letters[currentCharIndex];

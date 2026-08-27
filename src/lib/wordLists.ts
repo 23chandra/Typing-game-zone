@@ -399,3 +399,29 @@ export function getMonkeytypeQuote(lengthType: 'all' | 'short' | 'medium' | 'lon
   }
   return list[Math.floor(Math.random() * list.length)];
 }
+
+/**
+ * Synthesize a custom drill focusing specifically on the user's weakest keys
+ */
+export function generateWeakKeysDrill(weakKeys: string[], count = 25): string[] {
+  if (!weakKeys || weakKeys.length === 0) {
+    weakKeys = ['p', 'q', 'z', 'x', 'b'];
+  }
+  const cleanKeys = weakKeys.map(k => k.toLowerCase());
+
+  // Find words in English 1k and drill pools that contain at least one weak key
+  const matchingWords = MONKEYTYPE_ENGLISH_1K.filter(w => {
+    const lower = w.toLowerCase();
+    return cleanKeys.some(k => lower.includes(k));
+  });
+
+  const pool = matchingWords.length >= 10 ? matchingWords : MONKEYTYPE_ENGLISH_1K;
+  const result: string[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const word = pool[Math.floor(Math.random() * pool.length)];
+    result.push(word);
+  }
+
+  return result;
+}

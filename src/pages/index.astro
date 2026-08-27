@@ -120,7 +120,7 @@ const totalGames = ALL_GAMES.length;
           🛸 Arcade Shooters (4)
         </button>
         <button data-filter="action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          ⚔️ Action & Survival (4)
+          ⚔️ Action & Survival (5)
         </button>
         <button data-filter="adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
           🗝️ Adventure & Runners (4)
@@ -129,7 +129,7 @@ const totalGames = ALL_GAMES.length;
           🥊 Fighting & Duels (4)
         </button>
         <button data-filter="puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
-          🧩 Puzzle & Rhythm (4)
+          🧩 Puzzle & Rhythm (3)
         </button>
         <button data-filter="practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
           ⌨️ Practice & Drills (1)
@@ -261,9 +261,15 @@ const totalGames = ALL_GAMES.length;
       cards.forEach(card => {
         const cat = card.getAttribute('data-category');
         const title = card.getAttribute('data-title') || '';
+        const tags = card.getAttribute('data-tags') || '';
+        const desc = card.getAttribute('data-desc') || '';
 
         const matchesCat = currentCat === 'all' || cat === currentCat;
-        const matchesSearch = searchQuery === '' || title.includes(searchQuery);
+        const matchesSearch =
+          searchQuery === '' ||
+          title.includes(searchQuery) ||
+          tags.includes(searchQuery) ||
+          desc.includes(searchQuery);
 
         if (matchesCat && matchesSearch) {
           (card as HTMLElement).style.display = 'flex';

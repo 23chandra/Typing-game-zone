@@ -1,8 +1,6 @@
 ---
 // Global Monkeytype Command Palette & Quick Switcher
 // Accessible from any page on typinggamezone.com via Esc, Ctrl+Shift+P, or Cmd+K
-import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
-import { ALL_GAMES } from '../lib/games/gameRegistry';
 ---
 
 <div
@@ -63,8 +61,9 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
 </div>
 
 <script>
-  import { MONKEYTYPE_THEMES, applyThemeGlobal, getThemeById } from '../lib/monkeytypeThemes';
-  import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
+  import { MONKEYTYPE_THEMES, applyThemeGlobal } from '../lib/monkeytypeThemes';
+  import { ALL_GAMES } from '../lib/games/gameRegistry';
+  import { soundEngine } from '../lib/soundEngine';
 
   interface PaletteCommand {
     id: string;
@@ -77,13 +76,16 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
   }
 
   function initGlobalCommandPalette() {
-    const palette = document.getElementById('global-cmd-palette');
-    const searchInput = document.getElementById('global-cmd-search') as HTMLInputElement | null;
-    const listContainer = document.getElementById('global-cmd-list');
+    const paletteEl = document.getElementById('global-cmd-palette') as HTMLElement | null;
+    const searchInputEl = document.getElementById('global-cmd-search') as HTMLInputElement | null;
+    const listContainerEl = document.getElementById('global-cmd-list') as HTMLElement | null;
     const closeBtn = document.getElementById('global-cmd-close');
     const filterPills = document.querySelectorAll('.cmd-filter-pill');
 
-    if (!palette || !searchInput || !listContainer) return;
+    if (!paletteEl || !searchInputEl || !listContainerEl) return;
+    const palette = paletteEl;
+    const searchInput = searchInputEl;
+    const listContainer = listContainerEl;
 
     let activeFilter = 'all';
     let selectedIndex = 0;
@@ -102,8 +104,18 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         action: () => applyThemeGlobal(t)
       })),
 
+      // 21 Games
+      ...ALL_GAMES.map(g => ({
+        id: `game-${g.id}`,
+        label: `Play ${g.title} (${g.categoryName})`,
+        category: 'games' as const,
+        icon: g.icon,
+        badge: g.difficulty,
+        action: () => { window.location.href = `/game/${g.id}`; }
+      })),
+
       // Navigation Pages
-      { id: 'nav-home', label: 'Go to Games Hub (21 Games)', category: 'pages', icon: '🎮', action: () => { window.location.href = '/'; } },
+      { id: 'nav-home', label: 'Go to Games Hub (21 Games)', category: 'pages', icon: '🎮', action: () => { window.location.href = '/#games-section'; } },
       { id: 'nav-speed', label: 'Go to Speed Test Benchmark', category: 'pages', icon: '⚡', action: () => { window.location.href = '/speed-test'; } },
       { id: 'nav-arcade', label: 'Go to Retro Arcade Lounge', category: 'pages', icon: '🕹️', action: () => { window.location.href = '/arcade'; } },
       { id: 'nav-practice', label: 'Go to Touch Typing Practice Lab', category: 'pages', icon: '⌨️', action: () => { window.location.href = '/practice'; } },
@@ -274,12 +286,15 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
 
     // Global Key Listener for Esc / Ctrl+K / Ctrl+Shift+P
     window.addEventListener('keydown', (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in a textarea or input outside of palette
       const isInput = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
 
       if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === 'P' && e.ctrlKey && e.shiftKey)) {
         e.preventDefault();
         (window as any).toggleGlobalCommandPalette();
+        return;
+      }
+
+      if (isInput && document.activeElement !== searchInput) {
         return;
       }
 

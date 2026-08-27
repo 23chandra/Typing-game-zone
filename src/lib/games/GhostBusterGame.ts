@@ -22,7 +22,6 @@ interface Ghost {
 export class GhostBusterGame extends BaseGame {
   private ghosts: Ghost[] = [];
   private currentTarget: Ghost | null = null;
-  private protonBeamTarget: { x: number; y: number } | null = null;
   private spawnTimer: number = 0;
   private spawnInterval: number = 2.4;
   private nextId: number = 1;
@@ -48,7 +47,6 @@ export class GhostBusterGame extends BaseGame {
     this.spawnTimer = 0.4;
     this.ghosts = [];
     this.currentTarget = null;
-    this.protonBeamTarget = null;
     this.idleTime = 0;
   }
 
@@ -86,7 +84,6 @@ export class GhostBusterGame extends BaseGame {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         soundEngine.playLaser();
-        this.protonBeamTarget = { x: this.currentTarget.x, y: this.currentTarget.y };
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 5);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
@@ -108,7 +105,6 @@ export class GhostBusterGame extends BaseGame {
       this.currentTarget.typedIndex = 1;
       this.recordKeystroke(true);
       soundEngine.playLaser();
-      this.protonBeamTarget = { x: match.x, y: match.y };
       this.spawnSparks(match.x, match.y, '#50e3c2', 5);
 
       if (match.word.length === 1) {
