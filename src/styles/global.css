@@ -251,9 +251,9 @@
   background: var(--site-primary, #e2b714);
 }
 
-/* Zero Horizontal Overflow Enforcer */
+/* Zero Horizontal Overflow Enforcer (Compatible with position: sticky) */
 html, body {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
   width: 100%;
 }
