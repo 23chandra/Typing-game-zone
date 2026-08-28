@@ -26,8 +26,8 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
       </div>
     </a>
 
-    <!-- Desktop Nav Links (Hidden on small tablets, clean pill on large desktop) -->
-    <nav class="hidden xl:flex items-center gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1">
+    <!-- Desktop Nav Links (Visible on tablets & desktop 1024px+) -->
+    <nav class="hidden lg:flex items-center gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1">
       <a href="/#games-section" data-i18n="nav.games" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
       <a href="/arcade" data-i18n="nav.arcade" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
       <a href="/speed-test" data-i18n="nav.speedTest" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
@@ -36,7 +36,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
     </nav>
 
     <!-- Controls: Language + Global Theme + Sound Switcher + Command Hint + Play CTA -->
-    <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5">
+    <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 flex-shrink-0">
       
       <!-- Global Language Picker Dropdown -->
       <div class="relative" id="nav-lang-container">
@@ -159,8 +159,8 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         </div>
       </div>
 
-      <!-- Sound Switcher Dropdown -->
-      <div class="relative" id="sound-dropdown-container">
+      <!-- Sound Switcher Dropdown (Hidden on mobile < 640px, visible on sm+) -->
+      <div class="relative hidden sm:block" id="sound-dropdown-container">
         <button
           id="sound-menu-btn"
           type="button"
@@ -218,11 +218,11 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
       <!-- Subtle Vertical Divider (Visible on desktop) -->
       <div class="hidden xl:block h-5 w-px bg-hairline/80 mx-0.5"></div>
 
-      <!-- Player Level & Streak Telemetry Pill (Desktop Only) -->
+      <!-- Player Level & Streak Telemetry Pill (Desktop 2xl Only) -->
       <a
         href="/leaderboards"
         id="nav-player-pill"
-        class="hidden xl:flex items-center gap-2.5 rounded-xl border border-hairline bg-canvas px-3 py-1.5 text-xs font-mono font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft group cursor-pointer whitespace-nowrap"
+        class="hidden 2xl:flex items-center gap-2.5 rounded-xl border border-hairline bg-canvas px-3 py-1.5 text-xs font-mono font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft group cursor-pointer whitespace-nowrap"
         title="View Player Profile, Level & Daily Quests"
       >
         <span class="flex items-center gap-1 text-warning">
@@ -236,11 +236,11 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         </span>
       </a>
 
-      <!-- Command Palette Launcher Button (Laptops & Desktops) -->
+      <!-- Command Palette Launcher Button (Desktop xl+) -->
       <button
         type="button"
         id="nav-cmd-launcher"
-        class="hidden lg:flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+        class="hidden xl:flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
         title="Open Command Palette (Ctrl+K / Esc)"
       >
         <span class="font-bold text-ink">>_</span>
@@ -261,11 +261,11 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         </svg>
       </a>
 
-      <!-- Mobile Menu Hamburger Button (Hidden on xl) -->
+      <!-- Mobile Menu Hamburger Button (Hidden on lg+) -->
       <button
         id="mobile-menu-btn"
         type="button"
-        class="xl:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-canvas text-body shadow-level-1 hover:bg-canvas-soft hover:text-ink transition cursor-pointer flex-shrink-0"
+        class="lg:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-canvas text-body shadow-level-1 hover:bg-canvas-soft hover:text-ink transition cursor-pointer flex-shrink-0"
         aria-label="Toggle navigation"
       >
         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -276,7 +276,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
   </div>
 
   <!-- Mobile Dropdown Navigation -->
-  <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 xl:hidden font-mono text-xs">
+  <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 lg:hidden font-mono text-xs">
     <div class="flex flex-col gap-1.5 font-medium mb-3">
       <a href="/#games-section" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
         <span>🎮</span> <span data-i18n="nav.games">Games (21)</span>
