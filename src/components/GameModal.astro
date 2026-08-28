@@ -11,12 +11,12 @@
     </div>
 
     <!-- Title & Subtitle -->
-    <h3 id="modal-title" class="text-2xl font-bold tracking-tight text-ink">Level Cleared!</h3>
+    <h3 id="modal-title" class="text-2xl font-bold tracking-tight text-ink" data-i18n="game.levelCleared">Level Cleared!</h3>
     <p id="modal-subtitle" class="text-xs text-body mt-1">Excellent typing rhythm and precision.</p>
 
     <!-- Grade Rank Pill -->
     <div class="mt-4 flex items-center justify-center gap-2">
-      <span class="text-xs font-mono uppercase text-mute">Performance Grade:</span>
+      <span class="text-xs font-mono uppercase text-mute" data-i18n="game.performanceGrade">Performance Grade:</span>
       <span id="modal-grade-badge" class="rounded-full bg-emerald-500 text-white font-mono font-bold px-3 py-0.5 text-xs shadow-level-1">
         RANK S
       </span>
@@ -25,19 +25,19 @@
     <!-- Stats Grid Breakdown -->
     <div class="mt-6 grid grid-cols-2 gap-3 rounded-xl bg-canvas-soft p-4 border border-hairline font-mono text-left">
       <div>
-        <span class="text-[10px] text-mute uppercase">Net WPM</span>
+        <span class="text-[10px] text-mute uppercase" data-i18n="st.wpm">Net WPM</span>
         <div id="modal-wpm" class="text-lg font-bold text-ink">0</div>
       </div>
       <div>
-        <span class="text-[10px] text-mute uppercase">Accuracy</span>
+        <span class="text-[10px] text-mute uppercase" data-i18n="st.acc">Accuracy</span>
         <div id="modal-accuracy" class="text-lg font-bold text-ink">100%</div>
       </div>
       <div>
-        <span class="text-[10px] text-mute uppercase">Final Score</span>
+        <span class="text-[10px] text-mute uppercase" data-i18n="game.score">Final Score</span>
         <div id="modal-score" class="text-lg font-bold text-success">0</div>
       </div>
       <div>
-        <span class="text-[10px] text-mute uppercase">Max Streak</span>
+        <span class="text-[10px] text-mute uppercase" data-i18n="nav.activeStreak">Max Streak</span>
         <div id="modal-streak" class="text-lg font-bold text-warning">0</div>
       </div>
       <div>
@@ -45,14 +45,14 @@
         <div id="modal-errors" class="text-lg font-bold text-error">0</div>
       </div>
       <div>
-        <span class="text-[10px] text-mute uppercase">Time Elapsed</span>
+        <span class="text-[10px] text-mute uppercase" data-i18n="st.timeElapsed">Time Elapsed</span>
         <div id="modal-time" class="text-lg font-bold text-body">0s</div>
       </div>
     </div>
 
     <!-- New High Score Alert -->
     <div id="modal-new-record" class="mt-3 hidden items-center justify-center gap-1.5 text-xs font-mono text-warning font-semibold">
-      <span>👑 NEW HIGH SCORE RECORD!</span>
+      <span data-i18n="game.newRecord">👑 NEW HIGH SCORE RECORD!</span>
     </div>
 
     <!-- XP Earned Telemetry -->
@@ -66,21 +66,21 @@
         id="modal-next-btn"
         class="inline-flex items-center justify-center rounded-full bg-ink px-6 py-2.5 text-sm font-medium text-on-primary shadow-level-2 transition hover:opacity-90 active:scale-95"
       >
-        Next Level →
+        <span data-i18n="game.nextLevel">Next Level →</span>
       </button>
 
       <button
         id="modal-retry-btn"
         class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas px-5 py-2.5 text-sm font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95"
       >
-        Try Again
+        <span data-i18n="game.tryAgain">Try Again</span>
       </button>
 
       <a
         href="/"
         class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas-soft px-4 py-2.5 text-sm font-medium text-body transition hover:text-ink hover:bg-canvas"
       >
-        Hub
+        <span>Hub</span>
       </a>
     </div>
   </div>

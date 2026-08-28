@@ -61,7 +61,7 @@
         <!-- Dropdown Menu -->
         <div
           id="mt-pool-menu"
-          class="absolute left-0 top-full mt-1 hidden min-w-48 rounded-xl p-1.5 shadow-xl z-50 border text-xs"
+          class="absolute left-0 top-full mt-1 hidden min-w-56 rounded-xl p-1.5 shadow-xl z-50 border text-xs max-h-72 overflow-y-auto"
           style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt);"
         >
           <button type="button" data-pool="english" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] active-pool">
@@ -100,11 +100,64 @@
             <span>🇷🇺 Русский (Russian)</span>
             <span class="check text-[var(--mt-main)] hidden">✓</span>
           </button>
+          <button type="button" data-pool="arabic" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇸🇦 العربية (Arabic)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="chinese" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇨🇳 简体中文 (Pinyin)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="italian" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇹 Italiano (Italian)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="korean" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇰🇷 한국어 (Romaja)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="indonesian" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇩 Bahasa Indonesia</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="turkish" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇹🇷 Türkçe (Turkish)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="vietnamese" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇻🇳 Tiếng Việt</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-pool="bengali" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇧🇩 বাংলা (Bengali)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
           <button type="button" data-pool="code" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] border-t border-hairline mt-1">
             <span>💻 Code Snippets</span>
             <span class="check text-[var(--mt-main)] hidden">✓</span>
           </button>
         </div>
+      </div>
+
+      <!-- Script Mode Toggle (Native Script vs Latin / Romaji) -->
+      <div id="mt-script-toggle-wrapper" class="flex items-center gap-1 rounded-xl p-0.5 ml-1 hidden" style="background-color: var(--mt-sub-alt);">
+        <button
+          type="button"
+          id="mt-script-native-btn"
+          class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer"
+          style="background-color: var(--mt-main); color: var(--mt-bg);"
+          title="Type in Native Script with Phonetic Engine"
+        >
+          <span>🔤 Native</span>
+        </button>
+        <button
+          type="button"
+          id="mt-script-latin-btn"
+          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer opacity-70 hover:opacity-100"
+          title="Type in Latin / English alphabet"
+        >
+          <span>🔡 Latin</span>
+        </button>
       </div>
     </div>
 
@@ -192,8 +245,11 @@
         </div>
       </div>
 
-      <!-- Quick Action Indicators (Zen finish button / Quote author citation) -->
+      <!-- Quick Action Indicators (Zen finish button / Quote author citation / Phonetic badge) -->
       <div class="flex items-center gap-3">
+        <div id="mt-phonetic-badge" class="hidden items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono border" style="background-color: var(--mt-sub-alt); border-color: var(--mt-sub); color: var(--mt-main);">
+          <span>✨ Phonetic Typing: Active</span>
+        </div>
         <div id="mt-quote-author" class="hidden text-xs italic" style="color: var(--mt-sub);"></div>
         <button
           type="button"
@@ -681,6 +737,7 @@
   import { MONKEYTYPE_THEMES, getThemeById, applyThemeToElement, applyThemeGlobal, type MonkeytypeTheme } from '../lib/monkeytypeThemes';
   import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
+  import { transliterateInput, isNativeScriptSupported } from '../lib/transliterationEngine';
   import confetti from 'canvas-confetti';
 
   interface KeystrokeEvent {
@@ -803,6 +860,12 @@
     const poolMenu = document.getElementById('mt-pool-menu');
     const poolLabel = document.getElementById('mt-pool-label');
 
+    // Script Mode Toggle & Phonetic IME
+    const scriptToggleWrapper = document.getElementById('mt-script-toggle-wrapper');
+    const scriptNativeBtn = document.getElementById('mt-script-native-btn');
+    const scriptLatinBtn = document.getElementById('mt-script-latin-btn');
+    const phoneticBadge = document.getElementById('mt-phonetic-badge');
+
     if (!wordsViewport || !wordsWrapper || !inputEl) return;
 
     // 3. State Management
@@ -811,6 +874,8 @@
     let subOption: number = 30; // default 30s
     let quoteLength: 'all' | 'short' | 'medium' | 'long' | 'thicc' = 'all';
     let wordPool: string = 'english';
+    let scriptMode: 'native' | 'latin' = 'native';
+    let currentLatinBuffer = '';
     let includePunc = false;
     let includeNum = false;
     let caretStyle: 'line' | 'block' | 'underline' | 'outline' | 'carrot' = (localStorage.getItem('monkeytype_caret') as any) || 'line';
@@ -1023,6 +1088,7 @@
       isTestComplete = false;
       currentWordIndex = 0;
       currentCharIndex = 0;
+      currentLatinBuffer = '';
       correctChars = 0;
       errorChars = 0;
       extraCharsCount = 0;
@@ -1063,11 +1129,11 @@
         words = customTextBuffer.trim().split(/\s+/).filter(Boolean);
         if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
       } else if (mode === 'zen') {
-        words = generateMonkeytypeWordList(100, wordPool, includePunc, includeNum);
+        words = generateMonkeytypeWordList(100, wordPool, includePunc, includeNum, wordPool, scriptMode);
         if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
       } else {
         const count = mode === 'words' ? subOption : Math.max(120, subOption * 4);
-        words = generateMonkeytypeWordList(count, wordPool, includePunc, includeNum);
+        words = generateMonkeytypeWordList(count, wordPool, includePunc, includeNum, wordPool, scriptMode);
         if (quoteAuthorEl) quoteAuthorEl.classList.add('hidden');
       }
 
@@ -1511,6 +1577,7 @@
       // Space key -> advance word
       if (key === ' ' || (key === 'Enter' && currentWord === '↵')) {
         soundEngine.playKey(true);
+        currentLatinBuffer = '';
 
         if (currentCharIndex > 0 || currentWord === '↵') {
           // If word incomplete, penalize missing characters
@@ -1533,7 +1600,7 @@
 
           // Infinite Zen mode word append
           if (mode === 'zen' && currentWordIndex >= words.length - 10) {
-            const moreWords = generateMonkeytypeWordList(50, wordPool, includePunc, includeNum);
+            const moreWords = generateMonkeytypeWordList(50, wordPool, includePunc, includeNum, wordPool, scriptMode);
             words.push(...moreWords);
             moreWords.forEach(w => wordCharStates.push(new Array(w.length).fill(null)));
             moreWords.forEach((w, idx) => {
@@ -1569,6 +1636,7 @@
       if (key === 'Backspace') {
         if (confidenceMode) return; // In confidence mode, backspace is disabled
         soundEngine.playKey();
+        currentLatinBuffer = currentLatinBuffer.slice(0, -1);
 
         // 1. Remove extra character if present
         if (extraLetters && extraLetters.length > 0) {
@@ -1617,8 +1685,17 @@
       // Printable single character
       if (key.length === 1) {
         totalKeystrokes++;
+        currentLatinBuffer += key;
         const expected = currentWord[currentCharIndex];
-        const isMatch = key === expected;
+        let isMatch = key === expected;
+
+        if (!isMatch && scriptMode === 'native') {
+          const trans = transliterateInput(currentLatinBuffer, wordPool, 'native');
+          const partialExpected = currentWord.slice(0, currentCharIndex + 1);
+          if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
+            isMatch = true;
+          }
+        }
 
         // Keystroke telemetry log for Replay
         keystrokeLog.push({
@@ -2041,9 +2118,29 @@
           japanese: '日本語 (romaji)',
           portuguese: 'português',
           russian: 'русский',
+          arabic: 'العربية (arabic)',
+          chinese: '中文 (pinyin)',
+          italian: 'italiano',
+          korean: '한국어 (romaja)',
+          indonesian: 'indonesia',
+          turkish: 'türkçe',
+          vietnamese: 'tiếng việt',
+          bengali: 'বাংলা (bengali)',
           code: 'code'
         };
         poolLabel.textContent = poolLabels[pool] || pool;
+      }
+
+      // Update script toggle visibility
+      const isSupported = isNativeScriptSupported(pool);
+      if (scriptToggleWrapper) {
+        if (isSupported && pool !== 'english' && pool !== 'english1k' && pool !== 'code') {
+          scriptToggleWrapper.classList.remove('hidden');
+          if (phoneticBadge) phoneticBadge.classList.toggle('hidden', scriptMode !== 'native');
+        } else {
+          scriptToggleWrapper.classList.add('hidden');
+          if (phoneticBadge) phoneticBadge.classList.add('hidden');
+        }
       }
 
       // Update checkmark in dropdown
@@ -2064,6 +2161,42 @@
       generateWords();
       focusInputSafely();
     }
+
+    const updateScriptUI = () => {
+      if (scriptNativeBtn && scriptLatinBtn) {
+        if (scriptMode === 'native') {
+          scriptNativeBtn.style.backgroundColor = 'var(--mt-main)';
+          scriptNativeBtn.style.color = 'var(--mt-bg)';
+          scriptNativeBtn.classList.remove('opacity-70');
+          scriptLatinBtn.style.backgroundColor = 'transparent';
+          scriptLatinBtn.style.color = 'var(--mt-text)';
+          scriptLatinBtn.classList.add('opacity-70');
+          if (phoneticBadge) phoneticBadge.classList.remove('hidden');
+        } else {
+          scriptLatinBtn.style.backgroundColor = 'var(--mt-main)';
+          scriptLatinBtn.style.color = 'var(--mt-bg)';
+          scriptLatinBtn.classList.remove('opacity-70');
+          scriptNativeBtn.style.backgroundColor = 'transparent';
+          scriptNativeBtn.style.color = 'var(--mt-text)';
+          scriptNativeBtn.classList.add('opacity-70');
+          if (phoneticBadge) phoneticBadge.classList.add('hidden');
+        }
+      }
+    };
+
+    scriptNativeBtn?.addEventListener('click', () => {
+      scriptMode = 'native';
+      updateScriptUI();
+      generateWords();
+      focusInputSafely();
+    });
+
+    scriptLatinBtn?.addEventListener('click', () => {
+      scriptMode = 'latin';
+      updateScriptUI();
+      generateWords();
+      focusInputSafely();
+    });
 
     function setSound(sw: SwitchSoundType) {
       soundEngine.setSwitch(sw);
@@ -2423,7 +2556,15 @@
           de: 'german',
           ja: 'japanese',
           pt: 'portuguese',
-          ru: 'russian'
+          ru: 'russian',
+          ar: 'arabic',
+          zh: 'chinese',
+          it: 'italian',
+          ko: 'korean',
+          id: 'indonesian',
+          tr: 'turkish',
+          vi: 'vietnamese',
+          bn: 'bengali'
         };
         const targetPool = langMap[lang] || 'english';
         setWordPool(targetPool);

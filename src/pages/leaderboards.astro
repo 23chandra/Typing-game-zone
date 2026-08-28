@@ -286,6 +286,7 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
 
 <script>
   import { storage } from '../lib/storage';
+  import { formatNumber, formatDate, t } from '../lib/i18n';
   import confetti from 'canvas-confetti';
 
   function renderLeaderboards() {
@@ -312,9 +313,9 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
     }
     if (xpRatioEl) {
       if (isMaxLevel) {
-        xpRatioEl.textContent = `${profile.xp.toLocaleString()} XP (MAX TITAN LEVEL)`;
+        xpRatioEl.textContent = `${formatNumber(profile.xp)} XP (MAX TITAN LEVEL)`;
       } else {
-        xpRatioEl.textContent = `${profile.xp.toLocaleString()} / ${lvlInfo.maxXP.toLocaleString()} XP (${lvlInfo.progressPercent}%)`;
+        xpRatioEl.textContent = `${formatNumber(profile.xp)} / ${formatNumber(lvlInfo.maxXP)} XP (${lvlInfo.progressPercent}%)`;
       }
     }
     if (xpBarEl) {
@@ -323,8 +324,8 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
     }
     if (streakCountEl) streakCountEl.textContent = `${profile.currentStreak || 1}`;
     if (bestStreakEl) bestStreakEl.textContent = `${profile.bestStreak || 1} Days`;
-    if (totalWordsEl) totalWordsEl.textContent = profile.totalWordsTyped.toLocaleString();
-    if (totalStrokesEl) totalStrokesEl.textContent = profile.totalKeystrokes.toLocaleString();
+    if (totalWordsEl) totalWordsEl.textContent = formatNumber(profile.totalWordsTyped);
+    if (totalStrokesEl) totalStrokesEl.textContent = formatNumber(profile.totalKeystrokes);
 
     // 2. Fill Daily Quests
     const questsGrid = document.getElementById('quests-grid');
@@ -625,4 +626,5 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
   document.addEventListener('astro:page-load', renderLeaderboards);
   window.addEventListener('typing:xp-gained', renderLeaderboards);
   window.addEventListener('typing:quest-updated', renderLeaderboards);
+  window.addEventListener('typing:language-change', renderLeaderboards);
 </script>

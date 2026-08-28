@@ -1,22 +1,32 @@
 // Multi-Language Internationalization (i18n) Engine for Typing Game Zone
-// Supports 8 global languages: English (en), Hindi (hi), Spanish (es), French (fr), German (de), Japanese (ja), Portuguese (pt), Russian (ru)
+// Supports 16 global languages: English (en), Hindi (hi), Spanish (es), French (fr), German (de), Japanese (ja), Portuguese (pt), Russian (ru), Arabic (ar), Chinese (zh), Italian (it), Korean (ko), Indonesian (id), Turkish (tr), Vietnamese (vi), Bengali (bn)
 
 export interface LanguageDef {
   code: string;
   name: string;
   nativeName: string;
   flag: string;
+  isRTL?: boolean;
+  region?: string;
 }
 
 export const SUPPORTED_LANGUAGES: LanguageDef[] = [
-  { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳' },
-  { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸' },
-  { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'German', nativeName: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ja', name: 'Japanese', nativeName: '日本語', flag: '🇯🇵' },
-  { code: 'pt', name: 'Portuguese', nativeName: 'Português', flag: '🇧🇷' },
-  { code: 'ru', name: 'Russian', nativeName: 'Русский', flag: '🇷🇺' }
+  { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸', region: 'Global' },
+  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', region: 'India' },
+  { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸', region: 'Spain & Latin America' },
+  { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷', region: 'France & Francophonie' },
+  { code: 'de', name: 'German', nativeName: 'Deutsch', flag: '🇩🇪', region: 'Germany & DACH' },
+  { code: 'ja', name: 'Japanese', nativeName: '日本語', flag: '🇯🇵', region: 'Japan' },
+  { code: 'pt', name: 'Portuguese', nativeName: 'Português', flag: '🇧🇷', region: 'Brazil & Portugal' },
+  { code: 'ru', name: 'Russian', nativeName: 'Русский', flag: '🇷🇺', region: 'Eastern Europe' },
+  { code: 'ar', name: 'Arabic', nativeName: 'العربية', flag: '🇸🇦', isRTL: true, region: 'Middle East & North Africa' },
+  { code: 'zh', name: 'Chinese', nativeName: '简体中文', flag: '🇨🇳', region: 'China & Asia' },
+  { code: 'it', name: 'Italian', nativeName: 'Italiano', flag: '🇮🇹', region: 'Italy' },
+  { code: 'ko', name: 'Korean', nativeName: '한국어', flag: '🇰🇷', region: 'South Korea' },
+  { code: 'id', name: 'Indonesian', nativeName: 'Bahasa Indonesia', flag: '🇮🇩', region: 'Southeast Asia' },
+  { code: 'tr', name: 'Turkish', nativeName: 'Türkçe', flag: '🇹🇷', region: 'Turkey & Central Asia' },
+  { code: 'vi', name: 'Vietnamese', nativeName: 'Tiếng Việt', flag: '🇻🇳', region: 'Vietnam' },
+  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা', flag: '🇧🇩', region: 'Bangladesh & India' }
 ];
 
 export const TRANSLATIONS: Record<string, Record<string, string>> = {
@@ -36,6 +46,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': 'Switch Synthesis',
     'nav.activeStreak': 'Streak',
     'nav.novice': 'Novice',
+    'nav.language': 'Language',
+    'nav.searchLang': 'Search language...',
 
     // Hero Section
     'hero.badge': '21 2D TYPING GAMES • SPEED TEST SUITE • PRACTICE LAB',
@@ -75,11 +87,15 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.nextTest': 'Next Test',
     'st.repeatTest': 'Repeat Test',
     'st.practiceMissed': 'Practice Missed',
-    'st.replay': 'Replay',
+    'st.replay': 'Watch Replay',
     'st.shareScore': 'Share Score',
     'st.copied': 'Copied to Clipboard!',
     'st.ghostDuel': 'Ghost Duel',
     'st.clickToFocus': 'Click or Press Any Key to Focus & Start',
+    'st.customModalTitle': 'Custom Test Settings',
+    'st.customDurationPrompt': 'Enter custom duration (seconds):',
+    'st.customTextPrompt': 'Paste or type your own practice text or drill:',
+    'st.capsLockOn': 'Caps Lock is ON',
 
     // Practice Lab
     'prac.title': 'Touch Typing Practice Lab',
@@ -95,6 +111,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'Color Mode',
     'prac.themeSync': 'Theme Sync',
     'prac.fingerQuadrant': 'Finger Quadrant',
+    'prac.layout': 'Layout',
+    'prac.keyboardLayout': 'Keyboard Layout (QWERTY, AZERTY, QWERTZ, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'Career Hub & Quests',
@@ -139,6 +157,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'GAME OVER',
     'game.howToPlay': 'How to Play',
     'game.typeToShoot': 'Type words to attack and survive!',
+    'game.levelCleared': 'Level Cleared!',
+    'game.performanceGrade': 'Performance Grade',
+    'game.tryAgain': 'Try Again',
+    'game.newRecord': 'NEW HIGH SCORE RECORD!',
+    'game.xpEarned': 'XP Earned',
 
     // Footer
     'footer.quickTheme': 'Quick Theme Switcher',
@@ -149,7 +172,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': 'Audio Synthesizer',
     'footer.audioDesc': 'Real-time Web Audio synthesis simulates Cherry MX Blue clicks, Holy Panda thocks, Linear Reds, and mechanical typewriters.',
     'footer.rights': 'All rights reserved.',
-    'footer.operational': 'Systems Operational • 60 FPS'
+    'footer.operational': 'Systems Operational • 60 FPS',
+    'footer.languageSelect': 'Select Language'
   },
 
   hi: {
@@ -168,6 +192,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': 'स्विच सिंथेसाइज़र',
     'nav.activeStreak': 'स्ट्रीक',
     'nav.novice': 'नौसिखिया',
+    'nav.language': 'भाषा',
+    'nav.searchLang': 'भाषा खोजें...',
 
     // Hero Section
     'hero.badge': '21 2D टाइपिंग गेम्स • स्पीड टेस्ट लैब • टच टाइपिंग प्रैक्टिस',
@@ -197,7 +223,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.quote': 'उद्धरण',
     'st.zen': 'ज़ेन',
     'st.custom': 'कस्टम',
-    'st.wpm': 'डब्ल्यूपीएम (WPM)',
+    'st.wpm': 'WPM',
     'st.raw': 'रॉ WPM',
     'st.acc': 'सटीकता',
     'st.consistency': 'स्थिरता',
@@ -212,6 +238,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.copied': 'क्लिपबोर्ड पर कॉपी हो गया!',
     'st.ghostDuel': 'घोस्ट रेसर डुअल',
     'st.clickToFocus': 'शुरू करने के लिए क्लिक करें या कोई भी की दबाएं',
+    'st.customModalTitle': 'कस्टम टेस्ट सेटिंग्स',
+    'st.customDurationPrompt': 'कस्टम अवधि दर्ज करें (सेकंड):',
+    'st.customTextPrompt': 'अपना खुद का अभ्यास टेक्स्ट या कोड पेस्ट करें:',
+    'st.capsLockOn': 'कैप्स लॉक चालू है',
 
     // Practice Lab
     'prac.title': 'टच टाइपिंग प्रैक्टिस लैब',
@@ -227,6 +257,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'कलर मोड',
     'prac.themeSync': 'थीम सिंक',
     'prac.fingerQuadrant': 'फिंगर क्वाड्रेंट',
+    'prac.layout': 'लेआउट',
+    'prac.keyboardLayout': 'कीबोर्ड लेआउट (QWERTY, AZERTY, QWERTZ, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'करियर हब और दैनिक क्वेस्ट्स',
@@ -236,7 +268,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'lead.bestStreak': 'सर्वश्रेष्ठ स्ट्रीक',
     'lead.careerWords': 'कुल शब्द',
     'lead.totalStrokes': 'कुल स्ट्रोक्स',
-    'lead.dailyQuests': 'दैनिक क्वेस्ट्स (Daily Quests)',
+    'lead.dailyQuests': 'दैनिक क्वेस्ट्स',
     'lead.dailyQuestsDesc': 'हर 24 घंटे में 3 नई चुनौतियाँ रीफ्रेश होती हैं। बोनस XP अर्जित करने के लिए पूरा करें!',
     'lead.todaysChallenges': 'आज की चुनौतियाँ',
     'lead.activityHeatmap': 'दैनिक टाइपिंग हीटमैप',
@@ -271,6 +303,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'खेल समाप्त',
     'game.howToPlay': 'कैसे खेलें',
     'game.typeToShoot': 'हमला करने और बचने के लिए शब्द टाइप करें!',
+    'game.levelCleared': 'लेवल पूरा हुआ!',
+    'game.performanceGrade': 'प्रदर्शन ग्रेड',
+    'game.tryAgain': 'पुनः प्रयास करें',
+    'game.newRecord': 'नया उच्च स्कोर रिकॉर्ड!',
+    'game.xpEarned': 'अर्जित XP',
 
     // Footer
     'footer.quickTheme': 'त्वरित थीम स्विचर',
@@ -281,7 +318,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': 'ऑडियो सिंथेसाइज़र',
     'footer.audioDesc': 'चेरी एमएक्स ब्लू, होली पांडा, और मैकेनिकल टाइपराइटर की असली ध्वनियों का रियल-टाइम वेब ऑडियो अनुभव।',
     'footer.rights': 'सर्वाधिकार सुरक्षित।',
-    'footer.operational': 'सिस्टम सामान्य • 60 FPS'
+    'footer.operational': 'सिस्टम सामान्य • 60 FPS',
+    'footer.languageSelect': 'भाषा चुनें'
   },
 
   es: {
@@ -300,6 +338,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': 'Sonido de Switches',
     'nav.activeStreak': 'Racha',
     'nav.novice': 'Novato',
+    'nav.language': 'Idioma',
+    'nav.searchLang': 'Buscar idioma...',
 
     // Hero Section
     'hero.badge': '21 JUEGOS DE MECANOGRAFÍA 2D • TESTS DE VELOCIDAD • PRÁCTICA',
@@ -339,11 +379,15 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.nextTest': 'Siguiente Test',
     'st.repeatTest': 'Repetir Test',
     'st.practiceMissed': 'Practicar Errores',
-    'st.replay': 'Repetición',
+    'st.replay': 'Ver Repetición',
     'st.shareScore': 'Compartir Puntuación',
     'st.copied': '¡Copiado al Portapapeles!',
     'st.ghostDuel': 'Duelo Fantasma',
     'st.clickToFocus': 'Haz clic o pulsa cualquier tecla para empezar',
+    'st.customModalTitle': 'Ajustes Personalizados',
+    'st.customDurationPrompt': 'Introduce la duración (segundos):',
+    'st.customTextPrompt': 'Pega o escribe tu propio texto de práctica:',
+    'st.capsLockOn': 'Bloq Mayús activado',
 
     // Practice Lab
     'prac.title': 'Laboratorio de Mecanografía',
@@ -359,6 +403,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'Modo de Color',
     'prac.themeSync': 'Sincronizar Tema',
     'prac.fingerQuadrant': 'Cuadrante de Dedos',
+    'prac.layout': 'Distribución',
+    'prac.keyboardLayout': 'Distribución de Teclado (QWERTY, AZERTY, QWERTZ, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'Centro de Carrera y Misiones',
@@ -403,6 +449,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'FIN DE LA PARTIDA',
     'game.howToPlay': 'Cómo Jugar',
     'game.typeToShoot': '¡Escribe palabras para atacar y sobrevivir!',
+    'game.levelCleared': '¡Nivel Superado!',
+    'game.performanceGrade': 'Calificación',
+    'game.tryAgain': 'Intentar de Nuevo',
+    'game.newRecord': '¡NUEVO RÉCORD!',
+    'game.xpEarned': 'XP Ganado',
 
     // Footer
     'footer.quickTheme': 'Selector Rápido de Temas',
@@ -413,7 +464,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': 'Sintetizador de Audio',
     'footer.audioDesc': 'Síntesis Web Audio en tiempo real que simula switches mecánicos Cherry MX Blue, Holy Panda y máquinas de escribir.',
     'footer.rights': 'Todos los derechos reservados.',
-    'footer.operational': 'Sistemas Operativos • 60 FPS'
+    'footer.operational': 'Sistemas Operativos • 60 FPS',
+    'footer.languageSelect': 'Seleccionar Idioma'
   },
 
   fr: {
@@ -432,6 +484,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': 'Son des Switches',
     'nav.activeStreak': 'Série',
     'nav.novice': 'Débutant',
+    'nav.language': 'Langue',
+    'nav.searchLang': 'Rechercher une langue...',
 
     // Hero Section
     'hero.badge': '21 JEUX DE FRAPPE 2D • TESTS DE VITESSE • ENTRAÎNEMENT',
@@ -476,6 +530,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.copied': 'Copié dans le Presse-papier !',
     'st.ghostDuel': 'Duel Fantôme',
     'st.clickToFocus': 'Cliquez ou appuyez sur une touche pour commencer',
+    'st.customModalTitle': 'Paramètres Personnalisés',
+    'st.customDurationPrompt': 'Durée personnalisée (secondes) :',
+    'st.customTextPrompt': 'Collez ou tapez votre propre texte :',
+    'st.capsLockOn': 'Verrouillage Majuscule actif',
 
     // Practice Lab
     'prac.title': 'Labo de Dactylographie',
@@ -491,6 +549,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'Mode Couleur',
     'prac.themeSync': 'Synchroniser Thème',
     'prac.fingerQuadrant': 'Quadrant des Doigts',
+    'prac.layout': 'Disposition',
+    'prac.keyboardLayout': 'Disposition du Clavier (QWERTY, AZERTY, QWERTZ, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'Hub de Carrière et Quêtes',
@@ -535,6 +595,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'PARTIE TERMINÉE',
     'game.howToPlay': 'Comment Jouer',
     'game.typeToShoot': 'Tapez les mots pour attaquer et survivre !',
+    'game.levelCleared': 'Niveau Réussi !',
+    'game.performanceGrade': 'Rang de Performance',
+    'game.tryAgain': 'Réessayer',
+    'game.newRecord': 'NOUVEAU RECORD !',
+    'game.xpEarned': 'XP Gagné',
 
     // Footer
     'footer.quickTheme': 'Sélecteur de Thèmes',
@@ -545,7 +610,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': 'Synthétiseur Audio',
     'footer.audioDesc': 'Synthèse Web Audio simulant les switches mécaniques Cherry MX Blue, Holy Panda et machines à écrire.',
     'footer.rights': 'Tous droits réservés.',
-    'footer.operational': 'Systèmes Opérationnels • 60 FPS'
+    'footer.operational': 'Systèmes Opérationnels • 60 FPS',
+    'footer.languageSelect': 'Sélectionner la Langue'
   },
 
   de: {
@@ -564,6 +630,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': 'Switch-Synthese',
     'nav.activeStreak': 'Serie',
     'nav.novice': 'Anfänger',
+    'nav.language': 'Sprache',
+    'nav.searchLang': 'Sprache suchen...',
 
     // Hero Section
     'hero.badge': '21 2D TIPP-SPIELE • SPEEDTEST-SUITE • TASTFURÜBUNGEN',
@@ -608,6 +676,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.copied': 'In die Zwischenablage kopiert!',
     'st.ghostDuel': 'Geister-Duell',
     'st.clickToFocus': 'Klicken oder beliebige Taste drücken zum Starten',
+    'st.customModalTitle': 'Benutzerdefinierte Einstellungen',
+    'st.customDurationPrompt': 'Dauer eingeben (Sekunden):',
+    'st.customTextPrompt': 'Eigenen Übungstext einfügen:',
+    'st.capsLockOn': 'Feststelltaste ist aktiviert',
 
     // Practice Lab
     'prac.title': 'Tastatur-Übungslabor',
@@ -623,6 +695,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'Farbmodus',
     'prac.themeSync': 'Theme Synchronisieren',
     'prac.fingerQuadrant': 'Fingerquadrant',
+    'prac.layout': 'Tastaturlayout',
+    'prac.keyboardLayout': 'Tastaturlayout (QWERTY, AZERTY, QWERTZ, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'Karriere-Zentrum & Quests',
@@ -667,6 +741,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'SPIEL VORBEI',
     'game.howToPlay': 'Spielanleitung',
     'game.typeToShoot': 'Tippe Wörter zum Angreifen und Überleben!',
+    'game.levelCleared': 'Level Geschafft!',
+    'game.performanceGrade': 'Leistungsnote',
+    'game.tryAgain': 'Nochmal Versuchen',
+    'game.newRecord': 'NEUER HIGHSCORE!',
+    'game.xpEarned': 'XP Erhalten',
 
     // Footer
     'footer.quickTheme': 'Schnell-Theme-Wechsler',
@@ -677,7 +756,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': 'Audio-Synthesizer',
     'footer.audioDesc': 'Echtzeit-Web-Audio-Synthese für Cherry MX Blue, Holy Panda und Schreibmaschinen-Klänge.',
     'footer.rights': 'Alle Rechte vorbehalten.',
-    'footer.operational': 'Systeme Betriebsbereit • 60 FPS'
+    'footer.operational': 'Systeme Betriebsbereit • 60 FPS',
+    'footer.languageSelect': 'Sprache Auswählen'
   },
 
   ja: {
@@ -696,6 +776,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': '打鍵音シンセサイザー',
     'nav.activeStreak': '連続記録',
     'nav.novice': '初心者',
+    'nav.language': '言語',
+    'nav.searchLang': '言語を検索...',
 
     // Hero Section
     'hero.badge': '21種類の2Dタイピングゲーム • 速度テスト • タッチタイピング練習',
@@ -725,7 +807,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.quote': '名言',
     'st.zen': 'Zen',
     'st.custom': 'カスタム',
-    'st.wpm': 'WPM (ワード/分)',
+    'st.wpm': 'WPM',
     'st.raw': 'Raw WPM',
     'st.acc': '正確度',
     'st.consistency': '安定度',
@@ -740,6 +822,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.copied': 'クリップボードにコピーしました！',
     'st.ghostDuel': 'ゴースト対決',
     'st.clickToFocus': 'クリックまたはキーを押してスタート',
+    'st.customModalTitle': 'カスタム設定',
+    'st.customDurationPrompt': 'カスタム時間を秒単位で入力:',
+    'st.customTextPrompt': '練習用テキストを貼り付け:',
+    'st.capsLockOn': 'Caps Lockがオンになっています',
 
     // Practice Lab
     'prac.title': 'タッチタイピング練習ラボ',
@@ -755,6 +841,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'カラーモード',
     'prac.themeSync': 'テーマ連動',
     'prac.fingerQuadrant': '指別カラー',
+    'prac.layout': '配列',
+    'prac.keyboardLayout': 'キーボード配列 (QWERTY, JIS, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'キャリアハブ＆デイリークエスト',
@@ -799,6 +887,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'ゲームオーバー',
     'game.howToPlay': '遊び方',
     'game.typeToShoot': '単語をタイプして攻撃＆サバイブ！',
+    'game.levelCleared': 'ステージクリア！',
+    'game.performanceGrade': '総合評価',
+    'game.tryAgain': 'もう一度挑戦',
+    'game.newRecord': '新ハイスコア達成！',
+    'game.xpEarned': '獲得XP',
 
     // Footer
     'footer.quickTheme': 'クイックテーマ切替',
@@ -809,7 +902,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': '打鍵音シンセサイザー',
     'footer.audioDesc': 'Cherry MX Blue、Holy Panda、レトロタイプライターの打鍵音をWeb Audioでリアルタイム合成。',
     'footer.rights': '無断転載を禁じます。',
-    'footer.operational': 'システム正常稼働中 • 60 FPS'
+    'footer.operational': 'システム正常稼働中 • 60 FPS',
+    'footer.languageSelect': '言語を選択'
   },
 
   pt: {
@@ -828,6 +922,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': 'Som dos Switches',
     'nav.activeStreak': 'Sequência',
     'nav.novice': 'Iniciante',
+    'nav.language': 'Idioma',
+    'nav.searchLang': 'Buscar idioma...',
 
     // Hero Section
     'hero.badge': '21 JOGOS DE DIGITAÇÃO 2D • TESTES DE VELOCIDADE • PRÁTICA',
@@ -872,6 +968,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.copied': 'Copiado para a área de transferência!',
     'st.ghostDuel': 'Duelo Fantasma',
     'st.clickToFocus': 'Clique ou pressione qualquer tecla para começar',
+    'st.customModalTitle': 'Configurações Personalizadas',
+    'st.customDurationPrompt': 'Insira a duração personalizada (segundos):',
+    'st.customTextPrompt': 'Cole ou digite seu texto de treino:',
+    'st.capsLockOn': 'Caps Lock está ativado',
 
     // Practice Lab
     'prac.title': 'Laboratório de Digitação',
@@ -887,6 +987,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'Modo de Cor',
     'prac.themeSync': 'Sincronizar Tema',
     'prac.fingerQuadrant': 'Quadrante dos Dedos',
+    'prac.layout': 'Layout',
+    'prac.keyboardLayout': 'Layout de Teclado (QWERTY, ABNT2, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'Central de Carreira e Missões',
@@ -931,6 +1033,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'FIM DE JOGO',
     'game.howToPlay': 'Como Jogar',
     'game.typeToShoot': 'Digite palavras para atacar e sobreviver!',
+    'game.levelCleared': 'Nível Concluído!',
+    'game.performanceGrade': 'Classificação',
+    'game.tryAgain': 'Tentar Novamente',
+    'game.newRecord': 'NOVO RECORDE!',
+    'game.xpEarned': 'XP Ganho',
 
     // Footer
     'footer.quickTheme': 'Seletor Rápido de Temas',
@@ -941,7 +1048,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': 'Sintetizador de Áudio',
     'footer.audioDesc': 'Síntese Web Audio simulando Cherry MX Blue, Holy Panda e máquinas de escrever em tempo real.',
     'footer.rights': 'Todos os direitos reservados.',
-    'footer.operational': 'Sistemas Operacionais • 60 FPS'
+    'footer.operational': 'Sistemas Operacionais • 60 FPS',
+    'footer.languageSelect': 'Selecionar Idioma'
   },
 
   ru: {
@@ -960,6 +1068,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'nav.switchSynthesis': 'Звук Переключателей',
     'nav.activeStreak': 'Серия',
     'nav.novice': 'Новичок',
+    'nav.language': 'Язык',
+    'nav.searchLang': 'Поиск языка...',
 
     // Hero Section
     'hero.badge': '21 2D ИГРА ДЛЯ ПЕЧАТИ • ТЕСТЫ СКОРОСТИ • СЛЕПАЯ ПЕЧАТЬ',
@@ -989,7 +1099,7 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.quote': 'Цитата',
     'st.zen': 'Дзен',
     'st.custom': 'Свой Текст',
-    'st.wpm': 'СВМ (WPM)',
+    'st.wpm': 'WPM',
     'st.raw': 'Сырой WPM',
     'st.acc': 'Точность',
     'st.consistency': 'Стабильность',
@@ -1004,6 +1114,10 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'st.copied': 'Скопировано в буфер обмена!',
     'st.ghostDuel': 'Дуэль с Призраком',
     'st.clickToFocus': 'Нажмите любую клавишу для старта',
+    'st.customModalTitle': 'Настройки Теста',
+    'st.customDurationPrompt': 'Введите время в секундах:',
+    'st.customTextPrompt': 'Вставьте свой текст для тренировки:',
+    'st.capsLockOn': 'Caps Lock включен',
 
     // Practice Lab
     'prac.title': 'Лаборатория Слепой Печати',
@@ -1019,6 +1133,8 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'prac.colorMode': 'Цветовой Режим',
     'prac.themeSync': 'Синхронизация с Темой',
     'prac.fingerQuadrant': 'Зоны Пальцев',
+    'prac.layout': 'Раскладка',
+    'prac.keyboardLayout': 'Раскладка Клавиатуры (QWERTY, ЙЦУКЕН, Dvorak)',
 
     // Leaderboards & Career Hub
     'lead.title': 'Карьера и Ежедневные Квесты',
@@ -1063,6 +1179,11 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'game.gameOver': 'ИГРА ОКОНЧЕНА',
     'game.howToPlay': 'Как Играть',
     'game.typeToShoot': 'Печатайте слова для атаки и выживания!',
+    'game.levelCleared': 'Уровень пройден!',
+    'game.performanceGrade': 'Оценка мастерства',
+    'game.tryAgain': 'Попробовать снова',
+    'game.newRecord': 'НОВЫЙ РЕКОРД СЧЁТА!',
+    'game.xpEarned': 'Получено XP',
 
     // Footer
     'footer.quickTheme': 'Быстрая Смена Темы',
@@ -1073,11 +1194,1200 @@ export const TRANSLATIONS: Record<string, Record<string, string>> = {
     'footer.audioSynthesizer': 'Синтезатор Звука',
     'footer.audioDesc': 'Генерация звуков Cherry MX Blue, Holy Panda и печатных машинок в реальном времени.',
     'footer.rights': 'Все права защищены.',
-    'footer.operational': 'Системы в норме • 60 FPS'
+    'footer.operational': 'Системы в норме • 60 FPS',
+    'footer.languageSelect': 'Выбрать Язык'
+  },
+
+  ar: {
+    // Navigation
+    'nav.games': 'الألعاب (21)',
+    'nav.arcade': 'صالة الأركيد',
+    'nav.speedTest': 'اختبار السرعة',
+    'nav.practiceLab': 'مختبر التدريب',
+    'nav.leaderboards': 'لوحة الصدارة',
+    'nav.play': 'العب',
+    'nav.playGame': 'العب الآن',
+    'nav.commandPalette': 'لوحة الأوامر',
+    'nav.themes': 'السمات',
+    'nav.siteTheme': 'سمة الموقع (17)',
+    'nav.soundProfile': 'الملف الصوتي',
+    'nav.switchSynthesis': 'مؤثرات المفاتيح',
+    'nav.activeStreak': 'التتابع',
+    'nav.novice': 'مبتدئ',
+    'nav.language': 'اللغة',
+    'nav.searchLang': 'ابحث عن لغة...',
+
+    // Hero Section
+    'hero.badge': '21 لعبة طباعة ثنائية الأبعاد • اختبارات السرعة • تدريب اللمس',
+    'hero.title1': 'أتقن لوحة المفاتيح.',
+    'hero.title2': 'العب 21 لعبة كلاسيكية.',
+    'hero.subtitle': 'استمتع بمعارك الفضاء، تقطيع النينجا، قتال الزومبي واختبارات سرعة دقيقة مع محاكاة حقيقية لأصوات المفاتيح الميكانيكية.',
+    'hero.startTest': 'ابدأ اختبار السرعة',
+    'hero.browseGames': 'تصفح 21 لعبة',
+    'hero.activeTypists': 'الطباعون النشطون',
+    'hero.gamesCount': 'ألعاب مجانية',
+    'hero.switchSounds': 'أنماط الأصوات',
+    'hero.colorThemes': 'سمات الألوان',
+
+    // Category Tabs
+    'cat.all': 'كل الألعاب (21)',
+    'cat.arcade': 'أركيد (4)',
+    'cat.action': 'حركة (5)',
+    'cat.adventure': 'مغامرة (4)',
+    'cat.fighting': 'قتال (4)',
+    'cat.puzzle': 'ألغاز (3)',
+    'cat.practice': 'تدريب (1)',
+
+    // Speed Test
+    'st.mode': 'الوضع',
+    'st.time': 'الوقت',
+    'st.words': 'الكلمات',
+    'st.quote': 'اقتباس',
+    'st.zen': 'تأمل',
+    'st.custom': 'مخصص',
+    'st.wpm': 'ك/د (WPM)',
+    'st.raw': 'السرعة الخام',
+    'st.acc': 'الدقة',
+    'st.consistency': 'الاتساق',
+    'st.characters': 'الحروف',
+    'st.testType': 'نوع الاختبار',
+    'st.timeElapsed': 'الوقت المنقضي',
+    'st.nextTest': 'الاختبار التالي',
+    'st.repeatTest': 'إعادة',
+    'st.practiceMissed': 'تدريب الأخطاء',
+    'st.replay': 'إعادة العرض',
+    'st.shareScore': 'مشاركة النتيجة',
+    'st.copied': 'تم النسخ إلى الحافظة!',
+    'st.ghostDuel': 'سباق الشبح',
+    'st.clickToFocus': 'انقر أو اضغط أي مفتاح للبدء',
+    'st.customModalTitle': 'إعدادات الاختبار المخصص',
+    'st.customDurationPrompt': 'أدخل المدة بالثواني:',
+    'st.customTextPrompt': 'الصق أو اكتب نص التدريب الخاص بك:',
+    'st.capsLockOn': 'زر الحروف الكبيرة مفعّل',
+
+    // Practice Lab
+    'prac.title': 'مختبر الطباعة باللمس',
+    'prac.subtitle': 'مصفوفة ANSI QWERTY مع دليل توزيع الأصابع والمسرع الإيقاعي.',
+    'prac.focus': 'تركيز المفاتيح',
+    'prac.drillHome': 'الصف الأوسط (ASDF JKL;)',
+    'prac.drillTop': 'الصف العلوي (QWERTY)',
+    'prac.drillBottom': 'الصف السفلي (ZXCVBNM)',
+    'prac.drillNumbers': 'صف الأرقام (1-0)',
+    'prac.drillSymbols': 'الرموز الخاصة (!@#$)',
+    'prac.drillWeak': 'تدريب الذكاء الاصطناعي للمفاتيح الصعبة',
+    'prac.metronome': 'المسرع (Metronome)',
+    'prac.colorMode': 'نمط الألوان',
+    'prac.themeSync': 'مزامنة السمة',
+    'prac.fingerQuadrant': 'مناطق الأصابع',
+    'prac.layout': 'التخطيط',
+    'prac.keyboardLayout': 'تخطيط لوحة المفاتيح',
+
+    // Leaderboards & Career Hub
+    'lead.title': 'مركز المسيرة والمهام',
+    'lead.subtitle': 'ارتقِ من مبتدئ إلى عملاق لوحة المفاتيح، أنجز المهام اليومية وتابع نشاطك السنوي.',
+    'lead.levelProgress': 'تقدم المستوى',
+    'lead.activeStreak': 'التتابع النشط',
+    'lead.bestStreak': 'أفضل تتابع',
+    'lead.careerWords': 'إجمالي الكلمات',
+    'lead.totalStrokes': 'إجمالي الضربات',
+    'lead.dailyQuests': 'المهام اليومية',
+    'lead.dailyQuestsDesc': '3 تحديات جديدة كل 24 ساعة لكسب نقاط خبرة إضافية!',
+    'lead.todaysChallenges': 'تحديات اليوم',
+    'lead.activityHeatmap': 'خريطة النشاط اليومي',
+    'lead.activityHeatmapDesc': 'سجل نشاطك عبر الاختبارات والألعاب وجلسات التدريب.',
+    'lead.activeDays': 'أيام نشطة',
+    'lead.totalXp': 'مجموع XP',
+    'lead.bestWpmRecord': 'أعلى سرعة ك/د',
+    'lead.averageWpm': 'متوسط السرعة',
+    'lead.accuracy': 'الدقة',
+    'lead.gamesCompleted': 'الألعاب المكتملة',
+    'lead.weakKeysTitle': 'تشخيص المفاتيح الضعيفة بالذكاء الاصطناعي',
+    'lead.weakKeysDesc': 'تحليل فوري للمفاتيح الأكثر خطأً مع تدريبات تصحيحية مخصصة.',
+    'lead.practiceDrills': 'بدء التدريب ←',
+    'lead.prestigeAchievements': 'الإنجازات المرموقة (25)',
+    'lead.gameRecords': 'أرقام الألعاب والصدارة',
+    'lead.gameRecordsDesc': 'أداؤك الشخصي في جميع الألعاب الـ21.',
+    'lead.exportStats': 'تصدير البيانات (JSON)',
+    'lead.resetStats': 'إعادة ضبط الإحصائيات',
+    'lead.claimXp': 'استلام XP',
+    'lead.claimed': 'تم الاستلام',
+
+    // Game HUD & Common
+    'game.level': 'المستوى',
+    'game.score': 'النقاط',
+    'game.targetWpm': 'السرعة المستهدفة',
+    'game.health': 'الصحة',
+    'game.pause': 'إيقاف مؤقت',
+    'game.resume': 'استئناف',
+    'game.restart': 'إعادة التشغيل',
+    'game.nextLevel': 'المستوى التالي',
+    'game.victory': 'انتصار!',
+    'game.gameOver': 'انتهت اللعبة',
+    'game.howToPlay': 'طريقة اللعب',
+    'game.typeToShoot': 'اكتب الكلمات للهجوم والنجاة!',
+    'game.levelCleared': 'تم اجتياز المستوى!',
+    'game.performanceGrade': 'تقييم الأداء',
+    'game.tryAgain': 'حاول ثانية',
+    'game.newRecord': 'رقم قياسي جديد!',
+    'game.xpEarned': 'النقاط المكتسبة',
+
+    // Footer
+    'footer.quickTheme': 'مبدل السمات السريع',
+    'footer.themeSubtitle': 'اختر من بين 17 سمة لونية أنيقة',
+    'footer.allThemes': 'جميع السمات الـ17 ←',
+    'footer.gameGenres': 'أنواع الألعاب',
+    'footer.practiceAndTools': 'التدريب والأدوات',
+    'footer.audioSynthesizer': 'مخلّق الصوت',
+    'footer.audioDesc': 'محاكاة صوتية فورية بتقنية Web Audio لمفاتيح Cherry MX Blue وHoly Panda والآلات الكاتبة.',
+    'footer.rights': 'جميع الحقوق محفوظة.',
+    'footer.operational': 'الأنظمة تعمل بكفاءة • 60 FPS',
+    'footer.languageSelect': 'اختر اللغة'
+  },
+
+  zh: {
+    // Navigation
+    'nav.games': '游戏库 (21)',
+    'nav.arcade': '街机休息室',
+    'nav.speedTest': '打字测速',
+    'nav.practiceLab': '盲打实验室',
+    'nav.leaderboards': '排行榜与成就',
+    'nav.play': '开始',
+    'nav.playGame': '立即游玩',
+    'nav.commandPalette': '命令面板',
+    'nav.themes': '主题',
+    'nav.siteTheme': '全站配色 (17)',
+    'nav.soundProfile': '按键音效',
+    'nav.switchSynthesis': '轴体音效合成',
+    'nav.activeStreak': '连胜记录',
+    'nav.novice': '新手',
+    'nav.language': '语言',
+    'nav.searchLang': '搜索语言...',
+
+    // Hero Section
+    'hero.badge': '21款2D打字游戏 • 专业测速套件 • 触觉盲打训练',
+    'hero.title1': '征服键盘输入。',
+    'hero.title2': '畅玩21款复古2D打字游戏。',
+    'hero.subtitle': '体验太空弹幕、霓虹斩击、僵尸突围与媲美Monkeytype的极速测试，伴随真实机械轴体实时音频合成。',
+    'hero.startTest': '开始打字测速',
+    'hero.browseGames': '浏览全部21款游戏',
+    'hero.activeTypists': '活跃打字员',
+    'hero.gamesCount': '免费2D游戏',
+    'hero.switchSounds': '机械轴音效',
+    'hero.colorThemes': '色彩主题',
+
+    // Category Tabs
+    'cat.all': '所有游戏 (21)',
+    'cat.arcade': '街机 (4)',
+    'cat.action': '动作 (5)',
+    'cat.adventure': '冒险 (4)',
+    'cat.fighting': '格斗 (4)',
+    'cat.puzzle': '益智 (3)',
+    'cat.practice': '练习 (1)',
+
+    // Speed Test
+    'st.mode': '模式',
+    'st.time': '时间',
+    'st.words': '字数',
+    'st.quote': '名言',
+    'st.zen': '禅意',
+    'st.custom': '自定义',
+    'st.wpm': 'WPM (词/分)',
+    'st.raw': '原始WPM',
+    'st.acc': '准确率',
+    'st.consistency': '稳定性',
+    'st.characters': '输入字符',
+    'st.testType': '测试类型',
+    'st.timeElapsed': '用时',
+    'st.nextTest': '下一轮',
+    'st.repeatTest': '重试',
+    'st.practiceMissed': '错词巩固',
+    'st.replay': '按键回放',
+    'st.shareScore': '分享成绩',
+    'st.copied': '已复制到剪贴板！',
+    'st.ghostDuel': '幽灵竞速对决',
+    'st.clickToFocus': '点击或按任意键开始',
+    'st.customModalTitle': '自定义测试设置',
+    'st.customDurationPrompt': '输入测试时长（秒）：',
+    'st.customTextPrompt': '粘贴或输入自定义练习文本：',
+    'st.capsLockOn': '大写锁定已开启',
+
+    // Practice Lab
+    'prac.title': '触觉盲打练习实验室',
+    'prac.subtitle': 'ANSI QWERTY 15.0u 键盘矩阵、动态手指分区引导与节奏节拍器。',
+    'prac.focus': '键盘区域',
+    'prac.drillHome': '基准行 (ASDF JKL;)',
+    'prac.drillTop': '上排键 (QWERTY)',
+    'prac.drillBottom': '下排键 (ZXCVBNM)',
+    'prac.drillNumbers': '数字键 (1-0)',
+    'prac.drillSymbols': '特殊符号 (!@#$)',
+    'prac.drillWeak': '弱键AI专项特训',
+    'prac.metronome': '打调节拍器',
+    'prac.colorMode': '色彩模式',
+    'prac.themeSync': '主题联动',
+    'prac.fingerQuadrant': '手指分区',
+    'prac.layout': '键位布局',
+    'prac.keyboardLayout': '键盘布局选择',
+
+    // Leaderboards & Career Hub
+    'lead.title': '生涯中心与每日挑战',
+    'lead.subtitle': '从打字新手进阶为键盘泰坦，完成每日三项挑战，点亮365天全勤热力图。',
+    'lead.levelProgress': '等级进度',
+    'lead.activeStreak': '连续打卡',
+    'lead.bestStreak': '最高连击',
+    'lead.careerWords': '累计词数',
+    'lead.totalStrokes': '累计按键',
+    'lead.dailyQuests': '每日挑战',
+    'lead.dailyQuestsDesc': '每24小时刷新3个挑战任务，完成后可获得高额XP奖励！',
+    'lead.todaysChallenges': '今日挑战',
+    'lead.activityHeatmap': '打字活跃热力图',
+    'lead.activityHeatmapDesc': '记录你在测速、游戏和练习中的每日成长足迹。',
+    'lead.activeDays': '天活跃',
+    'lead.totalXp': '总经验值',
+    'lead.bestWpmRecord': '最高WPM纪录',
+    'lead.averageWpm': '平均WPM',
+    'lead.accuracy': '平均准确率',
+    'lead.gamesCompleted': '通关游戏数',
+    'lead.weakKeysTitle': 'AI弱键智能诊断',
+    'lead.weakKeysDesc': '实时分析错误率最高的按键，并生成针对性矫正练习。',
+    'lead.practiceDrills': '进入针对练习 →',
+    'lead.prestigeAchievements': '成就徽章 (25)',
+    'lead.gameRecords': '各游戏纪录与排行',
+    'lead.gameRecordsDesc': '你在全部21款游戏中的最佳表现。',
+    'lead.exportStats': '导出数据 (JSON)',
+    'lead.resetStats': '重置生涯统计',
+    'lead.claimXp': '领取XP',
+    'lead.claimed': '已领取',
+
+    // Game HUD & Common
+    'game.level': '关卡',
+    'game.score': '得分',
+    'game.targetWpm': '目标WPM',
+    'game.health': '护盾/生命',
+    'game.pause': '暂停',
+    'game.resume': '继续',
+    'game.restart': '重新开始',
+    'game.nextLevel': '下一关',
+    'game.victory': '胜利！',
+    'game.gameOver': '游戏结束',
+    'game.howToPlay': '玩法说明',
+    'game.typeToShoot': '输入屏幕出现的单词以发动攻击！',
+    'game.levelCleared': '关卡通过！',
+    'game.performanceGrade': '综合评价',
+    'game.tryAgain': '再试一次',
+    'game.newRecord': '新高分纪录！',
+    'game.xpEarned': '获得XP',
+
+    // Footer
+    'footer.quickTheme': '快捷主题切换',
+    'footer.themeSubtitle': '17套精心调配的高对比度主题',
+    'footer.allThemes': '查看全部17款主题 →',
+    'footer.gameGenres': '游戏类别',
+    'footer.practiceAndTools': '练习与工具',
+    'footer.audioSynthesizer': '音频合成器',
+    'footer.audioDesc': '基于 Web Audio API 实时生成青轴清脆点击、圣熊猫段落、红轴线性及复古打字机钟声。',
+    'footer.rights': '版权所有。',
+    'footer.operational': '系统运行正常 • 60 FPS',
+    'footer.languageSelect': '选择语言'
+  },
+
+  it: {
+    // Navigation
+    'nav.games': 'Giochi (21)',
+    'nav.arcade': 'Sala Arcade',
+    'nav.speedTest': 'Test di Velocità',
+    'nav.practiceLab': 'Laboratorio',
+    'nav.leaderboards': 'Classifiche',
+    'nav.play': 'Gioca',
+    'nav.playGame': 'Gioca Ora',
+    'nav.commandPalette': 'Tavolozza Comandi',
+    'nav.themes': 'Temi',
+    'nav.siteTheme': 'Tema del Sito (17)',
+    'nav.soundProfile': 'Profilo Audio',
+    'nav.switchSynthesis': 'Suoni Switch',
+    'nav.activeStreak': 'Serie',
+    'nav.novice': 'Novizio',
+    'nav.language': 'Lingua',
+    'nav.searchLang': 'Cerca lingua...',
+
+    // Hero Section
+    'hero.badge': '21 GIOCHI DI DIGITAZIONE 2D • TEST DI VELOCITÀ • PRATICA',
+    'hero.title1': 'Padroneggia la Tastiera.',
+    'hero.title2': 'Gioca a 21 Giochi Retro 2D.',
+    'hero.subtitle': 'Affronta battaglie spaziali, ninja al neon, zombie e test di velocità in stile Monkeytype con suoni realistici di tastiere meccaniche.',
+    'hero.startTest': 'Inizia il Test di Velocità',
+    'hero.browseGames': 'Esplora 21 Giochi',
+    'hero.activeTypists': 'Dattilografi Attivi',
+    'hero.gamesCount': 'Giochi 2D Gratuiti',
+    'hero.switchSounds': 'Profili Audio Switch',
+    'hero.colorThemes': 'Temi Colore',
+
+    // Category Tabs
+    'cat.all': 'Tutti i Giochi (21)',
+    'cat.arcade': 'Arcade (4)',
+    'cat.action': 'Azione (5)',
+    'cat.adventure': 'Avventura (4)',
+    'cat.fighting': 'Combattimento (4)',
+    'cat.puzzle': 'Puzzle (3)',
+    'cat.practice': 'Pratica (1)',
+
+    // Speed Test
+    'st.mode': 'Modalità',
+    'st.time': 'Tempo',
+    'st.words': 'Parole',
+    'st.quote': 'Citazione',
+    'st.zen': 'Zen',
+    'st.custom': 'Personalizzato',
+    'st.wpm': 'PPM (WPM)',
+    'st.raw': 'PPM Lorde',
+    'st.acc': 'Precisione',
+    'st.consistency': 'Costanza',
+    'st.characters': 'Caratteri',
+    'st.testType': 'Tipo di Test',
+    'st.timeElapsed': 'Tempo Trascorso',
+    'st.nextTest': 'Prossimo Test',
+    'st.repeatTest': 'Ripeti Test',
+    'st.practiceMissed': 'Esercita Errori',
+    'st.replay': 'Guarda Replay',
+    'st.shareScore': 'Condividi Punteggio',
+    'st.copied': 'Copiato negli Appunti!',
+    'st.ghostDuel': 'Duello Fantasma',
+    'st.clickToFocus': 'Fai clic o premi un tasto per iniziare',
+    'st.customModalTitle': 'Impostazioni Personalizzate',
+    'st.customDurationPrompt': 'Inserisci durata in secondi:',
+    'st.customTextPrompt': 'Incolla o digita il tuo testo:',
+    'st.capsLockOn': 'Bloc Maiusc attivo',
+
+    // Practice Lab
+    'prac.title': 'Laboratorio di Dattilografia',
+    'prac.subtitle': 'Matrice ANSI QWERTY 15.0u con guide per le dita e metronomo di cadenza.',
+    'prac.focus': 'Area Tastiera',
+    'prac.drillHome': 'Riga Base (ASDF JKL;)',
+    'prac.drillTop': 'Riga Superiore (QWERTY)',
+    'prac.drillBottom': 'Riga Inferiore (ZXCVBNM)',
+    'prac.drillNumbers': 'Riga Numeri (1-0)',
+    'prac.drillSymbols': 'Simboli Speciali (!@#$)',
+    'prac.drillWeak': 'Esercizio IA Tasti Deboli',
+    'prac.metronome': 'Metronomo',
+    'prac.colorMode': 'Modalità Colore',
+    'prac.themeSync': 'Sincronizza Tema',
+    'prac.fingerQuadrant': 'Quadrante Dita',
+    'prac.layout': 'Layout',
+    'prac.keyboardLayout': 'Layout Tastiera (QWERTY, Dvorak)',
+
+    // Leaderboards & Career Hub
+    'lead.title': 'Hub Carriera e Missioni',
+    'lead.subtitle': 'Avanza da Novizio a Titano della Tastiera, completa missioni giornaliere e visualizza la tua mappa termica a 365 giorni.',
+    'lead.levelProgress': 'Avanzamento Livello',
+    'lead.activeStreak': 'Serie Attiva',
+    'lead.bestStreak': 'Miglior Serie',
+    'lead.careerWords': 'Parole Totali',
+    'lead.totalStrokes': 'Battute Totali',
+    'lead.dailyQuests': 'Missioni Giornaliere',
+    'lead.dailyQuestsDesc': '3 nuove sfide ogni 24 ore per guadagnare XP extra!',
+    'lead.todaysChallenges': 'Sfide di Oggi',
+    'lead.activityHeatmap': 'Mappa Termica Giornaliera',
+    'lead.activityHeatmapDesc': 'La tua cronologia di digitazione tra test, giochi ed esercizi.',
+    'lead.activeDays': 'giorni attivi',
+    'lead.totalXp': 'XP totali',
+    'lead.bestWpmRecord': 'Record PPM',
+    'lead.averageWpm': 'PPM Medi',
+    'lead.accuracy': 'Precisione',
+    'lead.gamesCompleted': 'Giochi Completati',
+    'lead.weakKeysTitle': 'Diagnostica IA Tasti Deboli',
+    'lead.weakKeysDesc': 'Analisi in tempo reale dei tuoi errori più frequenti con esercizi mirati.',
+    'lead.practiceDrills': 'Inizia Esercizi →',
+    'lead.prestigeAchievements': 'Obiettivi di Prestigio (25)',
+    'lead.gameRecords': 'Record e Classifiche',
+    'lead.gameRecordsDesc': 'Le tue migliori prestazioni in tutti i 21 giochi.',
+    'lead.exportStats': 'Esporta Dati (JSON)',
+    'lead.resetStats': 'Azzera Statistiche',
+    'lead.claimXp': 'Riscatta XP',
+    'lead.claimed': 'Riscattato',
+
+    // Game HUD & Common
+    'game.level': 'Livello',
+    'game.score': 'Punteggio',
+    'game.targetWpm': 'PPM Obiettivo',
+    'game.health': 'Salute',
+    'game.pause': 'Pausa',
+    'game.resume': 'Riprendi',
+    'game.restart': 'Ricomincia',
+    'game.nextLevel': 'Prossimo Livello',
+    'game.victory': 'VITTORIA!',
+    'game.gameOver': 'PARTITA TERMINATA',
+    'game.howToPlay': 'Come Giocare',
+    'game.typeToShoot': 'Digita le parole per attaccare e sopravvivere!',
+    'game.levelCleared': 'Livello Superato!',
+    'game.performanceGrade': 'Valutazione',
+    'game.tryAgain': 'Riprova',
+    'game.newRecord': 'NUOVO RECORD!',
+    'game.xpEarned': 'XP Guadagnati',
+
+    // Footer
+    'footer.quickTheme': 'Selettore Rapido Temi',
+    'footer.themeSubtitle': 'Scegli tra 17 temi colore selezionati',
+    'footer.allThemes': 'Tutti i 17 Temi →',
+    'footer.gameGenres': 'Generi di Giochi',
+    'footer.practiceAndTools': 'Pratica e Strumenti',
+    'footer.audioSynthesizer': 'Sintetizzatore Audio',
+    'footer.audioDesc': 'Sintesi Web Audio in tempo reale per switch Cherry MX Blue, Holy Panda e macchine da scrivere.',
+    'footer.rights': 'Tutti i diritti riservati.',
+    'footer.operational': 'Sistemi Operativi • 60 FPS',
+    'footer.languageSelect': 'Seleziona Lingua'
+  },
+
+  ko: {
+    // Navigation
+    'nav.games': '게임 (21)',
+    'nav.arcade': '아케이드 라운지',
+    'nav.speedTest': '타자 속도 테스트',
+    'nav.practiceLab': '타자 연습실',
+    'nav.leaderboards': '순위표 및 업적',
+    'nav.play': '시작',
+    'nav.playGame': '게임 시작',
+    'nav.commandPalette': '명령어 팔레트',
+    'nav.themes': '테마',
+    'nav.siteTheme': '사이트 테마 (17)',
+    'nav.soundProfile': '타건음 프로필',
+    'nav.switchSynthesis': '스위치 음향 합성',
+    'nav.activeStreak': '연속 기록',
+    'nav.novice': '초보자',
+    'nav.language': '언어',
+    'nav.searchLang': '언어 검색...',
+
+    // Hero Section
+    'hero.badge': '21종 2D 타자 게임 • 스피드 테스트 • 정밀 타자 연습',
+    'hero.title1': '키보드를 마스터하세요.',
+    'hero.title2': '21가지 레트로 2D 게임을 플레이하세요.',
+    'hero.subtitle': '리얼한 기계식 스위치 사운드와 함께 우주 전투, 닌자 베기, 좀비 서바이벌 및 Monkeytype급 타자 테스트를 즐기세요.',
+    'hero.startTest': '타자 테스트 시작',
+    'hero.browseGames': '21개 게임 둘러보기',
+    'hero.activeTypists': '현재 타자 인원',
+    'hero.gamesCount': '무료 2D 게임',
+    'hero.switchSounds': '스위치 사운드',
+    'hero.colorThemes': '컬러 테마',
+
+    // Category Tabs
+    'cat.all': '전체 게임 (21)',
+    'cat.arcade': '아케이드 (4)',
+    'cat.action': '액션 (5)',
+    'cat.adventure': '어드벤처 (4)',
+    'cat.fighting': '격투 (4)',
+    'cat.puzzle': '퍼즐 (3)',
+    'cat.practice': '연습 (1)',
+
+    // Speed Test
+    'st.mode': '모드',
+    'st.time': '시간',
+    'st.words': '단어',
+    'st.quote': '명언',
+    'st.zen': '선(Zen)',
+    'st.custom': '사용자 지정',
+    'st.wpm': 'WPM (분당 단어수)',
+    'st.raw': 'Raw WPM',
+    'st.acc': '정확도',
+    'st.consistency': '일관성',
+    'st.characters': '입력 문자',
+    'st.testType': '테스트 종류',
+    'st.timeElapsed': '경과 시간',
+    'st.nextTest': '다음 테스트',
+    'st.repeatTest': '다시 시도',
+    'st.practiceMissed': '틀린 단어 연습',
+    'st.replay': '리플레이 보기',
+    'st.shareScore': '점수 공유',
+    'st.copied': '클립보드에 복사되었습니다!',
+    'st.ghostDuel': '고스트 레이서 대결',
+    'st.clickToFocus': '클릭하거나 아무 키를 눌러 시작',
+    'st.customModalTitle': '사용자 지정 설정',
+    'st.customDurationPrompt': '테스트 시간을 초 단위로 입력하세요:',
+    'st.customTextPrompt': '연습할 텍스트를 붙여넣으세요:',
+    'st.capsLockOn': 'Caps Lock이 켜져 있습니다',
+
+    // Practice Lab
+    'prac.title': '터치 타이핑 연습 랩',
+    'prac.subtitle': 'ANSI QWERTY 15.0u 매트릭스, 손가락 가이드 및 템포 메트로놈 탑재.',
+    'prac.focus': '키보드 영역',
+    'prac.drillHome': '홈 로우 (ASDF JKL;)',
+    'prac.drillTop': '상단 로우 (QWERTY)',
+    'prac.drillBottom': '하단 로우 (ZXCVBNM)',
+    'prac.drillNumbers': '숫자 행 (1-0)',
+    'prac.drillSymbols': '특수 기호 (!@#$)',
+    'prac.drillWeak': '취약 키 AI 집중 훈련',
+    'prac.metronome': '메트로놈',
+    'prac.colorMode': '컬러 모드',
+    'prac.themeSync': '테마 동기화',
+    'prac.fingerQuadrant': '손가락 구역',
+    'prac.layout': '배열',
+    'prac.keyboardLayout': '키보드 배열 선택',
+
+    // Leaderboards & Career Hub
+    'lead.title': '커리어 허브 및 일일 퀘스트',
+    'lead.subtitle': '초보자에서 키보드 타이탄으로 레벨업하고 매일 3개의 퀘스트를 완료하여 365일 활동 히트맵을 채우세요.',
+    'lead.levelProgress': '레벨 진행률',
+    'lead.activeStreak': '연속 일수',
+    'lead.bestStreak': '최고 연속 기록',
+    'lead.careerWords': '누적 단어 수',
+    'lead.totalStrokes': '총 타건 수',
+    'lead.dailyQuests': '일일 퀘스트',
+    'lead.dailyQuestsDesc': '24시간마다 갱신되는 3가지 도전 과제를 완료하고 보너스 XP를 획득하세요!',
+    'lead.todaysChallenges': '오늘의 도전 과제',
+    'lead.activityHeatmap': '일일 활동 히트맵',
+    'lead.activityHeatmapDesc': '테스트, 게임, 연습 세션의 일일 활동 기록입니다.',
+    'lead.activeDays': '일 활동',
+    'lead.totalXp': '총 XP',
+    'lead.bestWpmRecord': '최고 WPM 기록',
+    'lead.averageWpm': '평균 WPM',
+    'lead.accuracy': '평균 정확도',
+    'lead.gamesCompleted': '완료한 게임',
+    'lead.weakKeysTitle': '취약 키 AI 진단',
+    'lead.weakKeysDesc': '오타율이 높은 키를 실시간 분석하여 맞춤형 훈련을 제공합니다.',
+    'lead.practiceDrills': '훈련 시작 →',
+    'lead.prestigeAchievements': '업적 배지 (25)',
+    'lead.gameRecords': '게임별 기록 및 순위',
+    'lead.gameRecordsDesc': '21개 게임 전체에서 기록한 개인 최고 점수입니다.',
+    'lead.exportStats': '데이터 내보내기 (JSON)',
+    'lead.resetStats': '통계 초기화',
+    'lead.claimXp': 'XP 받기',
+    'lead.claimed': '받기 완료',
+
+    // Game HUD & Common
+    'game.level': '레벨',
+    'game.score': '점수',
+    'game.targetWpm': '목표 WPM',
+    'game.health': '체력',
+    'game.pause': '일시정지',
+    'game.resume': '계속하기',
+    'game.restart': '다시 시작',
+    'game.nextLevel': '다음 레벨',
+    'game.victory': '승리!',
+    'game.gameOver': '게임 오버',
+    'game.howToPlay': '게임 방법',
+    'game.typeToShoot': '단어를 타이핑하여 공격하고 살아남으세요!',
+    'game.levelCleared': '레벨 클리어!',
+    'game.performanceGrade': '성과 등급',
+    'game.tryAgain': '다시 시도',
+    'game.newRecord': '새로운 최고 기록 달성!',
+    'game.xpEarned': '획득한 XP',
+
+    // Footer
+    'footer.quickTheme': '빠른 테마 전환',
+    'footer.themeSubtitle': '17가지 프리미엄 테마 선택',
+    'footer.allThemes': '전체 17개 테마 보기 →',
+    'footer.gameGenres': '게임 장르',
+    'footer.practiceAndTools': '연습 및 도구',
+    'footer.audioSynthesizer': '타건음 신디사이저',
+    'footer.audioDesc': 'Web Audio API를 통해 체리 청축, 판다, 적축 및 타자기 소리를 실시간 합성합니다.',
+    'footer.rights': 'All rights reserved.',
+    'footer.operational': '시스템 정상 작동 중 • 60 FPS',
+    'footer.languageSelect': '언어 선택'
+  },
+
+  id: {
+    // Navigation
+    'nav.games': 'Game (21)',
+    'nav.arcade': 'Arcade Lounge',
+    'nav.speedTest': 'Tes Kecepatan',
+    'nav.practiceLab': 'Lab Latihan',
+    'nav.leaderboards': 'Papan Peringkat',
+    'nav.play': 'Main',
+    'nav.playGame': 'Main Sekarang',
+    'nav.commandPalette': 'Palet Perintah',
+    'nav.themes': 'Tema',
+    'nav.siteTheme': 'Tema Situs (17)',
+    'nav.soundProfile': 'Profil Suara',
+    'nav.switchSynthesis': 'Suara Switch',
+    'nav.activeStreak': 'Streak',
+    'nav.novice': 'Pemula',
+    'nav.language': 'Bahasa',
+    'nav.searchLang': 'Cari bahasa...',
+
+    // Hero Section
+    'hero.badge': '21 GAME MENGETIK 2D • TES KECEPATAN • LATIHAN MENGETIK 10 JARI',
+    'hero.title1': 'Kuasai Papan Ketik.',
+    'hero.title2': 'Mainkan 21 Game Retro 2D.',
+    'hero.subtitle': 'Nikmati pertarungan luar angkasa, tebasan ninja, pertempuran zombi, dan tes kecepatan standar Monkeytype dengan audio keyboard mekanikal realistis.',
+    'hero.startTest': 'Mulai Tes Mengetik',
+    'hero.browseGames': 'Jelajahi 21 Game',
+    'hero.activeTypists': 'Pengetik Aktif',
+    'hero.gamesCount': 'Game 2D Gratis',
+    'hero.switchSounds': 'Profil Suara Switch',
+    'hero.colorThemes': 'Tema Warna',
+
+    // Category Tabs
+    'cat.all': 'Semua Game (21)',
+    'cat.arcade': 'Arcade (4)',
+    'cat.action': 'Aksi (5)',
+    'cat.adventure': 'Petualangan (4)',
+    'cat.fighting': 'Pertarungan (4)',
+    'cat.puzzle': 'Teka-teki (3)',
+    'cat.practice': 'Latihan (1)',
+
+    // Speed Test
+    'st.mode': 'Mode',
+    'st.time': 'Waktu',
+    'st.words': 'Kata',
+    'st.quote': 'Kutipan',
+    'st.zen': 'Zen',
+    'st.custom': 'Kustom',
+    'st.wpm': 'KPM (WPM)',
+    'st.raw': 'KPM Mentah',
+    'st.acc': 'Akurasi',
+    'st.consistency': 'Konsistensi',
+    'st.characters': 'Karakter',
+    'st.testType': 'Jenis Tes',
+    'st.timeElapsed': 'Waktu Berlalu',
+    'st.nextTest': 'Tes Berikutnya',
+    'st.repeatTest': 'Ulangi Tes',
+    'st.practiceMissed': 'Latih Kata Salah',
+    'st.replay': 'Putar Ulang',
+    'st.shareScore': 'Bagikan Skor',
+    'st.copied': 'Tersalin ke Papan Klip!',
+    'st.ghostDuel': 'Duel Hantu',
+    'st.clickToFocus': 'Klik atau tekan tombol apa saja untuk mulai',
+    'st.customModalTitle': 'Pengaturan Kustom',
+    'st.customDurationPrompt': 'Masukkan durasi kustom (detik):',
+    'st.customTextPrompt': 'Tempel atau ketik teks latihan Anda:',
+    'st.capsLockOn': 'Caps Lock AKTIF',
+
+    // Practice Lab
+    'prac.title': 'Lab Latihan Mengetik 10 Jari',
+    'prac.subtitle': 'Matriks ANSI QWERTY 15.0u dengan panduan kuadran jari dan metronom ketukan.',
+    'prac.focus': 'Fokus Keyboard',
+    'prac.drillHome': 'Baris Beranda (ASDF JKL;)',
+    'prac.drillTop': 'Baris Atas (QWERTY)',
+    'prac.drillBottom': 'Baris Bawah (ZXCVBNM)',
+    'prac.drillNumbers': 'Baris Angka (1-0)',
+    'prac.drillSymbols': 'Simbol Khusus (!@#$)',
+    'prac.drillWeak': 'Latihan Tombol Lemah AI',
+    'prac.metronome': 'Metronom',
+    'prac.colorMode': 'Mode Warna',
+    'prac.themeSync': 'Sinkronisasi Tema',
+    'prac.fingerQuadrant': 'Kuadran Jari',
+    'prac.layout': 'Tata Letak',
+    'prac.keyboardLayout': 'Tata Letak Keyboard (QWERTY, Dvorak)',
+
+    // Leaderboards & Career Hub
+    'lead.title': 'Pusat Karir & Misi Harian',
+    'lead.subtitle': 'Tingkatkan level dari Pemula hingga Titan Keyboard, selesaikan misi harian, dan pantau heatmap 365 hari Anda.',
+    'lead.levelProgress': 'Progres Level',
+    'lead.activeStreak': 'Streak Aktif',
+    'lead.bestStreak': 'Streak Terbaik',
+    'lead.careerWords': 'Total Kata',
+    'lead.totalStrokes': 'Total Ketukan',
+    'lead.dailyQuests': 'Misi Harian',
+    'lead.dailyQuestsDesc': '3 tantangan baru setiap 24 jam untuk mendapatkan bonus XP!',
+    'lead.todaysChallenges': 'Tantangan Hari Ini',
+    'lead.activityHeatmap': 'Heatmap Aktivitas Harian',
+    'lead.activityHeatmapDesc': 'Linimasa aktivitas Anda dalam tes, game, dan sesi latihan.',
+    'lead.activeDays': 'hari aktif',
+    'lead.totalXp': 'total XP',
+    'lead.bestWpmRecord': 'Rekor WPM Terbaik',
+    'lead.averageWpm': 'Rata-rata WPM',
+    'lead.accuracy': 'Akurasi',
+    'lead.gamesCompleted': 'Game Diselesaikan',
+    'lead.weakKeysTitle': 'Diagnostik Tombol Lemah AI',
+    'lead.weakKeysDesc': 'Analisis waktu nyata dari tombol yang paling sering salah dengan latihan khusus.',
+    'lead.practiceDrills': 'Mulai Latihan →',
+    'lead.prestigeAchievements': 'Pencapaian Prestise (25)',
+    'lead.gameRecords': 'Rekor Game & Papan Peringkat',
+    'lead.gameRecordsDesc': 'Performa pribadi Anda di semua 21 game.',
+    'lead.exportStats': 'Ekspor Data (JSON)',
+    'lead.resetStats': 'Reset Statistik Karir',
+    'lead.claimXp': 'Klaim XP',
+    'lead.claimed': 'Diklaim',
+
+    // Game HUD & Common
+    'game.level': 'Level',
+    'game.score': 'Skor',
+    'game.targetWpm': 'Target WPM',
+    'game.health': 'Darah',
+    'game.pause': 'Jeda',
+    'game.resume': 'Lanjutkan',
+    'game.restart': 'Mulai Ulang',
+    'game.nextLevel': 'Level Berikutnya',
+    'game.victory': 'MENANG!',
+    'game.gameOver': 'GAME OVER',
+    'game.howToPlay': 'Cara Bermain',
+    'game.typeToShoot': 'Ketik kata untuk menyerang dan bertahan hidup!',
+    'game.levelCleared': 'Level Selesai!',
+    'game.performanceGrade': 'Peringkat Performa',
+    'game.tryAgain': 'Coba Lagi',
+    'game.newRecord': 'REKOR SKOR BARU!',
+    'game.xpEarned': 'XP Didapat',
+
+    // Footer
+    'footer.quickTheme': 'Peralihan Tema Cepat',
+    'footer.themeSubtitle': 'Pilih dari 17 tema warna pilihan',
+    'footer.allThemes': 'Semua 17 Tema →',
+    'footer.gameGenres': 'Genre Game',
+    'footer.practiceAndTools': 'Latihan & Alat',
+    'footer.audioSynthesizer': 'Synthesizer Audio',
+    'footer.audioDesc': 'Sintesis Web Audio real-time menirukan suara Cherry MX Blue, Holy Panda, dan mesin ketik kuno.',
+    'footer.rights': 'Hak cipta dilindungi undang-undang.',
+    'footer.operational': 'Sistem Beroperasi • 60 FPS',
+    'footer.languageSelect': 'Pilih Bahasa'
+  },
+
+  tr: {
+    // Navigation
+    'nav.games': 'Oyunlar (21)',
+    'nav.arcade': 'Arcade Salonu',
+    'nav.speedTest': 'Hız Testi',
+    'nav.practiceLab': 'Pratik Laboratuvarı',
+    'nav.leaderboards': 'Lider Tablosu',
+    'nav.play': 'Oyna',
+    'nav.playGame': 'Oyunu Oyna',
+    'nav.commandPalette': 'Komut Paleti',
+    'nav.themes': 'Temalar',
+    'nav.siteTheme': 'Site Teması (17)',
+    'nav.soundProfile': 'Ses Profili',
+    'nav.switchSynthesis': 'Anahtar Sesi',
+    'nav.activeStreak': 'Seri',
+    'nav.novice': 'Acemi',
+    'nav.language': 'Dil',
+    'nav.searchLang': 'Dil ara...',
+
+    // Hero Section
+    'hero.badge': '21 2D ON PARMAK OYUNU • HIZ TESTİ • DOKUNMATİK YAZIM PRATİĞİ',
+    'hero.title1': 'Klavyeye Hükmedin.',
+    'hero.title2': '21 Retro 2D Oyun Oynayın.',
+    'hero.subtitle': 'Uzay savaşları, neon ninja kesişleri, zombi saldırıları ve mekanik klavye sesleri eşliğinde Monkeytype kalitesinde hız testleri yapın.',
+    'hero.startTest': 'Yazma Testini Başlat',
+    'hero.browseGames': '21 Oyuna Göz At',
+    'hero.activeTypists': 'Aktif Yazıcılar',
+    'hero.gamesCount': 'Ücretsiz 2D Oyun',
+    'hero.switchSounds': 'Anahtar Sesleri',
+    'hero.colorThemes': 'Renk Temaları',
+
+    // Category Tabs
+    'cat.all': 'Tüm Oyunlar (21)',
+    'cat.arcade': 'Arcade (4)',
+    'cat.action': 'Aksiyon (5)',
+    'cat.adventure': 'Macera (4)',
+    'cat.fighting': 'Dövüş (4)',
+    'cat.puzzle': 'Bulmaca (3)',
+    'cat.practice': 'Pratik (1)',
+
+    // Speed Test
+    'st.mode': 'Mod',
+    'st.time': 'Süre',
+    'st.words': 'Kelime',
+    'st.quote': 'Alıntı',
+    'st.zen': 'Zen',
+    'st.custom': 'Özel',
+    'st.wpm': 'DKS (WPM)',
+    'st.raw': 'Ham DKS',
+    'st.acc': 'Doğruluk',
+    'st.consistency': 'Tutarlılık',
+    'st.characters': 'Karakterler',
+    'st.testType': 'Test Türü',
+    'st.timeElapsed': 'Geçen Süre',
+    'st.nextTest': 'Sonraki Test',
+    'st.repeatTest': 'Tekrar Dene',
+    'st.practiceMissed': 'Hatalı Kelimeleri Çalış',
+    'st.replay': 'Tekrarı İzle',
+    'st.shareScore': 'Skoru Paylaş',
+    'st.copied': 'Panoya kopyalandı!',
+    'st.ghostDuel': 'Hayalet Düello',
+    'st.clickToFocus': 'Başlamak için tıklayın veya herhangi bir tuşa basın',
+    'st.customModalTitle': 'Özel Test Ayarları',
+    'st.customDurationPrompt': 'Süreyi saniye cinsinden girin:',
+    'st.customTextPrompt': 'Kendi metninizi yapıştırın veya yazın:',
+    'st.capsLockOn': 'Caps Lock AÇIK',
+
+    // Practice Lab
+    'prac.title': 'Dokunmatik Yazım Laboratuvarı',
+    'prac.subtitle': 'ANSI QWERTY 15.0u matrisi, parmak yerleşim rehberi ve tempolu metronom.',
+    'prac.focus': 'Klavye Odağı',
+    'prac.drillHome': 'Temel Sıra (ASDF JKL;)',
+    'prac.drillTop': 'Üst Sıra (QWERTY)',
+    'prac.drillBottom': 'Alt Sıra (ZXCVBNM)',
+    'prac.drillNumbers': 'Sayılar Sırası (1-0)',
+    'prac.drillSymbols': 'Özel Simgeler (!@#$)',
+    'prac.drillWeak': 'Zayıf Tuşlar Yapay Zeka Egzersizi',
+    'prac.metronome': 'Metronom',
+    'prac.colorMode': 'Renk Modu',
+    'prac.themeSync': 'Tema Senkronizasyonu',
+    'prac.fingerQuadrant': 'Parmak Bölgeleri',
+    'prac.layout': 'Düzen',
+    'prac.keyboardLayout': 'Klavye Düzeni (Q, F Klavye, Dvorak)',
+
+    // Leaderboards & Career Hub
+    'lead.title': 'Kariyer Merkezi ve Görevler',
+    'lead.subtitle': 'Acemilikten Klavye Titanlığına yükselin, günlük görevleri tamamlayın ve 365 günlük aktivite haritanızı görün.',
+    'lead.levelProgress': 'Seviye İlerlemesi',
+    'lead.activeStreak': 'Aktif Seri',
+    'lead.bestStreak': 'En İyi Seri',
+    'lead.careerWords': 'Toplam Kelime',
+    'lead.totalStrokes': 'Toplam Vuruş',
+    'lead.dailyQuests': 'Günlük Görevler',
+    'lead.dailyQuestsDesc': 'Ekstra XP kazanmak için her 24 saatte bir yenilenen 3 görevi tamamlayın!',
+    'lead.todaysChallenges': 'Günün Görevleri',
+    'lead.activityHeatmap': 'Günlük Aktivite Haritası',
+    'lead.activityHeatmapDesc': 'Testlerdeki, oyunlardaki ve pratiklerdeki günlük ilerlemeniz.',
+    'lead.activeDays': 'aktif gün',
+    'lead.totalXp': 'toplam XP',
+    'lead.bestWpmRecord': 'En İyi DKS Rekoru',
+    'lead.averageWpm': 'Ortalama DKS',
+    'lead.accuracy': 'Doğruluk',
+    'lead.gamesCompleted': 'Tamamlanan Oyun',
+    'lead.weakKeysTitle': 'Yapay Zeka Zayıf Tuş Teşhisi',
+    'lead.weakKeysDesc': 'En çok hata yaptığınız tuşların gerçek zamanlı analizi ve özel alıştırmalar.',
+    'lead.practiceDrills': 'Pratiğe Başla →',
+    'lead.prestigeAchievements': 'Prestij Başarımları (25)',
+    'lead.gameRecords': 'Oyun Rekorları ve Lider Tablosu',
+    'lead.gameRecordsDesc': '21 oyunun tamamındaki kişisel en iyi performansınız.',
+    'lead.exportStats': 'Verileri Dışa Aktar (JSON)',
+    'lead.resetStats': 'İstatistikleri Sıfırla',
+    'lead.claimXp': 'XP Al',
+    'lead.claimed': 'Alındı',
+
+    // Game HUD & Common
+    'game.level': 'Seviye',
+    'game.score': 'Skor',
+    'game.targetWpm': 'Hedef DKS',
+    'game.health': 'Can',
+    'game.pause': 'Duraklat',
+    'game.resume': 'Devam Et',
+    'game.restart': 'Yeniden Başlat',
+    'game.nextLevel': 'Sonraki Seviye',
+    'game.victory': 'ZAFER!',
+    'game.gameOver': 'OYUN BİTTİ',
+    'game.howToPlay': 'Nasıl Oynanır',
+    'game.typeToShoot': 'Saldırmak ve hayatta kalmak için kelimeleri yazın!',
+    'game.levelCleared': 'Seviye Tamamlandı!',
+    'game.performanceGrade': 'Performans Derecesi',
+    'game.tryAgain': 'Tekrar Dene',
+    'game.newRecord': 'YENİ REKOR SKOR!',
+    'game.xpEarned': 'Kazanılan XP',
+
+    // Footer
+    'footer.quickTheme': 'Hızlı Tema Değiştirici',
+    'footer.themeSubtitle': '17 özel renk temasından birini seçin',
+    'footer.allThemes': 'Tüm 17 Temayı Gör →',
+    'footer.gameGenres': 'Oyun Türleri',
+    'footer.practiceAndTools': 'Pratik ve Araçlar',
+    'footer.audioSynthesizer': 'Ses Sentezleyici',
+    'footer.audioDesc': 'Gerçek zamanlı Web Audio sentezi ile Cherry MX Blue, Holy Panda ve daktilo sesleri.',
+    'footer.rights': 'Tüm hakları saklıdır.',
+    'footer.operational': 'Sistemler Çalışıyor • 60 FPS',
+    'footer.languageSelect': 'Dil Seçin'
+  },
+
+  vi: {
+    // Navigation
+    'nav.games': 'Trò chơi (21)',
+    'nav.arcade': 'Phòng Arcade',
+    'nav.speedTest': 'Kiểm tra tốc độ',
+    'nav.practiceLab': 'Phòng luyện gõ',
+    'nav.leaderboards': 'Bảng xếp hạng',
+    'nav.play': 'Chơi',
+    'nav.playGame': 'Chơi ngay',
+    'nav.commandPalette': 'Bảng lệnh',
+    'nav.themes': 'Giao diện',
+    'nav.siteTheme': 'Chủ đề (17)',
+    'nav.soundProfile': 'Âm thanh',
+    'nav.switchSynthesis': 'Âm thanh Switch',
+    'nav.activeStreak': 'Chuỗi',
+    'nav.novice': 'Tập sự',
+    'nav.language': 'Ngôn ngữ',
+    'nav.searchLang': 'Tìm ngôn ngữ...',
+
+    // Hero Section
+    'hero.badge': '21 TRÒ CHƠI GÕ PHÍM 2D • ĐO TỐC ĐỘ • LUYỆN GÕ 10 NGÓN',
+    'hero.title1': 'Làm chủ bàn phím.',
+    'hero.title2': 'Chơi 21 trò chơi 2D cổ điển.',
+    'hero.subtitle': 'Đắm mình trong các trận chiến không gian, chém kiếm neon, chống thây ma và kiểm tra tốc độ chuẩn Monkeytype với âm thanh switch cơ học chân thực.',
+    'hero.startTest': 'Bắt đầu kiểm tra',
+    'hero.browseGames': 'Khám phá 21 game',
+    'hero.activeTypists': 'Người đang gõ',
+    'hero.gamesCount': 'Game 2D miễn phí',
+    'hero.switchSounds': 'Âm thanh Switch',
+    'hero.colorThemes': 'Chủ đề màu sắc',
+
+    // Category Tabs
+    'cat.all': 'Tất cả game (21)',
+    'cat.arcade': 'Arcade (4)',
+    'cat.action': 'Hành động (5)',
+    'cat.adventure': 'Phiêu lưu (4)',
+    'cat.fighting': 'Đối kháng (4)',
+    'cat.puzzle': 'Giải đố (3)',
+    'cat.practice': 'Luyện tập (1)',
+
+    // Speed Test
+    'st.mode': 'Chế độ',
+    'st.time': 'Thời gian',
+    'st.words': 'Từ',
+    'st.quote': 'Trích dẫn',
+    'st.zen': 'Thiền',
+    'st.custom': 'Tùy chỉnh',
+    'st.wpm': 'WPM (từ/phút)',
+    'st.raw': 'WPM Thô',
+    'st.acc': 'Độ chính xác',
+    'st.consistency': 'Độ ổn định',
+    'st.characters': 'Ký tự',
+    'st.testType': 'Kiểu bài test',
+    'st.timeElapsed': 'Thời gian trôi qua',
+    'st.nextTest': 'Bài test tiếp',
+    'st.repeatTest': 'Thử lại',
+    'st.practiceMissed': 'Luyện từ sai',
+    'st.replay': 'Xem lại',
+    'st.shareScore': 'Chia sẻ điểm',
+    'st.copied': 'Đã sao chép vào bộ nhớ tạm!',
+    'st.ghostDuel': 'Đua cùng bóng ma',
+    'st.clickToFocus': 'Nhấp hoặc nhấn phím bất kỳ để bắt đầu',
+    'st.customModalTitle': 'Cài đặt tùy chỉnh',
+    'st.customDurationPrompt': 'Nhập thời gian tùy chỉnh (giây):',
+    'st.customTextPrompt': 'Dán hoặc gõ văn bản luyện tập của bạn:',
+    'st.capsLockOn': 'Caps Lock đang BẬT',
+
+    // Practice Lab
+    'prac.title': 'Phòng luyện gõ 10 ngón',
+    'prac.subtitle': 'Ma trận ANSI QWERTY 15.0u với hướng dẫn phân vùng ngón tay và máy đập nhịp.',
+    'prac.focus': 'Khu vực phím',
+    'prac.drillHome': 'Hàng cơ sở (ASDF JKL;)',
+    'prac.drillTop': 'Hàng trên (QWERTY)',
+    'prac.drillBottom': 'Hàng dưới (ZXCVBNM)',
+    'prac.drillNumbers': 'Hàng số (1-0)',
+    'prac.drillSymbols': 'Ký tự đặc biệt (!@#$)',
+    'prac.drillWeak': 'Luyện phím yếu cùng AI',
+    'prac.metronome': 'Máy đập nhịp',
+    'prac.colorMode': 'Chế độ màu',
+    'prac.themeSync': 'Đồng bộ chủ đề',
+    'prac.fingerQuadrant': 'Vùng ngón tay',
+    'prac.layout': 'Bố cục',
+    'prac.keyboardLayout': 'Bố cục bàn phím',
+
+    // Leaderboards & Career Hub
+    'lead.title': 'Trung tâm sự nghiệp & Nhiệm vụ',
+    'lead.subtitle': 'Thăng cấp từ Tập sự lên Titan Bàn Phím, hoàn thành nhiệm vụ hàng ngày và theo dõi biểu đồ 365 ngày.',
+    'lead.levelProgress': 'Tiến độ cấp độ',
+    'lead.activeStreak': 'Chuỗi ngày liên tiếp',
+    'lead.bestStreak': 'Chuỗi kỷ lục',
+    'lead.careerWords': 'Tổng số từ',
+    'lead.totalStrokes': 'Tổng lượt gõ',
+    'lead.dailyQuests': 'Nhiệm vụ hàng ngày',
+    'lead.dailyQuestsDesc': '3 thử thách mới mỗi 24 giờ để nhận thêm điểm XP thưởng!',
+    'lead.todaysChallenges': 'Thử thách hôm nay',
+    'lead.activityHeatmap': 'Biểu đồ nhiệt hoạt động',
+    'lead.activityHeatmapDesc': 'Dòng thời gian luyện tập qua các bài test và trò chơi.',
+    'lead.activeDays': 'ngày hoạt động',
+    'lead.totalXp': 'tổng XP',
+    'lead.bestWpmRecord': 'Kỷ lục WPM cao nhất',
+    'lead.averageWpm': 'WPM Trung bình',
+    'lead.accuracy': 'Độ chính xác',
+    'lead.gamesCompleted': 'Game đã hoàn thành',
+    'lead.weakKeysTitle': 'Chẩn đoán phím yếu AI',
+    'lead.weakKeysDesc': 'Phân tích thời gian thực các phím hay gõ sai và bài tập khắc phục.',
+    'lead.practiceDrills': 'Bắt đầu luyện tập →',
+    'lead.prestigeAchievements': 'Huy hiệu thành tích (25)',
+    'lead.gameRecords': 'Kỷ lục và Bảng xếp hạng',
+    'lead.gameRecordsDesc': 'Thành tích cá nhân của bạn trong cả 21 trò chơi.',
+    'lead.exportStats': 'Xuất dữ liệu (JSON)',
+    'lead.resetStats': 'Đặt lại thống kê',
+    'lead.claimXp': 'Nhận XP',
+    'lead.claimed': 'Đã nhận',
+
+    // Game HUD & Common
+    'game.level': 'Màn',
+    'game.score': 'Điểm',
+    'game.targetWpm': 'Mục tiêu WPM',
+    'game.health': 'Máu/Giáp',
+    'game.pause': 'Tạm dừng',
+    'game.resume': 'Tiếp tục',
+    'game.restart': 'Chơi lại',
+    'game.nextLevel': 'Màn tiếp',
+    'game.victory': 'CHIẾN THẮNG!',
+    'game.gameOver': 'TRÒ CHƠI KẾT THÚC',
+    'game.howToPlay': 'Cách chơi',
+    'game.typeToShoot': 'Gõ từ để tấn công và sống sót!',
+    'game.levelCleared': 'Vượt qua màn chơi!',
+    'game.performanceGrade': 'Hạng đánh giá',
+    'game.tryAgain': 'Thử lại',
+    'game.newRecord': 'KỶ LỤC ĐIỂM CAO MỚI!',
+    'game.xpEarned': 'XP Nhận được',
+
+    // Footer
+    'footer.quickTheme': 'Đổi chủ đề nhanh',
+    'footer.themeSubtitle': 'Chọn từ 17 chủ đề màu sắc ấn tượng',
+    'footer.allThemes': 'Xem tất cả 17 chủ đề →',
+    'footer.gameGenres': 'Thể loại game',
+    'footer.practiceAndTools': 'Luyện tập & Công cụ',
+    'footer.audioSynthesizer': 'Bộ tổng hợp âm thanh',
+    'footer.audioDesc': 'Tổng hợp âm thanh Web Audio trực tiếp mô phỏng Cherry MX Blue, Holy Panda và máy đánh chữ cổ điển.',
+    'footer.rights': 'Bảo lưu mọi quyền.',
+    'footer.operational': 'Hệ thống hoạt động mượt mà • 60 FPS',
+    'footer.languageSelect': 'Chọn ngôn ngữ'
+  },
+
+  bn: {
+    // Navigation
+    'nav.games': 'গেমস (21)',
+    'nav.arcade': 'আর্কেড লাউঞ্জ',
+    'nav.speedTest': 'স্পিড টেস্ট',
+    'nav.practiceLab': 'অনুশীলন ল্যাব',
+    'nav.leaderboards': 'লিডারবোর্ড',
+    'nav.play': 'খেলুন',
+    'nav.playGame': 'গেম খেলুন',
+    'nav.commandPalette': 'কমান্ড প্যালেট',
+    'nav.themes': 'থিমস',
+    'nav.siteTheme': 'সাইট থিম (17)',
+    'nav.soundProfile': 'সাউন্ড প্রোফাইল',
+    'nav.switchSynthesis': 'সুইচ সাউন্ড সিন্থেসিস',
+    'nav.activeStreak': 'ধারাবাহিকতা',
+    'nav.novice': 'শিক্ষানবিস',
+    'nav.language': 'ভাষা',
+    'nav.searchLang': 'ভাষা খুঁজুন...',
+
+    // Hero Section
+    'hero.badge': '21টি 2D টাইপিং গেম • স্পিড টেস্ট • টাচ টাইপিং প্র্যাকটিস',
+    'hero.title1': 'কীবোর্ডে দক্ষতা অর্জন করুন।',
+    'hero.title2': '21টি রেট্রো 2D গেম খেলুন।',
+    'hero.subtitle': 'আর্কেড স্পেস যুদ্ধ, নিনজা স্ল্যাশিং, জম্বি লড়াই এবং আসল মেকানিক্যাল সুইচের চমৎকার অডিও সহ মানসম্পন্ন স্পিড টেস্ট উপভোগ করুন।',
+    'hero.startTest': 'স্পিড টেস্ট শুরু করুন',
+    'hero.browseGames': '21টি গেম দেখুন',
+    'hero.activeTypists': 'সক্রিয় টাইপিস্ট',
+    'hero.gamesCount': 'ফ্রি 2D গেমস',
+    'hero.switchSounds': 'সুইচ সাউন্ড প্রোফাইল',
+    'hero.colorThemes': 'কালার থিমস',
+
+    // Category Tabs
+    'cat.all': 'সব গেমস (21)',
+    'cat.arcade': 'আর্কেড (4)',
+    'cat.action': 'অ্যাকশন (5)',
+    'cat.adventure': 'অ্যাডভেঞ্চার (4)',
+    'cat.fighting': 'ফাইটিং (4)',
+    'cat.puzzle': 'ধাঁধা (3)',
+    'cat.practice': 'অনুশীলন (1)',
+
+    // Speed Test
+    'st.mode': 'মোড',
+    'st.time': 'সময়',
+    'st.words': 'শব্দ',
+    'st.quote': 'উদ্ধৃতি',
+    'st.zen': 'জেন',
+    'st.custom': 'কাস্টম',
+    'st.wpm': 'WPM (শব্দ/মিনিট)',
+    'st.raw': 'র ডব্লিউপিএম',
+    'st.acc': 'নির্ভুলতা',
+    'st.consistency': 'ধারাবাহিকতা',
+    'st.characters': 'অক্ষর',
+    'st.testType': 'টেস্টের ধরন',
+    'st.timeElapsed': 'অতিবাহিত সময়',
+    'st.nextTest': 'পরবর্তী টেস্ট',
+    'st.repeatTest': 'পুনরায় চেষ্টা',
+    'st.practiceMissed': 'ভুল শব্দ অনুশীলন',
+    'st.replay': 'রিপ্লে দেখুন',
+    'st.shareScore': 'স্কোর শেয়ার করুন',
+    'st.copied': 'ক্লিপবোর্ডে কপি হয়েছে!',
+    'st.ghostDuel': 'ঘোস্ট রেসার ডুয়েল',
+    'st.clickToFocus': 'শুরু করতে ক্লিক করুন বা যেকোনো কি চাপুন',
+    'st.customModalTitle': 'কাস্টম টেস্ট সেটিংস',
+    'st.customDurationPrompt': 'সময়সীমা সেকেন্ডে লিখুন:',
+    'st.customTextPrompt': 'আপনার নিজস্ব টেক্সট পেস্ট করুন:',
+    'st.capsLockOn': 'Caps Lock চালু আছে',
+
+    // Practice Lab
+    'prac.title': 'টাচ টাইপিং প্র্যাকটিস ল্যাব',
+    'prac.subtitle': 'ANSI QWERTY 15.0u ম্যাট্রিক্স, আঙুলের অবস্থান নির্দেশিকা এবং রিদম মেট্রোনোম।',
+    'prac.focus': 'কীবোর্ড এলাকা',
+    'prac.drillHome': 'হোম রো (ASDF JKL;)',
+    'prac.drillTop': 'টপ রো (QWERTY)',
+    'prac.drillBottom': 'বটম রো (ZXCVBNM)',
+    'prac.drillNumbers': 'সংখ্যা সারি (1-0)',
+    'prac.drillSymbols': 'বিশেষ প্রতীক (!@#$)',
+    'prac.drillWeak': 'দুর্বল কি AI ড্রিল',
+    'prac.metronome': 'মেট্রোনোম',
+    'prac.colorMode': 'কালার মোড',
+    'prac.themeSync': 'থিম সিঙ্ক',
+    'prac.fingerQuadrant': 'আঙুলের বিভাগ',
+    'prac.layout': 'লেআউট',
+    'prac.keyboardLayout': 'কীবোর্ড লেআউট নির্বাচন',
+
+    // Leaderboards & Career Hub
+    'lead.title': 'ক্যারিয়ার হাব এবং দৈনিক কোয়েস্ট',
+    'lead.subtitle': 'শিক্ষানবিস থেকে কীবোর্ড টাইটান হন, দৈনিক ৩টি চ্যালেঞ্জ সম্পূর্ণ করুন এবং ৩৬৫ দিনের হিটম্যাপ দেখুন।',
+    'lead.levelProgress': 'লেভেল অগ্রগতি',
+    'lead.activeStreak': 'সক্রিয় ধারাবাহিকতা',
+    'lead.bestStreak': 'সেরা ধারাবাহিকতা',
+    'lead.careerWords': 'মোট শব্দ',
+    'lead.totalStrokes': 'মোট স্ট্রোক',
+    'lead.dailyQuests': 'দৈনিক কোয়েস্ট',
+    'lead.dailyQuestsDesc': 'বোনাস XP পেতে প্রতি ২৪ ঘণ্টায় ৩টি নতুন চ্যালেঞ্জ পূরণ করুন!',
+    'lead.todaysChallenges': 'আজকের চ্যালেঞ্জ',
+    'lead.activityHeatmap': 'দৈনিক টাইপিং হিটম্যাপ',
+    'lead.activityHeatmapDesc': 'টেস্ট, গেম ও অনুশীলনের দৈনিক সময়রেখা।',
+    'lead.activeDays': 'দিন সক্রিয়',
+    'lead.totalXp': 'মোট XP',
+    'lead.bestWpmRecord': 'সেরা WPM রেকর্ড',
+    'lead.averageWpm': 'গড় WPM',
+    'lead.accuracy': 'নির্ভুলতা',
+    'lead.gamesCompleted': 'সম্পূর্ণ করা গেম',
+    'lead.weakKeysTitle': 'দুর্বল কি AI বিশ্লেষণ',
+    'lead.weakKeysDesc': 'ভুল হওয়া কিগুলোর রিয়েল-টাইম বিশ্লেষণ এবং কাস্টম অনুশীলন।',
+    'lead.practiceDrills': 'অনুশীলন শুরু করুন →',
+    'lead.prestigeAchievements': 'অর্জন ব্যাজ (25)',
+    'lead.gameRecords': 'গেম রেকর্ডস ও লিডারবোর্ড',
+    'lead.gameRecordsDesc': '২১টি গেমে আপনার ব্যক্তিগত সেরা পারফরম্যান্স।',
+    'lead.exportStats': 'ডেটা এক্সপোর্ট করুন (JSON)',
+    'lead.resetStats': 'পরিসংখ্যান রিসেট',
+    'lead.claimXp': 'XP সংগ্রহ করুন',
+    'lead.claimed': 'সংগৃহীত',
+
+    // Game HUD & Common
+    'game.level': 'লেভেল',
+    'game.score': 'স্কোর',
+    'game.targetWpm': 'টার্গেট WPM',
+    'game.health': 'স্বাস্থ্য',
+    'game.pause': 'বিরতি',
+    'game.resume': 'চালিয়ে যান',
+    'game.restart': 'পুনরায় আরম্ভ',
+    'game.nextLevel': 'পরবর্তী লেভেল',
+    'game.victory': 'বিজয়!',
+    'game.gameOver': 'খেলা শেষ',
+    'game.howToPlay': 'কীভাবে খেলবেন',
+    'game.typeToShoot': 'আক্রমণ এবং বেঁচে থাকার জন্য শব্দ টাইপ করুন!',
+    'game.levelCleared': 'লেভেল সম্পন্ন!',
+    'game.performanceGrade': 'পারফরম্যান্স গ্রেড',
+    'game.tryAgain': 'আবার চেষ্টা করুন',
+    'game.newRecord': 'নতুন হাই স্কোর রেকর্ড!',
+    'game.xpEarned': 'অর্জিত XP',
+
+    // Footer
+    'footer.quickTheme': 'দ্রুত থিম পরিবর্তন',
+    'footer.themeSubtitle': '১৭টি চমৎকার রঙের থিম থেকে পছন্দ করুন',
+    'footer.allThemes': 'সব ১৭টি থিম দেখুন →',
+    'footer.gameGenres': 'গেমের ধরণ',
+    'footer.practiceAndTools': 'অনুশীলন ও টুলস',
+    'footer.audioSynthesizer': 'অডিও সিন্থেসাইজার',
+    'footer.audioDesc': 'চেরি এমএক্স ব্লু, হোলি পান্ডা এবং টাইপরাইটারের আসল শব্দের রিয়েল-টাইম ওয়েব অডিও সিন্থেসিস।',
+    'footer.rights': 'সর্বস্বত্ব সংরক্ষিত।',
+    'footer.operational': 'সিস্টেম স্বাভাবিক • 60 FPS',
+    'footer.languageSelect': 'ভাষা নির্বাচন করুন'
   }
 };
 
 const LANG_STORAGE_KEY = 'typing_game_zone_lang';
+
+/**
+ * Detect user's preferred language from localStorage or browser navigator
+ */
+export function detectBrowserLanguage(): string {
+  if (typeof window === 'undefined' || !window.navigator) return 'en';
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    if (saved && TRANSLATIONS[saved]) return saved;
+
+    const navLangs = navigator.languages || [navigator.language || 'en'];
+    for (const rawLang of navLangs) {
+      const code = rawLang.toLowerCase().split('-')[0];
+      if (TRANSLATIONS[code]) {
+        return code;
+      }
+    }
+  } catch {}
+  return 'en';
+}
 
 export function getCurrentLanguage(): string {
   if (typeof window === 'undefined') return 'en';
@@ -1085,11 +2395,17 @@ export function getCurrentLanguage(): string {
     const saved = localStorage.getItem(LANG_STORAGE_KEY);
     if (saved && TRANSLATIONS[saved]) return saved;
   } catch {}
-  return 'en';
+  return detectBrowserLanguage();
 }
 
 export function getLanguageDef(code: string): LanguageDef {
   return SUPPORTED_LANGUAGES.find(l => l.code === code) || SUPPORTED_LANGUAGES[0];
+}
+
+export function isRTLLanguage(code?: string): boolean {
+  const langCode = code || getCurrentLanguage();
+  const def = getLanguageDef(langCode);
+  return !!def.isRTL;
 }
 
 export function t(key: string, lang?: string): string {
@@ -1098,25 +2414,58 @@ export function t(key: string, lang?: string): string {
   return dict[key] || TRANSLATIONS['en'][key] || key;
 }
 
+export function formatNumber(num: number, lang?: string): string {
+  const targetLang = lang || getCurrentLanguage();
+  try {
+    return new Intl.NumberFormat(targetLang).format(num);
+  } catch {
+    return num.toLocaleString();
+  }
+}
+
+export function formatDate(date: Date | string | number, lang?: string, options?: Intl.DateTimeFormatOptions): string {
+  const targetLang = lang || getCurrentLanguage();
+  const d = typeof date === 'object' ? date : new Date(date);
+  try {
+    return new Intl.DateTimeFormat(targetLang, options || { month: 'short', day: 'numeric', year: 'numeric' }).format(d);
+  } catch {
+    return d.toLocaleDateString();
+  }
+}
+
 export function setLanguage(langCode: string): void {
   if (!TRANSLATIONS[langCode]) return;
   if (typeof window === 'undefined') return;
 
+  const def = getLanguageDef(langCode);
+
   try {
     localStorage.setItem(LANG_STORAGE_KEY, langCode);
     document.documentElement.setAttribute('lang', langCode);
+    if (def.isRTL) {
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+    }
   } catch {}
 
   applyTranslationsToDOM(langCode);
 
   window.dispatchEvent(new CustomEvent('typing:language-change', {
-    detail: { lang: langCode, def: getLanguageDef(langCode) }
+    detail: { lang: langCode, def }
   }));
 }
 
 export function applyTranslationsToDOM(lang?: string): void {
   if (typeof document === 'undefined') return;
   const curLang = lang || getCurrentLanguage();
+  const def = getLanguageDef(curLang);
+
+  if (def.isRTL) {
+    document.documentElement.setAttribute('dir', 'rtl');
+  } else {
+    document.documentElement.setAttribute('dir', 'ltr');
+  }
 
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -1141,7 +2490,13 @@ export function applyTranslationsToDOM(lang?: string): void {
 export function initI18n(): void {
   const curLang = getCurrentLanguage();
   if (typeof document !== 'undefined') {
+    const def = getLanguageDef(curLang);
     document.documentElement.setAttribute('lang', curLang);
+    if (def.isRTL) {
+      document.documentElement.setAttribute('dir', 'rtl');
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr');
+    }
     applyTranslationsToDOM(curLang);
   }
 }

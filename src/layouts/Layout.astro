@@ -32,16 +32,56 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://typinggamezone.com" />
+    <meta property="og:site_name" content="Typing Game Zone" />
 
-    <!-- Google Fonts for Geist & Geist Mono & Inter fallback -->
+    <!-- International SEO hreflang tags -->
+    <link rel="alternate" hreflang="x-default" href="https://typinggamezone.com" />
+    <link rel="alternate" hreflang="en" href="https://typinggamezone.com?lang=en" />
+    <link rel="alternate" hreflang="hi" href="https://typinggamezone.com?lang=hi" />
+    <link rel="alternate" hreflang="es" href="https://typinggamezone.com?lang=es" />
+    <link rel="alternate" hreflang="fr" href="https://typinggamezone.com?lang=fr" />
+    <link rel="alternate" hreflang="de" href="https://typinggamezone.com?lang=de" />
+    <link rel="alternate" hreflang="ja" href="https://typinggamezone.com?lang=ja" />
+    <link rel="alternate" hreflang="pt" href="https://typinggamezone.com?lang=pt" />
+    <link rel="alternate" hreflang="ru" href="https://typinggamezone.com?lang=ru" />
+    <link rel="alternate" hreflang="ar" href="https://typinggamezone.com?lang=ar" />
+    <link rel="alternate" hreflang="zh" href="https://typinggamezone.com?lang=zh" />
+    <link rel="alternate" hreflang="it" href="https://typinggamezone.com?lang=it" />
+    <link rel="alternate" hreflang="ko" href="https://typinggamezone.com?lang=ko" />
+    <link rel="alternate" hreflang="id" href="https://typinggamezone.com?lang=id" />
+    <link rel="alternate" hreflang="tr" href="https://typinggamezone.com?lang=tr" />
+    <link rel="alternate" hreflang="vi" href="https://typinggamezone.com?lang=vi" />
+    <link rel="alternate" hreflang="bn" href="https://typinggamezone.com?lang=bn" />
+
+    <!-- Google Fonts for Geist, Inter & International Typography Support -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
 
-    <!-- Instant Zero-FOUC Global Theme Injection -->
+    <!-- Instant Zero-FOUC Global Theme & Language/RTL Injection -->
     <script is:inline>
       (function() {
         try {
+          // Instant Zero-FOUC Language & RTL Detection
+          const rtlLangs = ['ar', 'fa', 'he', 'ur'];
+          const supportedLangs = ['en', 'hi', 'es', 'fr', 'de', 'ja', 'pt', 'ru', 'ar', 'zh', 'it', 'ko', 'id', 'tr', 'vi', 'bn'];
+          let curLang = localStorage.getItem('typing_game_zone_lang');
+
+          if (!curLang && navigator && navigator.languages) {
+            for (const l of navigator.languages) {
+              const code = l.toLowerCase().split('-')[0];
+              if (supportedLangs.includes(code)) {
+                curLang = code;
+                break;
+              }
+            }
+          }
+          if (!curLang) curLang = 'en';
+
+          const isRTL = rtlLangs.includes(curLang);
+          const rootEl = document.documentElement;
+          rootEl.setAttribute('lang', curLang);
+          rootEl.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
           const themes = {
             serika_dark: { bg: '#323437', main: '#e2b714', sub: '#646669', subAlt: '#2c2e31', text: '#d1d0c5', error: '#ca4754', errorExtra: '#7e2a33', isLight: false },
             carbon: { bg: '#313131', main: '#f66e0d', sub: '#616161', subAlt: '#262626', text: '#f5e6c8', error: '#e45c5c', errorExtra: '#b23a3a', isLight: false },

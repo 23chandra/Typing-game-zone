@@ -1,6 +1,7 @@
 ---
 // Navigation bar following DESIGN.md specifications with Global Monkeytype Theme Switcher
 import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
+import { SUPPORTED_LANGUAGES } from '../lib/i18n';
 ---
 
 <header class="sticky top-0 z-40 w-full border-b border-hairline bg-canvas/90 backdrop-blur-md transition-all select-none overflow-x-clip">
@@ -43,7 +44,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
           id="nav-lang-btn"
           type="button"
           class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2.5 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
-          title="Switch Language / भाषा बदलें"
+          title="Switch Language / भाषा बदलें / Cambiar idioma"
           aria-expanded="false"
         >
           <span id="nav-lang-flag" class="text-sm">🇺🇸</span>
@@ -56,45 +57,45 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
         <!-- Dropdown Menu -->
         <div
           id="nav-lang-menu"
-          class="absolute right-0 mt-2 hidden w-48 rounded-2xl border border-hairline bg-canvas p-2 shadow-level-4 z-50 font-mono text-xs flex flex-col gap-1"
+          class="absolute right-0 mt-2 hidden w-64 rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs flex flex-col max-h-[80vh]"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
-          <div class="flex items-center justify-between pb-1.5 mb-1 border-b border-hairline px-1.5 text-[10px] text-mute uppercase font-bold">
-            <span>Language (8)</span>
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1 text-[11px] text-mute uppercase font-bold">
+            <span data-i18n="nav.language">Language ({SUPPORTED_LANGUAGES.length})</span>
+            <span class="text-[10px] text-mute">Global i18n</span>
           </div>
 
-          <button type="button" data-lang="en" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇺🇸</span><span>English</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
-          <button type="button" data-lang="hi" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇮🇳</span><span>हिन्दी</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
-          <button type="button" data-lang="es" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇪🇸</span><span>Español</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
-          <button type="button" data-lang="fr" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇫🇷</span><span>Français</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
-          <button type="button" data-lang="de" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇩🇪</span><span>Deutsch</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
-          <button type="button" data-lang="ja" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇯🇵</span><span>日本語</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
-          <button type="button" data-lang="pt" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇧🇷</span><span>Português</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
-          <button type="button" data-lang="ru" class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer">
-            <span class="flex items-center gap-2"><span>🇷🇺</span><span>Русский</span></span>
-            <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
-          </button>
+          <!-- Quick Search Filter -->
+          <input
+            type="text"
+            id="nav-lang-search"
+            placeholder="Search language..."
+            class="w-full rounded-xl px-3 py-1.5 text-xs border mb-2 focus:outline-none"
+            style="background-color: var(--site-canvas-soft, #323437); border-color: var(--site-hairline); color: var(--site-ink);"
+          />
+
+          <!-- Languages List -->
+          <div id="nav-lang-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-64">
+            {SUPPORTED_LANGUAGES.map(lang => (
+              <button
+                type="button"
+                data-lang={lang.code}
+                class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">{lang.flag}</span>
+                  <div class="flex flex-col">
+                    <span class="font-bold text-xs">{lang.nativeName}</span>
+                    <span class="text-[10px] text-mute">{lang.name}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[9px] uppercase font-mono text-mute bg-canvas-soft px-1.5 py-0.5 rounded">{lang.code}</span>
+                  <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -339,6 +340,7 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
     const langMenu = document.getElementById('nav-lang-menu');
     const langFlag = document.getElementById('nav-lang-flag');
     const langLabel = document.getElementById('nav-lang-current-label');
+    const langSearch = document.getElementById('nav-lang-search') as HTMLInputElement | null;
 
     const soundBtn = document.getElementById('sound-menu-btn');
     const soundMenu = document.getElementById('sound-menu');
@@ -399,6 +401,27 @@ import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
       soundMenu?.classList.add('hidden');
       themeMenu?.classList.add('hidden');
       langMenu?.classList.toggle('hidden');
+      if (!langMenu?.classList.contains('hidden')) {
+        try {
+          langSearch?.focus({ preventScroll: true });
+        } catch {
+          langSearch?.focus();
+        }
+      }
+    });
+
+    langSearch?.addEventListener('input', (e) => {
+      const q = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      document.querySelectorAll('.nav-lang-opt').forEach((el) => {
+        const lCode = el.getAttribute('data-lang') || '';
+        const def = getLanguageDef(lCode);
+        const match =
+          def.name.toLowerCase().includes(q) ||
+          def.nativeName.toLowerCase().includes(q) ||
+          def.code.toLowerCase().includes(q) ||
+          (def.region && def.region.toLowerCase().includes(q));
+        (el as HTMLElement).style.display = match ? 'flex' : 'none';
+      });
     });
 
     document.querySelectorAll('.nav-lang-opt').forEach((el) => {

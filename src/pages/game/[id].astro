@@ -53,13 +53,13 @@ const { game } = Astro.props;
       <!-- Pause Overlay -->
       <div id="pause-overlay" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm hidden font-mono">
         <div class="text-4xl mb-2">⏸️</div>
-        <h3 class="text-2xl font-bold text-white tracking-tight">GAME PAUSED</h3>
+        <h3 class="text-2xl font-bold text-white tracking-tight" data-i18n="game.pause">GAME PAUSED</h3>
         <p class="text-xs text-neutral-400 mt-1">Press Space, Enter, or Click Resume</p>
         <button
           id="resume-btn"
           class="mt-4 rounded-full bg-cyan px-6 py-2 text-xs font-bold text-ink hover:opacity-90 transition cursor-pointer"
         >
-          Resume Game
+          <span data-i18n="game.resume">Resume Game</span>
         </button>
       </div>
     </div>
@@ -75,9 +75,9 @@ const { game } = Astro.props;
       <!-- How to Play -->
       <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1 md:col-span-2">
         <h3 class="text-base font-semibold text-ink flex items-center gap-2">
-          <span>📖</span> How to Play & Controls
+          <span>📖</span> <span data-i18n="game.howToPlay">How to Play & Controls</span>
         </h3>
-        <p class="mt-2 text-xs text-body leading-relaxed">
+        <p class="mt-2 text-xs text-body leading-relaxed" data-i18n="game.typeToShoot">
           {game.description}
         </p>
 
