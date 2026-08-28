@@ -310,6 +310,95 @@ export const MONKEYTYPE_BENGALI_NATIVE_200 = [
   'জল', 'আগুন', 'হাওয়া', 'সাগর', 'পাহাড়', 'তারা', 'চাঁদ', 'সূর্য', 'শক্তি', 'গতি'
 ];
 
+export const MONKEYTYPE_CHINESE_HANZI_200 = [
+  '的', '一', '是', '在', '不', '了', '有', '和', '人', '这',
+  '中', '大', '为', '上', '个', '国', '我', '以', '要', '他',
+  '时', '来', '用', '生', '到', '作', '地', '于', '出', '就',
+  '分', '对', '成', '会', '可', '主', '发', '年', '动', '同',
+  '能', '下', '过', '子', '说', '产', '种', '面', '而', '方',
+  '后', '多', '定', '行', '学', '法', '所', '民', '得', '经',
+  '三', '之', '进', '着', '等', '部', '度', '家', '电', '力',
+  '水', '化', '高', '自', '二', '理', '起', '小', '物', '现',
+  '量', '都', '两', '体', '机', '当', '使', '点', '从', '业',
+  '你好', '世界', '中国', '朋友', '快乐', '希望', '梦想', '光明', '成功', '和平'
+];
+
+export const MONKEYTYPE_KOREAN_HANGUL_200 = [
+  '그', '이', '저', '나', '우리', '사람', '때', '일', '말', '사회',
+  '문제', '문화', '집', '눈', '마음', '생각', '시간', '손', '속', '곳',
+  '물', '앞', '길', '소리', '나라', '몸', '얼굴', '어머니', '여자', '머리',
+  '아이', '이야기', '태양', '달', '별', '바다', '하늘', '사랑', '친구', '행복',
+  '가족', '인생', '꿈', '희망', '빛', '바람', '불', '비', '밤', '아침',
+  '나무', '꽃', '음악', '책', '세계', '평화', '자유', '열정', '성공', '노력',
+  '안녕하세요', '감사합니다', '한국어', '한국', '승리', '희망', '청춘', '미래', '우정', '감동'
+];
+
+export const MONKEYTYPE_SPANISH_NATIVE_200 = [
+  'de', 'la', 'que', 'el', 'en', 'y', 'a', 'los', 'se', 'del',
+  'las', 'un', 'por', 'con', 'no', 'una', 'su', 'para', 'es', 'al',
+  'lo', 'como', 'más', 'pero', 'sus', 'le', 'ya', 'o', 'este', 'sí',
+  'porque', 'está', 'son', 'entre', 'cuando', 'muy', 'sin', 'sobre', 'ser', 'tiene',
+  'también', 'me', 'hasta', 'hay', 'dónde', 'quién', 'desde', 'todo', 'nos', 'durante',
+  'todos', 'uno', 'les', 'ni', 'contra', 'otros', 'ese', 'eso', 'ante', 'ellos',
+  'año', 'niño', 'día', 'vida', 'mundo', 'casa', 'hombre', 'mujer', 'trabajo', 'luz',
+  'mano', 'fuerza', 'camino', 'español', 'corazón', 'adiós', 'hola', 'éxito', 'sueño', 'tiempo',
+  'país', 'ciudad', 'mañana', 'canción', 'árbol', 'música', 'esperanza', 'libertad', 'alegría', 'pasión'
+];
+
+export const MONKEYTYPE_FRENCH_NATIVE_200 = [
+  'de', 'la', 'le', 'et', 'les', 'des', 'en', 'un', 'du', 'une',
+  'que', 'est', 'pour', 'qui', 'dans', 'à', 'par', 'sur', 'au', 'plus',
+  'ne', 'pas', 'avec', 'ce', 'son', 'se', 'aux', 'ses', 'ou', 'il',
+  'sa', 'nous', 'comme', 'mais', 'ils', 'tout', 'on', 'leur', 'bien', 'fait',
+  'sans', 'peut', 'faire', 'cette', 'aussi', 'si', 'temps', 'deux', 'autre', 'après',
+  'même', 'encore', 'entre', 'mon', 'tous', 'premier', 'dire', 'sous', 'vers', 'monde',
+  'notre', 'pendant', 'donc', 'vie', 'jour', 'homme', 'femme', 'enfant', 'grand', 'lieu',
+  'petit', 'voir', 'savoir', 'pouvoir', 'vouloir', 'français', 'cœur', 'être', 'très', 'où',
+  'déjà', 'grâce', 'liberté', 'égalité', 'fraternité', 'rêve', 'lumière', 'succès', 'espoir', 'vérité'
+];
+
+export const MONKEYTYPE_PORTUGUESE_NATIVE_200 = [
+  'de', 'a', 'o', 'que', 'e', 'do', 'da', 'em', 'um', 'para',
+  'com', 'não', 'uma', 'os', 'no', 'se', 'na', 'por', 'mais', 'as',
+  'dos', 'como', 'mas', 'foi', 'ao', 'ele', 'das', 'tem', 'à', 'seu',
+  'sua', 'ou', 'quando', 'muito', 'nós', 'já', 'eu', 'também', 'só', 'pelo',
+  'pela', 'até', 'isso', 'ela', 'entre', 'depois', 'sem', 'mesmo', 'aos', 'seus',
+  'quem', 'me', 'esse', 'eles', 'você', 'essa', 'num', 'nem', 'suas', 'meu',
+  'minha', 'numa', 'tempo', 'vida', 'mundo', 'dia', 'homem', 'mulher', 'trabalho', 'mão',
+  'luz', 'força', 'caminho', 'cidade', 'casa', 'noite', 'amor', 'olho', 'palavra', 'coração',
+  'português', 'irmão', 'nação', 'país', 'visão', 'razão', 'emoção', 'esperança', 'vitória', 'canção'
+];
+
+export const MONKEYTYPE_TURKISH_NATIVE_200 = [
+  'bir', 've', 'bu', 'da', 'de', 'için', 'ile', 'çok', 'daha', 'gibi',
+  'en', 'kadar', 'var', 'yok', 'olan', 'ama', 'sonra', 'kendi', 'olarak', 'her',
+  'o', 'ne', 'göre', 'ancak', 'ben', 'sen', 'biz', 'onlar', 'bunu', 'buna',
+  'zaman', 'gün', 'insan', 'hayat', 'dünya', 'ev', 'yol', 'el', 'göz', 'kalp',
+  'iş', 'gece', 'ışık', 'söz', 'kitap', 'ses', 'arkadaş', 'sevgi', 'gök', 'yer',
+  'su', 'ateş', 'rüzgar', 'deniz', 'dağ', 'yıldız', 'ay', 'güneş', 'güç', 'hız',
+  'türkçe', 'yaşam', 'özgürlük', 'başarı', 'umut', 'barış', 'mutluluk', 'güzel', 'öğrenci', 'bilgi'
+];
+
+export const MONKEYTYPE_VIETNAMESE_NATIVE_200 = [
+  'và', 'của', 'là', 'có', 'trong', 'người', 'một', 'cho', 'không', 'được',
+  'này', 'với', 'về', 'các', 'những', 'đã', 'đến', 'sẽ', 'khi', 'như',
+  'vào', 'ra', 'để', 'tôi', 'bạn', 'chúng', 'anh', 'em', 'ngày', 'thời',
+  'gian', 'đời', 'thế', 'giới', 'nhà', 'đường', 'mắt', 'tim', 'tay', 'sáng',
+  'lời', 'sách', 'tiếng', 'việc', 'đêm', 'yêu', 'trời', 'đất', 'nước', 'lửa',
+  'gió', 'biển', 'núi', 'sao', 'trăng', 'mặt', 'sức', 'mạnh', 'Việt', 'Nam',
+  'hạnh', 'phúc', 'tự', 'do', 'hòa', 'bình', 'thành', 'công', 'ước', 'mơ'
+];
+
+export const MONKEYTYPE_ITALIAN_NATIVE_200 = [
+  'di', 'e', 'il', 'la', 'che', 'in', 'un', 'per', 'una', 'non',
+  'del', 'le', 'i', 'si', 'da', 'su', 'con', 'ha', 'ma', 'al',
+  'come', 'più', 'cosa', 'gli', 'anche', 'della', 'questo', 'o', 'sono', 'io',
+  'qui', 'sei', 'loro', 'tutto', 'vita', 'mondo', 'tempo', 'bene', 'uomo', 'donna',
+  'casa', 'giorno', 'notte', 'luce', 'occhio', 'mano', 'cuore', 'strada', 'amico', 'lavoro',
+  'sole', 'mare', 'terra', 'cielo', 'parola', 'musica', 'gioco', 'veloce', 'forza', 'sogno',
+  'città', 'perché', 'così', 'già', 'verità', 'libertà', 'felicità', 'passione', 'vittoria', 'speranza'
+];
+
 // --------------------------------------------------------------------------
 // 3. THEMED GAME WORD DICTIONARIES (For all 21 games)
 // --------------------------------------------------------------------------
@@ -605,30 +694,31 @@ export const KEYBOARD_LAYOUTS: Record<string, KeyboardLayoutDef> = {
 // --------------------------------------------------------------------------
 // 6. HELPER FUNCTIONS
 export function getWordPoolForLanguage(lang: string, poolType = '200', scriptMode: 'native' | 'latin' = 'native'): string[] {
+  const code = (lang || 'en').toLowerCase().trim();
   if (scriptMode === 'native') {
-    switch (lang) {
+    switch (code) {
       case 'hi': case 'hindi': return MONKEYTYPE_HINDI_DEVANAGARI_200;
       case 'ja': case 'japanese': return MONKEYTYPE_JAPANESE_KANA_200;
       case 'ru': case 'russian': return MONKEYTYPE_RUSSIAN_CYRILLIC_200;
       case 'ar': case 'arabic': return MONKEYTYPE_ARABIC_NATIVE_200;
       case 'de': case 'german': return MONKEYTYPE_GERMAN_UMLAUTS_200;
       case 'bn': case 'bengali': return MONKEYTYPE_BENGALI_NATIVE_200;
-      case 'es': case 'spanish': return MONKEYTYPE_SPANISH_200;
-      case 'fr': case 'french': return MONKEYTYPE_FRENCH_200;
-      case 'pt': case 'portuguese': return MONKEYTYPE_PORTUGUESE_200;
-      case 'zh': case 'chinese': return MONKEYTYPE_CHINESE_200;
-      case 'it': case 'italian': return MONKEYTYPE_ITALIAN_200;
-      case 'ko': case 'korean': return MONKEYTYPE_KOREAN_200;
+      case 'zh': case 'chinese': return MONKEYTYPE_CHINESE_HANZI_200;
+      case 'ko': case 'korean': return MONKEYTYPE_KOREAN_HANGUL_200;
+      case 'es': case 'spanish': return MONKEYTYPE_SPANISH_NATIVE_200;
+      case 'fr': case 'french': return MONKEYTYPE_FRENCH_NATIVE_200;
+      case 'pt': case 'portuguese': return MONKEYTYPE_PORTUGUESE_NATIVE_200;
+      case 'tr': case 'turkish': return MONKEYTYPE_TURKISH_NATIVE_200;
+      case 'vi': case 'vietnamese': return MONKEYTYPE_VIETNAMESE_NATIVE_200;
+      case 'it': case 'italian': return MONKEYTYPE_ITALIAN_NATIVE_200;
       case 'id': case 'indonesian': return MONKEYTYPE_INDONESIAN_200;
-      case 'tr': case 'turkish': return MONKEYTYPE_TURKISH_200;
-      case 'vi': case 'vietnamese': return MONKEYTYPE_VIETNAMESE_200;
       default:
         return poolType === '1k' ? MONKEYTYPE_ENGLISH_1K : MONKEYTYPE_ENGLISH_200;
     }
   }
 
-  // Latin / Romaji fallback mode
-  switch (lang) {
+  // Latin / Romaji / Pinyin fallback mode
+  switch (code) {
     case 'hi': case 'hindi': return MONKEYTYPE_HINDI_200;
     case 'es': case 'spanish': return MONKEYTYPE_SPANISH_200;
     case 'fr': case 'french': return MONKEYTYPE_FRENCH_200;
@@ -685,13 +775,12 @@ export function generateMonkeytypeWordList(
   scriptMode: 'native' | 'latin' = 'native'
 ): string[] {
   let pool = MONKEYTYPE_ENGLISH_200;
+  const targetLang = (langCode && langCode !== 'en') ? langCode : language;
 
-  if (langCode && langCode !== 'en') {
-    pool = getWordPoolForLanguage(langCode, '200', scriptMode);
-  } else if (language === 'english1k') {
+  if (targetLang === 'english1k') {
     pool = MONKEYTYPE_ENGLISH_1K;
   } else {
-    pool = getWordPoolForLanguage(language, '200', scriptMode);
+    pool = getWordPoolForLanguage(targetLang, '200', scriptMode);
   }
 
   const words: string[] = [];

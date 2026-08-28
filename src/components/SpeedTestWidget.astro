@@ -14,7 +14,7 @@
   <!-- Top Floating Monkeytype Config Bar -->
   <div
     id="mt-config-bar"
-    class="relative z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 transition-opacity duration-300 text-xs font-semibold select-none shadow-sm"
+    class="relative z-40 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 transition-opacity duration-300 text-xs font-semibold select-none shadow-sm"
     style="background-color: var(--mt-sub-alt); color: var(--mt-sub);"
   >
     <!-- Left: Modifiers & Word Pool -->
@@ -44,7 +44,7 @@
       <span class="h-4 w-px mx-1" style="background-color: var(--mt-sub); opacity: 0.3;"></span>
 
       <!-- Word Pool Language Selector -->
-      <div class="relative" id="mt-pool-dropdown-wrapper">
+      <div class="relative z-50" id="mt-pool-dropdown-wrapper">
         <button
           type="button"
           id="mt-pool-btn"
@@ -2366,18 +2366,25 @@
     });
 
     // Word Pool Dropdown
-    poolBtn?.addEventListener('click', (e) => {
+    const onPoolBtnClick = (e: MouseEvent) => {
       e.stopPropagation();
       poolMenu?.classList.toggle('hidden');
-    });
-    document.addEventListener('click', (e) => {
+    };
+    poolBtn?.addEventListener('click', onPoolBtnClick);
+    activeCleanups.push(() => poolBtn?.removeEventListener('click', onPoolBtnClick));
+
+    const onDocumentPoolClick = (e: MouseEvent) => {
       if (!poolMenu?.contains(e.target as Node) && !poolBtn?.contains(e.target as Node)) {
         poolMenu?.classList.add('hidden');
       }
-    });
+    };
+    document.addEventListener('click', onDocumentPoolClick);
+    activeCleanups.push(() => document.removeEventListener('click', onDocumentPoolClick));
+
     const poolOptions = document.querySelectorAll('.mt-pool-opt');
     poolOptions.forEach(opt => {
-      opt.addEventListener('click', () => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
         const pool = (opt.getAttribute('data-pool') || 'english') as any;
         setWordPool(pool);
         poolMenu?.classList.add('hidden');

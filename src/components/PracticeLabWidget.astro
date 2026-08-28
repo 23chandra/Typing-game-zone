@@ -80,6 +80,115 @@
         <button type="button" data-count="40" class="prac-count-btn px-2 py-1 rounded-lg transition cursor-pointer text-[11px] opacity-75 hover:opacity-100">40w</button>
       </div>
 
+      <!-- Language Selector for Practice Lab -->
+      <div class="relative z-50" id="prac-lang-dropdown-wrapper">
+        <button
+          type="button"
+          id="prac-lang-btn"
+          class="flex items-center gap-1 rounded-xl border border-hairline px-2.5 py-1.5 text-xs font-mono font-medium transition cursor-pointer hover:bg-canvas"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
+          title="Select Practice Language & Script"
+        >
+          <span id="prac-lang-flag">🌐</span>
+          <span id="prac-lang-label">English</span>
+          <svg class="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div
+          id="prac-lang-menu"
+          class="absolute right-0 top-full mt-1 hidden min-w-48 rounded-xl border border-hairline p-1.5 shadow-2xl z-50 text-xs font-mono max-h-72 overflow-y-auto"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));"
+        >
+          <button type="button" data-prac-lang="en" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] active font-bold">
+            <span>🇺🇸 English (ANSI)</span>
+            <span class="check text-[var(--mt-main)]">✓</span>
+          </button>
+          <button type="button" data-prac-lang="hi" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇳 हिन्दी (Hindi)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ja" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇯🇵 日本語 (Japanese)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ru" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇷🇺 Русский (Russian)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ar" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇸🇦 العربية (Arabic)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="de" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇩🇪 Deutsch (German)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="es" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇪🇸 Español (Spanish)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="fr" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇫🇷 Français (French)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="bn" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇧🇩 বাংলা (Bengali)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="pt" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇧🇷 Português</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="zh" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇨🇳 简体中文 (Chinese)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ko" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇰🇷 한국어 (Korean)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="it" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇹 Italiano (Italian)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="tr" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇹🇷 Türkçe (Turkish)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="vi" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇻🇳 Tiếng Việt (Vietnamese)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="id" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇩 Bahasa Indonesia</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Script Mode Toggle (Native Script vs Latin / Romaji) -->
+      <div id="prac-script-toggle-wrapper" class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline hidden" style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));">
+        <button
+          type="button"
+          id="prac-script-native-btn"
+          class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer"
+          style="background-color: var(--mt-main, #e2b714); color: var(--mt-bg, #323437);"
+          title="Practice in Native Script with Phonetic Engine"
+        >
+          <span>🔤 Native</span>
+        </button>
+        <button
+          type="button"
+          id="prac-script-latin-btn"
+          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer opacity-70 hover:opacity-100"
+          title="Practice in Latin Alphabet"
+        >
+          <span>🔡 Latin</span>
+        </button>
+      </div>
+
       <!-- Metronome Pacer Dropdown -->
       <div class="relative">
         <button
@@ -150,17 +259,24 @@
         </div>
       </div>
 
-      <!-- Quick Reset Button -->
-      <button
-        type="button"
-        id="prac-restart-btn"
-        class="flex items-center gap-1.5 rounded-xl border border-hairline px-3 py-1.5 text-xs font-bold transition hover:opacity-100 opacity-80 cursor-pointer"
-        style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-text, #d1d0c5);"
-        title="Restart Drill (Tab)"
-      >
-        <span>⟲</span>
-        <span class="hidden sm:inline">Restart (Tab)</span>
-      </button>
+      <div class="flex items-center gap-2">
+        <!-- Phonetic Badge -->
+        <div id="prac-phonetic-badge" class="hidden items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono border border-hairline" style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-main, #e2b714);">
+          <span>✨ Phonetic Typing: Active</span>
+        </div>
+
+        <!-- Quick Reset Button -->
+        <button
+          type="button"
+          id="prac-restart-btn"
+          class="flex items-center gap-1.5 rounded-xl border border-hairline px-3 py-1.5 text-xs font-bold transition hover:opacity-100 opacity-80 cursor-pointer"
+          style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-text, #d1d0c5);"
+          title="Restart Drill (Tab)"
+        >
+          <span>⟲</span>
+          <span class="hidden sm:inline">Restart (Tab)</span>
+        </button>
+      </div>
     </div>
 
     <!-- Active Words Display Arena -->
@@ -444,7 +560,8 @@
 </style>
 
 <script>
-  import { WORD_LISTS, generateWeakKeysDrill } from '../lib/wordLists';
+  import { WORD_LISTS, generateWeakKeysDrill, getWordPoolForLanguage } from '../lib/wordLists';
+  import { transliterateInput, isNativeScriptSupported } from '../lib/transliterationEngine';
   import { soundEngine } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
   import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, type PhysicalKeyDef } from '../lib/fingerMapping';
@@ -482,6 +599,16 @@
     const liveStreak = document.getElementById('prac-live-streak');
     const restartBtn = document.getElementById('prac-restart-btn');
 
+    // Language & Script Mode Elements
+    const langBtn = document.getElementById('prac-lang-btn');
+    const langMenu = document.getElementById('prac-lang-menu');
+    const langLabel = document.getElementById('prac-lang-label');
+    const langFlag = document.getElementById('prac-lang-flag');
+    const scriptToggleWrapper = document.getElementById('prac-script-toggle-wrapper');
+    const scriptNativeBtn = document.getElementById('prac-script-native-btn');
+    const scriptLatinBtn = document.getElementById('prac-script-latin-btn');
+    const phoneticBadge = document.getElementById('prac-phonetic-badge');
+
     // Instructor Elements
     const fingerDot = document.getElementById('prac-finger-dot');
     const fingerInstruction = document.getElementById('prac-finger-instruction');
@@ -517,6 +644,9 @@
 
     // State Variables
     let currentDrillType = 'homeRow';
+    let pracLang = 'en';
+    let scriptMode: 'native' | 'latin' = 'native';
+    let currentLatinBuffer = '';
     let targetWordCount = 20;
     let customBuffer = '';
     let keyboardColorMode: 'theme' | 'quadrant' = (localStorage.getItem('prac_keyboard_mode') as any) || 'theme';
@@ -645,6 +775,7 @@
       isDrillComplete = false;
       currentWordIndex = 0;
       currentCharIndex = 0;
+      currentLatinBuffer = '';
       correctChars = 0;
       errorChars = 0;
       currentStreak = 0;
@@ -657,7 +788,13 @@
       let sourceList: string[] = [];
       const drillsDict = WORD_LISTS.practiceDrills as any;
 
-      if (currentDrillType === 'custom') {
+      if (pracLang !== 'en') {
+        sourceList = getWordPoolForLanguage(pracLang, scriptMode);
+        words = [];
+        for (let i = 0; i < targetWordCount; i++) {
+          words.push(sourceList[i % sourceList.length]);
+        }
+      } else if (currentDrillType === 'custom') {
         if (!customBuffer) customBuffer = 'the quick brown fox jumps over the lazy dog';
         const rawWords = customBuffer.trim().split(/\s+/).filter(Boolean);
         words = [];
@@ -860,6 +997,7 @@
       // Space Key -> Advance Word
       if (key === ' ') {
         soundEngine.playKey(true);
+        currentLatinBuffer = '';
 
         if (currentCharIndex > 0) {
           if (letters && currentCharIndex < letters.length) {
@@ -894,6 +1032,7 @@
       // Backspace Handler
       if (key === 'Backspace') {
         soundEngine.playKey();
+        currentLatinBuffer = currentLatinBuffer.slice(0, -1);
 
         if (currentCharIndex > 0) {
           currentCharIndex--;
@@ -915,8 +1054,17 @@
       // Printable Single Characters
       if (key.length === 1) {
         totalKeystrokes++;
+        currentLatinBuffer += key;
         const expected = currentWord[currentCharIndex];
-        const isMatch = key === expected;
+        let isMatch = key === expected;
+
+        if (!isMatch && scriptMode === 'native' && pracLang !== 'en') {
+          const trans = transliterateInput(currentLatinBuffer, pracLang, 'native');
+          const partialExpected = currentWord.slice(0, currentCharIndex + 1);
+          if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
+            isMatch = true;
+          }
+        }
         storage.recordKeystroke(expected || key, !isMatch);
 
         if (letters && currentCharIndex < letters.length) {
@@ -1176,6 +1324,114 @@
         opt.querySelector('.bpm-check')?.classList.remove('hidden');
         metroMenu?.classList.add('hidden');
       });
+    });
+
+    // Practice Language Dropdown
+    const onPracLangBtnClick = (e: MouseEvent) => {
+      e.stopPropagation();
+      langMenu?.classList.toggle('hidden');
+    };
+    langBtn?.addEventListener('click', onPracLangBtnClick);
+    activeCleanups.push(() => langBtn?.removeEventListener('click', onPracLangBtnClick));
+
+    const onDocumentPracLangClick = (e: MouseEvent) => {
+      if (!langMenu?.contains(e.target as Node) && !langBtn?.contains(e.target as Node)) {
+        langMenu?.classList.add('hidden');
+      }
+    };
+    document.addEventListener('click', onDocumentPracLangClick);
+    activeCleanups.push(() => document.removeEventListener('click', onDocumentPracLangClick));
+
+    const pracLangOptions = document.querySelectorAll('.prac-lang-opt');
+    pracLangOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const l = opt.getAttribute('data-prac-lang') || 'en';
+        setPracLanguage(l);
+        langMenu?.classList.add('hidden');
+      });
+    });
+
+    function setPracLanguage(langCode: string) {
+      pracLang = langCode;
+      const flags: Record<string, string> = {
+        en: '🇺🇸', hi: '🇮🇳', ja: '🇯🇵', ru: '🇷🇺', ar: '🇸🇦',
+        de: '🇩🇪', es: '🇪🇸', fr: '🇫🇷', bn: '🇧🇩', pt: '🇧🇷',
+        zh: '🇨🇳', ko: '🇰🇷', it: '🇮🇹', tr: '🇹🇷', vi: '🇻🇳', id: '🇮🇩'
+      };
+      const labels: Record<string, string> = {
+        en: 'English (ANSI)', hi: 'हिन्दी (Hindi)', ja: '日本語 (Japanese)',
+        ru: 'Русский (Russian)', ar: 'العربية (Arabic)', de: 'Deutsch (German)',
+        es: 'Español (Spanish)', fr: 'Français (French)', bn: 'বাংলা (Bengali)',
+        pt: 'Português', zh: '简体中文 (Chinese)', ko: '한국어 (Korean)',
+        it: 'Italiano (Italian)', tr: 'Türkçe (Turkish)', vi: 'Tiếng Việt (Vietnamese)',
+        id: 'Bahasa Indonesia'
+      };
+      if (langFlag) langFlag.textContent = flags[langCode] || '🌐';
+      if (langLabel) langLabel.textContent = labels[langCode] || langCode;
+
+      pracLangOptions.forEach(opt => {
+        const l = opt.getAttribute('data-prac-lang');
+        const chk = opt.querySelector('.check');
+        if (chk) {
+          if (l === langCode) {
+            chk.classList.remove('hidden');
+            opt.classList.add('active', 'font-bold');
+          } else {
+            chk.classList.add('hidden');
+            opt.classList.remove('active', 'font-bold');
+          }
+        }
+      });
+
+      if (scriptToggleWrapper) {
+        if (langCode !== 'en' && isNativeScriptSupported(langCode)) {
+          scriptToggleWrapper.classList.remove('hidden');
+          if (phoneticBadge) phoneticBadge.classList.toggle('hidden', scriptMode !== 'native');
+        } else {
+          scriptToggleWrapper.classList.add('hidden');
+          if (phoneticBadge) phoneticBadge.classList.add('hidden');
+        }
+      }
+
+      generateDrillWords();
+      focusPracticeInput();
+    }
+
+    const updatePracScriptUI = () => {
+      if (scriptNativeBtn && scriptLatinBtn) {
+        if (scriptMode === 'native') {
+          scriptNativeBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+          scriptNativeBtn.style.color = 'var(--mt-bg, #323437)';
+          scriptNativeBtn.classList.remove('opacity-70');
+          scriptLatinBtn.style.backgroundColor = 'transparent';
+          scriptLatinBtn.style.color = 'var(--mt-text, #d1d0c5)';
+          scriptLatinBtn.classList.add('opacity-70');
+          if (phoneticBadge) phoneticBadge.classList.remove('hidden');
+        } else {
+          scriptLatinBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+          scriptLatinBtn.style.color = 'var(--mt-bg, #323437)';
+          scriptLatinBtn.classList.remove('opacity-70');
+          scriptNativeBtn.style.backgroundColor = 'transparent';
+          scriptNativeBtn.style.color = 'var(--mt-text, #d1d0c5)';
+          scriptNativeBtn.classList.add('opacity-70');
+          if (phoneticBadge) phoneticBadge.classList.add('hidden');
+        }
+      }
+    };
+
+    scriptNativeBtn?.addEventListener('click', () => {
+      scriptMode = 'native';
+      updatePracScriptUI();
+      generateDrillWords();
+      focusPracticeInput();
+    });
+
+    scriptLatinBtn?.addEventListener('click', () => {
+      scriptMode = 'latin';
+      updatePracScriptUI();
+      generateDrillWords();
+      focusPracticeInput();
     });
 
     // Function to activate a drill tab button & sync quadrant filter chips
