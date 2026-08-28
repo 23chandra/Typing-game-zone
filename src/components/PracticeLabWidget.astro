@@ -560,11 +560,11 @@
 </style>
 
 <script>
-  import { WORD_LISTS, generateWeakKeysDrill, getWordPoolForLanguage } from '../lib/wordLists';
-  import { transliterateInput, isNativeScriptSupported } from '../lib/transliterationEngine';
+  import { WORD_LISTS, generateWeakKeysDrill, getWordPoolForLanguage, getPracticeDrillWords } from '../lib/wordLists';
+  import { transliterateInput, isNativeScriptSupported, applySmartAccents } from '../lib/transliterationEngine';
   import { soundEngine } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
-  import { PHYSICAL_KEYBOARD_LAYOUT, getFingerQuadrantData, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import { PHYSICAL_KEYBOARD_LAYOUT, getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, type PhysicalKeyDef } from '../lib/fingerMapping';
   import confetti from 'canvas-confetti';
 
   let metronomeTimer: number | null = null;
@@ -677,7 +677,9 @@
       keyboardMatrix.innerHTML = '';
       keycapsMap.clear();
 
-      PHYSICAL_KEYBOARD_LAYOUT.forEach(row => {
+      const activeLayout = getPhysicalKeyboardLayout(pracLang);
+
+      activeLayout.forEach(row => {
         const rowDiv = document.createElement('div');
         rowDiv.className = 'flex justify-center w-full select-none';
         rowDiv.style.gap = 'var(--key-gap)';
@@ -752,6 +754,8 @@
               handleKey('Backspace');
             } else if (keyDef.k === ' ') {
               handleKey(' ');
+            } else if (keyDef.display) {
+              handleKey(keyDef.display);
             } else if (keyDef.k.length === 1) {
               handleKey(keyDef.k);
             }
@@ -785,16 +789,7 @@
       resultView?.classList.add('hidden');
       typingView?.classList.remove('hidden');
 
-      let sourceList: string[] = [];
-      const drillsDict = WORD_LISTS.practiceDrills as any;
-
-      if (pracLang !== 'en') {
-        sourceList = getWordPoolForLanguage(pracLang, scriptMode);
-        words = [];
-        for (let i = 0; i < targetWordCount; i++) {
-          words.push(sourceList[i % sourceList.length]);
-        }
-      } else if (currentDrillType === 'custom') {
+      if (currentDrillType === 'custom') {
         if (!customBuffer) customBuffer = 'the quick brown fox jumps over the lazy dog';
         const rawWords = customBuffer.trim().split(/\s+/).filter(Boolean);
         words = [];
@@ -804,14 +799,8 @@
       } else if (currentDrillType === 'weakKeys') {
         const weakKeys = storage.getWeakestKeys(5).map(k => k.char);
         words = generateWeakKeysDrill(weakKeys, targetWordCount);
-      } else if (drillsDict[currentDrillType]) {
-        sourceList = drillsDict[currentDrillType];
-        words = [];
-        for (let i = 0; i < targetWordCount; i++) {
-          words.push(sourceList[i % sourceList.length]);
-        }
       } else {
-        sourceList = drillsDict.homeRow;
+        const sourceList = getPracticeDrillWords(currentDrillType, pracLang, scriptMode);
         words = [];
         for (let i = 0; i < targetWordCount; i++) {
           words.push(sourceList[i % sourceList.length]);
@@ -920,7 +909,8 @@
       if (fingerDot) fingerDot.style.backgroundColor = highlightColor;
       if (fingerInstruction) {
         const displayChar = targetChar === ' ' ? 'SPACEBAR' : targetChar;
-        const shiftHint = fData.shiftKey ? `(Shift + ${fData.baseKey.toUpperCase()})` : '';
+        const keyHint = (fData.baseKey && fData.baseKey !== targetChar && targetChar !== ' ') ? `(Key: ${fData.baseKey.toUpperCase()})` : '';
+        const shiftHint = fData.shiftKey ? `(Shift + ${fData.baseKey.toUpperCase()})` : keyHint;
         fingerInstruction.innerHTML = `👉 Strike <span class="font-bold underline" style="color: ${highlightColor};">[${displayChar}]</span> ${shiftHint} using your <strong style="color: ${highlightColor};">${fData.fingerName}</strong>`;
       }
       if (handSideEl) handSideEl.textContent = fData.hand;
@@ -945,8 +935,11 @@
         el.classList.remove('ring-2', 'ring-offset-1');
       });
 
-      // Find matched keycap using Map
-      const matchedKeycap = keycapsMap.get(targetChar) || keycapsMap.get(targetChar.toLowerCase());
+      // Find matched keycap using Map (with universal fallback)
+      const matchedKeycap = keycapsMap.get(targetChar) ||
+        keycapsMap.get(targetChar.toLowerCase()) ||
+        keycapsMap.get(fData.baseKey) ||
+        keycapsMap.get(fData.baseKey.toLowerCase());
 
       if (matchedKeycap) {
         matchedKeycap.style.boxShadow = `0 0 24px 4px ${highlightColor}, 0 3px 0 0 rgba(0, 0, 0, 0.5)`;
@@ -1059,10 +1052,30 @@
         let isMatch = key === expected;
 
         if (!isMatch && scriptMode === 'native' && pracLang !== 'en') {
-          const trans = transliterateInput(currentLatinBuffer, pracLang, 'native');
-          const partialExpected = currentWord.slice(0, currentCharIndex + 1);
-          if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
-            isMatch = true;
+          // 1. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
+          const langOverrides = KEY_LABEL_OVERRIDES[pracLang] || KEY_LABEL_OVERRIDES[pracLang.slice(0, 2)];
+          if (langOverrides) {
+            const mapped = langOverrides[key.toLowerCase()]?.display;
+            if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
+              isMatch = true;
+            }
+          }
+
+          // 2. Phonetic transliteration check
+          if (!isMatch) {
+            const trans = transliterateInput(currentLatinBuffer, pracLang, 'native');
+            const partialExpected = currentWord.slice(0, currentCharIndex + 1);
+            if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
+              isMatch = true;
+            }
+          }
+
+          // 3. Smart Accents check
+          if (!isMatch) {
+            const smartAcc = applySmartAccents(key, pracLang);
+            if (smartAcc === expected || smartAcc.toLowerCase() === (expected || '').toLowerCase()) {
+              isMatch = true;
+            }
           }
         }
         storage.recordKeystroke(expected || key, !isMatch);
@@ -1394,6 +1407,7 @@
         }
       }
 
+      renderVirtualKeyboardDOM();
       generateDrillWords();
       focusPracticeInput();
     }

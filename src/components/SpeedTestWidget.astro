@@ -737,7 +737,8 @@
   import { MONKEYTYPE_THEMES, getThemeById, applyThemeToElement, applyThemeGlobal, type MonkeytypeTheme } from '../lib/monkeytypeThemes';
   import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
-  import { transliterateInput, isNativeScriptSupported } from '../lib/transliterationEngine';
+  import { transliterateInput, isNativeScriptSupported, applySmartAccents } from '../lib/transliterationEngine';
+  import { KEY_LABEL_OVERRIDES } from '../lib/fingerMapping';
   import confetti from 'canvas-confetti';
 
   interface KeystrokeEvent {
@@ -1689,11 +1690,31 @@
         const expected = currentWord[currentCharIndex];
         let isMatch = key === expected;
 
-        if (!isMatch && scriptMode === 'native') {
-          const trans = transliterateInput(currentLatinBuffer, wordPool, 'native');
-          const partialExpected = currentWord.slice(0, currentCharIndex + 1);
-          if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
-            isMatch = true;
+        if (!isMatch && scriptMode === 'native' && wordPool !== 'english' && wordPool !== 'english1k' && wordPool !== 'code') {
+          // 1. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
+          const langOverrides = KEY_LABEL_OVERRIDES[wordPool] || KEY_LABEL_OVERRIDES[wordPool.slice(0, 2)];
+          if (langOverrides) {
+            const mapped = langOverrides[key.toLowerCase()]?.display;
+            if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
+              isMatch = true;
+            }
+          }
+
+          // 2. Phonetic transliteration check
+          if (!isMatch) {
+            const trans = transliterateInput(currentLatinBuffer, wordPool, 'native');
+            const partialExpected = currentWord.slice(0, currentCharIndex + 1);
+            if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
+              isMatch = true;
+            }
+          }
+
+          // 3. Smart Accents check
+          if (!isMatch) {
+            const smartAcc = applySmartAccents(key, wordPool);
+            if (smartAcc === expected || smartAcc.toLowerCase() === (expected || '').toLowerCase()) {
+              isMatch = true;
+            }
           }
         }
 

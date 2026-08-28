@@ -534,6 +534,100 @@ export const PRACTICE_DRILLS = {
   thumbDrills: ['a', 'the', 'to', 'in', 'is', 'you', 'that', 'it', 'he', 'was', 'for', 'on', 'are', 'as', 'with', 'his', 'they', 'at', 'be', 'this']
 };
 
+export const LOCALIZED_PRACTICE_DRILLS: Record<string, Partial<typeof PRACTICE_DRILLS>> = {
+  hi: {
+    homeRow: ['कर', 'पर', 'रख', 'कल', 'तक', 'चलो', 'पाप', 'रात', 'कहा', 'रहना', 'कितना', 'समय', 'लोग', 'पहला', 'काम'],
+    topRow: ['बात', 'दिन', 'घर', 'गाना', 'बाद', 'होगा', 'बहुत', 'देना', 'जाना', 'दुनिया', 'बड़ा', 'देख', 'नया', 'जीवन'],
+    bottomRow: ['मन', 'सच', 'वन', 'समय', 'सब', 'सोच', 'यही', 'शान', 'सेवा', 'नाम', 'कम', 'प्यार', 'दोस्त', 'पानी'],
+    numberRow: ['१२३४', '५६७८', '२०२६', '१००%', '५०-५०', '१', '२', '३', '४', '५', '६', '७', '८', '९', '०'],
+    ngrams: ['कर', 'पर', 'सब', 'मन', 'घर', 'दिन', 'बात', 'सच', 'हम', 'तुम', 'आप', 'वह', 'यह', 'भी', 'तो', 'जब', 'है', 'था'],
+    pangrams: ['ऋषि ज्ञान से मनुष्य का जीवन सुंदर और सफल बनता है।', 'सत्य और अहिंसा ही सबसे बड़ा धर्म और शक्ति है।']
+  },
+  ru: {
+    homeRow: ['вода', 'дом', 'пора', 'дело', 'слово', 'друг', 'поле', 'дорога', 'голос', 'пожар', 'правда', 'город'],
+    topRow: ['утро', 'город', 'день', 'рука', 'небо', 'песня', 'ветер', 'туча', 'берег', 'вечер', 'гроза', 'порог'],
+    bottomRow: ['мир', 'свет', 'ночь', 'время', 'мысль', 'сила', 'земля', 'семья', 'число', 'месяц', 'зима', 'весна'],
+    numberRow: ['1234', '5678', '1984', '2026', '100%', '50/50'],
+    ngrams: ['ст', 'но', 'то', 'на', 'ен', 'ов', 'ни', 'ра', 'во', 'ко', 'ро', 'по', 'ал', 'пр', 'ос'],
+    pangrams: ['Съешь же ещё этих мягких французских булок, да выпей чаю.', 'Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства.']
+  },
+  ja: {
+    homeRow: ['ひと', 'こころ', 'はな', 'みち', 'て', 'め', 'ことば', 'ほん', 'なまえ', 'みず', 'ひ', 'かぜ'],
+    topRow: ['いま', 'せかい', 'みらい', 'つき', 'くに', 'まち', 'いえ', 'そら', 'やま', 'うみ', 'き', 'ゆめ'],
+    bottomRow: ['そら', 'ゆめ', 'あい', 'ちから', 'へいわ', 'しあわせ', 'ゆうき', 'さくら', 'にほん', 'せんせい'],
+    numberRow: ['1234', '5678', '2026', '100%', '一二三四', '五六七八'],
+    ngrams: ['の', 'に', 'は', 'を', 'た', 'が', 'で', 'て', 'と', 'し', 'れ', 'さ', 'あ', 'る', 'く', 'い'],
+    pangrams: ['いろはにほへと ちりぬるを わかよたれそ つねならむ うゐのおくやま けふこえて あさきゆめみし ゑひもせす']
+  },
+  ar: {
+    homeRow: ['سلام', 'بيت', 'باب', 'كتاب', 'سنة', 'بنت', 'شمس', 'طريق', 'كلمة', 'صديق', 'مكتب', 'نهر'],
+    topRow: ['يوم', 'عالم', 'عين', 'حياة', 'قوة', 'خير', 'حديث', 'فجر', 'حق', 'صوت', 'جمال', 'علم'],
+    bottomRow: ['نور', 'قمر', 'أمل', 'عمل', 'أرض', 'ماء', 'زمن', 'وطن', 'ورد', 'سرور', 'ذهب', 'روح'],
+    numberRow: ['١٢٣٤', '٥٦٧٨', '٢٠٢٦', '١٠٠٪', '1234', '5678'],
+    ngrams: ['في', 'من', 'عن', 'على', 'إلى', 'مع', 'كل', 'هو', 'هي', 'أن', 'لا', 'ما', 'كان', 'ثم', 'أو'],
+    pangrams: ['نص حكيم له سر قاطع وذو شأن عظيم مكتوب على ثوب أخضر ومطرز بالذهب.']
+  },
+  ko: {
+    homeRow: ['사람', '마음', '나라', '하늘', '소리', '아이', '어머니', '얼굴', '이야기', '하루', '사랑', '행복'],
+    topRow: ['인생', '희망', '바다', '생각', '시간', '태양', '세상', '미래', '우정', '열정', '성공', '기쁨'],
+    bottomRow: ['음악', '한국', '친구', '사랑', '행복', '가족', '자유', '평화', '승리', '도전', '청춘', '감동'],
+    numberRow: ['1234', '5678', '2026', '100%', '일이삼사', '오육칠팔'],
+    ngrams: ['그', '이', '저', '나', '우리', '때', '일', '말', '집', '눈', '손', '물', '앞', '길', '몸'],
+    pangrams: ['키스의 고유조건은 입술끼리 만나야 하고 특별한 기술은 필요치 않다.']
+  },
+  bn: {
+    homeRow: ['কথা', 'বই', 'কাজ', 'রাত', 'পথ', 'পর', 'কর', 'তার', 'হাত', 'গান', 'কাল', 'মন'],
+    topRow: ['বাড়ি', 'গান', 'দিন', 'হাতে', 'গান', 'ডাক', 'জীবন', 'দেশ', 'ঘর', 'আলো', 'গল্প', 'জল'],
+    bottomRow: ['মন', 'সব', 'আলো', 'জল', 'মাটি', 'নদী', 'ফুল', 'সকাল', 'মেঘ', 'বায়ু', 'ছবি', 'খবর'],
+    numberRow: ['১২৩৪', '৫৬৭৮', '২০২৬', '১০০%', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '০'],
+    ngrams: ['এবং', 'ও', 'এর', 'তে', 'থেকে', 'করে', 'হলো', 'আছে', 'নেই', 'একটি', 'এই', 'সেই', 'যে', 'সব'],
+    pangrams: ['যে কোনো স্বাধীন দেশের মানুষের জন্য মাতৃভাষার মর্যাদা রক্ষা করা পরম কর্তব্য।']
+  },
+  de: {
+    homeRow: ['schön', 'spät', 'groß', 'käfer', 'während', 'öffnen', 'hören', 'größe', 'nähe', 'drücken', 'wählen'],
+    topRow: ['über', 'für', 'körper', 'schließlich', 'ändern', 'schüler', 'glücklich', 'können', 'müssen', 'übung'],
+    bottomRow: ['mädchen', 'außerdem', 'möglich', 'verfügbar', 'vollständig', 'erklären', 'qualität', 'träger', 'lösung'],
+    numberRow: ['1234', '5678', '1984', '2026', '100%', '50-50'],
+    ngrams: ['der', 'die', 'das', 'und', 'in', 'den', 'von', 'zu', 'mit', 'sich', 'auf', 'für', 'ist', 'im'],
+    pangrams: ['Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.', 'Falsches Üben von Xylophonmusik quält jeden größeren Zwerg.']
+  },
+  es: {
+    homeRow: ['más', 'está', 'dónde', 'quién', 'año', 'niño', 'día', 'español', 'corazón', 'adiós', 'mañana', 'canción'],
+    topRow: ['éxito', 'sueño', 'tiempo', 'país', 'árbol', 'música', 'esperanza', 'libertad', 'alegría', 'pasión', 'visión'],
+    bottomRow: ['también', 'vida', 'mundo', 'casa', 'hombre', 'mujer', 'trabajo', 'luz', 'mano', 'fuerza', 'camino'],
+    numberRow: ['1234', '5678', '1984', '2026', '100%', '50-50'],
+    ngrams: ['de', 'la', 'que', 'el', 'en', 'y', 'a', 'los', 'se', 'del', 'las', 'un', 'por', 'con', 'no', 'una'],
+    pangrams: ['El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña tocaba el saxofón detrás del palenque de paja.']
+  },
+  fr: {
+    homeRow: ['français', 'cœur', 'être', 'très', 'où', 'déjà', 'grâce', 'liberté', 'égalité', 'fraternité', 'rêve'],
+    topRow: ['après', 'même', 'premier', 'lumière', 'succès', 'espoir', 'vérité', 'monde', 'temps', 'lieu', 'petit'],
+    bottomRow: ['homme', 'femme', 'enfant', 'grand', 'chose', 'part', 'force', 'yeux', 'main', 'notre', 'pendant'],
+    numberRow: ['1234', '5678', '1984', '2026', '100%', '50-50'],
+    ngrams: ['de', 'la', 'le', 'et', 'les', 'des', 'en', 'un', 'du', 'une', 'que', 'est', 'pour', 'qui', 'dans'],
+    pangrams: ['Portez ce vieux whisky au juge blond qui fume.', 'Voix ambiguë d’un cœur qui, au zéphyr, préfère les jattes de kiwis.']
+  }
+};
+
+export function getPracticeDrillWords(drillType: string, lang = 'en', scriptMode: 'native' | 'latin' = 'native'): string[] {
+  const code = (lang || 'en').toLowerCase().trim();
+
+  if (code === 'en' || scriptMode === 'latin') {
+    const drills = PRACTICE_DRILLS as any;
+    if (drills[drillType]) return drills[drillType];
+    return getWordPoolForLanguage(code, '200', scriptMode);
+  }
+
+  // Check language-specific drills
+  const langDrills = LOCALIZED_PRACTICE_DRILLS[code] || LOCALIZED_PRACTICE_DRILLS[code.slice(0, 2)];
+  if (langDrills && (langDrills as any)[drillType]) {
+    return (langDrills as any)[drillType];
+  }
+
+  // Fallback to language native word pool
+  return getWordPoolForLanguage(code, '200', scriptMode);
+}
+
 export const WORD_LISTS = {
   ...LOCALIZED_GAME_WORDS.en,
   pangrams: PANGRAMS_LIST,
