@@ -14,46 +14,46 @@
   <!-- Top Floating Monkeytype Config Bar -->
   <div
     id="mt-config-bar"
-    class="relative z-40 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 transition-opacity duration-300 text-xs font-semibold select-none shadow-sm"
+    class="relative z-40 flex flex-wrap items-center justify-between gap-2 sm:gap-3 rounded-2xl p-2 sm:p-2.5 transition-opacity duration-300 text-xs font-semibold select-none shadow-sm"
     style="background-color: var(--mt-sub-alt); color: var(--mt-sub);"
   >
     <!-- Left: Modifiers & Word Pool -->
-    <div class="flex flex-wrap items-center gap-1.5">
+    <div class="flex flex-wrap items-center gap-1 sm:gap-1.5">
       <!-- Punctuation Toggle -->
       <button
         type="button"
         id="mt-toggle-punc"
-        class="mt-config-pill flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
+        class="mt-config-pill flex items-center gap-1.5 rounded-xl px-2 sm:px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
         title="Toggle Punctuation (@)"
       >
         <span class="font-bold">@</span>
-        <span class="hidden sm:inline">punctuation</span>
+        <span class="hidden xs:inline sm:inline">punctuation</span>
       </button>
 
       <!-- Numbers Toggle -->
       <button
         type="button"
         id="mt-toggle-num"
-        class="mt-config-pill flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
+        class="mt-config-pill flex items-center gap-1.5 rounded-xl px-2 sm:px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
         title="Toggle Numbers (#)"
       >
         <span class="font-bold">#</span>
-        <span class="hidden sm:inline">numbers</span>
+        <span class="hidden xs:inline sm:inline">numbers</span>
       </button>
 
-      <span class="h-4 w-px mx-1" style="background-color: var(--mt-sub); opacity: 0.3;"></span>
+      <span class="h-4 w-px mx-0.5 sm:mx-1" style="background-color: var(--mt-sub); opacity: 0.3;"></span>
 
       <!-- Word Pool Language Selector -->
       <div class="relative z-50" id="mt-pool-dropdown-wrapper">
         <button
           type="button"
           id="mt-pool-btn"
-          class="flex items-center gap-1 rounded-xl px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
+          class="flex items-center gap-1 rounded-xl px-2 sm:px-2.5 py-1.5 transition-all cursor-pointer hover:text-[var(--mt-text)]"
           title="Change Word List / Language"
         >
           <span>🌐</span>
-          <span id="mt-pool-label">english 200</span>
-          <svg class="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <span id="mt-pool-label" class="truncate max-w-[90px] xs:max-w-none">english 200</span>
+          <svg class="h-3 w-3 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
@@ -61,7 +61,7 @@
         <!-- Dropdown Menu -->
         <div
           id="mt-pool-menu"
-          class="absolute left-0 top-full mt-1 hidden min-w-56 rounded-xl p-1.5 shadow-xl z-50 border text-xs max-h-72 overflow-y-auto"
+          class="absolute left-0 top-full mt-1 hidden w-[min(18rem,calc(100vw-2rem))] rounded-2xl p-2 shadow-2xl z-50 border text-xs max-h-72 overflow-y-auto smooth-scroll-x"
           style="background-color: var(--mt-bg); border-color: var(--mt-sub-alt);"
         >
           <button type="button" data-pool="english" class="mt-pool-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] active-pool">

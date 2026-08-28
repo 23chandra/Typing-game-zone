@@ -7,32 +7,115 @@ import '../styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  keywords?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  structuredData?: Record<string, any> | Record<string, any>[];
 }
 
 const {
-  title = 'Typing Game Zone — 21 Free 2D Typing Games & Speed Practice',
-  description = 'Play 21 free 2D typing games across arcade, adventure, action, and fighting genres with mechanical switch sound synthesis, levels, and speed tests.'
+  title = 'Typing Game Zone — Free 2D Typing Games Online, Speed Tests & Typing Lessons',
+  description = 'Play 21 free 2D typing games online at Typing Game Zone! Master fast typing with arcade action, zombie survival, typing lessons, speed tests, and mechanical switch audio.',
+  keywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, typing game online for kids, typing master word typing game online, kids typing game online, keyboard typing game online, zombie typing game online, 2d typing game online, 2d typing game online free, 2d typing game, typing game zone guess who i am, free typing game zone, typing game zone snake',
+  canonicalUrl = new URL(Astro.url.pathname, 'https://typinggamezone.com').href,
+  ogImage = 'https://typinggamezone.com/og-image.svg',
+  ogType = 'website',
+  structuredData
 } = Astro.props;
+
+// Core WebSite & WebApplication Schema.org JSON-LD
+const baseStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    'name': 'Typing Game Zone',
+    'alternateName': ['TypingGameZone', 'Typing Game Zone Online'],
+    'url': 'https://typinggamezone.com',
+    'description': 'Free 2D typing games online, keyboard speed tests, touch typing lessons, and arcade typing practice.',
+    'inLanguage': 'en-US',
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'Typing Game Zone',
+      'url': 'https://typinggamezone.com',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': 'https://typinggamezone.com/logo.svg'
+      }
+    }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    'name': 'Typing Game Zone',
+    'url': 'https://typinggamezone.com',
+    'applicationCategory': 'GameApplication, EducationalApplication',
+    'operatingSystem': 'Any (Web Browser)',
+    'offers': {
+      '@type': 'Offer',
+      'price': '0',
+      'priceCurrency': 'USD'
+    },
+    'description': 'Comprehensive suite of 21 free 2D typing games online, customizable speed tests, and interactive typing lessons with mechanical switch sound synthesis.'
+  }
+];
+
+const allStructuredData = structuredData
+  ? Array.isArray(structuredData)
+    ? [...baseStructuredData, ...structuredData]
+    : [...baseStructuredData, structuredData]
+  : baseStructuredData;
 ---
 
 <!doctype html>
 <html lang="en" data-theme="serika_dark" class="dark w-full max-w-full">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="TypingGameZone" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO & Metadata -->
+    <!-- Primary SEO Meta Tags -->
     <title>{title}</title>
+    <meta name="title" content={title} />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="theme-color" content="#323437" />
+    <meta name="author" content="Typing Game Zone" />
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:site_name" content="Typing Game Zone" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://typinggamezone.com" />
-    <meta property="og:site_name" content="Typing Game Zone" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TypingGameZone" />
+    <meta name="twitter:creator" content="@TypingGameZone" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={title} />
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(allStructuredData)} />
 
     <!-- International SEO hreflang tags -->
     <link rel="alternate" hreflang="x-default" href="https://typinggamezone.com" />

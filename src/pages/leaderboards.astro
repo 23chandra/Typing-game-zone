@@ -1,11 +1,34 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { ALL_GAMES } from '../lib/games/gameRegistry';
+
+const leaderboardKeywords = 'Typing game zone, player telemetry, typing leaderboards, keyboard speed records, typing game online, daily typing quests, fast typing game online, WPM rankings';
+
+const leaderboardStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': 'Home',
+      'item': 'https://typinggamezone.com/'
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': 'Career Hub & Leaderboards',
+      'item': 'https://typinggamezone.com/leaderboards'
+    }
+  ]
+};
 ---
 
 <Layout
-  title="Player Telemetry, Daily Quests & Activity Heatmap — Typing Game Zone"
-  description="Track your player level, daily quests, 365-day activity heatmap, weak keys diagnostics, and game records."
+  title="Leaderboards & Career Hub — Typing Game Zone"
+  description="Track your player progression, daily quests, 365-day activity heatmap, WPM records, and global achievements across 21 games on Typing Game Zone."
+  keywords={leaderboardKeywords}
+  structuredData={leaderboardStructuredData}
 >
   <div class="py-12 sm:py-16 bg-canvas-soft min-h-screen">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -120,8 +143,8 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         </div>
 
         <!-- Heatmap Grid Viewport with Horizontal Scroll -->
-        <div class="overflow-x-auto pb-2 relative">
-          <div id="heatmap-grid" class="flex gap-1 min-w-[720px] select-none">
+        <div class="overflow-x-auto pb-2 relative smooth-scroll-x" style="touch-action: pan-x pan-y;">
+          <div id="heatmap-grid" class="flex gap-1 min-w-[720px] select-none py-1">
             <!-- 52 columns of 7 day squares rendered via JavaScript -->
           </div>
           <!-- Floating Interactive Tooltip -->
@@ -129,8 +152,11 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
         </div>
 
         <!-- Heatmap Intensity Legend -->
-        <div class="mt-4 flex items-center justify-between text-xs font-mono text-mute pt-3 border-t border-hairline">
-          <span>52-Week Rolling Calendar</span>
+        <div class="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-mono text-mute pt-3 border-t border-hairline">
+          <div class="flex items-center gap-2">
+            <span>52-Week Rolling Calendar</span>
+            <span class="sm:hidden text-[10px] text-mute/80">(← Swipe →)</span>
+          </div>
           <div class="flex items-center gap-2">
             <span>Less</span>
             <span class="h-3 w-3 rounded-xs border border-hairline bg-canvas-soft inline-block"></span>
@@ -216,8 +242,8 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
           <span class="text-xs font-mono text-mute">21 Game Arenas</span>
         </div>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left font-mono text-xs">
+        <div class="overflow-x-auto smooth-scroll-x" style="touch-action: pan-x pan-y;">
+          <table class="w-full text-left font-mono text-xs min-w-[600px]">
             <thead>
               <tr class="border-b border-hairline text-mute uppercase text-[10px]">
                 <th class="pb-3">Game Title</th>

@@ -13,11 +13,58 @@ export function getStaticPaths() {
 }
 
 const { game } = Astro.props;
+
+const gameKeywords = `${game.title}, ${game.title} typing game, Typing game zone, free typing game online, 2d typing game online, typing game online free, 2d typing game, ${game.tags.join(', ')}, fast typing game online, keyboard typing game online, word typing game online`;
+
+const gameStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'VideoGame',
+    'name': game.title,
+    'description': game.description,
+    'genre': [game.categoryName, 'Typing Game', 'Arcade', 'Educational'],
+    'gamePlatform': 'Web Browser',
+    'applicationCategory': 'GameApplication',
+    'playMode': 'SinglePlayer',
+    'offers': {
+      '@type': 'Offer',
+      'price': '0',
+      'priceCurrency': 'USD'
+    },
+    'url': `https://typinggamezone.com/game/${game.id}`
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': game.categoryName,
+        'item': `https://typinggamezone.com/?cat=${game.category}`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': game.title,
+        'item': `https://typinggamezone.com/game/${game.id}`
+      }
+    ]
+  }
+];
 ---
 
 <Layout
-  title={`${game.title} — Play Free 2D Typing Game | Typing Game Zone`}
-  description={game.description}
+  title={`${game.title} — Play Free 2D Typing Game Online | Typing Game Zone`}
+  description={`${game.description} Play ${game.title} online for free at Typing Game Zone. Test your WPM and touch typing skills across 5 difficulty levels.`}
+  keywords={gameKeywords}
+  structuredData={gameStructuredData}
 >
   <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
     
@@ -46,7 +93,7 @@ const { game } = Astro.props;
       <canvas
         id="game-canvas"
         data-game-id={game.id}
-        class="w-full h-[360px] sm:h-[480px] lg:h-[540px] block cursor-crosshair focus:outline-none"
+        class="w-full h-[260px] xs:h-[300px] sm:h-[420px] lg:h-[500px] block cursor-crosshair focus:outline-none"
         tabindex="0"
       ></canvas>
 
@@ -201,6 +248,8 @@ const { game } = Astro.props;
 
     let currentLvl = 1;
 
+    const hudHealthPctMobile = document.getElementById('hud-health-pct-mobile');
+
     // Hook HUD telemetry updates
     gameInstance.onStatsChange = (stats: GameStats) => {
       if (hudScore) hudScore.textContent = stats.score.toLocaleString();
@@ -208,6 +257,7 @@ const { game } = Astro.props;
       if (hudAccuracy) hudAccuracy.textContent = `${stats.accuracy}%`;
       if (hudStreak) hudStreak.textContent = `${stats.streak}x`;
       if (hudHealthPct) hudHealthPct.textContent = `${Math.floor(stats.health)}%`;
+      if (hudHealthPctMobile) hudHealthPctMobile.textContent = `${Math.floor(stats.health)}%`;
       if (hudHealthBar) {
         hudHealthBar.style.width = `${stats.health}%`;
         hudHealthBar.className = `h-full transition-all duration-300 ${
@@ -421,10 +471,14 @@ const { game } = Astro.props;
       try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
-    // Click canvas to focus and resume audio
+    // Click canvas to focus and resume audio (and trigger mobile soft keyboard if on mobile)
     canvas.addEventListener('click', () => {
       soundEngine.initContext();
-      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+      if (window.innerWidth < 640 && mobileInput) {
+        try { mobileInput.focus({ preventScroll: true }); } catch { mobileInput.focus(); }
+      } else {
+        try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+      }
     });
 
     // Keyboard inputs to Canvas

@@ -1,11 +1,34 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SpeedTestWidget from '../components/SpeedTestWidget.astro';
+
+const speedTestKeywords = 'fast typing game online, typing master word typing game online, word typing game online, Typing game online, Typing game zone, typing speed test, WPM test online, free typing game online, typing benchmark';
+
+const speedTestStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': 'Home',
+      'item': 'https://typinggamezone.com/'
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': 'Speed Test',
+      'item': 'https://typinggamezone.com/speed-test'
+    }
+  ]
+};
 ---
 
 <Layout
-  title="Typing Speed Test — Pro Benchmark Lab (15s, 30s, 60s, Code, Quotes)"
-  description="Experience the ultimate typing speed test with curated themes, zero-latency keystroke telemetry, mechanical switch sounds, custom drills, and interactive performance charts."
+  title="Fast Typing Speed Test & WPM Benchmark Lab — Typing Game Zone"
+  description="Take the ultimate fast typing speed test at Typing Game Zone! Benchmark your Words Per Minute (WPM), accuracy, and consistency with mechanical switch audio, custom themes, and live charts."
+  keywords={speedTestKeywords}
+  structuredData={speedTestStructuredData}
 >
   <div class="py-10 sm:py-14 bg-canvas-soft min-h-screen relative overflow-hidden">
     <!-- Atmospheric subtle ambient mesh lighting -->

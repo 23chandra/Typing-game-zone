@@ -2,6 +2,7 @@
 // Footer following DESIGN.md 4-column specification with Monkeytype Themes & Language bar
 import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 import { SUPPORTED_LANGUAGES } from '../lib/i18n';
+import SiteLogo from './SiteLogo.astro';
 
 const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
 ---
@@ -64,27 +65,26 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-4 font-sans text-xs">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5 font-sans text-xs">
       <!-- Column 1: Brand & Status -->
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-3 sm:col-span-2 lg:col-span-1">
         <div class="flex items-center gap-2">
-          <div class="flex h-7 w-7 items-center justify-center rounded-lg bg-ink text-on-primary" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-              <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M18 12h.01M8 16h8"></path>
-            </svg>
-          </div>
+          <SiteLogo class="h-7 w-7 rounded-lg shadow-level-1 border border-hairline" />
           <span class="text-sm font-semibold tracking-tight text-ink font-mono">Typing Game Zone</span>
         </div>
         <p class="text-xs text-body leading-relaxed" data-i18n="hero.subtitle">
           The ultimate 2D typing game arcade & speed testing platform. Practice, compete, and master the keyboard.
         </p>
-        <div class="flex items-center gap-2 mt-2 font-mono">
+        <div class="flex items-center gap-2 mt-1 font-mono">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: var(--site-primary, #e2b714);"></span>
             <span class="relative inline-flex rounded-full h-2 w-2" style="background-color: var(--site-primary, #e2b714);"></span>
           </span>
           <span class="text-[11px] text-mute uppercase" data-i18n="footer.operational">Systems Operational • 60 FPS</span>
+        </div>
+        <div class="mt-2 text-[11px] font-mono text-mute">
+          <span>Support: </span>
+          <a href="mailto:jisahu2003@gmail.com" class="text-link hover:underline">jisahu2003@gmail.com</a>
         </div>
       </div>
 
@@ -110,6 +110,7 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
           <li><a href="/game/key-master" class="transition hover:text-ink">3D Heatmap Keyboard</a></li>
           <li><a href="/leaderboards" class="transition hover:text-ink" data-i18n="nav.leaderboards">Leaderboards</a></li>
           <li><a href="/arcade" class="transition hover:text-ink" data-i18n="nav.arcade">Arcade Lounge</a></li>
+          <li><a href="/faq" class="transition hover:text-ink text-link font-medium">❓ Typing FAQ (37 Q&A)</a></li>
         </ul>
       </div>
 
@@ -119,18 +120,41 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
         <p class="text-xs text-body leading-relaxed" data-i18n="footer.audioDesc">
           Real-time Web Audio synthesis simulates Cherry MX Blue clicks, Holy Panda thocks, Linear Reds, and mechanical typewriters.
         </p>
-        <div class="flex items-center gap-1.5 mt-1 font-mono">
+        <div class="flex flex-wrap items-center gap-1.5 mt-1 font-mono">
           <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">Web Audio API</span>
           <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">17 Themes</span>
           <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] text-mute border border-hairline">16 Languages</span>
         </div>
       </div>
+
+      <!-- Column 5: Company & Legal -->
+      <div class="flex flex-col gap-3">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Company & Legal</span>
+        <ul class="flex flex-col gap-2 text-xs text-body">
+          <li><a href="/about" class="transition hover:text-ink">About Us</a></li>
+          <li><a href="/contact" class="transition hover:text-ink">Contact Us</a></li>
+          <li><a href="/privacy" class="transition hover:text-ink">Privacy Policy</a></li>
+          <li><a href="/terms" class="transition hover:text-ink">Terms & Conditions</a></li>
+          <li><a href="/faq" class="transition hover:text-ink">Knowledge Base</a></li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Bottom Copyright & Domain -->
-    <div class="mt-8 flex flex-col sm:flex-row items-center justify-between border-t border-hairline pt-6 text-xs text-mute font-mono">
+    <!-- Bottom Copyright & Legal Links -->
+    <div class="mt-8 flex flex-col md:flex-row items-center justify-between border-t border-hairline pt-6 text-xs text-mute font-mono gap-4">
       <p>© {new Date().getFullYear()} Typing Game Zone (typinggamezone.com). <span data-i18n="footer.rights">All rights reserved.</span></p>
-      <p class="mt-2 sm:mt-0">Engineered with speed and precision.</p>
+      
+      <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px]">
+        <a href="/about" class="hover:text-ink transition">About</a>
+        <span>•</span>
+        <a href="/contact" class="hover:text-ink transition">Contact</a>
+        <span>•</span>
+        <a href="/privacy" class="hover:text-ink transition">Privacy Policy</a>
+        <span>•</span>
+        <a href="/terms" class="hover:text-ink transition">Terms of Service</a>
+        <span>•</span>
+        <a href="mailto:jisahu2003@gmail.com" class="text-link hover:underline">jisahu2003@gmail.com</a>
+      </div>
     </div>
   </div>
 </footer>

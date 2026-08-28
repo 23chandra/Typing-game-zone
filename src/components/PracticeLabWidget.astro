@@ -14,64 +14,64 @@
     class="flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 text-xs font-semibold select-none border border-hairline shadow-sm mb-6 transition-colors"
     style="background-color: var(--mt-sub-alt, var(--site-canvas, #2c2e31)); color: var(--mt-sub, var(--site-mute, #646669));"
   >
-    <!-- Left: Drill Categories -->
-    <div class="flex flex-wrap items-center gap-1" id="prac-categories-bar">
-      <button type="button" data-drill="homeRow" class="prac-cat-btn active flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer" style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));">
+    <!-- Left: Drill Categories (Scrollable on mobile) -->
+    <div class="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full pb-1 py-0.5 flex-1 min-w-0" id="prac-categories-bar">
+      <button type="button" data-drill="homeRow" class="prac-cat-btn active flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer whitespace-nowrap flex-shrink-0" style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));">
         <span>🏠</span>
         <span>Home Row</span>
       </button>
-      <button type="button" data-drill="topRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+      <button type="button" data-drill="topRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
         <span>⬆️</span>
         <span>Top Row</span>
       </button>
-      <button type="button" data-drill="bottomRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+      <button type="button" data-drill="bottomRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
         <span>⬇️</span>
         <span>Bottom Row</span>
       </button>
-      <button type="button" data-drill="numberRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+      <button type="button" data-drill="numberRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
         <span>🔢</span>
         <span>Numbers</span>
       </button>
-      <button type="button" data-drill="symbols" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+      <button type="button" data-drill="symbols" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
         <span>💻</span>
         <span>Code</span>
       </button>
-      <button type="button" data-drill="pangrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+      <button type="button" data-drill="pangrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
         <span>🔠</span>
         <span>Pangrams</span>
       </button>
-      <button type="button" data-drill="ngrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+      <button type="button" data-drill="ngrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
         <span>⚡</span>
         <span>N-Grams</span>
       </button>
-      <button type="button" data-drill="pinkyDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);">
+      <button type="button" data-drill="pinkyDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);">
         <span>🌸</span>
         <span>Pinky</span>
       </button>
-      <button type="button" data-drill="ringDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 45%, var(--mt-sub, #646669));">
+      <button type="button" data-drill="ringDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 45%, var(--mt-sub, #646669));">
         <span>🔮</span>
         <span>Ring</span>
       </button>
-      <button type="button" data-drill="middleDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 75%, var(--mt-text, #d1d0c5));">
+      <button type="button" data-drill="middleDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 75%, var(--mt-text, #d1d0c5));">
         <span>💎</span>
         <span>Middle</span>
       </button>
-      <button type="button" data-drill="indexDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: var(--mt-main, #10b981);">
+      <button type="button" data-drill="indexDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: var(--mt-main, #10b981);">
         <span>🌿</span>
         <span>Index</span>
       </button>
-      <button type="button" data-drill="thumbDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100" style="color: var(--mt-caret, var(--mt-main, #e2b714));">
+      <button type="button" data-drill="thumbDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: var(--mt-caret, var(--mt-main, #e2b714));">
         <span>⚡</span>
         <span>Thumbs</span>
       </button>
-      <button type="button" data-drill="custom" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100">
+      <button type="button" data-drill="custom" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
         <span>✏️</span>
         <span>Custom</span>
       </button>
     </div>
 
     <!-- Right: Controls (Word Count & Metronome) -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 flex-shrink-0">
 
       <!-- Drill Length Toggle -->
       <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));">
@@ -348,22 +348,22 @@
   <!-- Interactive QWERTY Visual Keyboard with Real-time Key Highlights -->
   <div
     id="prac-keyboard-card"
-    class="rounded-3xl border border-hairline p-4 sm:p-6 shadow-level-2 select-none overflow-x-auto transition-colors"
+    class="rounded-3xl border border-hairline p-3 sm:p-6 shadow-level-2 select-none overflow-x-auto smooth-scroll-x transition-colors"
     style="background-color: var(--mt-sub-alt, #2c2e31);"
   >
     
     <!-- Top Legend & Appearance Controls Bar -->
-    <div class="flex flex-wrap items-center justify-between gap-3 text-[11px] mb-5 pb-3 border-b border-hairline w-full">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[11px] mb-5 pb-3 border-b border-hairline w-full">
       
       <!-- Top Left: Title & 5 Quadrant Filter Chips (100% Theme Dynamic) -->
-      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-        <span class="font-bold uppercase tracking-wider text-xs" style="color: var(--mt-text, #d1d0c5);">⌨️ Keyboard Focus:</span>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <span class="font-bold uppercase tracking-wider text-xs whitespace-nowrap" style="color: var(--mt-text, #d1d0c5);">⌨️ Focus:</span>
 
-        <div class="flex items-center gap-1.5 sm:gap-2" id="prac-quad-filters-wrapper">
+        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar max-w-full pb-0.5" id="prac-quad-filters-wrapper">
           <button
             type="button"
             data-filter-quadrant="pinkyDrills"
-            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
             style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%); color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);"
           >
             <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);"></span>
@@ -372,7 +372,7 @@
           <button
             type="button"
             data-filter-quadrant="ringDrills"
-            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
             style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%); color: color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%);"
           >
             <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%);"></span>
@@ -381,7 +381,7 @@
           <button
             type="button"
             data-filter-quadrant="middleDrills"
-            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
             style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%); color: color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%);"
           >
             <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%);"></span>
@@ -390,7 +390,7 @@
           <button
             type="button"
             data-filter-quadrant="indexDrills"
-            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
             style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid var(--mt-main, #e2b714); color: var(--mt-main, #e2b714);"
           >
             <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: var(--mt-main, #e2b714);"></span>
@@ -399,7 +399,7 @@
           <button
             type="button"
             data-filter-quadrant="thumbDrills"
-            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
             style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid var(--mt-caret, var(--mt-main, #e2b714)); color: var(--mt-caret, var(--mt-main, #e2b714));"
           >
             <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: var(--mt-caret, var(--mt-main, #e2b714));"></span>
@@ -409,7 +409,7 @@
       </div>
       
       <!-- Top Right: Appearance Mode Switcher Pill -->
-      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline);">
+      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline flex-shrink-0" style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline);">
         <button
           type="button"
           id="prac-mode-theme-btn"
@@ -432,8 +432,8 @@
     </div>
 
     <!-- Keycaps Matrix Wrapper (Centered & Perfectly Proportioned 15.0u System) -->
-    <div class="flex justify-center w-full">
-      <div id="prac-keyboard-matrix" class="flex flex-col gap-1.5 text-xs font-mono select-none w-full max-w-[760px] items-center">
+    <div class="flex justify-center w-full min-w-0">
+      <div id="prac-keyboard-matrix" class="flex flex-col gap-1 sm:gap-1.5 text-xs font-mono select-none w-full max-w-[760px] items-center">
         <!-- Injected dynamically via JavaScript with exact mathematical 15.0u grid -->
       </div>
     </div>
@@ -544,9 +544,9 @@
 
 <style>
   #prac-keyboard-matrix {
-    --key-unit: clamp(26px, 4.3vw, 44px);
-    --key-gap: clamp(3px, 0.5vw, 6px);
-    --key-height: clamp(38px, 4.8vw, 48px);
+    --key-unit: clamp(17px, 5.7vw, 44px);
+    --key-gap: clamp(1.5px, 0.4vw, 6px);
+    --key-height: clamp(30px, 4.8vw, 48px);
   }
   .prac-keycap {
     font-family: 'Geist Mono', monospace;

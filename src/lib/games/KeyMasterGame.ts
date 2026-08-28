@@ -78,11 +78,14 @@ export class KeyMasterGame extends BaseGame {
     this.uniqueKeycaps = [];
 
     const totalRowUnits = 15.0;
-    const keyGap = 4;
-    const baseKeySize = Math.min(36, Math.max(20, (this.width - 50 - 14 * keyGap) / totalRowUnits));
-    const startY = this.height * 0.35;
+    const keyGap = this.width < 450 ? 2 : 4;
+    const padding = this.width < 450 ? 12 : 24;
+    const baseKeySize = Math.min(36, Math.max(12, (this.width - padding * 2 - 14 * keyGap) / totalRowUnits));
     const totalKeyboardWidth = 15.0 * baseKeySize + 14 * keyGap;
-    const startX = (this.width - totalKeyboardWidth) / 2;
+    const startX = Math.max(4, (this.width - totalKeyboardWidth) / 2);
+    const kh = baseKeySize * 1.1;
+    const totalKeyboardHeight = 5 * (kh + keyGap + 2);
+    const startY = Math.max(115, this.height - totalKeyboardHeight - 15);
 
     PHYSICAL_KEYBOARD_LAYOUT.forEach((row, rIdx) => {
       let curX = startX;

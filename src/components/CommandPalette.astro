@@ -36,12 +36,12 @@
     </div>
 
     <!-- Filter Category Chips -->
-    <div class="flex items-center gap-1.5 pb-2 mb-2 border-b text-[11px] overflow-x-auto" style="border-color: var(--site-hairline, rgba(255,255,255,0.08));">
-      <button type="button" data-cmd-filter="all" class="cmd-filter-pill active px-2.5 py-1 rounded-full font-bold transition cursor-pointer" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">All</button>
-      <button type="button" data-cmd-filter="themes" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🎨 Themes (17)</button>
-      <button type="button" data-cmd-filter="games" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🎮 Games (21)</button>
-      <button type="button" data-cmd-filter="sounds" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🔊 Sounds</button>
-      <button type="button" data-cmd-filter="pages" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer">🧭 Pages</button>
+    <div class="flex items-center gap-1.5 pb-2 mb-2 border-b text-[11px] overflow-x-auto no-scrollbar max-w-full" style="border-color: var(--site-hairline, rgba(255,255,255,0.08));">
+      <button type="button" data-cmd-filter="all" class="cmd-filter-pill active px-2.5 py-1 rounded-full font-bold transition cursor-pointer whitespace-nowrap flex-shrink-0" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">All</button>
+      <button type="button" data-cmd-filter="themes" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer whitespace-nowrap flex-shrink-0">🎨 Themes (17)</button>
+      <button type="button" data-cmd-filter="games" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer whitespace-nowrap flex-shrink-0">🎮 Games (21)</button>
+      <button type="button" data-cmd-filter="sounds" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer whitespace-nowrap flex-shrink-0">🔊 Sounds</button>
+      <button type="button" data-cmd-filter="pages" class="cmd-filter-pill px-2.5 py-1 rounded-full opacity-60 hover:opacity-100 transition cursor-pointer whitespace-nowrap flex-shrink-0">🧭 Pages</button>
     </div>
 
     <!-- Commands List -->
@@ -121,6 +121,11 @@
       { id: 'nav-arcade', label: 'Go to Retro Arcade Lounge', category: 'pages', icon: '🕹️', action: () => { window.location.href = '/arcade'; } },
       { id: 'nav-practice', label: 'Go to Touch Typing Practice Lab', category: 'pages', icon: '⌨️', action: () => { window.location.href = '/practice'; } },
       { id: 'nav-leaderboards', label: 'Go to Leaderboards & Achievements', category: 'pages', icon: '🏆', action: () => { window.location.href = '/leaderboards'; } },
+      { id: 'nav-faq', label: 'Go to FAQ & Knowledge Base (37 Q&A)', category: 'pages', icon: '❓', action: () => { window.location.href = '/faq'; } },
+      { id: 'nav-about', label: 'Go to About Us & Mission', category: 'pages', icon: 'ℹ️', action: () => { window.location.href = '/about'; } },
+      { id: 'nav-contact', label: 'Go to Contact Us (jisahu2003@gmail.com)', category: 'pages', icon: '📬', action: () => { window.location.href = '/contact'; } },
+      { id: 'nav-privacy', label: 'Go to Privacy Policy & Data Security', category: 'pages', icon: '🛡️', action: () => { window.location.href = '/privacy'; } },
+      { id: 'nav-terms', label: 'Go to Terms and Conditions', category: 'pages', icon: '📋', action: () => { window.location.href = '/terms'; } },
 
       // Switch Sounds
       { id: 'sound-clicky', label: 'Switch Sound: Cherry MX Blue (Clicky)', category: 'sounds', icon: '🔵', action: () => { soundEngine.setSwitch('clicky'); soundEngine.initContext(); soundEngine.playKey(); } },

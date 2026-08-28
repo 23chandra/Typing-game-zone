@@ -2,26 +2,16 @@
 // Navigation bar following DESIGN.md specifications with Global Monkeytype Theme Switcher
 import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 import { SUPPORTED_LANGUAGES } from '../lib/i18n';
+import SiteLogo from './SiteLogo.astro';
 ---
 
 <header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none">
   <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8">
     <!-- Brand Logo -->
-    <a href="/" class="group flex items-center gap-2 sm:gap-3 flex-shrink-0 whitespace-nowrap">
-      <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-ink text-on-primary shadow-level-2 transition-transform duration-200 group-hover:scale-105 flex-shrink-0" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-          <path d="M6 8h.01"></path>
-          <path d="M10 8h.01"></path>
-          <path d="M14 8h.01"></path>
-          <path d="M18 8h.01"></path>
-          <path d="M6 12h.01"></path>
-          <path d="M18 12h.01"></path>
-          <path d="M8 16h8"></path>
-        </svg>
-      </div>
-      <div class="flex flex-col flex-shrink-0 whitespace-nowrap">
-        <span class="text-sm sm:text-base font-bold tracking-tight text-ink whitespace-nowrap leading-none">Typing Game Zone</span>
+    <a href="/" class="group flex items-center gap-2 sm:gap-3 flex-shrink-0">
+      <SiteLogo class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl shadow-level-2 transition-transform duration-200 group-hover:scale-105 border border-hairline flex-shrink-0" />
+      <div class="flex flex-col flex-shrink min-w-0">
+        <span class="text-xs xs:text-sm sm:text-base font-bold tracking-tight text-ink truncate leading-tight">Typing Game Zone</span>
         <span class="hidden md:inline text-[10px] font-medium tracking-wide uppercase text-mute font-mono whitespace-nowrap mt-0.5">typinggamezone.com</span>
       </div>
     </a>
@@ -43,7 +33,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         <button
           id="nav-lang-btn"
           type="button"
-          class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2.5 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          class="flex items-center gap-1 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
           title="Switch Language / भाषा बदलें / Cambiar idioma"
           aria-expanded="false"
         >
@@ -57,7 +47,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         <!-- Dropdown Menu -->
         <div
           id="nav-lang-menu"
-          class="absolute right-0 mt-2 hidden w-64 rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs flex flex-col max-h-[80vh]"
+          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs flex flex-col max-h-[75vh]"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1 text-[11px] text-mute uppercase font-bold">
@@ -75,12 +65,12 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
           />
 
           <!-- Languages List -->
-          <div id="nav-lang-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-64">
+          <div id="nav-lang-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-60 smooth-scroll-x">
             {SUPPORTED_LANGUAGES.map(lang => (
               <button
                 type="button"
                 data-lang={lang.code}
-                class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left transition hover:bg-canvas-soft cursor-pointer"
+                class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft cursor-pointer min-h-[38px]"
               >
                 <div class="flex items-center gap-2">
                   <span class="text-sm">{lang.flag}</span>
@@ -104,7 +94,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         <button
           id="nav-theme-btn"
           type="button"
-          class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2.5 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          class="flex items-center gap-1 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
           title="Switch Website Color Theme (17 Themes)"
           aria-expanded="false"
         >
@@ -118,7 +108,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         <!-- Dropdown Menu -->
         <div
           id="nav-theme-menu"
-          class="absolute right-0 mt-2 hidden w-72 rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs max-h-[80vh] flex flex-col"
+          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs max-h-[75vh] flex flex-col"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1">
@@ -136,12 +126,12 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
           />
 
           <!-- Themes List -->
-          <div id="nav-theme-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-60">
+          <div id="nav-theme-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-60 smooth-scroll-x">
             {MONKEYTYPE_THEMES.map(theme => (
               <button
                 type="button"
                 data-theme-id={theme.id}
-                class="nav-theme-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft cursor-pointer"
+                class="nav-theme-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft cursor-pointer min-h-[38px]"
               >
                 <div class="flex flex-col">
                   <span class="font-bold text-xs" style={`color: ${theme.main};`}>{theme.name}</span>
@@ -275,24 +265,48 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
     </div>
   </div>
 
-  <!-- Mobile Dropdown Navigation -->
-  <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 lg:hidden font-mono text-xs">
-    <div class="flex flex-col gap-1.5 font-medium mb-3">
-      <a href="/#games-section" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
-        <span>🎮</span> <span data-i18n="nav.games">Games (21)</span>
+  <!-- Mobile Dropdown Navigation Drawer -->
+  <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 lg:hidden font-mono text-xs shadow-level-4 animate-in slide-in-from-top-2 duration-150">
+    <div class="flex flex-col gap-1 font-medium mb-3">
+      <a href="/#games-section" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">🎮</span> <span data-i18n="nav.games">Games (21)</span>
       </a>
-      <a href="/arcade" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
-        <span>🕹️</span> <span data-i18n="nav.arcade">Arcade Lounge</span>
+      <a href="/arcade" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">🕹️</span> <span data-i18n="nav.arcade">Arcade Lounge</span>
       </a>
-      <a href="/speed-test" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
-        <span>⚡</span> <span data-i18n="nav.speedTest">Speed Test</span>
+      <a href="/speed-test" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">⚡</span> <span data-i18n="nav.speedTest">Speed Test</span>
       </a>
-      <a href="/practice" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
-        <span>⌨️</span> <span data-i18n="nav.practiceLab">Practice Lab</span>
+      <a href="/practice" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">⌨️</span> <span data-i18n="nav.practiceLab">Practice Lab</span>
       </a>
-      <a href="/leaderboards" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
-        <span>🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
+      <a href="/leaderboards" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
       </a>
+      <a href="/faq" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">❓</span> <span>Typing FAQ (37 Q&A)</span>
+      </a>
+      <a href="/about" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">ℹ️</span> <span>About Us</span>
+      </a>
+      <a href="/contact" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">📬</span> <span>Contact Us</span>
+      </a>
+    </div>
+
+    <!-- Mobile Sound Toggle Bar -->
+    <div class="py-2.5 px-3 mb-3 rounded-xl bg-canvas-soft border border-hairline flex items-center justify-between">
+      <span class="text-[11px] text-mute flex items-center gap-1.5">
+        <span id="mobile-sound-icon">🔊</span>
+        <span>Sound: <strong id="mobile-sound-label" class="text-ink">Clicky</strong></span>
+      </span>
+      <button
+        type="button"
+        id="mobile-sound-cycle-btn"
+        class="rounded-lg px-2.5 py-1 text-[10px] font-bold border border-hairline bg-canvas text-body hover:text-ink cursor-pointer"
+      >
+        Cycle Sound ↻
+      </button>
     </div>
 
     <!-- Mobile Command & Play Quick Actions -->
@@ -300,14 +314,14 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
       <button
         type="button"
         id="mobile-cmd-btn"
-        class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-2 text-xs font-mono font-bold text-ink cursor-pointer hover:bg-canvas transition"
+        class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-2.5 text-xs font-mono font-bold text-ink cursor-pointer hover:bg-canvas transition min-h-[44px]"
       >
         <span>>_</span> <span data-i18n="nav.commandPalette">Command Palette</span>
         <kbd class="text-[10px] opacity-60">⌘K</kbd>
       </button>
       <a
         href="/game/type-defender"
-        class="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95"
+        class="inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 min-h-[44px]"
         style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
       >
         <span data-i18n="nav.playGame">Play Game</span>
@@ -452,10 +466,15 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
     });
 
     // --- SOUND ENGINE UI SYNC ---
+    const mobileSoundIcon = document.getElementById('mobile-sound-icon');
+    const mobileSoundLabel = document.getElementById('mobile-sound-label');
+    const mobileSoundCycleBtn = document.getElementById('mobile-sound-cycle-btn');
+
     const updateSoundUI = () => {
       const cur = soundEngine.getSwitch();
       const isMuted = soundEngine.getIsMuted() || cur === 'off';
       if (soundIcon) soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      if (mobileSoundIcon) mobileSoundIcon.textContent = isMuted ? '🔇' : '🔊';
 
       const labels: Record<SwitchSoundType, string> = {
         clicky: 'Blue Clicky',
@@ -467,6 +486,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         off: 'Muted'
       };
       if (soundLabel) soundLabel.textContent = labels[cur] || 'Sound';
+      if (mobileSoundLabel) mobileSoundLabel.textContent = labels[cur] || 'Sound';
 
       // Update checkmarks
       document.querySelectorAll('.switch-opt').forEach((el) => {
@@ -485,6 +505,26 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
       langMenu?.classList.add('hidden');
       themeMenu?.classList.add('hidden');
       soundMenu?.classList.toggle('hidden');
+    });
+
+    mobileSoundCycleBtn?.addEventListener('click', () => {
+      const cycle: SwitchSoundType[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
+      const cur = soundEngine.getSwitch();
+      const nextIdx = (cycle.indexOf(cur) + 1) % cycle.length;
+      const nextSwitch = cycle[nextIdx];
+      soundEngine.initContext();
+      soundEngine.setSwitch(nextSwitch);
+      if (nextSwitch !== 'off') {
+        soundEngine.playKey(false, nextSwitch === 'typewriter');
+      }
+      updateSoundUI();
+    });
+
+    // Close mobile drawer on navigation link click
+    mobileDrawer?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileDrawer?.classList.add('hidden');
+      });
     });
 
     document.querySelectorAll('.switch-opt').forEach((el) => {

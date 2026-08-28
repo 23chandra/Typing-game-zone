@@ -1,0 +1,392 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const seoTitle = 'Contact Us — Get in Touch with Typing Game Zone';
+const seoDescription = 'Have feedback, game suggestions, bug reports, or partnership inquiries? Contact the Typing Game Zone team directly at jisahu2003@gmail.com.';
+const seoKeywords = 'contact typing game zone, typing game support, typing game feedback, typing game bug report, contact typing arcade';
+
+const contactStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  'name': 'Contact Us — Typing Game Zone',
+  'url': 'https://typinggamezone.com/contact',
+  'description': seoDescription,
+  'mainEntity': {
+    '@type': 'Organization',
+    'name': 'Typing Game Zone',
+    'url': 'https://typinggamezone.com',
+    'email': 'jisahu2003@gmail.com',
+    'contactPoint': [
+      {
+        '@type': 'ContactPoint',
+        'email': 'jisahu2003@gmail.com',
+        'contactType': 'Customer Support',
+        'availableLanguage': ['English', 'Hindi', 'Spanish', 'French', 'German']
+      }
+    ]
+  },
+  'breadcrumb': {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Contact Us',
+        'item': 'https://typinggamezone.com/contact'
+      }
+    ]
+  }
+};
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  keywords={seoKeywords}
+  canonicalUrl="https://typinggamezone.com/contact"
+  structuredData={contactStructuredData}
+>
+  <div class="py-12 sm:py-16 bg-canvas-soft border-b border-hairline">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-mute mb-6" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-ink transition">Home</a>
+        <span>/</span>
+        <span class="text-ink font-semibold">Contact Us</span>
+      </nav>
+
+      <!-- Header Banner -->
+      <div class="text-left max-w-3xl">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-link shadow-level-1 backdrop-blur mb-4">
+          <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>WE'D LOVE TO HEAR FROM YOU</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight font-sans">
+          Contact Typing Game Zone
+        </h1>
+        <p class="mt-4 text-sm sm:text-base text-body leading-relaxed font-sans">
+          Whether you have a game recommendation, found a keyboard glitch, want to suggest a new switch sound profile, or want to discuss a partnership — our team is here to help.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <main class="py-12 sm:py-20 bg-canvas">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-16">
+
+      <!-- Primary Contact Card Highlight -->
+      <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 sm:p-10 shadow-level-3 relative overflow-hidden">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div>
+            <div class="inline-flex items-center gap-2 rounded-full bg-canvas px-3 py-1 text-xs font-mono text-mute border border-hairline mb-3">
+              <span class="text-sm">📬</span> DIRECT INBOX
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-ink font-mono mb-2">
+              jisahu2003@gmail.com
+            </h2>
+            <p class="text-sm text-body max-w-xl leading-relaxed font-sans">
+              Send your message directly to our inbox. We read every email and typically reply within <strong>24 to 48 hours</strong>.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+            <a
+              href="mailto:jisahu2003@gmail.com?subject=Typing%20Game%20Zone%20Feedback"
+              class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 text-center flex-1 lg:flex-initial"
+              style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+            >
+              <span>✉️ Open Mail Client</span>
+            </a>
+            <button
+              type="button"
+              id="main-copy-email-btn"
+              class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas px-5 py-3 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer flex-1 lg:flex-initial"
+            >
+              <span id="main-copy-text">📋 Copy Email Address</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-Column Section: Interactive Form + Contact Topics -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Interactive Message Builder / Form (7 cols) -->
+        <div class="lg:col-span-7 rounded-3xl border border-hairline bg-canvas-soft p-6 sm:p-8 shadow-level-2">
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-ink font-mono flex items-center gap-2">
+              <span>✍️</span> Send a Message
+            </h3>
+            <p class="text-xs text-mute mt-1 font-sans">
+              Fill in the form below to craft your inquiry or feedback.
+            </p>
+          </div>
+
+          <form id="contact-form" class="space-y-4 font-sans text-xs">
+            <!-- Topic / Category -->
+            <div>
+              <label for="form-category" class="block font-mono font-semibold text-ink mb-1.5">
+                Inquiry Topic <span class="text-red-400">*</span>
+              </label>
+              <select
+                id="form-category"
+                class="w-full rounded-xl border border-hairline bg-canvas px-3.5 py-2.5 text-xs text-ink focus:outline-none focus:border-link font-mono cursor-pointer"
+                required
+              >
+                <option value="Game Suggestion / New Title Idea">🎮 Game Suggestion / New Title Idea</option>
+                <option value="Bug Report / Keystroke Issue">🐛 Bug Report / Keystroke Glitch</option>
+                <option value="Sound Profile / Mechanical Switch Request">🔊 Audio / Mechanical Switch Request</option>
+                <option value="Speed Test or Practice Lab Feature">⚡ Speed Test / Practice Lab Drill Request</option>
+                <option value="Business, Sponsorship & Partnership">🤝 Business & Partnership</option>
+                <option value="Privacy / Legal Request">🛡️ Privacy & Legal Inquiry</option>
+                <option value="General Question & Compliment">💬 General Feedback & Hello</option>
+              </select>
+            </div>
+
+            <!-- Name and Email Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="form-name" class="block font-mono font-semibold text-ink mb-1.5">
+                  Your Name <span class="text-mute font-normal">(Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  id="form-name"
+                  placeholder="e.g. Alex"
+                  class="w-full rounded-xl border border-hairline bg-canvas px-3.5 py-2.5 text-xs text-ink placeholder:text-mute focus:outline-none focus:border-link font-mono"
+                />
+              </div>
+              <div>
+                <label for="form-email" class="block font-mono font-semibold text-ink mb-1.5">
+                  Your Email Address <span class="text-red-400">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="form-email"
+                  placeholder="your.email@example.com"
+                  required
+                  class="w-full rounded-xl border border-hairline bg-canvas px-3.5 py-2.5 text-xs text-ink placeholder:text-mute focus:outline-none focus:border-link font-mono"
+                />
+              </div>
+            </div>
+
+            <!-- Subject Line -->
+            <div>
+              <label for="form-subject" class="block font-mono font-semibold text-ink mb-1.5">
+                Subject <span class="text-red-400">*</span>
+              </label>
+              <input
+                type="text"
+                id="form-subject"
+                placeholder="Brief summary of your message"
+                required
+                class="w-full rounded-xl border border-hairline bg-canvas px-3.5 py-2.5 text-xs text-ink placeholder:text-mute focus:outline-none focus:border-link font-mono"
+              />
+            </div>
+
+            <!-- Message Body -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label for="form-message" class="font-mono font-semibold text-ink">
+                  Message <span class="text-red-400">*</span>
+                </label>
+                <span id="char-count" class="text-[10px] font-mono text-mute">0 / 1000</span>
+              </div>
+              <textarea
+                id="form-message"
+                rows="5"
+                maxlength="1000"
+                placeholder="Type your message, details, browser/device info, or suggestions here..."
+                required
+                class="w-full rounded-xl border border-hairline bg-canvas p-3 text-xs text-ink placeholder:text-mute focus:outline-none focus:border-link font-sans leading-relaxed resize-y"
+              ></textarea>
+            </div>
+
+            <!-- Submit Button & Options -->
+            <div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+              <button
+                type="submit"
+                id="form-submit-btn"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 cursor-pointer"
+                style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+              >
+                <span>🚀 Send via Email</span>
+              </button>
+              <span class="text-[11px] font-mono text-mute text-center sm:text-left">
+                Direct destination: <code class="text-ink">jisahu2003@gmail.com</code>
+              </span>
+            </div>
+          </form>
+
+          <!-- Success Alert Container -->
+          <div id="form-success-banner" class="hidden mt-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs font-mono text-ink animate-in fade-in duration-200">
+            <div class="flex items-start gap-2.5">
+              <span class="text-base text-emerald-400">✓</span>
+              <div>
+                <span class="font-bold block text-emerald-400">Thank you! Your email is ready to send.</span>
+                <p class="text-mute mt-1 text-[11px] font-sans">
+                  If your mail client didn't open automatically, you can send your message directly to <a href="mailto:jisahu2003@gmail.com" class="text-link underline">jisahu2003@gmail.com</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Inquiry Channels & Details (5 cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1">
+            <div class="text-2xl mb-2">🎮</div>
+            <h4 class="font-bold text-ink text-sm font-mono mb-1">Game Suggestions & Ideas</h4>
+            <p class="text-xs text-mute leading-relaxed">
+              Have an idea for a new 2D typing game mode, boss battle, or retro mechanic? We love prototyping community games!
+            </p>
+          </div>
+
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1">
+            <div class="text-2xl mb-2">🐛</div>
+            <h4 class="font-bold text-ink text-sm font-mono mb-1">Bug Reports & Glitches</h4>
+            <p class="text-xs text-mute leading-relaxed">
+              Found an issue with key detection, sound synthesis on your browser, or layout rendering? Include your OS, browser version, and keyboard layout for rapid resolution.
+            </p>
+          </div>
+
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1">
+            <div class="text-2xl mb-2">🤝</div>
+            <h4 class="font-bold text-ink text-sm font-mono mb-1">Partnerships & Education</h4>
+            <p class="text-xs text-mute leading-relaxed">
+              Are you an educator using Typing Game Zone in schools, or a keyboard maker looking to showcase switch acoustic profiles? Reach out to collaborate.
+            </p>
+          </div>
+
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1">
+            <div class="text-2xl mb-2">⚡</div>
+            <h4 class="font-bold text-ink text-sm font-mono mb-1">Response Time Commitment</h4>
+            <p class="text-xs text-mute leading-relaxed">
+              All messages received at <span class="text-ink font-mono">jisahu2003@gmail.com</span> are reviewed promptly by our development team.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Frequently Asked Questions Preview -->
+      <div class="rounded-3xl border border-hairline bg-canvas-soft p-8 sm:p-10 shadow-level-2">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <span class="text-xs font-mono text-mute uppercase font-bold block mb-1">Quick Help</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-ink font-sans">Common Questions Before Contacting</h3>
+          </div>
+          <a
+            href="/faq"
+            class="inline-flex items-center gap-1 text-xs font-mono text-link hover:underline"
+          >
+            <span>View all 37 FAQ answers →</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1 font-mono">Is Typing Game Zone free to use?</span>
+            <p class="text-mute leading-relaxed">
+              Yes, 100% free! All 21 2D games, speed tests, and practice drills are completely free with no paywalls or subscription fees.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1 font-mono">How do I report an incorrect word or typo?</span>
+            <p class="text-mute leading-relaxed">
+              Email us the exact word and game name at <a href="mailto:jisahu2003@gmail.com" class="text-link underline">jisahu2003@gmail.com</a> and we will update the word list dictionary.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1 font-mono">Can I request new mechanical switch sounds?</span>
+            <p class="text-mute leading-relaxed">
+              Absolutely! We synthesize switch audio using the Web Audio API. Let us know which switch acoustic profile you would like to hear next.
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1 font-mono">Where are my high scores saved?</span>
+            <p class="text-mute leading-relaxed">
+              All high scores and preferences are saved locally on your device in your browser's localStorage for maximum speed and privacy.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Related Links -->
+      <div class="pt-8 border-t border-hairline flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-mute">
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="/about" class="hover:text-ink transition">About Us →</a>
+          <a href="/privacy" class="hover:text-ink transition">Privacy Policy →</a>
+          <a href="/terms" class="hover:text-ink transition">Terms & Conditions →</a>
+          <a href="/faq" class="hover:text-ink transition">FAQ →</a>
+        </div>
+        <a href="#top" class="hover:text-ink transition">Back to Top ↑</a>
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Copy Email Functionality
+  const mainCopyBtn = document.getElementById('main-copy-email-btn');
+  const mainCopyText = document.getElementById('main-copy-text');
+
+  mainCopyBtn?.addEventListener('click', () => {
+    navigator.clipboard.writeText('jisahu2003@gmail.com').then(() => {
+      if (mainCopyText) mainCopyText.textContent = '✓ Copied to Clipboard!';
+      setTimeout(() => {
+        if (mainCopyText) mainCopyText.textContent = '📋 Copy Email Address';
+      }, 2500);
+    });
+  });
+
+  // Character Counter for Message Box
+  const messageInput = document.getElementById('form-message') as HTMLTextAreaElement | null;
+  const charCount = document.getElementById('char-count');
+
+  messageInput?.addEventListener('input', () => {
+    const len = messageInput.value.length;
+    if (charCount) charCount.textContent = `${len} / 1000`;
+  });
+
+  // Form Submission via Mailto Link Generator
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const successBanner = document.getElementById('form-success-banner');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const category = (document.getElementById('form-category') as HTMLSelectElement)?.value || 'General Feedback';
+    const name = (document.getElementById('form-name') as HTMLInputElement)?.value.trim() || 'Anonymous Typist';
+    const email = (document.getElementById('form-email') as HTMLInputElement)?.value.trim() || '';
+    const subject = (document.getElementById('form-subject') as HTMLInputElement)?.value.trim() || 'Typing Game Zone Inquiry';
+    const message = (document.getElementById('form-message') as HTMLTextAreaElement)?.value.trim() || '';
+
+    const formattedSubject = encodeURIComponent(`[${category}] ${subject}`);
+    const formattedBody = encodeURIComponent(
+      `Hi Typing Game Zone Team,\n\n${message}\n\n---\nSender: ${name}\nEmail: ${email}\nTopic: ${category}\nSent via typinggamezone.com/contact`
+    );
+
+    const mailtoUrl = `mailto:jisahu2003@gmail.com?subject=${formattedSubject}&body=${formattedBody}`;
+    
+    // Launch mail client
+    window.location.href = mailtoUrl;
+
+    if (successBanner) {
+      successBanner.classList.remove('hidden');
+    }
+  });
+</script>

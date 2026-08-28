@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+
+const featuredGames = ALL_GAMES.slice(0, 4);
+
+const seoTitle = '500 - Internal Server Error | Typing Game Zone';
+const seoDescription = 'An unexpected server error occurred. Our engineers have been alerted. Please reload or return to Typing Game Zone.';
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+>
+  <div class="min-h-[75vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-canvas">
+    <div class="max-w-2xl w-full text-center">
+      
+      <!-- Error Status Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 py-1.5 text-xs font-mono text-link shadow-level-1 mb-6">
+        <span class="flex h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
+        <span class="font-bold">ERROR CODE 500 • INTERNAL SERVER ERROR</span>
+      </div>
+
+      <!-- Giant 500 Display -->
+      <div class="relative select-none my-2">
+        <h1 class="text-7xl sm:text-9xl font-extrabold tracking-tighter font-mono" style="color: var(--site-primary, #e2b714); text-shadow: 0 0 30px rgba(226, 183, 20, 0.25);">
+          500
+        </h1>
+        <div class="text-xs sm:text-sm font-mono text-mute uppercase tracking-widest mt-1">
+          [ INTERNAL_SERVER_ERROR // 0x500_CRASH ]
+        </div>
+      </div>
+
+      <!-- Heading & Description -->
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink mt-4 font-sans tracking-tight">
+        Something Went Wrong on Our End
+      </h2>
+      <p class="text-sm text-body mt-3 max-w-md mx-auto leading-relaxed font-sans">
+        Our servers encountered an unexpected hiccup. Don't worry, your local high scores and saved progress are safe in your browser.
+      </p>
+
+      <!-- Primary Action Buttons -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          onclick="window.location.reload()"
+          class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 cursor-pointer"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        >
+          <span>🔄 Reload Page</span>
+        </button>
+        <a
+          href="/"
+          class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer"
+        >
+          <span>🏠 Return to Home Hub</span>
+        </a>
+        <a
+          href="/speed-test"
+          class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer"
+        >
+          <span>⚡ Speed Test</span>
+        </a>
+      </div>
+
+      <!-- Recommended Games Grid -->
+      <div class="mt-12 pt-8 border-t border-hairline text-left">
+        <span class="text-xs font-mono text-mute uppercase font-bold tracking-wider block text-center mb-4">
+          Jump into popular 2D typing games:
+        </span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+          {featuredGames.map(game => (
+            <a
+              href={`/game/${game.id}`}
+              class="rounded-2xl border border-hairline bg-canvas-soft p-3 text-center shadow-level-1 hover:border-link hover:scale-105 transition group"
+            >
+              <span class="text-2xl block mb-1">{game.icon}</span>
+              <span class="font-bold text-ink block truncate group-hover:text-link">{game.title}</span>
+              <span class="text-[10px] text-mute uppercase block mt-0.5">{game.categoryName}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Need Help / Support Link -->
+      <div class="mt-8 text-xs font-mono text-mute">
+        <span>If this persists, report it to our team at </span>
+        <a href="mailto:jisahu2003@gmail.com?subject=500%20Error%20Report" class="text-link hover:underline">jisahu2003@gmail.com</a>
+      </div>
+
+    </div>
+  </div>
+</Layout>

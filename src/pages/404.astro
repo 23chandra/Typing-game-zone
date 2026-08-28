@@ -1,0 +1,157 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+
+const featuredGames = ALL_GAMES.slice(0, 4);
+
+const seoTitle = '404 - Page Not Found | Typing Game Zone';
+const seoDescription = 'The page you are looking for does not exist or may have moved. Return to Typing Game Zone to play 21 free 2D typing games and test your keyboard speed.';
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+>
+  <div class="min-h-[75vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-canvas">
+    <div class="max-w-2xl w-full text-center">
+      
+      <!-- Glitch / Retro 404 Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 py-1.5 text-xs font-mono text-link shadow-level-1 mb-6">
+        <span class="flex h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
+        <span class="font-bold">ERROR CODE 404 • MISSING ROUTE</span>
+      </div>
+
+      <!-- Giant 404 Display -->
+      <div class="relative select-none my-2">
+        <h1 class="text-7xl sm:text-9xl font-extrabold tracking-tighter font-mono" style="color: var(--site-primary, #e2b714); text-shadow: 0 0 30px rgba(226, 183, 20, 0.25);">
+          404
+        </h1>
+        <div class="text-xs sm:text-sm font-mono text-mute uppercase tracking-widest mt-1">
+          [ PAGE_NOT_FOUND // 0x404_ERR ]
+        </div>
+      </div>
+
+      <!-- Heading & Description -->
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink mt-4 font-sans tracking-tight">
+        Looks like you hit a typo!
+      </h2>
+      <p class="text-sm text-body mt-3 max-w-md mx-auto leading-relaxed font-sans">
+        The coordinates you entered don't correspond to any page or game in the zone. Don't worry — your typing streak is still intact.
+      </p>
+
+      <!-- Interactive Quick Practice Mini-Drill -->
+      <div class="mt-8 p-5 rounded-3xl border border-hairline bg-canvas-soft text-left shadow-level-2 max-w-lg mx-auto font-mono text-xs">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-hairline text-mute">
+          <span class="flex items-center gap-1.5">
+            <span>⌨️</span> <span>Quick 404 Rescue Drill:</span>
+          </span>
+          <span id="drill-status" class="text-[10px] text-link font-bold">TYPE TO REPAIR</span>
+        </div>
+        
+        <div class="text-sm font-bold tracking-wider mb-3 select-none" id="drill-target" style="color: var(--site-mute, #646669);">
+          <span id="drill-completed" style="color: var(--site-primary, #e2b714);"></span><span id="drill-cursor" class="border-b-2 animate-pulse" style="border-color: var(--site-primary, #e2b714); color: var(--site-ink, #d1d0c5);">r</span><span id="drill-remaining">eturn to safety</span>
+        </div>
+
+        <input
+          type="text"
+          id="drill-input"
+          placeholder="Click here and type 'return to safety'..."
+          class="w-full rounded-xl border border-hairline bg-canvas px-3.5 py-2 text-xs text-ink focus:outline-none focus:border-link shadow-inner"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+
+      <!-- Primary Action Buttons -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="/"
+          class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 cursor-pointer"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        >
+          <span>🏠 Return to Home Hub</span>
+        </a>
+        <a
+          href="/speed-test"
+          class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer"
+        >
+          <span>⚡ Speed Test</span>
+        </a>
+        <a
+          href="/arcade"
+          class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer"
+        >
+          <span>🕹️ Arcade Lounge</span>
+        </a>
+      </div>
+
+      <!-- Recommended Games Grid -->
+      <div class="mt-12 pt-8 border-t border-hairline text-left">
+        <span class="text-xs font-mono text-mute uppercase font-bold tracking-wider block text-center mb-4">
+          Or jump into a popular 2D typing game:
+        </span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+          {featuredGames.map(game => (
+            <a
+              href={`/game/${game.id}`}
+              class="rounded-2xl border border-hairline bg-canvas-soft p-3 text-center shadow-level-1 hover:border-link hover:scale-105 transition group"
+            >
+              <span class="text-2xl block mb-1">{game.icon}</span>
+              <span class="font-bold text-ink block truncate group-hover:text-link">{game.title}</span>
+              <span class="text-[10px] text-mute uppercase block mt-0.5">{game.categoryName}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Need Help / Support Link -->
+      <div class="mt-8 text-xs font-mono text-mute">
+        <span>Looking for something specific? </span>
+        <a href="/contact" class="text-link hover:underline">Contact us at jisahu2003@gmail.com</a>
+      </div>
+
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Interactive 404 Mini Rescue Drill
+  const targetText = 'return to safety';
+  const drillInput = document.getElementById('drill-input') as HTMLInputElement | null;
+  const drillCompleted = document.getElementById('drill-completed');
+  const drillCursor = document.getElementById('drill-cursor');
+  const drillRemaining = document.getElementById('drill-remaining');
+  const drillStatus = document.getElementById('drill-status');
+
+  drillInput?.addEventListener('input', () => {
+    const val = drillInput.value.toLowerCase();
+    
+    if (val === targetText) {
+      if (drillStatus) {
+        drillStatus.textContent = '✓ ROUTE REPAIRED! REDIRECTING...';
+        drillStatus.style.color = 'var(--site-success, #10b981)';
+      }
+      if (drillCompleted) drillCompleted.textContent = targetText;
+      if (drillCursor) drillCursor.textContent = '';
+      if (drillRemaining) drillRemaining.textContent = '';
+
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 600);
+      return;
+    }
+
+    let matchLen = 0;
+    for (let i = 0; i < val.length; i++) {
+      if (val[i] === targetText[i]) {
+        matchLen++;
+      } else {
+        break;
+      }
+    }
+
+    if (drillCompleted) drillCompleted.textContent = targetText.slice(0, matchLen);
+    if (drillCursor) drillCursor.textContent = targetText.slice(matchLen, matchLen + 1);
+    if (drillRemaining) drillRemaining.textContent = targetText.slice(matchLen + 1);
+  });
+</script>

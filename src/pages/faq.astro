@@ -1,0 +1,132 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FAQSection from '../components/FAQSection.astro';
+import { generateFAQSchema, FAQ_DATA } from '../lib/faqData';
+
+const seoTitle = 'Frequently Asked Questions (FAQ) — Touch Typing, WPM Benchmarks & Free Games | Typing Game Zone';
+const seoDescription = 'Explore answers to 37 top typing questions on Typing Game Zone: Learn about touch typing, QWERTY vs AZERTY, 10-key numpad skills, good typing speeds by age, 2D arcade games, and mechanical switch audio.';
+const seoKeywords = 'typing faq, typing questions, touch typing faq, what is a good typing speed, what is 20 wpm, who invented qwerty, how to practice typing, typing game online free, 10 key typing skills, typing games free, typing speed by age';
+
+const faqStructuredData = generateFAQSchema(FAQ_DATA);
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  keywords={seoKeywords}
+  structuredData={faqStructuredData}
+>
+  <div class="py-12 sm:py-16 bg-canvas-soft border-b border-hairline">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-mute mb-6" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-ink transition">Home</a>
+        <span>/</span>
+        <span class="text-ink font-semibold">FAQ & Knowledge Base</span>
+      </nav>
+
+      <!-- Page Title -->
+      <div class="text-left">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-link shadow-level-1 backdrop-blur mb-4">
+          <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>37 VERIFIED TYPING ANSWERS</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight">
+          Keyboard Knowledge Base & FAQ
+        </h1>
+        <p class="mt-4 text-sm sm:text-base text-body max-w-3xl leading-relaxed">
+          Comprehensive answers to the most frequently asked questions about touch-typing technique, speed benchmarks, 10-key skills, keyboard history, finger placement charts, and free 2D online typing games.
+        </p>
+      </div>
+
+      <!-- Quick Category Shortcuts -->
+      <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+        <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
+          <span class="text-lg block mb-1">🎮</span>
+          <span class="font-bold text-ink group-hover:text-link">Typing Games</span>
+          <span class="block text-[11px] text-mute mt-0.5">21 Free Titles</span>
+        </a>
+        <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
+          <span class="text-lg block mb-1">⚡</span>
+          <span class="font-bold text-ink group-hover:text-link">WPM Speeds</span>
+          <span class="block text-[11px] text-mute mt-0.5">Benchmarks by Age</span>
+        </a>
+        <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
+          <span class="text-lg block mb-1">🖐️</span>
+          <span class="font-bold text-ink group-hover:text-link">Fingers & Form</span>
+          <span class="block text-[11px] text-mute mt-0.5">Home Row Rules</span>
+        </a>
+        <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
+          <span class="text-lg block mb-1">⌨️</span>
+          <span class="font-bold text-ink group-hover:text-link">QWERTY History</span>
+          <span class="block text-[11px] text-mute mt-0.5">Keyboards & Layouts</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main class="py-12 sm:py-16 bg-canvas">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <FAQSection
+        title="Comprehensive Typing & Keyboard FAQ"
+        subtitle="Search through all 37 questions or filter by category below."
+        includeSchema={false}
+      />
+
+      <!-- Quick Action Promotion Cards -->
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 font-sans">
+        <div class="rounded-2xl border border-hairline bg-canvas-soft p-6 shadow-level-1 flex flex-col justify-between">
+          <div>
+            <div class="text-2xl mb-2">⚡</div>
+            <h3 class="text-base font-bold text-ink">Test Your WPM Speed</h3>
+            <p class="text-xs text-body mt-2 leading-relaxed">
+              Measure your words per minute, keystroke accuracy, and consistency with live telemetry.
+            </p>
+          </div>
+          <a
+            href="/speed-test"
+            class="mt-6 inline-flex items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-bold text-on-primary shadow-level-1 transition hover:opacity-90"
+            style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+          >
+            <span>Start Speed Test</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <div class="rounded-2xl border border-hairline bg-canvas-soft p-6 shadow-level-1 flex flex-col justify-between">
+          <div>
+            <div class="text-2xl mb-2">⌨️</div>
+            <h3 class="text-base font-bold text-ink">Touch Typing Practice Lab</h3>
+            <p class="text-xs text-body mt-2 leading-relaxed">
+              Interactive ANSI QWERTY keyboard map with color-coded finger quadrants and targeted drills.
+            </p>
+          </div>
+          <a
+            href="/practice"
+            class="mt-6 inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft-2"
+          >
+            <span>Open Practice Lab</span>
+            <span>→</span>
+          </a>
+        </div>
+
+        <div class="rounded-2xl border border-hairline bg-canvas-soft p-6 shadow-level-1 flex flex-col justify-between">
+          <div>
+            <div class="text-2xl mb-2">🎮</div>
+            <h3 class="text-base font-bold text-ink">Play 21 2D Arcade Games</h3>
+            <p class="text-xs text-body mt-2 leading-relaxed">
+              Battle zombie swarms, hack mainframes, slice neon words, and dodge meteors at 60 FPS.
+            </p>
+          </div>
+          <a
+            href="/#games-section"
+            class="mt-6 inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft-2"
+          >
+            <span>Browse Games Catalog</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>

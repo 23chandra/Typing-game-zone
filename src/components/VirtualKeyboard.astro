@@ -19,49 +19,49 @@
   </div>
 
   <!-- On-Screen Interactive Keyboard (Responsive for touch screen tablets & desktops) -->
-  <div class="w-full max-w-2xl select-none">
-    <div class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 text-center">
-      <div class="flex items-center justify-between text-[11px] font-mono text-mute px-2 mb-2">
-        <span class="flex items-center gap-1.5">
+  <div class="w-full max-w-2xl select-none px-1">
+    <div class="rounded-xl border border-hairline bg-canvas p-2 sm:p-3.5 shadow-level-1 text-center">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[11px] font-mono text-mute px-1 mb-2.5">
+        <span class="flex items-center gap-1.5 self-start sm:self-auto">
           <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Touch Typing Zone</span>
         </span>
         
         <!-- Layout Switcher Pills -->
-        <div class="flex flex-wrap items-center gap-1" id="vk-layout-switcher">
-          <span class="text-[10px] uppercase font-bold mr-1 text-mute">Layout:</span>
-          <button type="button" data-layout="qwerty" class="vk-layout-btn active px-1.5 py-0.5 rounded text-[10px] font-bold border transition cursor-pointer" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437); border-color: var(--site-primary, #e2b714);">QWERTY</button>
-          <button type="button" data-layout="azerty" class="vk-layout-btn px-1.5 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer">AZERTY</button>
-          <button type="button" data-layout="qwertz" class="vk-layout-btn px-1.5 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer">QWERTZ</button>
-          <button type="button" data-layout="dvorak" class="vk-layout-btn px-1.5 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer">DVORAK</button>
-          <button type="button" data-layout="hindi" class="vk-layout-btn px-1.5 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer">हिन्दी</button>
-          <button type="button" data-layout="russian" class="vk-layout-btn px-1.5 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer">Русский</button>
-          <button type="button" data-layout="arabic" class="vk-layout-btn px-1.5 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer">العربية</button>
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full pb-0.5" id="vk-layout-switcher">
+          <span class="text-[10px] uppercase font-bold mr-1 text-mute whitespace-nowrap">Layout:</span>
+          <button type="button" data-layout="qwerty" class="vk-layout-btn active px-2 py-0.5 rounded text-[10px] font-bold border transition cursor-pointer whitespace-nowrap" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437); border-color: var(--site-primary, #e2b714);">QWERTY</button>
+          <button type="button" data-layout="azerty" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">AZERTY</button>
+          <button type="button" data-layout="qwertz" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">QWERTZ</button>
+          <button type="button" data-layout="dvorak" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">DVORAK</button>
+          <button type="button" data-layout="hindi" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">हिन्दी</button>
+          <button type="button" data-layout="russian" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">Русский</button>
+          <button type="button" data-layout="arabic" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">العربية</button>
         </div>
       </div>
 
       <!-- Key Rows Container (Dynamic Layout Matrix) -->
-      <div id="vk-rows-container" class="flex flex-col gap-1.5 font-mono text-xs">
+      <div id="vk-rows-container" class="flex flex-col gap-1 sm:gap-1.5 font-mono text-xs w-full">
         <!-- Row 1 -->
-        <div class="flex justify-center gap-1" id="vk-row-1">
+        <div class="flex justify-center gap-0.5 sm:gap-1 w-full" id="vk-row-1">
           {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map(k => (
             <button
               type="button"
               data-virtual-key={k.toLowerCase()}
-              class="virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+              class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
             >
               {k}
             </button>
           ))}
         </div>
         <!-- Row 2 -->
-        <div class="flex justify-center gap-1" id="vk-row-2">
+        <div class="flex justify-center gap-0.5 sm:gap-1 w-full" id="vk-row-2">
           {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'].map(k => (
             <button
               type="button"
               data-virtual-key={k.toLowerCase()}
-              class={`virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border font-bold text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer ${
-                ['F', 'J'].includes(k) ? 'border-link text-link underline' : 'border-hairline text-ink'
+              class={`virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border font-bold text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0 ${
+                ['F', 'J'].includes(k) ? 'border-link text-link underline font-extrabold' : 'border-hairline text-ink'
               }`}
             >
               {k}
@@ -69,11 +69,11 @@
           ))}
         </div>
         <!-- Row 3 -->
-        <div class="flex justify-center gap-1" id="vk-row-3">
+        <div class="flex justify-center gap-0.5 sm:gap-1 w-full" id="vk-row-3">
           <button
             type="button"
             data-virtual-key="backspace"
-            class="virtual-key-btn flex h-9 px-2 sm:px-3 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[11px] text-error shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-error active:text-white transition cursor-pointer"
+            class="virtual-key-btn flex-initial min-w-[32px] sm:min-w-[44px] h-8 sm:h-10 px-1.5 sm:px-2 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[10px] sm:text-[11px] text-error shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-error active:text-white transition cursor-pointer"
           >
             ⌫
           </button>
@@ -81,7 +81,7 @@
             <button
               type="button"
               data-virtual-key={k.toLowerCase()}
-              class="virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+              class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
             >
               {k}
             </button>
@@ -89,7 +89,7 @@
           <button
             type="button"
             data-virtual-key=" "
-            class="virtual-key-btn flex h-9 px-3 sm:px-4 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[11px] text-ink shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+            class="virtual-key-btn flex-initial min-w-[38px] sm:min-w-[56px] h-8 sm:h-10 px-1.5 sm:px-3 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[9px] sm:text-[10px] text-ink shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
           >
             SPACE
           </button>
@@ -120,7 +120,7 @@
         <button
           type="button"
           data-virtual-key="${k.toLowerCase()}"
-          class="virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+          class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
         >
           ${k.toUpperCase()}
         </button>
@@ -133,7 +133,7 @@
         <button
           type="button"
           data-virtual-key="${k.toLowerCase()}"
-          class="virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border ${isHoming ? 'border-link text-link underline font-extrabold' : 'border-hairline text-ink'} font-bold text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+          class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border ${isHoming ? 'border-link text-link underline font-extrabold' : 'border-hairline text-ink'} font-bold text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
         >
           ${k.toUpperCase()}
         </button>
@@ -144,7 +144,7 @@
         <button
           type="button"
           data-virtual-key="${k.toLowerCase()}"
-          class="virtual-key-btn flex h-9 w-8 sm:w-11 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+          class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
         >
           ${k.toUpperCase()}
         </button>
@@ -154,7 +154,7 @@
         <button
           type="button"
           data-virtual-key="backspace"
-          class="virtual-key-btn flex h-9 px-2 sm:px-3 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[11px] text-error shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-error active:text-white transition cursor-pointer"
+          class="virtual-key-btn flex-initial min-w-[32px] sm:min-w-[44px] h-8 sm:h-10 px-1.5 sm:px-2 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[10px] sm:text-[11px] text-error shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-error active:text-white transition cursor-pointer"
         >
           ⌫
         </button>
@@ -162,7 +162,7 @@
         <button
           type="button"
           data-virtual-key=" "
-          class="virtual-key-btn flex h-9 px-3 sm:px-4 items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[11px] text-ink shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+          class="virtual-key-btn flex-initial min-w-[38px] sm:min-w-[56px] h-8 sm:h-10 px-1.5 sm:px-3 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[9px] sm:text-[10px] text-ink shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
         >
           SPACE
         </button>

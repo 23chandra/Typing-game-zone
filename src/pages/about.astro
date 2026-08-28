@@ -1,0 +1,297 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteLogo from '../components/SiteLogo.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+
+const seoTitle = 'About Us — Typing Game Zone | The Free 2D Typing Game Arcade & Speed Platform';
+const seoDescription = 'Learn the story and mission of Typing Game Zone: Providing 21 free 2D typing games, mechanical switch audio synthesis, 17 themes, and touch typing practice tools for learners worldwide.';
+const seoKeywords = 'about typing game zone, typing game arcade, touch typing games online, free typing games, mechanical keyboard typing games, monkeytype typing games';
+
+const aboutStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  'name': 'About Typing Game Zone',
+  'url': 'https://typinggamezone.com/about',
+  'description': seoDescription,
+  'mainEntity': {
+    '@type': 'Organization',
+    'name': 'Typing Game Zone',
+    'url': 'https://typinggamezone.com',
+    'logo': 'https://typinggamezone.com/logo.svg',
+    'description': 'Free 2D typing games online, keyboard speed tests, touch typing practice, and mechanical keyboard audio synthesis.',
+    'contactPoint': {
+      '@type': 'ContactPoint',
+      'email': 'jisahu2003@gmail.com',
+      'contactType': 'Creator & Support'
+    }
+  },
+  'breadcrumb': {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'About Us',
+        'item': 'https://typinggamezone.com/about'
+      }
+    ]
+  }
+};
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  keywords={seoKeywords}
+  canonicalUrl="https://typinggamezone.com/about"
+  structuredData={aboutStructuredData}
+>
+  <!-- Hero Section -->
+  <div class="py-12 sm:py-20 bg-canvas-soft border-b border-hairline relative overflow-hidden">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-mute mb-6" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-ink transition">Home</a>
+        <span>/</span>
+        <span class="text-ink font-semibold">About Us</span>
+      </nav>
+
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-link shadow-level-1 backdrop-blur mb-4">
+            <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>OUR MISSION & STORY</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight font-sans">
+            Crafting the Ultimate Retro Typing Arcade
+          </h1>
+          <p class="mt-4 text-sm sm:text-base text-body leading-relaxed font-sans">
+            Typing Game Zone was created with one simple conviction: <strong>learning to type fast should be exhilarating, addictive, and 100% free for everyone.</strong>
+          </p>
+        </div>
+
+        <!-- Brand Showcase Card -->
+        <div class="rounded-3xl border border-hairline bg-canvas p-6 shadow-level-3 flex flex-col items-center text-center w-full lg:w-72 flex-shrink-0">
+          <SiteLogo class="h-20 w-20 rounded-2xl shadow-level-2 border border-hairline mb-3" />
+          <span class="font-bold text-ink text-base font-mono">Typing Game Zone</span>
+          <span class="text-xs text-mute font-mono mt-0.5">typinggamezone.com</span>
+          <div class="mt-4 pt-4 border-t border-hairline w-full flex items-center justify-around text-xs font-mono">
+            <div class="text-center">
+              <span class="block font-bold text-ink text-sm">21</span>
+              <span class="text-[10px] text-mute">2D Games</span>
+            </div>
+            <div class="text-center">
+              <span class="block font-bold text-ink text-sm">17</span>
+              <span class="text-[10px] text-mute">Themes</span>
+            </div>
+            <div class="text-center">
+              <span class="block font-bold text-ink text-sm">16</span>
+              <span class="text-[10px] text-mute">Languages</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <main class="py-12 sm:py-20 bg-canvas">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-16">
+
+      <!-- Mission & Vision Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="rounded-3xl border border-hairline bg-canvas-soft p-8 shadow-level-2 flex flex-col justify-between">
+          <div>
+            <div class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-canvas border border-hairline text-xl mb-4 shadow-sm">
+              🎯
+            </div>
+            <h2 class="text-xl font-bold text-ink font-mono mb-3">Our Core Mission</h2>
+            <p class="text-sm text-body leading-relaxed">
+              We bridge the gap between rigorous keyboard ergonomics and pure arcade fun. Whether you are a student preparing for school, a programmer speeding up your coding workflow, or an esports enthusiast sharpening your reaction time, our 2D canvas games turn repetitive key drills into high-adrenaline boss fights and survival adventures.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-hairline flex items-center gap-2 text-xs font-mono text-mute">
+            <span class="h-2 w-2 rounded-full bg-primary"></span>
+            <span>Skill progression measured in real WPM gains</span>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-hairline bg-canvas-soft p-8 shadow-level-2 flex flex-col justify-between">
+          <div>
+            <div class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-canvas border border-hairline text-xl mb-4 shadow-sm">
+              ⚡
+            </div>
+            <h2 class="text-xl font-bold text-ink font-mono mb-3">Zero Friction Philosophy</h2>
+            <p class="text-sm text-body leading-relaxed">
+              No mandatory accounts. No annoying popups. No paywalled levels. Everything runs client-side at a smooth 60 frames per second right inside your browser. Just open the page, pick a game or speed test, and start typing immediately.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-hairline flex items-center gap-2 text-xs font-mono text-mute">
+            <span class="h-2 w-2 rounded-full bg-primary"></span>
+            <span>Instant load times • Zero latency input handling</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- What Makes Typing Game Zone Unique -->
+      <div>
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="text-xs font-mono font-bold text-link uppercase tracking-wider">Features & Technology</span>
+          <h2 class="text-2xl sm:text-4xl font-bold text-ink mt-1 font-sans">
+            Built by Typists, for Typists
+          </h2>
+          <p class="text-sm text-body mt-2">
+            Every feature on Typing Game Zone is engineered to deliver the best typing experience on the web.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Feature 1 -->
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1 hover:border-link transition group">
+            <div class="text-3xl mb-3">🎮</div>
+            <h3 class="text-base font-bold text-ink font-mono mb-2 group-hover:text-link">21 Custom 2D Game Engines</h3>
+            <p class="text-xs text-mute leading-relaxed">
+              From <a href="/game/retro-invaders" class="text-ink underline">Retro Invaders</a> and <a href="/game/zombie-horde" class="text-ink underline">Zombie Horde</a> to <a href="/game/cyber-hacker" class="text-ink underline">Cyber Hacker</a> and <a href="/game/street-fighter" class="text-ink underline">Street Fighter</a>, every game features hand-crafted canvas physics, particle bursts, and dynamic difficulty scaling.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1 hover:border-link transition group">
+            <div class="text-3xl mb-3">🔊</div>
+            <h3 class="text-base font-bold text-ink font-mono mb-2 group-hover:text-link">Web Audio Switch Synthesizer</h3>
+            <p class="text-xs text-mute leading-relaxed">
+              Experience the acoustic bliss of mechanical switches. Real-time procedural audio synthesis generates realistic clicky Cherry MX Blues, deep Holy Panda thocks, smooth Linear Reds, and vintage typewriter bells.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1 hover:border-link transition group">
+            <div class="text-3xl mb-3">🎨</div>
+            <h3 class="text-base font-bold text-ink font-mono mb-2 group-hover:text-link">17 Curated Aesthetic Themes</h3>
+            <p class="text-xs text-mute leading-relaxed">
+              Customize your battlefield with beloved themes like Serika Dark, Dracula, Matrix, Cyberpunk, Nord, Gruvbox, Taro, Miami Nights, and Botanical with instant zero-flash switching.
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1 hover:border-link transition group">
+            <div class="text-3xl mb-3">🌐</div>
+            <h3 class="text-base font-bold text-ink font-mono mb-2 group-hover:text-link">16 Global Languages & RTL</h3>
+            <p class="text-xs text-mute leading-relaxed">
+              Full internationalization and smart transliteration support for English, Hindi, Spanish, French, German, Japanese, Portuguese, Russian, Arabic, Chinese, Italian, Korean, Indonesian, Turkish, Vietnamese, and Bengali.
+            </p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1 hover:border-link transition group">
+            <div class="text-3xl mb-3">⌨️</div>
+            <h3 class="text-base font-bold text-ink font-mono mb-2 group-hover:text-link">Touch Typing Practice Lab</h3>
+            <p class="text-xs text-mute leading-relaxed">
+              Comprehensive drills for Home Row, Upper Row, Bottom Row, Number Row, Symbols, and 10-Key Numpad with dynamic finger guides, accuracy heatmaps, and instant feedback.
+            </p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 shadow-level-1 hover:border-link transition group">
+            <div class="text-3xl mb-3">⚡</div>
+            <h3 class="text-base font-bold text-ink font-mono mb-2 group-hover:text-link">Speed Test Telemetry</h3>
+            <p class="text-xs text-mute leading-relaxed">
+              Professional Monkeytype-grade speed tests featuring customizable time, word count, famous quotes, zen mode, custom texts, live WPM graphs, and raw keystroke analytics.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Community & Creator Section -->
+      <div class="rounded-3xl border border-hairline bg-canvas-soft p-8 sm:p-12 shadow-level-3">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div class="max-w-xl">
+            <span class="text-xs font-mono text-mute uppercase font-bold block mb-1">Behind The Project</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-ink font-sans">
+              Built with Passion for Keyboard Enthusiasts
+            </h2>
+            <p class="text-sm text-body mt-3 leading-relaxed">
+              Typing Game Zone is actively maintained and continually expanding with new games, switch sound profiles, drills, and community-requested features. We welcome suggestions, bug reports, and collaborations from learners, educators, and gamers worldwide!
+            </p>
+            <div class="mt-6 flex flex-wrap items-center gap-4 text-xs font-mono">
+              <span class="inline-flex items-center gap-1.5 rounded-lg bg-canvas px-3 py-1.5 border border-hairline text-ink">
+                <span>💻</span> Open Web Standards
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-lg bg-canvas px-3 py-1.5 border border-hairline text-ink">
+                <span>🛡️</span> Privacy-First
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-lg bg-canvas px-3 py-1.5 border border-hairline text-ink">
+                <span>⚡</span> 60 FPS Canvas
+              </span>
+            </div>
+          </div>
+
+          <!-- Contact Email Card -->
+          <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-1 w-full md:w-80 flex-shrink-0">
+            <span class="text-[11px] font-mono text-mute uppercase font-bold block mb-1">Direct Developer Contact</span>
+            <span class="text-base font-bold text-ink font-mono block break-all">jisahu2003@gmail.com</span>
+            <p class="text-xs text-mute mt-2 leading-relaxed">
+              Got a game idea, feedback, or a partnership inquiry? Reach out anytime!
+            </p>
+            <div class="mt-4 flex flex-col gap-2">
+              <a
+                href="mailto:jisahu2003@gmail.com?subject=Hello%20from%20Typing%20Game%20Zone"
+                class="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-xs font-bold shadow-level-1 transition hover:opacity-90 active:scale-95 text-center"
+                style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+              >
+                <span>✉️ Send an Email</span>
+              </a>
+              <a
+                href="/contact"
+                class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 py-2 text-xs font-mono font-medium text-ink hover:bg-canvas-soft-2 transition text-center"
+              >
+                <span>Contact Page →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action CTAs -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs text-center">
+        <a href="/#games-section" class="rounded-2xl border border-hairline bg-canvas-soft p-5 hover:border-link transition group shadow-level-1">
+          <span class="text-2xl block mb-2">🎮</span>
+          <span class="font-bold text-ink block group-hover:text-link">Explore 21 Free Games</span>
+          <span class="text-mute text-[11px] mt-1 block">Arcade, Action & Fighting</span>
+        </a>
+        <a href="/speed-test" class="rounded-2xl border border-hairline bg-canvas-soft p-5 hover:border-link transition group shadow-level-1">
+          <span class="text-2xl block mb-2">⚡</span>
+          <span class="font-bold text-ink block group-hover:text-link">Take a Speed Test</span>
+          <span class="text-mute text-[11px] mt-1 block">Live WPM & Accuracy Graphs</span>
+        </a>
+        <a href="/practice" class="rounded-2xl border border-hairline bg-canvas-soft p-5 hover:border-link transition group shadow-level-1">
+          <span class="text-2xl block mb-2">⌨️</span>
+          <span class="font-bold text-ink block group-hover:text-link">Practice Lab & 10-Key</span>
+          <span class="text-mute text-[11px] mt-1 block">Master Finger Placement</span>
+        </a>
+      </div>
+
+      <!-- Bottom Nav -->
+      <div class="pt-8 border-t border-hairline flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-mute">
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="/privacy" class="hover:text-ink transition">Privacy Policy →</a>
+          <a href="/terms" class="hover:text-ink transition">Terms & Conditions →</a>
+          <a href="/contact" class="hover:text-ink transition">Contact Us →</a>
+          <a href="/faq" class="hover:text-ink transition">Typing FAQ (37 Q&A) →</a>
+        </div>
+        <a href="#top" class="hover:text-ink transition">Back to Top ↑</a>
+      </div>
+
+    </div>
+  </main>
+</Layout>

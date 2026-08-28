@@ -2,12 +2,26 @@
 import Layout from '../layouts/Layout.astro';
 import GameCard from '../components/GameCard.astro';
 import SpeedTestWidget from '../components/SpeedTestWidget.astro';
+import FAQSection from '../components/FAQSection.astro';
 import { ALL_GAMES } from '../lib/games/gameRegistry';
+import { FAQ_DATA, generateFAQSchema } from '../lib/faqData';
 
 const totalGames = ALL_GAMES.length;
+
+// SEO Metadata for Typing Game Zone Home Page
+const seoTitle = 'Typing Game Zone — Free 2D Typing Games Online, Speed Tests & Typing Lessons';
+const seoDescription = 'Play 21 free 2D typing games online at Typing Game Zone! Master fast typing with retro arcade action, zombie survival, kids typing games, word challenges, speed tests, and mechanical switch audio.';
+const seoKeywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, typing game online for kids, typing master word typing game online, kids typing game online, keyboard typing game online, zombie typing game online, 2d typing game online, 2d typing game online free, 2d typing game, typing game zone guess who i am, free typing game zone, typing game zone snake, typing faq';
+
+const faqStructuredData = generateFAQSchema(FAQ_DATA);
 ---
 
-<Layout title="Typing Game Zone — 21 Free 2D Typing Games & Speed Practice">
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  keywords={seoKeywords}
+  structuredData={faqStructuredData}
+>
   <!-- 1. Hero Band with Atmospheric Mesh Gradient Backdrop -->
   <section class="relative overflow-hidden border-b border-hairline bg-canvas py-16 sm:py-24 mesh-gradient-hero">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -19,21 +33,21 @@ const totalGames = ALL_GAMES.length;
       </div>
 
       <!-- Main Display Headline -->
-      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-ink leading-[1.08] max-w-4xl mx-auto">
+      <h1 class="text-3xl xs:text-4xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-ink leading-[1.12] max-w-4xl mx-auto">
         <span data-i18n="hero.title1">Master the keyboard.</span> <br class="hidden sm:inline" />
         <span class="text-gradient-develop" data-i18n="hero.title2">Play 21 Retro 2D Games.</span>
       </h1>
 
       <!-- Body Lead Paragraph -->
-      <p class="mt-6 text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
+      <p class="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg text-body max-w-2xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
         Immerse yourself in arcade boss battles, neon slicing, zombie shootouts, and Monkeytype-grade speed tests with realistic mechanical switch audio synthesis.
       </p>
 
       <!-- CTA Buttons Row -->
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+      <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-4">
         <a
           href="/game/type-defender"
-          class="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm sm:text-base font-medium text-on-primary shadow-level-3 transition hover:opacity-90 active:scale-95"
+          class="inline-flex items-center gap-2 rounded-full bg-ink px-6 sm:px-7 py-3 sm:py-3.5 text-xs sm:text-base font-medium text-on-primary shadow-level-3 transition hover:opacity-90 active:scale-95"
           style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
         >
           <span data-i18n="hero.browseGames">Browse 21 Games</span>
@@ -44,36 +58,36 @@ const totalGames = ALL_GAMES.length;
 
         <a
           href="/speed-test"
-          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-6 py-3.5 text-sm sm:text-base font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95"
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-5 sm:px-6 py-3 sm:py-3.5 text-xs sm:text-base font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95"
         >
           <span data-i18n="hero.startTest">Start Typing Test</span>
         </a>
 
         <a
           href="/arcade"
-          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3.5 text-sm sm:text-base font-medium text-body transition hover:text-ink hover:bg-canvas active:scale-95"
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-base font-medium text-body transition hover:text-ink hover:bg-canvas active:scale-95"
         >
           <span data-i18n="nav.arcade">🕹️ Arcade Lounge</span>
         </a>
       </div>
 
       <!-- Quick Platform Telemetry Bar -->
-      <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto text-left font-mono">
-        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.gamesCount">Free 2D Games</div>
-          <div class="text-2xl font-bold text-ink mt-1">21 Titles</div>
+      <div class="mt-8 sm:mt-12 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 max-w-3xl mx-auto text-left font-mono">
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.gamesCount">Free 2D Games</div>
+          <div class="text-xl sm:text-2xl font-bold text-ink mt-0.5 sm:mt-1">21 Titles</div>
         </div>
-        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.activeTypists">Active Typists</div>
-          <div class="text-2xl font-bold text-ink mt-1">10,000+</div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.activeTypists">Active Typists</div>
+          <div class="text-xl sm:text-2xl font-bold text-ink mt-0.5 sm:mt-1">10,000+</div>
         </div>
-        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.switchSounds">Audio Profiles</div>
-          <div class="text-2xl font-bold text-success mt-1">7 Switches</div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.switchSounds">Audio Profiles</div>
+          <div class="text-xl sm:text-2xl font-bold text-success mt-0.5 sm:mt-1">7 Switches</div>
         </div>
-        <div class="rounded-xl border border-hairline bg-canvas/80 p-4 shadow-level-1 backdrop-blur">
-          <div class="text-[11px] text-mute uppercase tracking-wider" data-i18n="hero.colorThemes">Color Themes</div>
-          <div class="text-2xl font-bold text-link mt-1">17 Themes</div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.colorThemes">Color Themes</div>
+          <div class="text-xl sm:text-2xl font-bold text-link mt-0.5 sm:mt-1">17 Themes</div>
         </div>
       </div>
 
@@ -81,11 +95,11 @@ const totalGames = ALL_GAMES.length;
   </section>
 
   <!-- 2. Interactive Game Hub & Catalog Section -->
-  <section class="py-16 sm:py-20 bg-canvas-soft scroll-mt-16" id="games-section">
+  <section class="py-12 sm:py-20 bg-canvas-soft scroll-mt-16" id="games-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       
       <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-hairline">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 pb-6 sm:pb-8 border-b border-hairline">
         <div>
           <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link" data-i18n="lead.gameRecords">Game Library</span>
           <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
@@ -111,26 +125,26 @@ const totalGames = ALL_GAMES.length;
       </div>
 
       <!-- Filter Tabs Row -->
-      <div class="flex flex-wrap items-center gap-2 pt-6 pb-8">
-        <button data-filter="all" data-i18n="cat.all" class="cat-filter-btn active rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-on-primary shadow-level-1 transition">
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar max-w-full pb-2 pt-6 mb-2">
+        <button data-filter="all" data-i18n="cat.all" class="cat-filter-btn active rounded-full bg-ink px-4 py-1.5 text-xs font-medium text-on-primary shadow-level-1 transition whitespace-nowrap flex-shrink-0">
           All Games (21)
         </button>
-        <button data-filter="arcade" data-i18n="cat.arcade" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+        <button data-filter="arcade" data-i18n="cat.arcade" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0">
           Arcade (4)
         </button>
-        <button data-filter="action" data-i18n="cat.action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+        <button data-filter="action" data-i18n="cat.action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0">
           Action (5)
         </button>
-        <button data-filter="adventure" data-i18n="cat.adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+        <button data-filter="adventure" data-i18n="cat.adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0">
           Adventure (4)
         </button>
-        <button data-filter="fighting" data-i18n="cat.fighting" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+        <button data-filter="fighting" data-i18n="cat.fighting" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0">
           Fighting (4)
         </button>
-        <button data-filter="puzzle" data-i18n="cat.puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+        <button data-filter="puzzle" data-i18n="cat.puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0">
           Puzzle (3)
         </button>
-        <button data-filter="practice" data-i18n="cat.practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition">
+        <button data-filter="practice" data-i18n="cat.practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0">
           Practice (1)
         </button>
       </div>
@@ -152,7 +166,7 @@ const totalGames = ALL_GAMES.length;
     </div>
   </section>
 
-  <!-- 3. Polarity-Flipped Dark Feature Band (per DESIGN.md showcase-band-dark) -->
+  <!-- 3. Polarity-Flipped Dark Feature Band -->
   <section class="border-y border-hairline bg-canvas py-20 relative overflow-hidden mesh-gradient-dark">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
       
@@ -242,6 +256,134 @@ const totalGames = ALL_GAMES.length;
       
     </div>
   </section>
+
+  <!-- 5. Comprehensive SEO Editorial & Knowledge Center (800 - 1200 Words) -->
+  <article class="py-16 sm:py-24 bg-canvas border-t border-hairline relative" id="about-typing-game-zone">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <header class="text-center max-w-3xl mx-auto mb-14">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-3.5 py-1 text-xs font-mono text-link shadow-level-1 mb-4">
+          <span>📖 THE COMPLETE KEYBOARD GUIDE</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-ink leading-tight">
+          Master the Keyboard with Typing Game Zone: The Ultimate Free 2D Typing Game Online Platform
+        </h2>
+        <p class="mt-4 text-sm sm:text-base text-body leading-relaxed">
+          Discover how gamified 2D arcade battles, speed tests, and structured touch-typing lessons combine to accelerate your typing velocity and accuracy.
+        </p>
+      </header>
+
+      <!-- Main Editorial Content Columns -->
+      <div class="space-y-10 text-body leading-relaxed text-sm sm:text-base">
+        
+        <!-- Subsection 1: Introduction & The Problem with Traditional Typing -->
+        <section class="rounded-3xl border border-hairline bg-canvas-soft/60 p-6 sm:p-8 shadow-level-1 backdrop-blur">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-canvas text-lg border border-hairline shadow-sm">🚀</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+              Revolutionizing Typing Online Through Gamified 2D Arcade Mechanics
+            </h3>
+          </div>
+          <p>
+            Welcome to <strong>Typing Game Zone</strong>, the premier digital arcade and speed benchmarking platform engineered to revolutionize how students, developers, and competitive typists master their keyboards. For decades, learning to type has relied on dry drills and repetitive tutors that quickly become monotonous. <strong>Typing Game Zone</strong> transforms <strong>typing online</strong> by merging 2D arcade mechanics, dynamic visuals, procedural switch audio, and structured <strong>typing lessons</strong> into an engaging web suite. Whether you are searching for an exciting <strong>free typing game online</strong> to test your reflexes, an educational <strong>typing game online for kids</strong> to introduce home-row fundamentals, or an intense <strong>fast typing game online</strong> to break past 100 WPM, our platform delivers an unmatched catalog of 21 interactive experiences.
+          </p>
+        </section>
+
+        <!-- Subsection 2: Why 2D Typing Games Work -->
+        <section class="rounded-3xl border border-hairline bg-canvas-soft/60 p-6 sm:p-8 shadow-level-1 backdrop-blur">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-canvas text-lg border border-hairline shadow-sm">🕹️</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+              Why Play 2D Typing Games Online? The Power of Gamified Touch Typing
+            </h3>
+          </div>
+          <p class="mb-4">
+            Mastering computer <strong>typing</strong> requires building deep neuromuscular memory. When you practice typing with static text, focus often wanders, leading to plateaus. Stepping into a <strong>2d typing game</strong> changes your learning psychology: your brain shifts into an active state of problem-solving, spatial tracking, and instant reflex response. Instead of merely copying letters, you are deflecting incoming missiles, dodging hazards, and out-dueling rivals.
+          </p>
+          <p class="mb-4">
+            Our curated collection of <strong>2d typing game online</strong> titles delivers 60 FPS HTML5 Canvas performance with zero latency. If you thrive on heart-pounding survival, our <strong>zombie typing game online</strong> puts your keyboard defense to the test as you type rapid bullet words to hold off hordes of mutant runners. Classic gaming fans will love <strong>typing game zone snake</strong>, which reimagines the retro snake maze by requiring you to type directional command words to guide your growing serpent. For players who love mystery and vocabulary challenges, <strong>typing game zone guess who i am</strong> presents cryptic riddles where accurately typed keywords uncover hidden personas.
+          </p>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+            <div class="rounded-xl border border-hairline bg-canvas p-3">
+              <span class="text-link font-bold block mb-1">🧟 Zombie Horde</span>
+              <span>Survival bullet mechanics where high WPM repels swarms.</span>
+            </div>
+            <div class="rounded-xl border border-hairline bg-canvas p-3">
+              <span class="text-link font-bold block mb-1">🐍 Snake Arena</span>
+              <span>Retro maze navigation requiring instant keystroke calls.</span>
+            </div>
+            <div class="rounded-xl border border-hairline bg-canvas p-3">
+              <span class="text-link font-bold block mb-1">🕵️ Guess Who I Am</span>
+              <span>Riddle clues & deductive keyword identification challenges.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Subsection 3: Structured Touch Typing Lessons -->
+        <section class="rounded-3xl border border-hairline bg-canvas-soft/60 p-6 sm:p-8 shadow-level-1 backdrop-blur">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-canvas text-lg border border-hairline shadow-sm">⌨️</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+              Structured Typing Lessons and the Interactive Practice Lab
+            </h3>
+          </div>
+          <p>
+            Achieving professional typing fluency requires ergonomic hand positioning, proper finger-to-key mapping, and touch-typing technique where you never look down at the keyboard. <strong>Typing Game Zone</strong> includes built-in <strong>typing lessons</strong> that guide learners step-by-step from beginner drills to advanced velocity sprints. Inside our Practice Lab and <strong>keyboard typing game online</strong> training modules, you will master the ANSI QWERTY matrix, assign specific keys to their optimal finger quadrants, and seamlessly incorporate number keys, symbols, and punctuation into your muscle memory. Our smart diagnostic system tracks your keystrokes in real time to target troublesome keys with personalized corrective drills.
+          </p>
+        </section>
+
+        <!-- Subsection 4: Kids Typing Game Online -->
+        <section class="rounded-3xl border border-hairline bg-canvas-soft/60 p-6 sm:p-8 shadow-level-1 backdrop-blur">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-canvas text-lg border border-hairline shadow-sm">🌟</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+              Engaging Typing Games Online for Kids: Safe, Fun, and Educational
+            </h3>
+          </div>
+          <p>
+            In today’s digital era, keyboard proficiency is a foundational skill for students. From essays and coding to online exams, kids who type quickly possess a major advantage. <strong>Typing Game Zone</strong> provides the ultimate <strong>typing game online for kids</strong>, featuring friendly animations, colorful arcade themes, and smooth difficulty scaling across 5 progressive tiers. Playing a <strong>kids typing game online</strong> on our platform helps children build fine motor skills and spelling confidence in a safe, ad-free environment. Parents and educators worldwide rely on our <strong>2d typing game online free</strong> suite for classrooms and homeschool curricula.
+          </p>
+        </section>
+
+        <!-- Subsection 5: Word Typing Games & Speed Tests -->
+        <section class="rounded-3xl border border-hairline bg-canvas-soft/60 p-6 sm:p-8 shadow-level-1 backdrop-blur">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-canvas text-lg border border-hairline shadow-sm">⚡</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+              Mastering Word Velocity and Typing Master Benchmark Tests
+            </h3>
+          </div>
+          <p>
+            For typists striving to reach speeds of 80 to 120+ WPM, whole-word chunking unlocks peak velocity. When you play a dedicated <strong>word typing game online</strong>, your visual cortex recognizes word shapes instantly, allowing your fingers to execute fluid motor bursts. Inspired by benchmarks like Typing Master and Monkeytype, our <strong>typing master word typing game online</strong> test bench delivers lab-grade telemetry. Benchmark your speed across 15s, 30s, and 60s intervals with instant calculations of gross WPM, net WPM, and accuracy. Our Web Audio synthesizer procedurally generates the acoustics of 7 iconic mechanical switches (Cherry MX Blues, Holy Panda thocks, Linear Reds, and vintage typewriter bells) for rich acoustic feedback.
+          </p>
+        </section>
+
+        <!-- Subsection 6: 100% Free & Open Access Philosophy -->
+        <section class="rounded-3xl border border-hairline bg-canvas-soft/60 p-6 sm:p-8 shadow-level-1 backdrop-blur">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-canvas text-lg border border-hairline shadow-sm">🌐</span>
+            <h3 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+              Why the Free Typing Game Zone is Built for Everyone
+            </h3>
+          </div>
+          <p>
+            We believe world-class typing education and arcade games should be universally accessible. The <strong>free typing game zone</strong> is 100% open-access, with no paywalls, recurring subscription fees, locked levels, or downloads. Play any <strong>typing game online free</strong> directly in your browser on desktop, laptop, Chromebook, or tablet. With 17 customizable color themes (Serika Dark, Dracula, Cyberpunk, Carbon, Matrix) and international support for 16 languages, <strong>Typing Game Zone</strong> is your all-in-one destination to learn, practice, and play. Discover the joy of <strong>typing</strong> today!
+          </p>
+        </section>
+
+        <!-- Subsection 7: Comprehensive Interactive FAQ Accordion Section -->
+        <FAQSection
+          title="Frequently Asked Questions About Typing, Keyboards & Games"
+          subtitle="Everything you need to know about touch-typing technique, speed benchmarks, 10-key numpad skills, QWERTY history, and free 2D games."
+          includeSchema={false}
+        />
+
+      </div>
+
+    </div>
+  </article>
 </Layout>
 
 <script>

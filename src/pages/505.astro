@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+
+const featuredGames = ALL_GAMES.slice(0, 4);
+
+const seoTitle = '505 - HTTP Version Not Supported | Typing Game Zone';
+const seoDescription = 'An unexpected HTTP protocol error occurred. Please refresh or return to Typing Game Zone.';
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+>
+  <div class="min-h-[75vh] flex items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-canvas">
+    <div class="max-w-2xl w-full text-center">
+      
+      <!-- Error Status Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 py-1.5 text-xs font-mono text-link shadow-level-1 mb-6">
+        <span class="flex h-2 w-2 rounded-full bg-amber-500 animate-ping"></span>
+        <span class="font-bold">HTTP STATUS 505 • PROTOCOL ANOMALY</span>
+      </div>
+
+      <!-- Giant 505 Display -->
+      <div class="relative select-none my-2">
+        <h1 class="text-7xl sm:text-9xl font-extrabold tracking-tighter font-mono" style="color: var(--site-primary, #e2b714); text-shadow: 0 0 30px rgba(226, 183, 20, 0.25);">
+          505
+        </h1>
+        <div class="text-xs sm:text-sm font-mono text-mute uppercase tracking-widest mt-1">
+          [ HTTP_VERSION_NOT_SUPPORTED // 0x505_PROTO ]
+        </div>
+      </div>
+
+      <!-- Heading & Description -->
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink mt-4 font-sans tracking-tight">
+        Protocol Transmission Anomaly
+      </h2>
+      <p class="text-sm text-body mt-3 max-w-md mx-auto leading-relaxed font-sans">
+        The server does not support the HTTP protocol version used in the request. This can occur if an outdated proxy, browser extension, or legacy connection is utilized.
+      </p>
+
+      <!-- Terminal Diagnostics Box -->
+      <div class="mt-8 p-5 rounded-3xl border border-hairline bg-canvas-soft text-left shadow-level-2 max-w-lg mx-auto font-mono text-xs">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-hairline text-mute">
+          <span class="flex items-center gap-1.5">
+            <span>⚙️</span> <span>Diagnostic Telemetry:</span>
+          </span>
+          <span class="text-[10px] text-link font-bold">CLIENT LOG</span>
+        </div>
+        
+        <div class="space-y-1.5 text-[11px] text-mute leading-relaxed font-mono">
+          <p><strong class="text-ink">> Protocol:</strong> Standard HTTP/2 or HTTP/3 recommended</p>
+          <p><strong class="text-ink">> Status:</strong> Server engine running normally</p>
+          <p><strong class="text-ink">> Suggestion:</strong> Refresh browser, disable proxy, or reload page</p>
+        </div>
+      </div>
+
+      <!-- Primary Action Buttons -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          onclick="window.location.reload()"
+          class="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 cursor-pointer"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        >
+          <span>🔄 Reload Page</span>
+        </button>
+        <a
+          href="/"
+          class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer"
+        >
+          <span>🏠 Return to Home Hub</span>
+        </a>
+        <a
+          href="/contact"
+          class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-3 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer"
+        >
+          <span>📬 Report Bug</span>
+        </a>
+      </div>
+
+      <!-- Recommended Games Grid -->
+      <div class="mt-12 pt-8 border-t border-hairline text-left">
+        <span class="text-xs font-mono text-mute uppercase font-bold tracking-wider block text-center mb-4">
+          Or resume typing in free 2D games:
+        </span>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+          {featuredGames.map(game => (
+            <a
+              href={`/game/${game.id}`}
+              class="rounded-2xl border border-hairline bg-canvas-soft p-3 text-center shadow-level-1 hover:border-link hover:scale-105 transition group"
+            >
+              <span class="text-2xl block mb-1">{game.icon}</span>
+              <span class="font-bold text-ink block truncate group-hover:text-link">{game.title}</span>
+              <span class="text-[10px] text-mute uppercase block mt-0.5">{game.categoryName}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Need Help / Support Link -->
+      <div class="mt-8 text-xs font-mono text-mute">
+        <span>Persistent issue? Email our support team directly at </span>
+        <a href="mailto:jisahu2003@gmail.com?subject=505%20Error%20Report" class="text-link hover:underline">jisahu2003@gmail.com</a>
+      </div>
+
+    </div>
+  </div>
+</Layout>
