@@ -278,11 +278,21 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
   <!-- Mobile Dropdown Navigation -->
   <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 xl:hidden font-mono text-xs">
     <div class="flex flex-col gap-1.5 font-medium mb-3">
-      <a href="/#games-section" data-i18n="nav.games" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🎮 All Games (21)</a>
-      <a href="/arcade" data-i18n="nav.arcade" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🕹️ Arcade Lounge</a>
-      <a href="/speed-test" data-i18n="nav.speedTest" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">⚡ Speed Test</a>
-      <a href="/practice" data-i18n="nav.practiceLab" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">⌨️ Practice Lab</a>
-      <a href="/leaderboards" data-i18n="nav.leaderboards" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">🏆 Leaderboards</a>
+      <a href="/#games-section" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
+        <span>🎮</span> <span data-i18n="nav.games">Games (21)</span>
+      </a>
+      <a href="/arcade" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
+        <span>🕹️</span> <span data-i18n="nav.arcade">Arcade Lounge</span>
+      </a>
+      <a href="/speed-test" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
+        <span>⚡</span> <span data-i18n="nav.speedTest">Speed Test</span>
+      </a>
+      <a href="/practice" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
+        <span>⌨️</span> <span data-i18n="nav.practiceLab">Practice Lab</span>
+      </a>
+      <a href="/leaderboards" class="flex items-center gap-2 rounded-xl px-3.5 py-2 text-body hover:bg-canvas-soft hover:text-ink transition">
+        <span>🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
+      </a>
     </div>
 
     <!-- Mobile Command & Play Quick Actions -->
@@ -292,7 +302,7 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
         id="mobile-cmd-btn"
         class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-2 text-xs font-mono font-bold text-ink cursor-pointer hover:bg-canvas transition"
       >
-        <span data-i18n="nav.commandPalette">>_ Command Palette</span>
+        <span>>_</span> <span data-i18n="nav.commandPalette">Command Palette</span>
         <kbd class="text-[10px] opacity-60">⌘K</kbd>
       </button>
       <a
