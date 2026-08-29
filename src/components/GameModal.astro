@@ -5,6 +5,19 @@
 <div id="game-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-3 sm:p-4 hidden">
   <div class="relative w-full max-w-md max-h-[92dvh] overflow-y-auto overscroll-contain rounded-2xl border border-hairline bg-canvas p-4 sm:p-6 shadow-level-5 text-center animate-in fade-in zoom-in-95 duration-200">
     
+    <!-- Top-Right Close 'X' Button -->
+    <button
+      id="modal-close-btn"
+      type="button"
+      class="absolute top-3 right-3 sm:top-4 sm:right-4 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-hairline bg-canvas-soft text-mute hover:text-ink hover:bg-canvas active:scale-95 transition cursor-pointer z-10"
+      title="Close popup (Esc)"
+      aria-label="Close modal"
+    >
+      <svg class="h-4 w-4 sm:h-4.5 sm:w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
     <!-- Status Icon & Grade -->
     <div class="mx-auto flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-canvas-soft border border-hairline shadow-level-2 mb-2 sm:mb-3">
       <span id="modal-status-icon" class="text-2xl sm:text-3xl">🎉</span>
@@ -76,6 +89,15 @@
         class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95 min-h-[42px] cursor-pointer"
       >
         <span data-i18n="game.tryAgain">Try Again</span>
+      </button>
+
+      <button
+        id="modal-dismiss-btn"
+        type="button"
+        class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-medium text-body hover:text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95 min-h-[42px] cursor-pointer"
+        title="Close this popup"
+      >
+        <span>Close ✕</span>
       </button>
 
       <a

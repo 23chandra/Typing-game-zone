@@ -246,6 +246,8 @@ const gameStructuredData = [
     const modalXpText = document.getElementById('modal-xp-text');
     const modalNextBtn = document.getElementById('modal-next-btn');
     const modalRetryBtn = document.getElementById('modal-retry-btn');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalDismissBtn = document.getElementById('modal-dismiss-btn');
 
     let currentLvl = 1;
 
@@ -398,6 +400,28 @@ const gameStructuredData = [
       gameModal?.classList.add('hidden');
       gameInstance.start(currentLvl);
       try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+    });
+
+    modalCloseBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    modalDismissBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    // Close modal when clicking backdrop outside modal card
+    gameModal?.addEventListener('click', (e) => {
+      if (e.target === gameModal) {
+        gameModal.classList.add('hidden');
+      }
+    });
+
+    // Close modal on Escape key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && gameModal && !gameModal.classList.contains('hidden')) {
+        gameModal.classList.add('hidden');
+      }
     });
 
     function updateLvlBtnUI() {
