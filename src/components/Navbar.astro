@@ -6,28 +6,28 @@ import SiteLogo from './SiteLogo.astro';
 ---
 
 <header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none pt-[env(safe-area-inset-top,0px)]">
-  <div class="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between gap-1.5 xs:gap-2 sm:gap-4 px-3 xs:px-4 sm:px-6 lg:px-8">
+  <div class="mx-auto flex h-14 sm:h-16 max-w-7xl 2xl:max-w-[1600px] w-full items-center justify-between gap-2 sm:gap-4 lg:gap-6 px-3 xs:px-4 sm:px-6 lg:px-8">
     
     <!-- Brand Logo -->
-    <a href="/" class="group flex items-center gap-1.5 xs:gap-2 sm:gap-3 min-w-0 flex-shrink flex-1 sm:flex-initial" title="Typing Game Zone - Home">
+    <a href="/" class="group flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-max mr-2 lg:mr-4 xl:mr-6" title="Typing Game Zone - Home">
       <SiteLogo class="h-7 w-7 xs:h-8 xs:w-8 sm:h-9 sm:w-9 rounded-xl shadow-level-2 transition-transform duration-200 group-hover:scale-105 border border-hairline flex-shrink-0" />
-      <div class="flex flex-col min-w-0">
-        <span class="text-xs xs:text-sm sm:text-base font-bold tracking-tight text-ink truncate leading-tight">Typing Game Zone</span>
+      <div class="flex flex-col min-w-max">
+        <span class="text-xs xs:text-sm sm:text-base font-bold tracking-tight text-ink whitespace-nowrap leading-tight">Typing Game Zone</span>
         <span class="hidden md:inline text-[10px] font-medium tracking-wide uppercase text-mute font-mono whitespace-nowrap mt-0.5">typinggamezone.com</span>
       </div>
     </a>
 
     <!-- Desktop Nav Links (Visible on desktop lg: 1024px+) -->
-    <nav class="hidden lg:flex items-center gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1">
-      <a href="/#games-section" data-i18n="nav.games" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
-      <a href="/arcade" data-i18n="nav.arcade" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
-      <a href="/speed-test" data-i18n="nav.speedTest" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
-      <a href="/practice" data-i18n="nav.practiceLab" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
-      <a href="/leaderboards" data-i18n="nav.leaderboards" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
+    <nav class="hidden lg:flex items-center gap-0.5 xl:gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1 flex-shrink-0">
+      <a href="/#games-section" data-i18n="nav.games" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
+      <a href="/arcade" data-i18n="nav.arcade" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
+      <a href="/speed-test" data-i18n="nav.speedTest" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
+      <a href="/practice" data-i18n="nav.practiceLab" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
+      <a href="/leaderboards" data-i18n="nav.leaderboards" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
     </nav>
 
     <!-- Controls: Language + Global Theme + Sound Switcher + Command Hint + Play CTA + Hamburger -->
-    <div class="flex items-center gap-1 xs:gap-1.5 sm:gap-2 lg:gap-2.5 flex-shrink-0">
+    <div class="flex items-center gap-1 xs:gap-1.5 sm:gap-2 lg:gap-2 xl:gap-2.5 flex-shrink-0 ml-auto lg:ml-0">
       
       <!-- Global Language Picker Dropdown -->
       <div class="relative" id="nav-lang-container">
@@ -103,7 +103,7 @@ import SiteLogo from './SiteLogo.astro';
           aria-haspopup="dialog"
         >
           <span id="nav-theme-dot" class="h-2.5 w-2.5 rounded-full shadow-xs transition-colors flex-shrink-0" style="background-color: var(--site-primary, #e2b714);"></span>
-          <span id="nav-theme-current-label" class="hidden md:inline font-bold">Serika Dark</span>
+          <span id="nav-theme-current-label" class="hidden xl:inline font-bold">Serika Dark</span>
           <svg class="h-3 w-3 sm:h-3.5 sm:w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
