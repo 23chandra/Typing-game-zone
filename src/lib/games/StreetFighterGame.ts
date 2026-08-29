@@ -91,8 +91,11 @@ export class StreetFighterGame extends BaseGame {
         this.animTimer = 0.22;
       }
 
+      const playerX = Math.max(65, Math.min(200, this.width * 0.22));
+      const oppX = Math.max(playerX + 110, Math.min(this.width - 65, this.width * 0.78));
+
       this.comboMeter = Math.min(100, this.comboMeter + 6);
-      this.spawnSparks(240, this.height - 130, '#50e3c2', 4);
+      this.spawnSparks(playerX + 40, this.height - 130, '#50e3c2', 4);
 
       if (this.typedIndex >= this.currentWord.length) {
         this.executeFinisher();
@@ -113,6 +116,8 @@ export class StreetFighterGame extends BaseGame {
   private executeFinisher(): void {
     const isSuper = this.comboMeter >= 100;
     const damage = isSuper ? 55 : 25;
+    const playerX = Math.max(65, Math.min(200, this.width * 0.22));
+    const oppX = Math.max(playerX + 110, Math.min(this.width - 65, this.width * 0.78));
 
     this.wordsCompletedInLevel++;
     this.score += isSuper ? 150 : 50;
@@ -127,7 +132,7 @@ export class StreetFighterGame extends BaseGame {
       this.addFloatingText(this.width / 2, this.height * 0.4, '🔥 SUPER HADOKEN! -55 HP', '#00dfd8', 24);
 
       this.fireball = {
-        x: 230,
+        x: playerX + 30,
         y: this.height - 130,
         vx: 800,
         radius: 32,
@@ -139,10 +144,10 @@ export class StreetFighterGame extends BaseGame {
       this.animTimer = 0.25;
       soundEngine.playHit();
       this.triggerScreenShake(0.12, 6);
-      this.addFloatingText(this.width - 200, this.height - 180, `CRITICAL HIT! -${damage} HP`, '#ff0080', 20);
+      this.addFloatingText(oppX, this.height - 180, `CRITICAL HIT! -${damage} HP`, '#ff0080', 20);
 
       this.fireball = {
-        x: 230,
+        x: playerX + 30,
         y: this.height - 130,
         vx: 550,
         radius: 18,
@@ -156,6 +161,8 @@ export class StreetFighterGame extends BaseGame {
 
   public updateGame(dt: number): void {
     this.idleTime += dt;
+    const playerX = Math.max(65, Math.min(200, this.width * 0.22));
+    const oppX = Math.max(playerX + 110, Math.min(this.width - 65, this.width * 0.78));
 
     // Smooth Health Lag Bars
     if (this.opponentLagHp > this.opponentHp) {
@@ -191,8 +198,8 @@ export class StreetFighterGame extends BaseGame {
         shape: 'spark'
       });
 
-      // Impact on opponent (x ~ width - 200)
-      if (this.fireball.x >= this.width - 200) {
+      // Impact on opponent
+      if (this.fireball.x >= oppX - 20) {
         this.fireball.active = false;
         const damage = this.fireball.isSuper ? 55 : 25;
         this.opponentHp = Math.max(0, this.opponentHp - damage);
@@ -200,11 +207,11 @@ export class StreetFighterGame extends BaseGame {
         this.animTimer = 0.25;
 
         soundEngine.playExplosion();
-        this.spawnExplosion(this.width - 200, this.height - 130, this.fireball.isSuper ? '#00dfd8' : '#ff0080', this.fireball.isSuper ? 35 : 20);
+        this.spawnExplosion(oppX, this.height - 130, this.fireball.isSuper ? '#00dfd8' : '#ff0080', this.fireball.isSuper ? 35 : 20);
         this.triggerScreenShake(this.fireball.isSuper ? 0.35 : 0.18, this.fireball.isSuper ? 12 : 7);
 
         if (this.opponentHp <= 0) {
-          this.addFloatingText(this.width - 200, this.height * 0.4, '💥 K.O.! VICTORY!', '#f9cb28', 32);
+          this.addFloatingText(oppX, this.height * 0.4, '💥 K.O.! VICTORY!', '#f9cb28', 32);
           this.triggerLevelClear();
         }
       }
@@ -218,8 +225,8 @@ export class StreetFighterGame extends BaseGame {
         this.takeDamage(20);
         this.opponentAnim = 'attack';
         this.animTimer = 0.35;
-        this.addFloatingText(200, this.height - 180, 'OPPONENT STRIKE! -20 HP', '#ee0000', 20);
-        this.spawnExplosion(200, this.height - 130, '#ee0000', 25);
+        this.addFloatingText(playerX, this.height - 180, 'OPPONENT STRIKE! -20 HP', '#ee0000', 20);
+        this.spawnExplosion(playerX, this.height - 130, '#ee0000', 25);
       }
     }
   }
@@ -332,11 +339,14 @@ export class StreetFighterGame extends BaseGame {
     ctx.fillStyle = '#ffffff';
     ctx.fillText(this.comboMeter >= 100 ? '⚡ SUPER HADOKEN READY! ⚡' : `SUPER COMBO GAUGE: ${Math.floor(this.comboMeter)}%`, 44, this.height - 15);
 
-    // 3. Render Player Martial Artist (Left: x ~ 200)
-    this.renderPlayerFighter(ctx, 200, floorY);
+    const playerX = Math.max(65, Math.min(200, this.width * 0.22));
+    const oppX = Math.max(playerX + 110, Math.min(this.width - 65, this.width * 0.78));
 
-    // 4. Render Opponent Martial Artist (Right: x ~ width - 200)
-    this.renderOpponentFighter(ctx, this.width - 200, floorY, opp);
+    // 3. Render Player Martial Artist (Left)
+    this.renderPlayerFighter(ctx, playerX, floorY);
+
+    // 4. Render Opponent Martial Artist (Right)
+    this.renderOpponentFighter(ctx, oppX, floorY, opp);
 
     // 5. Render Fireball / Hadoken
     if (this.fireball && this.fireball.active) {

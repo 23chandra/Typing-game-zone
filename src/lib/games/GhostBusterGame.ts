@@ -58,9 +58,18 @@ export class GhostBusterGame extends BaseGame {
     const type = types[Math.floor(Math.random() * types.length)];
     const speed = (25 + this.currentLevel * 7) * (Math.random() * 0.3 + 0.85);
 
+    const minMarginX = this.width < 460 ? 45 : 70;
+    const maxMarginX = Math.max(minMarginX + 40, this.width - minMarginX);
+    let x = Math.random() * (maxMarginX - minMarginX) + minMarginX;
+    let attempts = 0;
+    while (attempts < 10 && this.ghosts.some(g => Math.abs(g.x - x) < 55 && g.y < 120)) {
+      x = Math.random() * (maxMarginX - minMarginX) + minMarginX;
+      attempts++;
+    }
+
     this.ghosts.push({
       id: this.nextId++,
-      x: Math.random() * (this.width - 240) + 120,
+      x,
       y: -30,
       vx: (Math.random() - 0.5) * 35,
       vy: speed,

@@ -93,7 +93,7 @@ const gameStructuredData = [
       <canvas
         id="game-canvas"
         data-game-id={game.id}
-        class="w-full h-[260px] xs:h-[300px] sm:h-[420px] lg:h-[500px] block cursor-crosshair focus:outline-none"
+        class="w-full h-[280px] xs:h-[340px] sm:h-[440px] lg:h-[500px] block cursor-crosshair focus:outline-none touch-none select-none"
         tabindex="0"
       ></canvas>
 
@@ -104,7 +104,8 @@ const gameStructuredData = [
         <p class="text-xs text-neutral-400 mt-1">Press Space, Enter, or Click Resume</p>
         <button
           id="resume-btn"
-          class="mt-4 rounded-full bg-cyan px-6 py-2 text-xs font-bold text-ink hover:opacity-90 transition cursor-pointer"
+          type="button"
+          class="mt-4 rounded-full bg-cyan px-6 py-2.5 text-xs font-bold text-ink hover:opacity-90 active:scale-95 transition cursor-pointer min-h-[40px]"
         >
           <span data-i18n="game.resume">Resume Game</span>
         </button>
@@ -471,15 +472,18 @@ const gameStructuredData = [
       try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
-    // Click canvas to focus and resume audio (and trigger mobile soft keyboard if on mobile)
-    canvas.addEventListener('click', () => {
+    // Focus canvas or mobile input on pointerdown / tap
+    const onCanvasTap = (e: Event) => {
       soundEngine.initContext();
       if (window.innerWidth < 640 && mobileInput) {
         try { mobileInput.focus({ preventScroll: true }); } catch { mobileInput.focus(); }
       } else {
         try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
       }
-    });
+    };
+
+    canvas.addEventListener('pointerdown', onCanvasTap, { passive: true });
+    canvas.addEventListener('click', onCanvasTap);
 
     // Keyboard inputs to Canvas
     const onKeyDown = (e: KeyboardEvent) => {
@@ -518,10 +522,10 @@ const gameStructuredData = [
 
     window.addEventListener('keydown', onKeyDown);
 
-    // On-screen Virtual Keyboard buttons click handlers
+    // On-screen Virtual Keyboard buttons click handlers (pointerdown for 0ms latency)
     const virtualKeys = document.querySelectorAll('.virtual-key-btn');
     virtualKeys.forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('pointerdown', (e) => {
         e.preventDefault();
         soundEngine.initContext();
         if (gameInstance.state !== 'PLAYING') return;
@@ -537,14 +541,15 @@ const gameStructuredData = [
       });
     });
 
-    // Mobile Virtual Input binding
+    // Mobile Virtual Input binding (handles typing, swipe keyboards, GBoard suggestions, multiple chars)
     mobileInput?.addEventListener('input', (e) => {
       const val = (e.target as HTMLInputElement).value;
       if (val.length > 0) {
         soundEngine.initContext();
         if (gameInstance.state === 'PLAYING') {
-          const lastChar = val[val.length - 1];
-          gameInstance.handleInputChar(lastChar);
+          for (let i = 0; i < val.length; i++) {
+            gameInstance.handleInputChar(val[i]);
+          }
         }
         (e.target as HTMLInputElement).value = '';
       }

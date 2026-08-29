@@ -40,6 +40,11 @@ export class ZombieHordeGame extends BaseGame {
     ];
   }
 
+  public override handleResize(): void {
+    super.handleResize();
+    this.barricadeX = Math.max(50, Math.min(110, this.width * 0.16));
+  }
+
   public initLevel(levelNumber: number): void {
     const lvl = this.getLevels()[levelNumber - 1] || this.getLevels()[0];
     this.zombiesGoal = lvl.wordCount;
@@ -49,7 +54,7 @@ export class ZombieHordeGame extends BaseGame {
     this.zombies = [];
     this.bulletTracers = [];
     this.currentTarget = null;
-    this.barricadeX = 110;
+    this.barricadeX = Math.max(50, Math.min(110, this.width * 0.16));
     this.idleTime = 0;
 
     if (levelNumber === 5) {

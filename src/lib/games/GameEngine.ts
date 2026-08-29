@@ -127,12 +127,17 @@ export abstract class BaseGame {
     this.ctx = context;
     this.handleResize();
     if (typeof window !== 'undefined') {
-      window.addEventListener('resize', this.onWindowResize);
+      window.addEventListener('resize', this.onWindowResize, { passive: true });
+      window.addEventListener('orientationchange', this.onOrientationChange, { passive: true });
     }
   }
 
   private onWindowResize = () => {
     this.handleResize();
+  };
+
+  private onOrientationChange = () => {
+    setTimeout(() => this.handleResize(), 100);
   };
 
   public handleResize(): void {
@@ -235,6 +240,7 @@ export abstract class BaseGame {
     }
     if (typeof window !== 'undefined') {
       window.removeEventListener('resize', this.onWindowResize);
+      window.removeEventListener('orientationchange', this.onOrientationChange);
     }
   }
 
@@ -426,7 +432,11 @@ export abstract class BaseGame {
 
   // Particle Emitters
   public spawnExplosion(x: number, y: number, color: string = '#00dfd8', count: number = 22): void {
-    for (let i = 0; i < count; i++) {
+    const isMobile = this.width < 500;
+    const effectiveCount = isMobile ? Math.min(12, count) : count;
+    if (this.particles.length > (isMobile ? 50 : 150)) return;
+
+    for (let i = 0; i < effectiveCount; i++) {
       const angle = Math.random() * Math.PI * 2;
       const speed = Math.random() * 5.5 + 1.5;
       this.particles.push({
@@ -447,7 +457,7 @@ export abstract class BaseGame {
       y,
       vx: 0,
       vy: 0,
-      size: 14,
+      size: isMobile ? 10 : 14,
       color,
       alpha: 0.85,
       decay: 0.05,
@@ -456,7 +466,11 @@ export abstract class BaseGame {
   }
 
   public spawnSparks(x: number, y: number, color: string = '#ff0080', count: number = 12): void {
-    for (let i = 0; i < count; i++) {
+    const isMobile = this.width < 500;
+    const effectiveCount = isMobile ? Math.min(8, count) : count;
+    if (this.particles.length > (isMobile ? 50 : 150)) return;
+
+    for (let i = 0; i < effectiveCount; i++) {
       const angle = (Math.random() - 0.5) * Math.PI;
       const speed = Math.random() * 4.5 + 2;
       this.particles.push({
@@ -474,7 +488,11 @@ export abstract class BaseGame {
   }
 
   public spawnSmoke(x: number, y: number, color: string = 'rgba(120, 120, 140, 0.6)', count: number = 8): void {
-    for (let i = 0; i < count; i++) {
+    const isMobile = this.width < 500;
+    const effectiveCount = isMobile ? Math.min(5, count) : count;
+    if (this.particles.length > (isMobile ? 50 : 150)) return;
+
+    for (let i = 0; i < effectiveCount; i++) {
       this.particles.push({
         x: x + (Math.random() - 0.5) * 16,
         y: y + (Math.random() - 0.5) * 8,
@@ -499,7 +517,7 @@ export abstract class BaseGame {
     this.flashColor = color;
   }
 
-  // Consistent High-Contrast Word Tag Renderer
+  // Consistent High-Contrast Word Tag Renderer with Mobile Clamping & Responsive Scaling
   public drawWordBadge(
     ctx: CanvasRenderingContext2D,
     word: string,
@@ -513,26 +531,34 @@ export abstract class BaseGame {
     const typed = word.substring(0, typedIndex);
     const remaining = word.substring(typedIndex);
 
-    ctx.font = `600 ${fontSize}px "Geist Mono", monospace`;
+    // Dynamic adaptive font scaling on mobile screens (< 480px width)
+    const isMobile = this.width < 480;
+    const effectiveFontSize = isMobile ? Math.max(11, Math.round(fontSize * 0.9)) : fontSize;
+    const padX = isMobile ? 6 : 8;
+    const padY = isMobile ? 4 : 5;
+
+    ctx.font = `600 ${effectiveFontSize}px "Geist Mono", monospace`;
     const wordWidth = ctx.measureText(word).width;
-    const padX = 8;
-    const padY = 5;
     const badgeW = wordWidth + padX * 2;
-    const badgeH = fontSize + padY * 2;
-    const bx = x - badgeW / 2;
-    const by = y - badgeH / 2;
+    const badgeH = effectiveFontSize + padY * 2;
+
+    // Horizontally & vertically clamp badge to prevent overflow on mobile screen edges
+    const clampedX = Math.max(badgeW / 2 + 4, Math.min(this.width - badgeW / 2 - 4, x));
+    const clampedY = Math.max(badgeH / 2 + 4, Math.min(this.height - badgeH / 2 - 4, y));
+    const bx = clampedX - badgeW / 2;
+    const by = clampedY - badgeH / 2;
 
     ctx.save();
     // Shadow glow for active targeted word
     if (isTarget) {
       ctx.shadowColor = accentColor;
-      ctx.shadowBlur = 10;
-      ctx.fillStyle = 'rgba(10, 15, 25, 0.92)';
+      ctx.shadowBlur = isMobile ? 6 : 10;
+      ctx.fillStyle = 'rgba(10, 15, 25, 0.94)';
       ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = isMobile ? 1.5 : 2;
     } else {
-      ctx.fillStyle = 'rgba(15, 18, 25, 0.82)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+      ctx.fillStyle = 'rgba(15, 18, 25, 0.85)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.24)';
       ctx.lineWidth = 1;
     }
 
@@ -544,7 +570,7 @@ export abstract class BaseGame {
 
     // Word Text
     let curX = bx + padX;
-    const textY = by + fontSize + 1;
+    const textY = by + effectiveFontSize + 1;
 
     if (typed.length > 0) {
       ctx.fillStyle = '#50e3c2';

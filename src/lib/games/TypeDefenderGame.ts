@@ -110,7 +110,16 @@ export class TypeDefenderGame extends BaseGame {
     if (this.levelWordsKilled + this.enemies.length >= this.levelWordGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
     const word = getRandomWord(cat);
-    const x = Math.random() * (this.width - 200) + 100;
+    
+    const minMarginX = this.width < 460 ? 45 : 70;
+    const maxMarginX = Math.max(minMarginX + 40, this.width - minMarginX);
+    let x = Math.random() * (maxMarginX - minMarginX) + minMarginX;
+    let attempts = 0;
+    while (attempts < 10 && this.enemies.some(e => Math.abs(e.x - x) < 55 && e.y < 120)) {
+      x = Math.random() * (maxMarginX - minMarginX) + minMarginX;
+      attempts++;
+    }
+
     const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.4 + 0.8);
     const type = this.currentLevel >= 4 ? 'cruiser' : this.currentLevel >= 3 ? 'interceptor' : 'scout';
 

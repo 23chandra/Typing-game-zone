@@ -48,11 +48,13 @@ export class RetroInvadersGame extends BaseGame {
     this.ufoTimer = 8;
     this.idleTime = 0;
 
-    const rows = Math.min(4, Math.floor(lvl.wordCount / 3));
-    const spacingX = (this.width - 220) / 3;
+    const cols = this.width < 460 ? 2 : 3;
+    const rows = Math.min(4, Math.ceil(lvl.wordCount / cols));
+    const marginX = this.width < 460 ? 35 : 80;
+    const spacingX = (this.width - marginX * 2) / cols;
 
     for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < 3; c++) {
+      for (let c = 0; c < cols; c++) {
         if (this.invaders.length >= lvl.wordCount) break;
         const cat = levelNumber === 1 ? 'easy' : levelNumber <= 3 ? 'medium' : 'space';
         const word = getRandomWord(cat);
@@ -60,8 +62,8 @@ export class RetroInvadersGame extends BaseGame {
           id: this.nextId++,
           row: r,
           col: c,
-          x: 110 + c * spacingX,
-          y: 75 + r * 65,
+          x: marginX + c * spacingX + spacingX / 2,
+          y: 75 + r * 58,
           word,
           typedIndex: 0,
           spriteFrame: 0,
@@ -218,7 +220,8 @@ export class RetroInvadersGame extends BaseGame {
       for (const inv of this.invaders) {
         inv.x += this.marchDir * 18;
         inv.spriteFrame = inv.spriteFrame === 0 ? 1 : 0;
-        if (inv.x > this.width - 70 || inv.x < 70) {
+        const wallMargin = this.width < 460 ? 35 : 65;
+        if (inv.x > this.width - wallMargin || inv.x < wallMargin) {
           hitWall = true;
         }
       }

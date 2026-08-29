@@ -40,17 +40,22 @@ export class NeonNinjaGame extends BaseGame {
     ];
   }
 
+  public override handleResize(): void {
+    super.handleResize();
+    this.ninjaTargetPos = { x: Math.max(50, Math.min(120, this.width * 0.16)), y: this.height - 100 };
+  }
+
   public initLevel(levelNumber: number): void {
     const lvl = this.getLevels()[levelNumber - 1] || this.getLevels()[0];
     this.sliceGoal = lvl.wordCount;
     this.slicedCount = 0;
-    this.spawnInterval = Math.max(1.1, 2.6 - levelNumber * 0.35);
-    this.spawnTimer = 0.4;
+    this.spawnInterval = Math.max(1.0, 2.5 - levelNumber * 0.28);
+    this.spawnTimer = 0.5;
     this.targets = [];
     this.bladeTrails = [];
     this.currentTarget = null;
     this.idleTime = 0;
-    this.ninjaTargetPos = { x: 120, y: this.height - 100 };
+    this.ninjaTargetPos = { x: Math.max(50, Math.min(120, this.width * 0.16)), y: this.height - 100 };
   }
 
   private spawnTarget(): void {

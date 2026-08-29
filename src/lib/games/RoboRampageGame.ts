@@ -159,8 +159,9 @@ export class RoboRampageGame extends BaseGame {
   private fireMechSalvo(tx: number, ty: number): void {
     soundEngine.playLaser();
     this.mechGatlingSpin += 12;
+    const playerX = Math.max(50, Math.min(130, this.width * 0.16));
     this.missiles.push({
-      x: 175,
+      x: playerX + 40,
       y: this.height - 125,
       tx,
       ty,
@@ -234,15 +235,17 @@ export class RoboRampageGame extends BaseGame {
       }
     }
 
+    const playerX = Math.max(50, Math.min(130, this.width * 0.16));
+
     // Rogue Mechs Advance
     for (let i = this.mechs.length - 1; i >= 0; i--) {
       const m = this.mechs[i];
       m.x -= m.speed * dt;
 
-      if (m.x <= 160) {
+      if (m.x <= playerX + 25) {
         this.takeDamage(20);
         this.spawnExplosion(m.x, m.y, '#ee0000', 30);
-        this.addFloatingText(160, this.height - 180, 'HULL IMPACT! -20 HP', '#ee0000', 20);
+        this.addFloatingText(playerX, this.height - 180, 'HULL IMPACT! -20 HP', '#ee0000', 20);
         if (this.currentTarget === m) this.currentTarget = null;
         this.mechs.splice(i, 1);
       }
@@ -292,8 +295,9 @@ export class RoboRampageGame extends BaseGame {
     ctx.fillStyle = '#50e3c2';
     ctx.fillText(`ROGUE UNITS NEUTRALIZED: ${this.destroyedCount} / ${this.destroyGoal}`, 30, 25);
 
-    // 2. Render Player Titan Mech (Left: x = 130)
-    this.renderPlayerMech(ctx, 130, floorY);
+    // 2. Render Player Titan Mech (Left)
+    const playerX = Math.max(50, Math.min(130, this.width * 0.16));
+    this.renderPlayerMech(ctx, playerX, floorY);
 
     // 3. Render Missiles In Flight
     for (const m of this.missiles) {

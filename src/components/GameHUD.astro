@@ -7,22 +7,22 @@ interface Props {
 const { gameTitle, gameId } = Astro.props;
 ---
 
-<div id="game-hud-root" data-game-id={gameId} class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 rounded-2xl border border-hairline bg-canvas p-3 sm:p-4 shadow-level-2 select-none">
+<div id="game-hud-root" data-game-id={gameId} class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4 rounded-2xl border border-hairline bg-canvas p-2.5 xs:p-3 sm:p-4 shadow-level-2 select-none">
   <!-- 1. Top Section on Mobile / Left on Desktop: Game Info & Return -->
-  <div class="flex items-center justify-between sm:justify-start gap-2.5 sm:gap-3 flex-shrink-0">
-    <div class="flex items-center gap-2.5">
+  <div class="flex items-center justify-between sm:justify-start gap-2 sm:gap-3 flex-shrink-0">
+    <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
       <a
         href="/"
-        class="flex h-8 w-8 items-center justify-center rounded-xl border border-hairline bg-canvas-soft text-body hover:text-ink shadow-level-1 transition min-h-[36px] min-w-[36px]"
+        class="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-canvas-soft text-body hover:text-ink active:scale-95 shadow-level-1 transition min-h-[36px] min-w-[36px] flex-shrink-0"
         title="Return to Game Zone"
       >
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
       </a>
-      <div>
-        <h2 class="text-sm sm:text-base font-semibold tracking-tight text-ink truncate max-w-[160px] xs:max-w-[220px] sm:max-w-none">{gameTitle}</h2>
-        <div class="flex items-center gap-1.5 text-[11px] font-mono text-mute">
+      <div class="min-w-0">
+        <h2 class="text-xs xs:text-sm sm:text-base font-semibold tracking-tight text-ink truncate max-w-[140px] xs:max-w-[200px] sm:max-w-none">{gameTitle}</h2>
+        <div class="flex items-center gap-1.5 text-[10px] xs:text-[11px] font-mono text-mute">
           <span id="hud-level-tag" class="font-bold text-ink">LEVEL 1</span>
           <span>•</span>
           <span id="hud-time-tag">00:00</span>
@@ -31,36 +31,36 @@ const { gameTitle, gameId } = Astro.props;
     </div>
 
     <!-- Mini Shield on Mobile -->
-    <div class="flex sm:hidden items-center gap-1.5 bg-canvas-soft px-2.5 py-1 rounded-lg border border-hairline font-mono text-[11px]">
+    <div class="flex sm:hidden items-center gap-1.5 bg-canvas-soft px-2 py-1 rounded-lg border border-hairline font-mono text-[11px] flex-shrink-0">
       <span class="text-xs">🛡️</span>
       <span id="hud-health-pct-mobile" class="font-bold text-ink">100%</span>
     </div>
   </div>
 
-  <!-- 2. Live Stats Dashboard (Centered, wraps fluidly on mobile) -->
-  <div class="flex items-center justify-around sm:justify-center gap-2 sm:gap-4 md:gap-6 font-mono text-xs bg-canvas-soft sm:bg-transparent p-2 sm:p-0 rounded-xl border sm:border-0 border-hairline">
+  <!-- 2. Live Stats Dashboard (Grid on mobile, flex on desktop) -->
+  <div class="grid grid-cols-4 sm:flex sm:items-center sm:justify-center gap-1 sm:gap-4 md:gap-6 font-mono text-xs bg-canvas-soft sm:bg-transparent p-2 sm:p-0 rounded-xl border sm:border-0 border-hairline text-center sm:text-left">
     <!-- Score -->
-    <div class="flex flex-col items-center sm:items-start min-w-[48px]">
-      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider" data-i18n="game.score">Score</span>
-      <span id="hud-score" class="text-xs sm:text-sm font-bold text-ink">0</span>
+    <div class="flex flex-col items-center sm:items-start min-w-0">
+      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider truncate" data-i18n="game.score">Score</span>
+      <span id="hud-score" class="text-xs sm:text-sm font-bold text-ink truncate">0</span>
     </div>
 
     <!-- WPM -->
-    <div class="flex flex-col items-center sm:items-start min-w-[48px]">
-      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider" data-i18n="st.wpm">WPM</span>
-      <span id="hud-wpm" class="text-xs sm:text-sm font-bold text-success">0</span>
+    <div class="flex flex-col items-center sm:items-start min-w-0">
+      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider truncate" data-i18n="st.wpm">WPM</span>
+      <span id="hud-wpm" class="text-xs sm:text-sm font-bold text-success truncate">0</span>
     </div>
 
     <!-- Accuracy -->
-    <div class="flex flex-col items-center sm:items-start min-w-[48px]">
-      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider" data-i18n="st.acc">Acc</span>
-      <span id="hud-accuracy" class="text-xs sm:text-sm font-bold text-ink">100%</span>
+    <div class="flex flex-col items-center sm:items-start min-w-0">
+      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider truncate" data-i18n="st.acc">Acc</span>
+      <span id="hud-accuracy" class="text-xs sm:text-sm font-bold text-ink truncate">100%</span>
     </div>
 
     <!-- Streak -->
-    <div class="flex flex-col items-center sm:items-start min-w-[48px]">
-      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider" data-i18n="nav.activeStreak">Streak</span>
-      <div class="flex items-center gap-0.5 text-xs sm:text-sm font-bold text-warning">
+    <div class="flex flex-col items-center sm:items-start min-w-0">
+      <span class="text-[9px] sm:text-[10px] text-mute uppercase tracking-wider truncate" data-i18n="nav.activeStreak">Streak</span>
+      <div class="flex items-center gap-0.5 text-xs sm:text-sm font-bold text-warning truncate">
         <span>🔥</span>
         <span id="hud-streak">0</span>
       </div>
@@ -83,20 +83,22 @@ const { gameTitle, gameId } = Astro.props;
     <!-- Sound Quick Cycle Button -->
     <button
       id="hud-sound-toggle"
-      class="flex items-center gap-1 rounded-xl border border-hairline bg-canvas-soft px-2.5 py-1.5 text-xs font-mono text-body hover:text-ink shadow-level-1 transition cursor-pointer min-h-[36px]"
+      type="button"
+      class="flex items-center gap-1 rounded-xl border border-hairline bg-canvas-soft px-2 xs:px-2.5 py-1.5 text-xs font-mono text-body hover:text-ink active:scale-95 shadow-level-1 transition cursor-pointer min-h-[36px]"
       title="Click to cycle switch sounds"
     >
       <span id="hud-sound-icon">🔊</span>
-      <span id="hud-sound-name" class="hidden xs:inline text-[11px]">Clicky</span>
+      <span id="hud-sound-name" class="hidden xs:inline text-[10px] xs:text-[11px]">Clicky</span>
     </button>
 
     <!-- Level Selector -->
-    <div class="flex items-center gap-0.5 sm:gap-1 bg-canvas-soft p-1 rounded-xl border border-hairline text-xs font-mono">
-      <span class="text-[10px] text-mute px-1 hidden xs:inline">LVL:</span>
+    <div class="flex items-center gap-0.5 sm:gap-1 bg-canvas-soft p-0.5 sm:p-1 rounded-xl border border-hairline text-xs font-mono">
+      <span class="text-[10px] text-mute px-1 hidden md:inline">LVL:</span>
       {[1, 2, 3, 4, 5].map(lvl => (
         <button
+          type="button"
           data-lvl-btn={lvl}
-          class={`lvl-select-btn flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center rounded-lg text-xs font-bold transition cursor-pointer ${
+          class={`lvl-select-btn flex h-7 w-7 sm:h-6 sm:w-6 items-center justify-center rounded-lg text-xs font-bold transition cursor-pointer active:scale-95 ${
             lvl === 1 ? 'bg-ink text-on-primary shadow-xs' : 'text-body hover:bg-canvas'
           }`}
         >
@@ -108,7 +110,8 @@ const { gameTitle, gameId } = Astro.props;
     <!-- Pause Button -->
     <button
       id="hud-pause-btn"
-      class="flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-xl border border-hairline bg-canvas text-body hover:text-ink shadow-level-1 transition cursor-pointer min-h-[36px] min-w-[36px]"
+      type="button"
+      class="flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-xl border border-hairline bg-canvas text-body hover:text-ink active:scale-95 shadow-level-1 transition cursor-pointer min-h-[36px] min-w-[36px]"
       title="Pause / Resume (Esc)"
     >
       <svg id="hud-pause-icon" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,7 +122,8 @@ const { gameTitle, gameId } = Astro.props;
     <!-- Restart Button -->
     <button
       id="hud-restart-btn"
-      class="flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-xl border border-hairline bg-canvas text-body hover:text-ink shadow-level-1 transition cursor-pointer min-h-[36px] min-w-[36px]"
+      type="button"
+      class="flex h-8 w-8 sm:h-8 sm:w-8 items-center justify-center rounded-xl border border-hairline bg-canvas text-body hover:text-ink active:scale-95 shadow-level-1 transition cursor-pointer min-h-[36px] min-w-[36px]"
       title="Restart Level"
     >
       <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

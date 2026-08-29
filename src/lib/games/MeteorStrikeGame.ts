@@ -61,8 +61,16 @@ export class MeteorStrikeGame extends BaseGame {
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
     const word = getRandomWord(cat);
 
-    const startX = Math.random() * (this.width - 200) + 100;
-    const targetX = this.width / 2 + (Math.random() - 0.5) * 260;
+    const minMarginX = this.width < 460 ? 45 : 70;
+    const maxMarginX = Math.max(minMarginX + 40, this.width - minMarginX);
+    let startX = Math.random() * (maxMarginX - minMarginX) + minMarginX;
+    let attempts = 0;
+    while (attempts < 10 && this.meteors.some(m => Math.abs(m.x - startX) < 55 && m.y < 120)) {
+      startX = Math.random() * (maxMarginX - minMarginX) + minMarginX;
+      attempts++;
+    }
+
+    const targetX = this.width / 2 + (Math.random() - 0.5) * Math.min(260, this.width * 0.7);
     const targetY = this.height;
 
     const angle = Math.atan2(targetY, targetX - startX);

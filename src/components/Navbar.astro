@@ -5,54 +5,56 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
 import SiteLogo from './SiteLogo.astro';
 ---
 
-<header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none">
-  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8">
+<header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none pt-[env(safe-area-inset-top,0px)]">
+  <div class="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between gap-1.5 xs:gap-2 sm:gap-4 px-3 xs:px-4 sm:px-6 lg:px-8">
+    
     <!-- Brand Logo -->
-    <a href="/" class="group flex items-center gap-2 sm:gap-3 flex-shrink-0">
-      <SiteLogo class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl shadow-level-2 transition-transform duration-200 group-hover:scale-105 border border-hairline flex-shrink-0" />
-      <div class="flex flex-col flex-shrink min-w-0">
+    <a href="/" class="group flex items-center gap-1.5 xs:gap-2 sm:gap-3 min-w-0 flex-shrink flex-1 sm:flex-initial" title="Typing Game Zone - Home">
+      <SiteLogo class="h-7 w-7 xs:h-8 xs:w-8 sm:h-9 sm:w-9 rounded-xl shadow-level-2 transition-transform duration-200 group-hover:scale-105 border border-hairline flex-shrink-0" />
+      <div class="flex flex-col min-w-0">
         <span class="text-xs xs:text-sm sm:text-base font-bold tracking-tight text-ink truncate leading-tight">Typing Game Zone</span>
         <span class="hidden md:inline text-[10px] font-medium tracking-wide uppercase text-mute font-mono whitespace-nowrap mt-0.5">typinggamezone.com</span>
       </div>
     </a>
 
-    <!-- Desktop Nav Links (Visible on tablets & desktop 1024px+) -->
+    <!-- Desktop Nav Links (Visible on desktop lg: 1024px+) -->
     <nav class="hidden lg:flex items-center gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1">
-      <a href="/#games-section" data-i18n="nav.games" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
-      <a href="/arcade" data-i18n="nav.arcade" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
-      <a href="/speed-test" data-i18n="nav.speedTest" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
-      <a href="/practice" data-i18n="nav.practiceLab" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
-      <a href="/leaderboards" data-i18n="nav.leaderboards" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
+      <a href="/#games-section" data-i18n="nav.games" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
+      <a href="/arcade" data-i18n="nav.arcade" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
+      <a href="/speed-test" data-i18n="nav.speedTest" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
+      <a href="/practice" data-i18n="nav.practiceLab" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
+      <a href="/leaderboards" data-i18n="nav.leaderboards" class="desktop-nav-link rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
     </nav>
 
-    <!-- Controls: Language + Global Theme + Sound Switcher + Command Hint + Play CTA -->
-    <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 flex-shrink-0">
+    <!-- Controls: Language + Global Theme + Sound Switcher + Command Hint + Play CTA + Hamburger -->
+    <div class="flex items-center gap-1 xs:gap-1.5 sm:gap-2 lg:gap-2.5 flex-shrink-0">
       
       <!-- Global Language Picker Dropdown -->
       <div class="relative" id="nav-lang-container">
         <button
           id="nav-lang-btn"
           type="button"
-          class="flex items-center gap-1 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          class="flex items-center gap-1 sm:gap-1.5 rounded-xl border border-hairline bg-canvas px-1.5 xs:px-2 sm:px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap min-h-[34px] sm:min-h-[38px]"
           title="Switch Language / भाषा बदलें / Cambiar idioma"
           aria-expanded="false"
+          aria-haspopup="dialog"
         >
           <span id="nav-lang-flag" class="text-sm">🇺🇸</span>
-          <span id="nav-lang-current-label" class="hidden md:inline font-bold">EN</span>
-          <svg class="h-3.5 w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <span id="nav-lang-current-label" class="hidden sm:inline font-bold">EN</span>
+          <svg class="h-3 w-3 sm:h-3.5 sm:w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
-        <!-- Dropdown Menu -->
+        <!-- Dropdown Menu (Fixed position on mobile < sm, floating popup on sm+) -->
         <div
           id="nav-lang-menu"
-          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs flex flex-col max-h-[75vh]"
+          class="fixed top-15 sm:absolute sm:top-full inset-x-3 sm:inset-x-auto sm:right-0 mt-0 sm:mt-2 hidden w-auto sm:w-72 max-w-sm sm:max-w-none mx-auto sm:mx-0 rounded-2xl border border-hairline bg-canvas p-3 sm:p-2.5 shadow-level-4 z-50 font-mono text-xs max-h-[min(28rem,calc(100dvh-5rem))] flex flex-col"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1 text-[11px] text-mute uppercase font-bold">
             <span data-i18n="nav.language">Language ({SUPPORTED_LANGUAGES.length})</span>
-            <span class="text-[10px] text-mute">Global i18n</span>
+            <button type="button" id="nav-lang-close-btn" class="sm:hidden text-mute hover:text-ink text-sm p-1 cursor-pointer" aria-label="Close language picker">✕</button>
           </div>
 
           <!-- Quick Search Filter -->
@@ -60,17 +62,18 @@ import SiteLogo from './SiteLogo.astro';
             type="text"
             id="nav-lang-search"
             placeholder="Search language..."
-            class="w-full rounded-xl px-3 py-1.5 text-xs border mb-2 focus:outline-none"
+            class="w-full rounded-xl px-3 py-2 text-base sm:text-xs border mb-2 focus:outline-none"
             style="background-color: var(--site-canvas-soft, #323437); border-color: var(--site-hairline); color: var(--site-ink);"
+            autocomplete="off"
           />
 
           <!-- Languages List -->
-          <div id="nav-lang-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-60 smooth-scroll-x">
+          <div id="nav-lang-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-56 sm:max-h-60 smooth-scroll-x overscroll-contain">
             {SUPPORTED_LANGUAGES.map(lang => (
               <button
                 type="button"
                 data-lang={lang.code}
-                class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft cursor-pointer min-h-[38px]"
+                class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft active:bg-canvas-soft cursor-pointer min-h-[44px]"
               >
                 <div class="flex items-center gap-2">
                   <span class="text-sm">{lang.flag}</span>
@@ -94,26 +97,27 @@ import SiteLogo from './SiteLogo.astro';
         <button
           id="nav-theme-btn"
           type="button"
-          class="flex items-center gap-1 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          class="flex items-center gap-1 sm:gap-1.5 rounded-xl border border-hairline bg-canvas px-1.5 xs:px-2 sm:px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap min-h-[34px] sm:min-h-[38px]"
           title="Switch Website Color Theme (17 Themes)"
           aria-expanded="false"
+          aria-haspopup="dialog"
         >
           <span id="nav-theme-dot" class="h-2.5 w-2.5 rounded-full shadow-xs transition-colors flex-shrink-0" style="background-color: var(--site-primary, #e2b714);"></span>
           <span id="nav-theme-current-label" class="hidden md:inline font-bold">Serika Dark</span>
-          <svg class="h-3.5 w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-3 w-3 sm:h-3.5 sm:w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
-        <!-- Dropdown Menu -->
+        <!-- Dropdown Menu (Fixed position on mobile < sm, floating popup on sm+) -->
         <div
           id="nav-theme-menu"
-          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs max-h-[75vh] flex flex-col"
+          class="fixed top-15 sm:absolute sm:top-full inset-x-3 sm:inset-x-auto sm:right-0 mt-0 sm:mt-2 hidden w-auto sm:w-72 max-w-sm sm:max-w-none mx-auto sm:mx-0 rounded-2xl border border-hairline bg-canvas p-3 sm:p-2.5 shadow-level-4 z-50 font-mono text-xs max-h-[min(28rem,calc(100dvh-5rem))] flex flex-col"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1">
-            <span class="text-[11px] font-bold text-mute uppercase" data-i18n="nav.siteTheme">Site Theme (17)</span>
-            <span class="text-[10px] text-mute">Typing Game Zone</span>
+            <span class="text-[11px] font-bold text-mute uppercase" data-i18n="nav.siteTheme">Site Theme ({MONKEYTYPE_THEMES.length})</span>
+            <button type="button" id="nav-theme-close-btn" class="sm:hidden text-mute hover:text-ink text-sm p-1 cursor-pointer" aria-label="Close theme picker">✕</button>
           </div>
 
           <!-- Quick Search Filter -->
@@ -121,17 +125,18 @@ import SiteLogo from './SiteLogo.astro';
             type="text"
             id="nav-theme-search"
             placeholder="Search themes..."
-            class="w-full rounded-xl px-3 py-1.5 text-xs border mb-2 focus:outline-none"
+            class="w-full rounded-xl px-3 py-2 text-base sm:text-xs border mb-2 focus:outline-none"
             style="background-color: var(--site-canvas-soft, #323437); border-color: var(--site-hairline); color: var(--site-ink);"
+            autocomplete="off"
           />
 
           <!-- Themes List -->
-          <div id="nav-theme-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-60 smooth-scroll-x">
+          <div id="nav-theme-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-56 sm:max-h-60 smooth-scroll-x overscroll-contain">
             {MONKEYTYPE_THEMES.map(theme => (
               <button
                 type="button"
                 data-theme-id={theme.id}
-                class="nav-theme-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft cursor-pointer min-h-[38px]"
+                class="nav-theme-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft active:bg-canvas-soft cursor-pointer min-h-[44px]"
               >
                 <div class="flex flex-col">
                   <span class="font-bold text-xs" style={`color: ${theme.main};`}>{theme.name}</span>
@@ -149,12 +154,12 @@ import SiteLogo from './SiteLogo.astro';
         </div>
       </div>
 
-      <!-- Sound Switcher Dropdown (Hidden on mobile < 640px, visible on sm+) -->
+      <!-- Sound Switcher Dropdown (Visible on sm+) -->
       <div class="relative hidden sm:block" id="sound-dropdown-container">
         <button
           id="sound-menu-btn"
           type="button"
-          class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2.5 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2.5 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap min-h-[38px]"
           title="Switch Sound Profile"
           aria-expanded="false"
         >
@@ -174,31 +179,31 @@ import SiteLogo from './SiteLogo.astro';
           <div class="px-2 py-1 text-[11px] text-mute uppercase border-b border-hairline mb-1" data-i18n="nav.switchSynthesis">
             Switch Synthesis
           </div>
-          <button data-switch="clicky" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+          <button data-switch="clicky" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer min-h-[36px]">
             <span>🔵 Blue (Clicky)</span>
             <span class="switch-check text-success hidden">✓</span>
           </button>
-          <button data-switch="thock" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+          <button data-switch="thock" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer min-h-[36px]">
             <span>🐼 Panda (Thock)</span>
             <span class="switch-check text-success hidden">✓</span>
           </button>
-          <button data-switch="linear" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+          <button data-switch="linear" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer min-h-[36px]">
             <span>🔴 Red (Linear)</span>
             <span class="switch-check text-success hidden">✓</span>
           </button>
-          <button data-switch="typewriter" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+          <button data-switch="typewriter" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer min-h-[36px]">
             <span>📻 Typewriter Bell</span>
             <span class="switch-check text-success hidden">✓</span>
           </button>
-          <button data-switch="pop" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+          <button data-switch="pop" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer min-h-[36px]">
             <span>🫧 Bubble Pop</span>
             <span class="switch-check text-success hidden">✓</span>
           </button>
-          <button data-switch="beep" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+          <button data-switch="beep" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer min-h-[36px]">
             <span>👾 Digital Beep</span>
             <span class="switch-check text-success hidden">✓</span>
           </button>
-          <button data-switch="off" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink border-t border-hairline mt-1 cursor-pointer">
+          <button data-switch="off" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-2 text-body hover:bg-canvas-soft hover:text-ink border-t border-hairline mt-1 cursor-pointer min-h-[36px]">
             <span>🔇 Mute Sound</span>
             <span class="switch-check text-success hidden">✓</span>
           </button>
@@ -212,7 +217,7 @@ import SiteLogo from './SiteLogo.astro';
       <a
         href="/leaderboards"
         id="nav-player-pill"
-        class="hidden 2xl:flex items-center gap-2.5 rounded-xl border border-hairline bg-canvas px-3 py-1.5 text-xs font-mono font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft group cursor-pointer whitespace-nowrap"
+        class="hidden 2xl:flex items-center gap-2.5 rounded-xl border border-hairline bg-canvas px-3 py-1.5 text-xs font-mono font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft group cursor-pointer whitespace-nowrap min-h-[38px]"
         title="View Player Profile, Level & Daily Quests"
       >
         <span class="flex items-center gap-1 text-warning">
@@ -230,17 +235,17 @@ import SiteLogo from './SiteLogo.astro';
       <button
         type="button"
         id="nav-cmd-launcher"
-        class="hidden xl:flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+        class="hidden xl:flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap min-h-[38px]"
         title="Open Command Palette (Ctrl+K / Esc)"
       >
         <span class="font-bold text-ink">>_</span>
         <kbd class="rounded bg-canvas-soft px-1.5 py-0.5 text-[10px] font-semibold border border-hairline opacity-75">⌘K</kbd>
       </button>
 
-      <!-- Quick Play Primary CTA -->
+      <!-- Quick Play Primary CTA (Visible on sm+) -->
       <a
         href="/game/type-defender"
-        class="inline-flex items-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-bold shadow-level-2 transition-all hover:opacity-95 hover:scale-105 active:scale-95 whitespace-nowrap cursor-pointer flex-shrink-0"
+        class="hidden sm:inline-flex items-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-bold shadow-level-2 transition-all hover:opacity-95 hover:scale-105 active:scale-95 whitespace-nowrap cursor-pointer flex-shrink-0 min-h-[38px]"
         style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
         title="Play 21 Free Arcade Typing Games"
       >
@@ -251,46 +256,84 @@ import SiteLogo from './SiteLogo.astro';
         </svg>
       </a>
 
-      <!-- Mobile Menu Hamburger Button (Hidden on lg+) -->
+      <!-- Mobile Menu Hamburger / Close Button (Hidden on lg+) -->
       <button
         id="mobile-menu-btn"
         type="button"
-        class="lg:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-canvas text-body shadow-level-1 hover:bg-canvas-soft hover:text-ink transition cursor-pointer flex-shrink-0"
-        aria-label="Toggle navigation"
+        class="lg:hidden flex h-9 w-9 sm:h-9 sm:w-9 items-center justify-center rounded-xl border border-hairline bg-canvas text-body shadow-level-1 hover:bg-canvas-soft hover:text-ink active:scale-95 transition cursor-pointer flex-shrink-0 min-h-[36px]"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
       >
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <!-- Hamburger Bars Icon -->
+        <svg id="mobile-hamburger-icon" class="h-5 w-5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <!-- Close 'X' Icon -->
+        <svg id="mobile-close-icon" class="h-5 w-5 hidden transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
   </div>
 
+  <!-- Mobile Backdrop Overlay -->
+  <div id="mobile-menu-backdrop" class="fixed inset-0 top-14 sm:top-16 bg-black/60 backdrop-blur-xs z-30 lg:hidden hidden transition-opacity" aria-hidden="true"></div>
+
   <!-- Mobile Dropdown Navigation Drawer -->
-  <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 lg:hidden font-mono text-xs shadow-level-4 animate-in slide-in-from-top-2 duration-150">
+  <div id="mobile-menu-drawer" class="hidden fixed inset-x-0 top-14 sm:top-16 border-b border-hairline bg-canvas px-4 py-4 lg:hidden font-mono text-xs shadow-level-4 z-40 max-h-[calc(100dvh-3.5rem)] sm:max-h-[calc(100dvh-4rem)] overflow-y-auto smooth-scroll-x overscroll-contain animate-in slide-in-from-top-2 duration-150" style="background-color: var(--site-canvas, #2c2e31);">
+    
+    <!-- Mobile Quick Theme & Language Chips in Drawer -->
+    <div class="grid grid-cols-2 gap-2 mb-3 pb-3 border-b border-hairline">
+      <button
+        type="button"
+        id="mobile-drawer-lang-btn"
+        class="flex items-center justify-between rounded-xl px-3 py-2 bg-canvas-soft border border-hairline text-body hover:text-ink active:bg-canvas cursor-pointer min-h-[44px]"
+      >
+        <span class="flex items-center gap-1.5 truncate">
+          <span id="mobile-drawer-lang-flag" class="text-sm">🇺🇸</span>
+          <span class="text-[11px] font-bold truncate" id="mobile-drawer-lang-label">English</span>
+        </span>
+        <span class="text-[10px] text-mute font-mono flex-shrink-0">🌐</span>
+      </button>
+
+      <button
+        type="button"
+        id="mobile-drawer-theme-btn"
+        class="flex items-center justify-between rounded-xl px-3 py-2 bg-canvas-soft border border-hairline text-body hover:text-ink active:bg-canvas cursor-pointer min-h-[44px]"
+      >
+        <span class="flex items-center gap-1.5 truncate">
+          <span id="mobile-drawer-theme-dot" class="h-2.5 w-2.5 rounded-full flex-shrink-0" style="background-color: var(--site-primary, #e2b714);"></span>
+          <span class="text-[11px] font-bold truncate" id="mobile-drawer-theme-label">Serika Dark</span>
+        </span>
+        <span class="text-[10px] text-mute font-mono flex-shrink-0">🎨</span>
+      </button>
+    </div>
+
+    <!-- Navigation Links -->
     <div class="flex flex-col gap-1 font-medium mb-3">
-      <a href="/#games-section" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">🎮</span> <span data-i18n="nav.games">Games (21)</span>
+      <a href="/#games-section" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">🎮</span> <span data-i18n="nav.games">Games (21)</span>
       </a>
-      <a href="/arcade" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">🕹️</span> <span data-i18n="nav.arcade">Arcade Lounge</span>
+      <a href="/arcade" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">🕹️</span> <span data-i18n="nav.arcade">Arcade Lounge</span>
       </a>
-      <a href="/speed-test" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">⚡</span> <span data-i18n="nav.speedTest">Speed Test</span>
+      <a href="/speed-test" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">⚡</span> <span data-i18n="nav.speedTest">Speed Test</span>
       </a>
-      <a href="/practice" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">⌨️</span> <span data-i18n="nav.practiceLab">Practice Lab</span>
+      <a href="/practice" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">⌨️</span> <span data-i18n="nav.practiceLab">Practice Lab</span>
       </a>
-      <a href="/leaderboards" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
+      <a href="/leaderboards" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
       </a>
-      <a href="/faq" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">❓</span> <span>Typing FAQ (37 Q&A)</span>
+      <a href="/faq" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">❓</span> <span>Typing FAQ (37 Q&A)</span>
       </a>
-      <a href="/about" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">ℹ️</span> <span>About Us</span>
+      <a href="/about" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">ℹ️</span> <span>About Us</span>
       </a>
-      <a href="/contact" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">📬</span> <span>Contact Us</span>
+      <a href="/contact" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">📬</span> <span>Contact Us</span>
       </a>
     </div>
 
@@ -303,25 +346,25 @@ import SiteLogo from './SiteLogo.astro';
       <button
         type="button"
         id="mobile-sound-cycle-btn"
-        class="rounded-lg px-2.5 py-1 text-[10px] font-bold border border-hairline bg-canvas text-body hover:text-ink cursor-pointer"
+        class="rounded-lg px-2.5 py-1.5 text-[10px] font-bold border border-hairline bg-canvas text-body hover:text-ink active:bg-canvas-soft cursor-pointer min-h-[36px]"
       >
         Cycle Sound ↻
       </button>
     </div>
 
     <!-- Mobile Command & Play Quick Actions -->
-    <div class="pt-3 border-t border-hairline flex items-center justify-between gap-3">
+    <div class="pt-3 border-t border-hairline flex items-center justify-between gap-2.5">
       <button
         type="button"
         id="mobile-cmd-btn"
-        class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-2.5 text-xs font-mono font-bold text-ink cursor-pointer hover:bg-canvas transition min-h-[44px]"
+        class="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-2.5 text-xs font-mono font-bold text-ink cursor-pointer hover:bg-canvas active:bg-canvas transition min-h-[44px]"
       >
         <span>>_</span> <span data-i18n="nav.commandPalette">Command Palette</span>
         <kbd class="text-[10px] opacity-60">⌘K</kbd>
       </button>
       <a
         href="/game/type-defender"
-        class="inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 min-h-[44px]"
+        class="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 min-h-[44px]"
         style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
       >
         <span data-i18n="nav.playGame">Play Game</span>
@@ -367,38 +410,123 @@ import SiteLogo from './SiteLogo.astro';
     const langFlag = document.getElementById('nav-lang-flag');
     const langLabel = document.getElementById('nav-lang-current-label');
     const langSearch = document.getElementById('nav-lang-search') as HTMLInputElement | null;
+    const langCloseBtn = document.getElementById('nav-lang-close-btn');
+
+    const themeBtn = document.getElementById('nav-theme-btn');
+    const themeMenu = document.getElementById('nav-theme-menu');
+    const themeLabel = document.getElementById('nav-theme-current-label');
+    const themeSearch = document.getElementById('nav-theme-search') as HTMLInputElement | null;
+    const themeCloseBtn = document.getElementById('nav-theme-close-btn');
 
     const soundBtn = document.getElementById('sound-menu-btn');
     const soundMenu = document.getElementById('sound-menu');
     const soundLabel = document.getElementById('current-switch-label');
     const soundIcon = document.getElementById('sound-icon');
 
-    const themeBtn = document.getElementById('nav-theme-btn');
-    const themeMenu = document.getElementById('nav-theme-menu');
-    const themeLabel = document.getElementById('nav-theme-current-label');
-    const themeSearch = document.getElementById('nav-theme-search') as HTMLInputElement | null;
-
     const cmdLauncher = document.getElementById('nav-cmd-launcher');
     const mobileCmdBtn = document.getElementById('mobile-cmd-btn');
     const mobileBtn = document.getElementById('mobile-menu-btn');
     const mobileDrawer = document.getElementById('mobile-menu-drawer');
+    const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
+    const mobileHamburgerIcon = document.getElementById('mobile-hamburger-icon');
+    const mobileCloseIcon = document.getElementById('mobile-close-icon');
+
+    const mobileDrawerLangBtn = document.getElementById('mobile-drawer-lang-btn');
+    const mobileDrawerLangFlag = document.getElementById('mobile-drawer-lang-flag');
+    const mobileDrawerLangLabel = document.getElementById('mobile-drawer-lang-label');
+
+    const mobileDrawerThemeBtn = document.getElementById('mobile-drawer-theme-btn');
+    const mobileDrawerThemeDot = document.getElementById('mobile-drawer-theme-dot');
+    const mobileDrawerThemeLabel = document.getElementById('mobile-drawer-theme-label');
+
+    // Highlight active nav links on current page
+    const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+    document.querySelectorAll('.desktop-nav-link, .mobile-nav-link').forEach((link) => {
+      const href = link.getAttribute('href')?.replace(/\/$/, '') || '';
+      if (href && (href === currentPath || (href !== '/' && href !== '/#games-section' && currentPath.startsWith(href)))) {
+        link.classList.add('bg-canvas-soft', 'font-bold', 'text-ink');
+      }
+    });
+
+    const closeAllMenus = () => {
+      langMenu?.classList.add('hidden');
+      themeMenu?.classList.add('hidden');
+      soundMenu?.classList.add('hidden');
+      langBtn?.setAttribute('aria-expanded', 'false');
+      themeBtn?.setAttribute('aria-expanded', 'false');
+      soundBtn?.setAttribute('aria-expanded', 'false');
+    };
+
+    const toggleMobileDrawer = (open?: boolean) => {
+      const shouldOpen = open !== undefined ? open : mobileDrawer?.classList.contains('hidden');
+      if (shouldOpen) {
+        closeAllMenus();
+        mobileDrawer?.classList.remove('hidden');
+        mobileBackdrop?.classList.remove('hidden');
+        mobileBtn?.setAttribute('aria-expanded', 'true');
+        mobileHamburgerIcon?.classList.add('hidden');
+        mobileCloseIcon?.classList.remove('hidden');
+      } else {
+        mobileDrawer?.classList.add('hidden');
+        mobileBackdrop?.classList.add('hidden');
+        mobileBtn?.setAttribute('aria-expanded', 'false');
+        mobileHamburgerIcon?.classList.remove('hidden');
+        mobileCloseIcon?.classList.add('hidden');
+      }
+    };
 
     // Mobile nav toggle
-    mobileBtn?.addEventListener('click', () => {
-      mobileDrawer?.classList.toggle('hidden');
+    mobileBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobileDrawer();
+    });
+
+    mobileBackdrop?.addEventListener('click', () => {
+      toggleMobileDrawer(false);
+      closeAllMenus();
+    });
+
+    langCloseBtn?.addEventListener('click', () => {
+      langMenu?.classList.add('hidden');
+      langBtn?.setAttribute('aria-expanded', 'false');
+    });
+
+    themeCloseBtn?.addEventListener('click', () => {
+      themeMenu?.classList.add('hidden');
+      themeBtn?.setAttribute('aria-expanded', 'false');
+    });
+
+    // Drawer shortcuts to open Language & Theme pickers directly
+    mobileDrawerLangBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobileDrawer(false);
+      setTimeout(() => {
+        langMenu?.classList.remove('hidden');
+        langBtn?.setAttribute('aria-expanded', 'true');
+        try { langSearch?.focus({ preventScroll: true }); } catch { langSearch?.focus(); }
+      }, 50);
+    });
+
+    mobileDrawerThemeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMobileDrawer(false);
+      setTimeout(() => {
+        themeMenu?.classList.remove('hidden');
+        themeBtn?.setAttribute('aria-expanded', 'true');
+        try { themeSearch?.focus({ preventScroll: true }); } catch { themeSearch?.focus(); }
+      }, 50);
     });
 
     // Command palette launcher
     const openCmd = () => {
+      toggleMobileDrawer(false);
+      closeAllMenus();
       if ((window as any).toggleGlobalCommandPalette) {
         (window as any).toggleGlobalCommandPalette();
       }
     };
     cmdLauncher?.addEventListener('click', openCmd);
-    mobileCmdBtn?.addEventListener('click', () => {
-      mobileDrawer?.classList.add('hidden');
-      openCmd();
-    });
+    mobileCmdBtn?.addEventListener('click', openCmd);
 
     // --- LANGUAGE SWITCHER UI SYNC ---
     const updateLangUI = (code?: string) => {
@@ -406,6 +534,8 @@ import SiteLogo from './SiteLogo.astro';
       const def = getLanguageDef(cur);
       if (langFlag) langFlag.textContent = def.flag;
       if (langLabel) langLabel.textContent = def.code.toUpperCase();
+      if (mobileDrawerLangFlag) mobileDrawerLangFlag.textContent = def.flag;
+      if (mobileDrawerLangLabel) mobileDrawerLangLabel.textContent = def.name;
 
       document.querySelectorAll('.nav-lang-opt').forEach((el) => {
         const lCode = el.getAttribute('data-lang');
@@ -413,10 +543,10 @@ import SiteLogo from './SiteLogo.astro';
         if (check) {
           if (lCode === cur) {
             check.classList.remove('hidden');
-            el.classList.add('font-bold');
+            el.classList.add('font-bold', 'bg-canvas-soft');
           } else {
             check.classList.add('hidden');
-            el.classList.remove('font-bold');
+            el.classList.remove('font-bold', 'bg-canvas-soft');
           }
         }
       });
@@ -424,10 +554,12 @@ import SiteLogo from './SiteLogo.astro';
 
     langBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
-      soundMenu?.classList.add('hidden');
-      themeMenu?.classList.add('hidden');
-      langMenu?.classList.toggle('hidden');
-      if (!langMenu?.classList.contains('hidden')) {
+      const isClosed = langMenu?.classList.contains('hidden');
+      closeAllMenus();
+      toggleMobileDrawer(false);
+      if (isClosed) {
+        langMenu?.classList.remove('hidden');
+        langBtn?.setAttribute('aria-expanded', 'true');
         try {
           langSearch?.focus({ preventScroll: true });
         } catch {
@@ -457,6 +589,7 @@ import SiteLogo from './SiteLogo.astro';
           setLanguage(lCode);
           updateLangUI(lCode);
           langMenu?.classList.add('hidden');
+          langBtn?.setAttribute('aria-expanded', 'false');
         }
       });
     });
@@ -493,8 +626,13 @@ import SiteLogo from './SiteLogo.astro';
         const sw = el.getAttribute('data-switch');
         const check = el.querySelector('.switch-check');
         if (check) {
-          if (sw === cur) check.classList.remove('hidden');
-          else check.classList.add('hidden');
+          if (sw === cur) {
+            check.classList.remove('hidden');
+            el.classList.add('font-bold', 'bg-canvas-soft');
+          } else {
+            check.classList.add('hidden');
+            el.classList.remove('font-bold', 'bg-canvas-soft');
+          }
         }
       });
     };
@@ -502,9 +640,13 @@ import SiteLogo from './SiteLogo.astro';
     soundBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
       soundEngine.initContext();
-      langMenu?.classList.add('hidden');
-      themeMenu?.classList.add('hidden');
-      soundMenu?.classList.toggle('hidden');
+      const isClosed = soundMenu?.classList.contains('hidden');
+      closeAllMenus();
+      toggleMobileDrawer(false);
+      if (isClosed) {
+        soundMenu?.classList.remove('hidden');
+        soundBtn?.setAttribute('aria-expanded', 'true');
+      }
     });
 
     mobileSoundCycleBtn?.addEventListener('click', () => {
@@ -523,7 +665,7 @@ import SiteLogo from './SiteLogo.astro';
     // Close mobile drawer on navigation link click
     mobileDrawer?.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        mobileDrawer?.classList.add('hidden');
+        toggleMobileDrawer(false);
       });
     });
 
@@ -539,6 +681,7 @@ import SiteLogo from './SiteLogo.astro';
           }
           updateSoundUI();
           soundMenu?.classList.add('hidden');
+          soundBtn?.setAttribute('aria-expanded', 'false');
         }
       });
     });
@@ -556,6 +699,9 @@ import SiteLogo from './SiteLogo.astro';
       const themeDot = document.getElementById('nav-theme-dot');
       if (themeDot) themeDot.style.backgroundColor = curTheme.main;
 
+      if (mobileDrawerThemeDot) mobileDrawerThemeDot.style.backgroundColor = curTheme.main;
+      if (mobileDrawerThemeLabel) mobileDrawerThemeLabel.textContent = curTheme.name;
+
       // Update active checkmarks
       document.querySelectorAll('.nav-theme-opt').forEach((el) => {
         const tId = el.getAttribute('data-theme-id');
@@ -563,10 +709,10 @@ import SiteLogo from './SiteLogo.astro';
         if (check) {
           if (tId === curId) {
             check.classList.remove('hidden');
-            el.classList.add('font-bold');
+            el.classList.add('font-bold', 'bg-canvas-soft');
           } else {
             check.classList.add('hidden');
-            el.classList.remove('font-bold');
+            el.classList.remove('font-bold', 'bg-canvas-soft');
           }
         }
       });
@@ -574,10 +720,12 @@ import SiteLogo from './SiteLogo.astro';
 
     themeBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
-      langMenu?.classList.add('hidden');
-      soundMenu?.classList.add('hidden');
-      themeMenu?.classList.toggle('hidden');
-      if (!themeMenu?.classList.contains('hidden')) {
+      const isClosed = themeMenu?.classList.contains('hidden');
+      closeAllMenus();
+      toggleMobileDrawer(false);
+      if (isClosed) {
+        themeMenu?.classList.remove('hidden');
+        themeBtn?.setAttribute('aria-expanded', 'true');
         try {
           themeSearch?.focus({ preventScroll: true });
         } catch {
@@ -604,6 +752,7 @@ import SiteLogo from './SiteLogo.astro';
           applyThemeGlobal(selectedTheme);
           updateThemeUI(selectedTheme);
           themeMenu?.classList.add('hidden');
+          themeBtn?.setAttribute('aria-expanded', 'false');
         }
       });
     });
@@ -613,16 +762,31 @@ import SiteLogo from './SiteLogo.astro';
       updateThemeUI(e.detail);
     });
 
-    // Close on click outside
+    // Global click outside handler
     document.addEventListener('click', (e) => {
-      if (!langMenu?.contains(e.target as Node) && !langBtn?.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (!langMenu?.contains(target) && !langBtn?.contains(target)) {
         langMenu?.classList.add('hidden');
+        langBtn?.setAttribute('aria-expanded', 'false');
       }
-      if (!soundMenu?.contains(e.target as Node) && !soundBtn?.contains(e.target as Node)) {
+      if (!soundMenu?.contains(target) && !soundBtn?.contains(target)) {
         soundMenu?.classList.add('hidden');
+        soundBtn?.setAttribute('aria-expanded', 'false');
       }
-      if (!themeMenu?.contains(e.target as Node) && !themeBtn?.contains(e.target as Node)) {
+      if (!themeMenu?.contains(target) && !themeBtn?.contains(target)) {
         themeMenu?.classList.add('hidden');
+        themeBtn?.setAttribute('aria-expanded', 'false');
+      }
+      if (!mobileDrawer?.contains(target) && !mobileBtn?.contains(target) && !mobileBackdrop?.contains(target)) {
+        toggleMobileDrawer(false);
+      }
+    });
+
+    // Escape key listener to close open menus and drawer
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllMenus();
+        toggleMobileDrawer(false);
       }
     });
 

@@ -257,19 +257,24 @@ export class SamuraiShowdownGame extends BaseGame {
     // Telemetry HUD Bar (Top Letterbox)
     ctx.font = 'bold 12px "Geist Mono", monospace';
     ctx.fillStyle = '#f9cb28';
-    ctx.fillText(`DUELS WON: ${this.roundWins} / ${this.roundGoal}`, 30, 21);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(`OPPONENT: ${opp.name} (${opp.title})`, 220, 21);
+    ctx.fillText(`WINS: ${this.roundWins}/${this.roundGoal}`, 20, 21);
+    if (this.width >= 560) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`OPPONENT: ${opp.name}`, this.width * 0.35, 21);
+    }
     ctx.fillStyle = '#50e3c2';
     ctx.textAlign = 'right';
-    ctx.fillText(`PARRY WINDOW: ${this.opponentReactionTime.toFixed(2)}s`, this.width - 30, 21);
+    ctx.fillText(`PARRY: ${this.opponentReactionTime.toFixed(2)}s`, this.width - 20, 21);
     ctx.textAlign = 'left';
 
-    // 2. Render Player Samurai (Left: x ~ 210)
-    this.renderPlayerSamurai(ctx, 210, floorY);
+    const playerX = Math.max(65, Math.min(210, this.width * 0.22));
+    const oppX = Math.max(playerX + 110, Math.min(this.width - 65, this.width * 0.78));
 
-    // 3. Render Opponent Samurai (Right: x ~ width - 210)
-    this.renderOpponentSamurai(ctx, this.width - 210, floorY, opp);
+    // 2. Render Player Samurai (Left)
+    this.renderPlayerSamurai(ctx, playerX, floorY);
+
+    // 3. Render Opponent Samurai (Right)
+    this.renderOpponentSamurai(ctx, oppX, floorY, opp);
 
     // 4. Standoff & Draw Prompts
     if (this.phase === 'STANDOFF') {

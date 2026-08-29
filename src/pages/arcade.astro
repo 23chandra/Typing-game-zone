@@ -34,27 +34,27 @@ const arcadeStructuredData = {
   keywords={arcadeKeywords}
   structuredData={arcadeStructuredData}
 >
-  <div class="bg-canvas-soft text-ink min-h-screen py-12 sm:py-16">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <div class="bg-canvas-soft text-ink min-h-screen py-8 sm:py-16">
+    <div class="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8">
       
       <!-- Retro Arcade Header Banner -->
-      <div class="relative overflow-hidden rounded-3xl border border-hairline bg-canvas p-8 sm:p-12 mb-12 shadow-level-4 scanline-effect">
+      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-hairline bg-canvas p-5 xs:p-6 sm:p-12 mb-8 sm:mb-12 shadow-level-4 scanline-effect">
         <div class="relative z-10 max-w-3xl">
-          <div class="inline-flex items-center gap-2 rounded-full bg-canvas-soft border border-hairline px-3 py-1 text-xs font-mono text-link mb-4 shadow-sm">
+          <div class="inline-flex items-center gap-2 rounded-full bg-canvas-soft border border-hairline px-3 py-1 text-xs font-mono text-link mb-3 sm:mb-4 shadow-sm">
             <span class="animate-ping h-2 w-2 rounded-full inline-block" style="background-color: var(--site-primary, #e2b714);"></span>
             <span>COIN-OP READY • INSERT 100 WPM TO PLAY</span>
           </div>
-          <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight">
+          <h1 class="text-2xl xs:text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight">
             <span data-i18n="nav.arcade">The Retro Arcade Lounge</span>
           </h1>
-          <p class="mt-4 text-sm sm:text-base text-body leading-relaxed" data-i18n="hero.subtitle">
+          <p class="mt-2.5 sm:mt-4 text-xs sm:text-base text-body leading-relaxed" data-i18n="hero.subtitle">
             Classic 8-bit space invaders, planetary orbital defenses, neon ninja blades, and Hadoken brawlers. Grab your keyboard and dominate the arcade high-score table.
           </p>
 
-          <div class="mt-6 flex flex-wrap items-center gap-3">
+          <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
             <a
               href="/game/retro-invaders"
-              class="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95"
+              class="inline-flex items-center justify-center gap-2 rounded-full px-5 sm:px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 min-h-[42px]"
               style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
             >
               <span>Launch Retro Invaders</span>
@@ -64,7 +64,7 @@ const arcadeStructuredData = {
             </a>
             <a
               href="/game/street-fighter"
-              class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-2.5 text-xs font-bold text-ink transition hover:bg-canvas active:scale-95"
+              class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 sm:px-5 py-2.5 text-xs font-bold text-ink transition hover:bg-canvas active:scale-95 min-h-[42px]"
             >
               <span>Street Fighter Typer 🥊</span>
             </a>
@@ -73,14 +73,14 @@ const arcadeStructuredData = {
       </div>
 
       <!-- Arcade Games Grid -->
-      <div class="mb-8 flex items-center justify-between border-b border-hairline pb-4">
+      <div class="mb-6 sm:mb-8 flex items-center justify-between border-b border-hairline pb-4">
         <div>
-          <h2 class="text-xl font-bold text-ink">Arcade, Combat & Defense Titles ({arcadeGames.length})</h2>
+          <h2 class="text-lg sm:text-xl font-bold text-ink">Arcade, Combat & Defense Titles ({arcadeGames.length})</h2>
           <p class="text-xs text-mute mt-0.5">High intensity typing games with multi-phase bosses.</p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-ink">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 text-ink">
         {arcadeGames.map(game => (
           <GameCard game={game} />
         ))}

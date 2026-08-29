@@ -56,7 +56,9 @@ export class SpaceRacerGame extends BaseGame {
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'space' : 'hard';
     const word = getRandomWord(cat);
     const lanes = [-1, 0, 1];
-    const lane = lanes[Math.floor(Math.random() * lanes.length)];
+    // Prefer lane without gate near spawn distance (z > 700)
+    const validLanes = lanes.filter(l => !this.gates.some(g => g.lane === l && g.z > 680));
+    const lane = validLanes.length > 0 ? validLanes[Math.floor(Math.random() * validLanes.length)] : lanes[Math.floor(Math.random() * lanes.length)];
 
     this.gates.push({
       id: this.nextId++,
@@ -139,7 +141,7 @@ export class SpaceRacerGame extends BaseGame {
     const fov = 300;
     const depth = Math.max(1, z + fov);
     const scale = fov / depth;
-    const laneWidth = 260;
+    const laneWidth = Math.min(260, this.width * 0.38);
 
     const x = this.width / 2 + lane * laneWidth * scale;
     const y = horizonY + (this.height - horizonY) * scale;

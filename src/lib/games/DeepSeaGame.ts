@@ -230,21 +230,23 @@ export class DeepSeaGame extends BaseGame {
     ctx.fillText(`SPECIES CATALOGED: ${this.creaturesCataloged} / ${this.creatureGoal}`, 30, 25);
 
     // 2. Render Submarine Searchlight Cone
+    const subX = Math.max(45, Math.min(110, this.width * 0.14));
+    const coneEnd = subX + Math.min(260, this.width * 0.65);
     ctx.save();
-    const lightCone = ctx.createRadialGradient(150, this.subY, 20, 360, this.subY, 220);
+    const lightCone = ctx.createRadialGradient(subX + 40, this.subY, 20, coneEnd, this.subY, 220);
     lightCone.addColorStop(0, 'rgba(249, 203, 40, 0.35)');
     lightCone.addColorStop(1, 'rgba(249, 203, 40, 0)');
     ctx.fillStyle = lightCone;
     ctx.beginPath();
-    ctx.moveTo(150, this.subY);
-    ctx.lineTo(400, this.subY - 80);
-    ctx.lineTo(400, this.subY + 80);
+    ctx.moveTo(subX + 40, this.subY);
+    ctx.lineTo(coneEnd, this.subY - 80);
+    ctx.lineTo(coneEnd, this.subY + 80);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 
-    // 3. Render Deep Sea Submarine (Left: x = 110)
-    this.renderSubmarine(ctx, 110, this.subY);
+    // 3. Render Deep Sea Submarine (Left)
+    this.renderSubmarine(ctx, subX, this.subY);
 
     // 4. Render Bioluminescent Fauna
     for (const creature of this.creatures) {

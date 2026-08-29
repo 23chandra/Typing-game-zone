@@ -54,7 +54,14 @@ export class LaserTurretGame extends BaseGame {
     if (this.wordsKilled + this.drones.length >= this.wordsGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
     const word = getRandomWord(cat);
-    const angle = Math.random() * Math.PI * 2;
+    
+    let angle = Math.random() * Math.PI * 2;
+    let attempts = 0;
+    while (attempts < 10 && this.drones.some(d => Math.abs(d.angle - angle) < 0.45 || Math.abs(d.angle - angle) > Math.PI * 2 - 0.45)) {
+      angle = Math.random() * Math.PI * 2;
+      attempts++;
+    }
+
     const spawnDist = Math.hypot(this.width / 2, this.height / 2) + 25;
     const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.3 + 0.85);
 

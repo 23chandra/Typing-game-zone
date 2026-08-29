@@ -38,6 +38,11 @@ export class DungeonEscapeGame extends BaseGame {
     ];
   }
 
+  public override handleResize(): void {
+    super.handleResize();
+    this.runnerX = Math.max(50, Math.min(140, this.width * 0.16));
+  }
+
   public initLevel(levelNumber: number): void {
     const lvl = this.getLevels()[levelNumber - 1] || this.getLevels()[0];
     this.trapsGoal = lvl.wordCount;
@@ -46,6 +51,7 @@ export class DungeonEscapeGame extends BaseGame {
     this.spawnDistanceTimer = 1.0;
     this.traps = [];
     this.currentTarget = null;
+    this.runnerX = Math.max(50, Math.min(140, this.width * 0.16));
     this.runnerY = this.height - 85;
     this.runnerVY = 0;
     this.isJumping = false;

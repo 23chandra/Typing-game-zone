@@ -9,7 +9,7 @@ const { game } = Astro.props;
 ---
 
 <div
-  class="group relative flex flex-col justify-between rounded-xl border border-hairline bg-canvas p-6 shadow-level-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-level-4"
+  class="group relative flex flex-col justify-between rounded-2xl border border-hairline bg-canvas p-4 xs:p-5 sm:p-6 shadow-level-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-level-4 active:scale-[0.99] touch-manipulation"
   data-category={game.category}
   data-title={game.title.toLowerCase()}
   data-tags={game.tags.join(' ').toLowerCase()}
@@ -17,15 +17,15 @@ const { game } = Astro.props;
 >
   <!-- Card Header -->
   <div>
-    <div class="flex items-center justify-between gap-2 mb-4">
-      <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-canvas-soft text-2xl shadow-level-1 border border-hairline group-hover:scale-110 transition-transform duration-300">
+    <div class="flex items-center justify-between gap-2 mb-3 sm:mb-4">
+      <div class="flex h-11 w-11 xs:h-12 xs:w-12 items-center justify-center rounded-xl bg-canvas-soft text-xl xs:text-2xl shadow-level-1 border border-hairline group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
         {game.icon}
       </div>
-      <div class="flex items-center gap-1.5">
-        <span class="rounded-full bg-canvas-soft px-2.5 py-1 text-[11px] font-mono font-medium text-body border border-hairline">
+      <div class="flex items-center gap-1 xs:gap-1.5 flex-wrap justify-end">
+        <span class="rounded-full bg-canvas-soft px-2 xs:px-2.5 py-0.5 xs:py-1 text-[10px] xs:text-[11px] font-mono font-medium text-body border border-hairline">
           {game.categoryName}
         </span>
-        <span class={`rounded-full px-2.5 py-1 text-[11px] font-mono font-medium border ${
+        <span class={`rounded-full px-2 xs:px-2.5 py-0.5 xs:py-1 text-[10px] xs:text-[11px] font-mono font-medium border ${
           game.difficulty === 'Beginner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' :
           game.difficulty === 'Intermediate' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
           game.difficulty === 'Advanced' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
@@ -37,17 +37,17 @@ const { game } = Astro.props;
     </div>
 
     <!-- Title & Description -->
-    <h3 class="text-lg font-semibold tracking-tight text-ink group-hover:text-link transition-colors">
-      {game.title}
+    <h3 class="text-base xs:text-lg font-semibold tracking-tight text-ink group-hover:text-link transition-colors">
+      <a href={`/game/${game.id}`} class="focus:outline-none">{game.title}</a>
     </h3>
-    <p class="mt-2 text-xs text-body line-clamp-2 leading-relaxed">
+    <p class="mt-1.5 xs:mt-2 text-xs text-body line-clamp-2 leading-relaxed">
       {game.description}
     </p>
 
     <!-- Tags -->
-    <div class="mt-4 flex flex-wrap gap-1.5">
+    <div class="mt-3 xs:mt-4 flex flex-wrap gap-1 xs:gap-1.5">
       {game.tags.map((tag: string) => (
-        <span class="rounded bg-canvas-soft-2 px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">
+        <span class="rounded bg-canvas-soft-2 px-1.5 xs:px-2 py-0.5 text-[10px] font-mono text-mute border border-hairline">
           #{tag}
         </span>
       ))}
@@ -55,13 +55,13 @@ const { game } = Astro.props;
   </div>
 
   <!-- Card Footer -->
-  <div class="mt-6 flex items-center justify-between border-t border-hairline pt-4">
+  <div class="mt-5 xs:mt-6 flex items-center justify-between border-t border-hairline pt-3.5 xs:pt-4">
     <!-- 5 Levels Indicator -->
     <div class="flex items-center gap-1" title="5 Progressive Levels">
-      <span class="text-[10px] font-mono text-mute uppercase mr-1">LVL</span>
+      <span class="text-[10px] font-mono text-mute uppercase mr-0.5">LVL</span>
       <div class="flex gap-1">
         {[1, 2, 3, 4, 5].map(lvl => (
-          <span class="flex h-4 w-4 items-center justify-center rounded-sm bg-canvas-soft text-[9px] font-mono font-bold text-body border border-hairline">
+          <span class="flex h-5 w-5 xs:h-4 xs:w-4 items-center justify-center rounded-sm bg-canvas-soft text-[10px] xs:text-[9px] font-mono font-bold text-body border border-hairline">
             {lvl}
           </span>
         ))}
@@ -71,7 +71,7 @@ const { game } = Astro.props;
     <!-- Play Pill Button -->
     <a
       href={`/game/${game.id}`}
-      class="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-medium text-on-primary shadow-level-1 transition hover:opacity-90 active:scale-95"
+      class="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-bold text-on-primary shadow-level-1 transition hover:opacity-90 active:scale-95 min-h-[38px] min-w-[76px]"
     >
       <span>Play</span>
       <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
