@@ -1,0 +1,299 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GameCard from '../../components/GameCard.astro';
+import SpeedTestWidget from '../../components/SpeedTestWidget.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import { ALL_GAMES } from '../../lib/games/gameRegistry';
+import { getLocalizedFAQData, generateFAQSchema } from '../../lib/faqData';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../i18n/config';
+import { t, getLocaleUrl } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+const totalGames = ALL_GAMES.length;
+
+const seoTitle = t('seo.homeTitle', currentLocale);
+const seoDescription = t('seo.homeDescription', currentLocale);
+const localizedFAQ = getLocalizedFAQData(currentLocale);
+const faqStructuredData = generateFAQSchema(localizedFAQ);
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  locale={currentLocale}
+  structuredData={faqStructuredData}
+>
+  <!-- 1. Hero Band with Atmospheric Mesh Gradient Backdrop -->
+  <section class="relative overflow-hidden border-b border-hairline bg-canvas py-16 sm:py-24 mesh-gradient-hero">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      
+      <!-- Announcement Eyebrow Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/90 px-3.5 py-1 text-xs font-mono text-body shadow-level-1 backdrop-blur mb-6">
+        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span data-i18n="hero.badge">{t('hero.badge', currentLocale)}</span>
+      </div>
+
+      <!-- Main Display Headline -->
+      <h1 class="text-3xl xs:text-4xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.04em] text-ink leading-[1.12] max-w-4xl mx-auto">
+        <span data-i18n="hero.title1">{t('hero.title1', currentLocale)}</span> <br class="hidden sm:inline" />
+        <span class="text-gradient-develop" data-i18n="hero.title2">{t('hero.title2', currentLocale)}</span>
+      </h1>
+
+      <!-- Body Lead Paragraph -->
+      <p class="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg text-body max-w-2xl mx-auto leading-relaxed" data-i18n="hero.subtitle">
+        {t('hero.subtitle', currentLocale)}
+      </p>
+
+      <!-- CTA Buttons Row -->
+      <div class="mt-6 sm:mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-4">
+        <a
+          href={getLocaleUrl('/game/type-defender', currentLocale)}
+          class="inline-flex items-center gap-2 rounded-full bg-ink px-6 sm:px-7 py-3 sm:py-3.5 text-xs sm:text-base font-medium text-on-primary shadow-level-3 transition hover:opacity-90 active:scale-95"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        >
+          <span data-i18n="hero.browseGames">{t('hero.browseGames', currentLocale)}</span>
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+
+        <a
+          href={getLocaleUrl('/speed-test', currentLocale)}
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-5 sm:px-6 py-3 sm:py-3.5 text-xs sm:text-base font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft active:scale-95"
+        >
+          <span data-i18n="hero.startTest">{t('hero.startTest', currentLocale)}</span>
+        </a>
+
+        <a
+          href={getLocaleUrl('/arcade', currentLocale)}
+          class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 sm:px-5 py-3 sm:py-3.5 text-xs sm:text-base font-medium text-body transition hover:text-ink hover:bg-canvas active:scale-95"
+        >
+          <span data-i18n="nav.arcade">🕹️ {t('nav.arcade', currentLocale)}</span>
+        </a>
+      </div>
+
+      <!-- Quick Platform Telemetry Bar -->
+      <div class="mt-8 sm:mt-12 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 max-w-3xl mx-auto text-left font-mono">
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.gamesCount">{t('hero.gamesCount', currentLocale)}</div>
+          <div class="text-xl sm:text-2xl font-bold text-ink mt-0.5 sm:mt-1">21 Titles</div>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.activeTypists">{t('hero.activeTypists', currentLocale)}</div>
+          <div class="text-xl sm:text-2xl font-bold text-ink mt-0.5 sm:mt-1">10,000+</div>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.switchSounds">{t('hero.switchSounds', currentLocale)}</div>
+          <div class="text-xl sm:text-2xl font-bold text-success mt-0.5 sm:mt-1">7 Switches</div>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas/80 p-3 sm:p-4 shadow-level-1 backdrop-blur">
+          <div class="text-[10px] sm:text-[11px] text-mute uppercase tracking-wider truncate" data-i18n="hero.colorThemes">{t('hero.colorThemes', currentLocale)}</div>
+          <div class="text-xl sm:text-2xl font-bold text-link mt-0.5 sm:mt-1">17 Themes</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 2. Interactive Game Hub & Catalog Section -->
+  <section class="py-10 sm:py-20 bg-canvas-soft scroll-mt-16" id="games-section">
+    <div class="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 pb-5 sm:pb-8 border-b border-hairline">
+        <div>
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link" data-i18n="lead.gameRecords">{t('lead.gameRecords', currentLocale)}</span>
+          <h2 id="games-count-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
+            {t('nav.games', currentLocale)}
+          </h2>
+          <p class="text-xs sm:text-sm text-body mt-1" data-i18n="lead.gameRecordsDesc">
+            {t('lead.gameRecordsDesc', currentLocale)}
+          </p>
+        </div>
+
+        <!-- Real-time Search Box -->
+        <div class="relative w-full md:w-72">
+          <input
+            type="text"
+            id="game-search-input"
+            placeholder={t('nav.searchLang', currentLocale).replace('language...', 'games...')}
+            class="w-full rounded-full border border-hairline bg-canvas px-4 py-2.5 pl-10 pr-9 text-base sm:text-xs font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20"
+          />
+          <svg class="absolute left-3.5 top-3 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <button
+            type="button"
+            id="game-search-clear"
+            class="absolute right-3 top-2.5 h-5 w-5 rounded-full bg-canvas-soft text-mute hover:text-ink text-xs hidden items-center justify-center cursor-pointer active:scale-95"
+            title="Clear search"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Tabs Row -->
+      <div class="flex items-center gap-2 overflow-x-auto smooth-scroll-x overscroll-contain max-w-full pb-2 pt-4 sm:pt-6 mb-2 text-xs">
+        <button type="button" data-filter="all" data-i18n="cat.all" class="cat-filter-btn active rounded-full bg-ink px-4 py-1.5 font-medium text-on-primary shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          {t('cat.all', currentLocale)}
+        </button>
+        <button type="button" data-filter="arcade" data-i18n="cat.arcade" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          {t('cat.arcade', currentLocale)}
+        </button>
+        <button type="button" data-filter="action" data-i18n="cat.action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          {t('cat.action', currentLocale)}
+        </button>
+        <button type="button" data-filter="adventure" data-i18n="cat.adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          {t('cat.adventure', currentLocale)}
+        </button>
+        <button type="button" data-filter="fighting" data-i18n="cat.fighting" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          {t('cat.fighting', currentLocale)}
+        </button>
+        <button type="button" data-filter="puzzle" data-i18n="cat.puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          {t('cat.puzzle', currentLocale)}
+        </button>
+        <button type="button" data-filter="practice" data-i18n="cat.practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          {t('cat.practice', currentLocale)}
+        </button>
+      </div>
+
+      <!-- 21 Games Responsive Grid -->
+      <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mt-4">
+        {ALL_GAMES.map(game => (
+          <GameCard game={game} locale={currentLocale} />
+        ))}
+      </div>
+
+      <!-- No search results fallback -->
+      <div id="no-results" class="hidden py-16 text-center">
+        <div class="text-4xl mb-2">🔍</div>
+        <h3 class="text-base font-semibold text-ink">No matching games found</h3>
+        <p class="text-xs text-mute mt-1">Try clearing your search query or filter category.</p>
+        <button
+          type="button"
+          id="reset-filter-btn"
+          class="mt-4 rounded-full bg-ink px-4 py-2 text-xs font-medium text-on-primary shadow-level-1 transition hover:opacity-90 active:scale-95"
+        >
+          Reset All Filters
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. Speed Test Suite Showcase -->
+  <section class="py-16 sm:py-24 bg-canvas-soft/80 border-b border-hairline relative overflow-hidden" id="speed-test-section">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+          {t('st.resultsTitle', currentLocale).replace('!', '')}
+        </h2>
+        <p class="text-xs sm:text-sm text-body mt-2">
+          {t('hero.subtitle', currentLocale)}
+        </p>
+      </div>
+      <SpeedTestWidget locale={currentLocale} />
+    </div>
+  </section>
+
+  <!-- 4. FAQ Section -->
+  <FAQSection locale={currentLocale} includeSchema={false} />
+</Layout>
+
+<script>
+  // Game filtering and search script
+  function initGameFiltering() {
+    const searchInput = document.getElementById('game-search-input') as HTMLInputElement;
+    const clearBtn = document.getElementById('game-search-clear');
+    const filterBtns = document.querySelectorAll('.cat-filter-btn');
+    const gameCards = document.querySelectorAll('.game-card');
+    const noResults = document.getElementById('no-results');
+    const resetBtn = document.getElementById('reset-filter-btn');
+
+    let activeFilter = 'all';
+    let searchQuery = '';
+
+    function applyFilter() {
+      let visibleCount = 0;
+      gameCards.forEach((card: any) => {
+        const category = card.getAttribute('data-category');
+        const title = (card.getAttribute('data-title') || '').toLowerCase();
+        const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+
+        const matchCat = activeFilter === 'all' || category === activeFilter;
+        const matchSearch = !searchQuery || title.includes(searchQuery) || tags.includes(searchQuery);
+
+        if (matchCat && matchSearch) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (noResults) {
+        noResults.classList.toggle('hidden', visibleCount > 0);
+      }
+      if (clearBtn) {
+        clearBtn.classList.toggle('hidden', !searchQuery);
+        clearBtn.classList.toggle('flex', !!searchQuery);
+      }
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('active', 'bg-ink', 'text-on-primary');
+          b.classList.add('bg-canvas', 'text-body');
+        });
+        btn.classList.add('active', 'bg-ink', 'text-on-primary');
+        btn.classList.remove('bg-canvas', 'text-body');
+        activeFilter = btn.getAttribute('data-filter') || 'all';
+        applyFilter();
+      });
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      applyFilter();
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      searchQuery = '';
+      applyFilter();
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      searchQuery = '';
+      activeFilter = 'all';
+      filterBtns.forEach((b, idx) => {
+        if (idx === 0) {
+          b.classList.add('active', 'bg-ink', 'text-on-primary');
+          b.classList.remove('bg-canvas', 'text-body');
+        } else {
+          b.classList.remove('active', 'bg-ink', 'text-on-primary');
+          b.classList.add('bg-canvas', 'text-body');
+        }
+      });
+      applyFilter();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGameFiltering);
+  } else {
+    initGameFiltering();
+  }
+  document.addEventListener('astro:page-load', initGameFiltering);
+</script>

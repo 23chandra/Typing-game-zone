@@ -1,10 +1,21 @@
 ---
 // Authentic Monkeytype Speed Test Widget — 1:1 Monkeytype Engine
 // Complete with Themes, Command Palette, Smooth Caret, Live Telemetry, Spline Graphs, Replays & Custom Modes
+import { getLocaleFromPath } from '../i18n/utils';
+import { DEFAULT_LOCALE } from '../i18n/config';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale } = Astro.props;
+const currentPath = Astro.url.pathname;
+const currentLocale = locale || getLocaleFromPath(currentPath) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
 ---
 
 <div
   id="monkeytype-root"
+  data-locale={currentLocale}
   class="monkeytype-widget-root w-full max-w-5xl mx-auto rounded-3xl p-4 sm:p-8 font-mono transition-colors duration-300 relative select-none"
   style="--mt-bg: #323437; --mt-main: #e2b714; --mt-caret: #e2b714; --mt-sub: #646669; --mt-sub-alt: #2c2e31; --mt-text: #d1d0c5; --mt-error: #ca4754; --mt-error-extra: #7e2a33; background-color: var(--mt-bg); color: var(--mt-text);"
 >
@@ -874,7 +885,31 @@
     let mode: 'time' | 'words' | 'quote' | 'zen' | 'custom' = 'time';
     let subOption: number = 30; // default 30s
     let quoteLength: 'all' | 'short' | 'medium' | 'long' | 'thicc' = 'all';
-    let wordPool: string = 'english';
+
+    const rootLocale = rootEl.getAttribute('data-locale') || 'en';
+    const localeToPoolMap: Record<string, string> = {
+      en: 'english',
+      hi: 'hindi',
+      es: 'spanish',
+      fr: 'french',
+      de: 'german',
+      ja: 'japanese',
+      pt: 'portuguese',
+      ru: 'russian',
+      ar: 'arabic',
+      zh: 'chinese',
+      it: 'italian',
+      ko: 'korean',
+      id: 'indonesian',
+      tr: 'turkish',
+      vi: 'vietnamese',
+      bn: 'bengali'
+    };
+    const defaultPoolForLocale = localeToPoolMap[rootLocale] || 'english';
+    const storedPool = localStorage.getItem('monkeytype_pool');
+    let wordPool: string = (rootLocale !== 'en' && (!storedPool || storedPool === 'english'))
+      ? defaultPoolForLocale
+      : (storedPool || defaultPoolForLocale);
     let scriptMode: 'native' | 'latin' = 'native';
     let currentLatinBuffer = '';
     let includePunc = false;
@@ -1114,12 +1149,13 @@
         const q = getMonkeytypeQuote(quoteLength);
         words = q.text.trim().split(/\s+/);
         if (quoteAuthorEl) {
-          quoteAuthorEl.textContent = `— ${q.author}`;
+          quoteAuthorEl.textContent = `— ${q.source || (q as any).author || ''}`;
           quoteAuthorEl.classList.remove('hidden');
         }
       } else if (wordPool === 'code') {
         const c = MONKEYTYPE_CODE_SNIPPETS[Math.floor(Math.random() * MONKEYTYPE_CODE_SNIPPETS.length)];
-        words = c.code.replace(/\r\n/g, '\n').split('\n').flatMap((line, idx, arr) => {
+        const codeText = typeof c === 'string' ? c : (c as any).code || '';
+        words = codeText.replace(/\r\n/g, '\n').split('\n').flatMap((line: string, idx: number, arr: string[]) => {
           const lineWords = line.trim().split(/\s+/).filter(Boolean);
           if (idx < arr.length - 1) lineWords.push('↵');
           return lineWords;
@@ -1554,6 +1590,38 @@
       chartCanvas.onmouseleave = onChartMouseLeave;
     }
 
+    function normalizeDiacritic(str: string): string {
+      if (!str) return '';
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    function isFuzzyMatch(typedChar: string, expectedChar: string, _pool: string): boolean {
+      if (!typedChar || !expectedChar) return false;
+      if (typedChar === expectedChar) return true;
+      if (typedChar.toLowerCase() === expectedChar.toLowerCase()) return true;
+
+      const normTyped = normalizeDiacritic(typedChar);
+      const normExp = normalizeDiacritic(expectedChar);
+      if (normTyped === normExp && normTyped.length > 0) return true;
+
+      const specialPairs: Record<string, string[]> = {
+        'ß': ['s', 'ss'],
+        'đ': ['d'], 'Đ': ['d', 'D'],
+        'ş': ['s'], 'Ş': ['s', 'S'],
+        'ğ': ['g'], 'Ğ': ['g', 'G'],
+        'ı': ['i'], 'İ': ['i', 'I'],
+        'œ': ['oe', 'o', 'e'], 'æ': ['ae', 'a', 'e'],
+        'ø': ['o'], 'å': ['a'],
+        '¿': ['?'], '¡': ['!']
+      };
+
+      if (specialPairs[expectedChar] && specialPairs[expectedChar].includes(typedChar.toLowerCase())) {
+        return true;
+      }
+
+      return false;
+    }
+
     // 13. Core Keystroke Handler
     function handleKey(key: string) {
       if (isTestComplete) return;
@@ -1690,18 +1758,25 @@
         const expected = currentWord[currentCharIndex];
         let isMatch = key === expected;
 
-        if (!isMatch && scriptMode === 'native' && wordPool !== 'english' && wordPool !== 'english1k' && wordPool !== 'code') {
-          // 1. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
-          const langOverrides = KEY_LABEL_OVERRIDES[wordPool] || KEY_LABEL_OVERRIDES[wordPool.slice(0, 2)];
-          if (langOverrides) {
-            const mapped = langOverrides[key.toLowerCase()]?.display;
-            if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
-              isMatch = true;
+        if (!isMatch && wordPool !== 'english' && wordPool !== 'english1k' && wordPool !== 'code') {
+          // A. Diacritic & Accent Normalization (e.g. e -> é, a -> á/à/â/ã, c -> ç, u -> ü/ù/ú, n -> ñ, s -> ş, g -> ğ, d -> đ, etc.)
+          if (isFuzzyMatch(key, expected, wordPool)) {
+            isMatch = true;
+          }
+
+          // B. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
+          if (!isMatch && scriptMode === 'native') {
+            const langOverrides = KEY_LABEL_OVERRIDES[wordPool] || KEY_LABEL_OVERRIDES[wordPool.slice(0, 2)];
+            if (langOverrides) {
+              const mapped = langOverrides[key.toLowerCase()]?.display;
+              if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
+                isMatch = true;
+              }
             }
           }
 
-          // 2. Phonetic transliteration check
-          if (!isMatch) {
+          // C. Phonetic transliteration check
+          if (!isMatch && scriptMode === 'native') {
             const trans = transliterateInput(currentLatinBuffer, wordPool, 'native');
             const partialExpected = currentWord.slice(0, currentCharIndex + 1);
             if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
@@ -1709,7 +1784,7 @@
             }
           }
 
-          // 3. Smart Accents check
+          // D. Smart Accents check
           if (!isMatch) {
             const smartAcc = applySmartAccents(key, wordPool);
             if (smartAcc === expected || smartAcc.toLowerCase() === (expected || '').toLowerCase()) {
@@ -1831,6 +1906,11 @@
     const onInputKeyDown = (e: KeyboardEvent) => {
       soundEngine.initContext();
 
+      // If user is actively typing in IME (e.g. Japanese/Hindi/Korean/Chinese/Vietnamese IME), let IME compose
+      if (e.isComposing || (e as any).keyCode === 229) {
+        return;
+      }
+
       if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Enter' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
         e.preventDefault();
         e.stopPropagation();
@@ -1839,6 +1919,20 @@
     };
     inputEl?.addEventListener('keydown', onInputKeyDown);
     activeCleanups.push(() => inputEl?.removeEventListener('keydown', onInputKeyDown));
+
+    // Composition Event for IME character resolution
+    const onCompositionEnd = (e: CompositionEvent) => {
+      soundEngine.initContext();
+      const data = e.data || (inputEl ? inputEl.value : '');
+      if (data && data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+          handleKey(data[i]);
+        }
+        if (inputEl) inputEl.value = '';
+      }
+    };
+    inputEl?.addEventListener('compositionend', onCompositionEnd);
+    activeCleanups.push(() => inputEl?.removeEventListener('compositionend', onCompositionEnd));
 
     // Global Key Listener for Quick Focus / Command Palette / Tab Restart
     const onGlobalKeyDown = (e: KeyboardEvent) => {
@@ -1861,6 +1955,10 @@
 
       // If on homepage and not focused in speed test, do not hijack global keys
       if (!isSpeedTestPage && document.activeElement !== inputEl && !isTestRunning) {
+        return;
+      }
+
+      if (e.isComposing || (e as any).keyCode === 229) {
         return;
       }
 
@@ -1906,6 +2004,8 @@
 
     // Fallback for virtual keyboards & mobile IME input
     const onInputValue = (e: Event) => {
+      const inputEvent = e as InputEvent;
+      if (inputEvent?.isComposing) return;
       soundEngine.initContext();
       const val = (e.target as HTMLInputElement).value;
       if (val.length > 0) {
@@ -2602,9 +2702,10 @@
     activeCleanups.push(() => window.removeEventListener('typing:language-change', onLangChange));
 
     // Initial setup
+    setWordPool(wordPool);
     bindSubOptionButtons();
     generateWords();
-    if (window.location.pathname.startsWith('/speed-test')) {
+    if (window.location.pathname.startsWith('/speed-test') || window.location.pathname.includes('/speed-test')) {
       focusInputSafely();
     }
   }

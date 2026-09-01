@@ -3,13 +3,18 @@
 import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 import { SUPPORTED_LANGUAGES } from '../lib/i18n';
 import SiteLogo from './SiteLogo.astro';
+import { getLocaleUrl, getLocaleFromPath } from '../i18n/utils';
+import { DEFAULT_LOCALE } from '../i18n/config';
+
+const currentPath = Astro.url.pathname;
+const currentLocale = getLocaleFromPath(currentPath) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
 ---
 
 <header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none pt-[env(safe-area-inset-top,0px)]">
   <div class="mx-auto flex h-14 sm:h-16 max-w-7xl 2xl:max-w-[1600px] w-full items-center justify-between gap-2 sm:gap-4 lg:gap-6 px-3 xs:px-4 sm:px-6 lg:px-8">
     
     <!-- Brand Logo -->
-    <a href="/" class="group flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-max mr-2 lg:mr-4 xl:mr-6" title="Typing Game Zone - Home">
+    <a href={getLocaleUrl('/', currentLocale)} class="group flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-max mr-2 lg:mr-4 xl:mr-6" title="Typing Game Zone - Home">
       <SiteLogo class="h-7 w-7 xs:h-8 xs:w-8 sm:h-9 sm:w-9 rounded-xl shadow-level-2 transition-transform duration-200 group-hover:scale-105 border border-hairline flex-shrink-0" />
       <div class="flex flex-col min-w-max">
         <span class="text-xs xs:text-sm sm:text-base font-bold tracking-tight text-ink whitespace-nowrap leading-tight">Typing Game Zone</span>
@@ -19,11 +24,11 @@ import SiteLogo from './SiteLogo.astro';
 
     <!-- Desktop Nav Links (Visible on desktop lg: 1024px+) -->
     <nav class="hidden lg:flex items-center gap-0.5 xl:gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1 flex-shrink-0">
-      <a href="/#games-section" data-i18n="nav.games" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
-      <a href="/arcade" data-i18n="nav.arcade" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
-      <a href="/speed-test" data-i18n="nav.speedTest" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
-      <a href="/practice" data-i18n="nav.practiceLab" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
-      <a href="/leaderboards" data-i18n="nav.leaderboards" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
+      <a href={getLocaleUrl('/#games-section', currentLocale)} data-i18n="nav.games" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
+      <a href={getLocaleUrl('/arcade', currentLocale)} data-i18n="nav.arcade" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
+      <a href={getLocaleUrl('/speed-test', currentLocale)} data-i18n="nav.speedTest" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
+      <a href={getLocaleUrl('/practice', currentLocale)} data-i18n="nav.practiceLab" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
+      <a href={getLocaleUrl('/leaderboards', currentLocale)} data-i18n="nav.leaderboards" class="desktop-nav-link rounded-full px-2.5 xl:px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
     </nav>
 
     <!-- Controls: Language + Global Theme + Sound Switcher + Command Hint + Play CTA + Hamburger -->
@@ -311,29 +316,29 @@ import SiteLogo from './SiteLogo.astro';
 
     <!-- Navigation Links -->
     <div class="flex flex-col gap-1 font-medium mb-3">
-      <a href="/#games-section" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+      <a href={getLocaleUrl('/#games-section', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
         <span class="text-base flex-shrink-0">🎮</span> <span data-i18n="nav.games">Games (21)</span>
       </a>
-      <a href="/arcade" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+      <a href={getLocaleUrl('/arcade', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
         <span class="text-base flex-shrink-0">🕹️</span> <span data-i18n="nav.arcade">Arcade Lounge</span>
       </a>
-      <a href="/speed-test" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+      <a href={getLocaleUrl('/speed-test', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
         <span class="text-base flex-shrink-0">⚡</span> <span data-i18n="nav.speedTest">Speed Test</span>
       </a>
-      <a href="/practice" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+      <a href={getLocaleUrl('/practice', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
         <span class="text-base flex-shrink-0">⌨️</span> <span data-i18n="nav.practiceLab">Practice Lab</span>
       </a>
-      <a href="/leaderboards" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+      <a href={getLocaleUrl('/leaderboards', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
         <span class="text-base flex-shrink-0">🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
       </a>
-      <a href="/faq" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
-        <span class="text-base flex-shrink-0">❓</span> <span>Typing FAQ (37 Q&A)</span>
+      <a href={getLocaleUrl('/faq', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">❓</span> <span data-i18n="footer.faq">Typing FAQ (37 Q&A)</span>
       </a>
-      <a href="/about" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
-        <span class="text-base flex-shrink-0">ℹ️</span> <span>About Us</span>
+      <a href={getLocaleUrl('/about', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">ℹ️</span> <span data-i18n="footer.about">About Us</span>
       </a>
-      <a href="/contact" class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
-        <span class="text-base flex-shrink-0">📬</span> <span>Contact Us</span>
+      <a href={getLocaleUrl('/contact', currentLocale)} class="mobile-nav-link flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink active:bg-canvas-soft transition min-h-[44px]">
+        <span class="text-base flex-shrink-0">📬</span> <span data-i18n="footer.contact">Contact Us</span>
       </a>
     </div>
 

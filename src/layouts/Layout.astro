@@ -3,6 +3,9 @@ import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import CommandPalette from '../components/CommandPalette.astro';
 import '../styles/global.css';
+import { getLanguageConfig, isRTL as checkIsRTL, DEFAULT_LOCALE } from '../i18n/config';
+import { getHreflangAlternates, getLocaleFromPath } from '../i18n/utils';
+import { t } from '../i18n/utils';
 
 interface Props {
   title?: string;
@@ -12,28 +15,40 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   structuredData?: Record<string, any> | Record<string, any>[];
+  locale?: string;
 }
 
+const currentPath = Astro.url.pathname;
+const detectedLocale = Astro.props.locale || getLocaleFromPath(currentPath) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
+const langConfig = getLanguageConfig(detectedLocale);
+const isRTL = checkIsRTL(detectedLocale);
+
+const defaultTitle = t('seo.homeTitle', detectedLocale);
+const defaultDescription = t('seo.homeDescription', detectedLocale);
+
 const {
-  title = 'Typing Game Zone — Free 2D Typing Games Online, Speed Tests & Typing Lessons',
-  description = 'Play 21 free 2D typing games online at Typing Game Zone! Master fast typing with arcade action, zombie survival, typing lessons, speed tests, and mechanical switch audio.',
-  keywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, typing game online for kids, typing master word typing game online, kids typing game online, keyboard typing game online, zombie typing game online, 2d typing game online, 2d typing game online free, 2d typing game, typing game zone guess who i am, free typing game zone, typing game zone snake',
-  canonicalUrl = new URL(Astro.url.pathname, 'https://typinggamezone.com').href,
+  title = defaultTitle,
+  description = defaultDescription,
+  keywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, 2d typing game online',
+  canonicalUrl = new URL(currentPath, 'https://typinggamezone.com').href,
   ogImage = 'https://typinggamezone.com/og-image.svg',
   ogType = 'website',
   structuredData
 } = Astro.props;
 
-// Core WebSite & WebApplication Schema.org JSON-LD
+// Reciprocal hreflang alternates for all 16 supported languages
+const hreflangs = getHreflangAlternates(currentPath, 'https://typinggamezone.com');
+
+// Core WebSite & WebApplication Schema.org JSON-LD in target language
 const baseStructuredData = [
   {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     'name': 'Typing Game Zone',
     'alternateName': ['TypingGameZone', 'Typing Game Zone Online'],
-    'url': 'https://typinggamezone.com',
-    'description': 'Free 2D typing games online, keyboard speed tests, touch typing lessons, and arcade typing practice.',
-    'inLanguage': 'en-US',
+    'url': `https://typinggamezone.com/${detectedLocale}/`,
+    'description': description,
+    'inLanguage': langConfig.isoLocale,
     'publisher': {
       '@type': 'Organization',
       'name': 'Typing Game Zone',
@@ -48,15 +63,16 @@ const baseStructuredData = [
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     'name': 'Typing Game Zone',
-    'url': 'https://typinggamezone.com',
+    'url': `https://typinggamezone.com/${detectedLocale}/`,
     'applicationCategory': 'GameApplication, EducationalApplication',
     'operatingSystem': 'Any (Web Browser)',
+    'inLanguage': langConfig.isoLocale,
     'offers': {
       '@type': 'Offer',
       'price': '0',
-      'priceCurrency': 'USD'
+      'priceCurrency': langConfig.currency
     },
-    'description': 'Comprehensive suite of 21 free 2D typing games online, customizable speed tests, and interactive typing lessons with mechanical switch sound synthesis.'
+    'description': description
   }
 ];
 
@@ -68,7 +84,7 @@ const allStructuredData = structuredData
 ---
 
 <!doctype html>
-<html lang="en" data-theme="serika_dark" class="dark w-full max-w-full">
+<html lang={detectedLocale} dir={isRTL ? 'rtl' : 'ltr'} data-theme="serika_dark" class="dark w-full max-w-full">
   <head>
     <!-- Google tag (gtag.js) -->
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-8T1BYV4KWR"></script>
@@ -112,7 +128,7 @@ const allStructuredData = structuredData
     <meta property="og:image:alt" content={title} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={langConfig.isoLocale.replace('-', '_')} />
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -125,56 +141,22 @@ const allStructuredData = structuredData
     <meta name="twitter:image:alt" content={title} />
 
     <!-- Schema.org JSON-LD Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(allStructuredData)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(allStructuredData)} />
 
-    <!-- International SEO hreflang tags -->
-    <link rel="alternate" hreflang="x-default" href="https://typinggamezone.com" />
-    <link rel="alternate" hreflang="en" href="https://typinggamezone.com?lang=en" />
-    <link rel="alternate" hreflang="hi" href="https://typinggamezone.com?lang=hi" />
-    <link rel="alternate" hreflang="es" href="https://typinggamezone.com?lang=es" />
-    <link rel="alternate" hreflang="fr" href="https://typinggamezone.com?lang=fr" />
-    <link rel="alternate" hreflang="de" href="https://typinggamezone.com?lang=de" />
-    <link rel="alternate" hreflang="ja" href="https://typinggamezone.com?lang=ja" />
-    <link rel="alternate" hreflang="pt" href="https://typinggamezone.com?lang=pt" />
-    <link rel="alternate" hreflang="ru" href="https://typinggamezone.com?lang=ru" />
-    <link rel="alternate" hreflang="ar" href="https://typinggamezone.com?lang=ar" />
-    <link rel="alternate" hreflang="zh" href="https://typinggamezone.com?lang=zh" />
-    <link rel="alternate" hreflang="it" href="https://typinggamezone.com?lang=it" />
-    <link rel="alternate" hreflang="ko" href="https://typinggamezone.com?lang=ko" />
-    <link rel="alternate" hreflang="id" href="https://typinggamezone.com?lang=id" />
-    <link rel="alternate" hreflang="tr" href="https://typinggamezone.com?lang=tr" />
-    <link rel="alternate" hreflang="vi" href="https://typinggamezone.com?lang=vi" />
-    <link rel="alternate" hreflang="bn" href="https://typinggamezone.com?lang=bn" />
+    <!-- Full Reciprocal International SEO hreflang tags for all 16 locales -->
+    {hreflangs.map(alt => (
+      <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+    ))}
 
-    <!-- Google Fonts for Geist, Inter & International Typography Support -->
+    <!-- Google Fonts for Multilingual Typography (Arabic, Devanagari, Bengali, CJK, Latin) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
 
-    <!-- Instant Zero-FOUC Global Theme & Language/RTL Injection -->
+    <!-- Instant Zero-FOUC Global Theme & Language/RTL Script -->
     <script is:inline>
       (function() {
         try {
-          // Instant Zero-FOUC Language & RTL Detection
-          const rtlLangs = ['ar', 'fa', 'he', 'ur'];
-          const supportedLangs = ['en', 'hi', 'es', 'fr', 'de', 'ja', 'pt', 'ru', 'ar', 'zh', 'it', 'ko', 'id', 'tr', 'vi', 'bn'];
-          let curLang = localStorage.getItem('typing_game_zone_lang');
-
-          if (!curLang && navigator && navigator.languages) {
-            for (const l of navigator.languages) {
-              const code = l.toLowerCase().split('-')[0];
-              if (supportedLangs.includes(code)) {
-                curLang = code;
-                break;
-              }
-            }
-          }
-          if (!curLang) curLang = 'en';
-
-          const isRTL = rtlLangs.includes(curLang);
-          const rootEl = document.documentElement;
-          rootEl.setAttribute('lang', curLang);
-          rootEl.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
           const themes = {
             serika_dark: { bg: '#323437', main: '#e2b714', sub: '#646669', subAlt: '#2c2e31', text: '#d1d0c5', error: '#ca4754', errorExtra: '#7e2a33', isLight: false },
             carbon: { bg: '#313131', main: '#f66e0d', sub: '#616161', subAlt: '#262626', text: '#f5e6c8', error: '#e45c5c', errorExtra: '#b23a3a', isLight: false },

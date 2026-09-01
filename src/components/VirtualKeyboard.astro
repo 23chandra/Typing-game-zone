@@ -145,43 +145,50 @@
       const def = KEYBOARD_LAYOUTS[layoutKey] || KEYBOARD_LAYOUTS.qwerty;
       if (!row1 || !row2 || !row3) return;
 
-      // Update row 1
-      row1.innerHTML = def.rows[0].map(k => `
-        <button
-          type="button"
-          data-virtual-key="${k.toLowerCase()}"
-          style="touch-action: manipulation;"
-          class="virtual-key-btn flex-1 min-w-[26px] max-w-[44px] h-9 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
-        >
-          ${k.toUpperCase()}
-        </button>
-      `).join('');
+      const getKeyStr = (k: any): string => (typeof k === 'string' ? k : k?.primary || '');
 
-      // Update row 2
-      row2.innerHTML = def.rows[1].map(k => {
-        const isHoming = ['f', 'j', 'u', 'h', 't', 'n'].includes(k.toLowerCase());
+      // Update row 1
+      row1.innerHTML = def.rows[0].map(k => {
+        const str = getKeyStr(k);
         return `
         <button
           type="button"
-          data-virtual-key="${k.toLowerCase()}"
+          data-virtual-key="${str.toLowerCase()}"
+          style="touch-action: manipulation;"
+          class="virtual-key-btn flex-1 min-w-[26px] max-w-[44px] h-9 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
+        >
+          ${str.toUpperCase()}
+        </button>
+      `;}).join('');
+
+      // Update row 2
+      row2.innerHTML = def.rows[1].map(k => {
+        const str = getKeyStr(k);
+        const isHoming = ['f', 'j', 'u', 'h', 't', 'n'].includes(str.toLowerCase());
+        return `
+        <button
+          type="button"
+          data-virtual-key="${str.toLowerCase()}"
           style="touch-action: manipulation;"
           class="virtual-key-btn flex-1 min-w-[26px] max-w-[44px] h-9 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border ${isHoming ? 'border-link text-link underline font-extrabold' : 'border-hairline text-ink'} font-bold text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
         >
-          ${k.toUpperCase()}
+          ${str.toUpperCase()}
         </button>
       `;}).join('');
 
       // Update row 3
-      const midKeys = def.rows[2].map(k => `
+      const midKeys = def.rows[2].map(k => {
+        const str = getKeyStr(k);
+        return `
         <button
           type="button"
-          data-virtual-key="${k.toLowerCase()}"
+          data-virtual-key="${str.toLowerCase()}"
           style="touch-action: manipulation;"
           class="virtual-key-btn flex-1 min-w-[26px] max-w-[44px] h-9 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
         >
-          ${k.toUpperCase()}
+          ${str.toUpperCase()}
         </button>
-      `).join('');
+      `;}).join('');
 
       row3.innerHTML = `
         <button

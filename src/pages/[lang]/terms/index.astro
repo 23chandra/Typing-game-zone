@@ -1,0 +1,39 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../../i18n/config';
+import { t } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+
+const seoTitle = `${t('footer.terms', currentLocale)} — ${t('seo.termsTitle', currentLocale)}`;
+const seoDescription = t('seo.termsDescription', currentLocale);
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  locale={currentLocale}
+>
+  <div class="py-12 sm:py-20 bg-canvas-soft min-h-screen">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink mb-6">
+        {t('footer.terms', currentLocale)}
+      </h1>
+      <div class="prose dark:prose-invert max-w-none text-body text-sm space-y-4">
+        <p>Welcome to Typing Game Zone. By accessing our platform, you agree to these Terms of Service.</p>
+        <h2 class="text-lg font-bold text-ink mt-6 mb-2">1. Free Usage</h2>
+        <p>Typing Game Zone is 100% free to use for personal, educational, and competitive touch typing practice.</p>
+        <h2 class="text-lg font-bold text-ink mt-6 mb-2">2. Fair Play</h2>
+        <p>Automated scripts or bot-based inputs that manipulate leaderboard rankings are prohibited.</p>
+      </div>
+    </div>
+  </div>
+</Layout>

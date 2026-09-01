@@ -1,7 +1,6 @@
-// Base 2D Canvas Game Engine for Typing Game Zone
-// Provides physics, particle systems, floating combat text, camera shakes, DPR scaling, and telemetry
-
 import { soundEngine } from '../soundEngine';
+
+export const CANVAS_FONT_STACK = '"Geist Mono", "JetBrains Mono", "Noto Sans Arabic", "Noto Sans Devanagari", "Noto Sans Bengali", "Noto Sans JP", "Noto Sans KR", "Noto Sans SC", -apple-system, system-ui, monospace';
 
 export interface GameLevelDef {
   level: number;
@@ -415,7 +414,7 @@ export abstract class BaseGame {
     for (const ft of this.floatingTexts) {
       ctx.save();
       ctx.globalAlpha = Math.max(0, ft.alpha);
-      ctx.font = `bold ${Math.round(ft.size * ft.scale)}px "Geist Mono", monospace`;
+      ctx.font = `bold ${Math.round(ft.size * ft.scale)}px ${CANVAS_FONT_STACK}`;
       ctx.textAlign = 'center';
 
       // Dark drop shadow outline for crisp legibility
@@ -528,8 +527,9 @@ export abstract class BaseGame {
     accentColor: string = '#50e3c2',
     fontSize: number = 14
   ): void {
-    const typed = word.substring(0, typedIndex);
-    const remaining = word.substring(typedIndex);
+    const graphemes = Array.from(word);
+    const typed = graphemes.slice(0, typedIndex).join('');
+    const remainingGraphemes = graphemes.slice(typedIndex);
 
     // Dynamic adaptive font scaling on mobile screens (< 480px width)
     const isMobile = this.width < 480;
@@ -537,7 +537,7 @@ export abstract class BaseGame {
     const padX = isMobile ? 6 : 8;
     const padY = isMobile ? 4 : 5;
 
-    ctx.font = `600 ${effectiveFontSize}px "Geist Mono", monospace`;
+    ctx.font = `600 ${effectiveFontSize}px ${CANVAS_FONT_STACK}`;
     const wordWidth = ctx.measureText(word).width;
     const badgeW = wordWidth + padX * 2;
     const badgeH = effectiveFontSize + padY * 2;
@@ -579,9 +579,9 @@ export abstract class BaseGame {
     }
 
     // Highlight the next immediate character
-    if (isTarget && remaining.length > 0) {
-      const nextChar = remaining[0];
-      const rest = remaining.substring(1);
+    if (isTarget && remainingGraphemes.length > 0) {
+      const nextChar = remainingGraphemes[0];
+      const rest = remainingGraphemes.slice(1).join('');
 
       ctx.fillStyle = '#f9cb28'; // glowing amber next key
       ctx.fillText(nextChar, curX, textY);
@@ -590,7 +590,8 @@ export abstract class BaseGame {
       ctx.fillStyle = '#ffffff';
       ctx.fillText(rest, curX, textY);
     } else {
-      ctx.fillStyle = '#ffffff';
+      const remaining = remainingGraphemes.join('');
+      ctx.fillStyle = isTarget ? '#ffffff' : '#d1d0c5';
       ctx.fillText(remaining, curX, textY);
     }
 

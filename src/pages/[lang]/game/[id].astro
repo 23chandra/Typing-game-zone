@@ -1,0 +1,612 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import GameHUD from '../../../components/GameHUD.astro';
+import GameModal from '../../../components/GameModal.astro';
+import VirtualKeyboard from '../../../components/VirtualKeyboard.astro';
+import { ALL_GAMES } from '../../../lib/games/gameRegistry';
+import { getLocalizedGame } from '../../../lib/games/i18n';
+import { SUPPORTED_LOCALES, type SupportedLocale, getLanguageConfig } from '../../../i18n/config';
+import { t, getLocaleUrl } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  const paths: Array<{ params: { lang: string; id: string }; props: { game: any; lang: string } }> = [];
+  for (const lang of SUPPORTED_LOCALES) {
+    for (const game of ALL_GAMES) {
+      paths.push({
+        params: { lang, id: game.id },
+        props: { game, lang }
+      });
+    }
+  }
+  return paths;
+}
+
+const { game: rawGame, lang } = Astro.props;
+const currentLocale = (lang || Astro.params.lang || 'en') as SupportedLocale;
+const game = getLocalizedGame(rawGame, currentLocale);
+const langConfig = getLanguageConfig(currentLocale);
+
+const gameKeywords = `${game.title}, ${game.title} typing game, Typing game zone, free typing game online, 2d typing game online, typing game online free, 2d typing game, ${game.tags.join(', ')}, fast typing game online, keyboard typing game online, word typing game online`;
+
+const gameStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'VideoGame',
+    'name': game.title,
+    'description': game.description,
+    'genre': [game.categoryName, 'Typing Game', 'Arcade', 'Educational'],
+    'gamePlatform': 'Web Browser',
+    'applicationCategory': 'GameApplication',
+    'playMode': 'SinglePlayer',
+    'inLanguage': langConfig.isoLocale,
+    'offers': {
+      '@type': 'Offer',
+      'price': '0',
+      'priceCurrency': langConfig.currency
+    },
+    'url': `https://typinggamezone.com/${currentLocale}/game/${game.id}/`
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': t('nav.home', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': t('nav.arcade', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/arcade/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 3,
+        'name': game.title,
+        'item': `https://typinggamezone.com/${currentLocale}/game/${game.id}/`
+      }
+    ]
+  }
+];
+---
+
+<Layout
+  title={`${game.title} — ${t('hero.title2', currentLocale)} | Typing Game Zone`}
+  description={`${game.description} ${t('hero.subtitle', currentLocale)}`}
+  keywords={gameKeywords}
+  locale={currentLocale}
+  structuredData={gameStructuredData}
+>
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    
+    <!-- Top Breadcrumb & Tag -->
+    <div class="mb-4 flex items-center justify-between">
+      <nav class="flex items-center gap-2 text-xs font-mono text-mute">
+        <a href={getLocaleUrl('/', currentLocale)} class="hover:text-ink transition">{t('nav.home', currentLocale)}</a>
+        <span>/</span>
+        <a href={getLocaleUrl('/arcade', currentLocale)} class="hover:text-ink transition uppercase">{game.categoryName}</a>
+        <span>/</span>
+        <span class="text-ink font-semibold">{game.title}</span>
+      </nav>
+
+      <span class="rounded-full bg-canvas border border-hairline px-3 py-1 text-xs font-mono text-body shadow-level-1">
+        {game.difficulty} • 5 Levels
+      </span>
+    </div>
+
+    <!-- Telemetry HUD -->
+    <div class="mb-4">
+      <GameHUD gameTitle={game.title} gameId={game.id} />
+    </div>
+
+    <!-- Canvas Game Container -->
+    <div class="relative w-full overflow-hidden rounded-2xl border border-hairline bg-[#0a0d14] shadow-level-4">
+      <canvas
+        id="game-canvas"
+        data-game-id={game.id}
+        data-locale={currentLocale}
+        class="w-full h-[280px] xs:h-[340px] sm:h-[440px] lg:h-[500px] block cursor-crosshair focus:outline-none touch-none select-none"
+        tabindex="0"
+      ></canvas>
+
+      <!-- Pause Overlay -->
+      <div id="pause-overlay" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm hidden font-mono">
+        <div class="text-4xl mb-2">⏸️</div>
+        <h3 class="text-2xl font-bold text-white tracking-tight" data-i18n="game.pause">{t('game.pause', currentLocale)}</h3>
+        <p class="text-xs text-neutral-400 mt-1">Press Space, Enter, or Click Resume</p>
+        <button
+          id="resume-btn"
+          type="button"
+          class="mt-4 rounded-full px-6 py-2.5 text-xs font-bold transition cursor-pointer min-h-[40px] shadow-level-2 active:scale-95"
+          style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        >
+          <span data-i18n="game.resume">{t('game.resume', currentLocale)}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Virtual Input Bar & Keyboard -->
+    <VirtualKeyboard />
+
+    <!-- Result / Victory / Game Over Modal -->
+    <GameModal />
+
+    <!-- Game Instructions & Levels Information -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 font-sans">
+      <!-- How to Play -->
+      <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1 md:col-span-2">
+        <h3 class="text-base font-semibold text-ink flex items-center gap-2">
+          <span>📖</span> <span data-i18n="game.howToPlay">{t('game.howToPlay', currentLocale)}</span>
+        </h3>
+        <p class="mt-2 text-xs text-body leading-relaxed" data-i18n="game.typeToShoot">
+          {game.description}
+        </p>
+
+        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+          <div class="rounded-lg bg-canvas-soft p-3 border border-hairline">
+            <span class="text-mute text-[10px] uppercase block" data-i18n="game.targeting">{t('game.targeting', currentLocale)}</span>
+            <span class="font-bold text-ink" data-i18n="game.typeFirstLetter">{t('game.typeFirstLetter', currentLocale)}</span>
+          </div>
+          <div class="rounded-lg bg-canvas-soft p-3 border border-hairline">
+            <span class="text-mute text-[10px] uppercase block" data-i18n="game.mistakes">{t('game.mistakes', currentLocale)}</span>
+            <span class="font-bold text-error" data-i18n="game.backspaceErase">{t('game.backspaceErase', currentLocale)}</span>
+          </div>
+          <div class="rounded-lg bg-canvas-soft p-3 border border-hairline">
+            <span class="text-mute text-[10px] uppercase block" data-i18n="game.pauseKey">{t('game.pauseKey', currentLocale)}</span>
+            <span class="font-bold text-ink" data-i18n="game.escOrIcon">{t('game.escOrIcon', currentLocale)}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level Tier Breakdown -->
+      <div class="rounded-xl border border-hairline bg-canvas p-6 shadow-level-1">
+        <h3 class="text-base font-semibold text-ink flex items-center gap-2">
+          <span>🏆</span> <span>5 Level Tiers</span>
+        </h3>
+        <ul class="mt-3 space-y-2 text-xs font-mono">
+          <li class="flex items-center justify-between pb-1.5 border-b border-hairline">
+            <span class="text-body">Tier 1: Scout / Novice</span>
+            <span class="font-bold text-link">30 WPM</span>
+          </li>
+          <li class="flex items-center justify-between pb-1.5 border-b border-hairline">
+            <span class="text-body">Tier 2: Vanguard / Cadet</span>
+            <span class="font-bold text-link">45 WPM</span>
+          </li>
+          <li class="flex items-center justify-between pb-1.5 border-b border-hairline">
+            <span class="text-body">Tier 3: Interceptor / Veteran</span>
+            <span class="font-bold text-link">60 WPM</span>
+          </li>
+          <li class="flex items-center justify-between pb-1.5 border-b border-hairline">
+            <span class="text-body">Tier 4: Armored Fleet</span>
+            <span class="font-bold text-link">75 WPM</span>
+          </li>
+          <li class="flex items-center justify-between">
+            <span class="text-body">Tier 5: Mothership Boss</span>
+            <span class="font-bold text-error">90+ WPM</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</Layout>
+
+<script>
+  import { GAME_REGISTRY } from '../../../lib/games/gameRegistry';
+  import { storage } from '../../../lib/storage';
+  import { soundEngine } from '../../../lib/soundEngine';
+  import type { BaseGame, GameStats, GameState } from '../../../lib/games/GameEngine';
+  import confetti from 'canvas-confetti';
+
+  let activeGameInstance: BaseGame | null = null;
+  let activeCleanup: (() => void) | null = null;
+
+  function initGameArena() {
+    if (activeCleanup) {
+      activeCleanup();
+      activeCleanup = null;
+    }
+    if (activeGameInstance) {
+      activeGameInstance.destroy();
+      activeGameInstance = null;
+    }
+
+    const canvas = document.getElementById('game-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const gameId = canvas.getAttribute('data-game-id') || '';
+    const gameMeta = GAME_REGISTRY[gameId];
+    if (!gameMeta) {
+      console.error(`Game not found in registry for ID: "${gameId}"`);
+      return;
+    }
+
+    const gameInstance = gameMeta.factory(canvas);
+    activeGameInstance = gameInstance;
+
+    const hudScore = document.getElementById('hud-score');
+    const hudWpm = document.getElementById('hud-wpm');
+    const hudAccuracy = document.getElementById('hud-accuracy');
+    const hudStreak = document.getElementById('hud-streak');
+    const hudHealthBar = document.getElementById('hud-health-bar');
+    const hudHealthPct = document.getElementById('hud-health-pct');
+    const hudLevelTag = document.getElementById('hud-level-tag');
+    const hudTimeTag = document.getElementById('hud-time-tag');
+    const pauseOverlay = document.getElementById('pause-overlay');
+    const pauseBtn = document.getElementById('hud-pause-btn');
+    const restartBtn = document.getElementById('hud-restart-btn');
+    const resumeBtn = document.getElementById('resume-btn');
+    const lvlBtns = document.querySelectorAll('.lvl-select-btn');
+    const mobileInput = document.getElementById('mobile-game-input') as HTMLInputElement | null;
+
+    const gameModal = document.getElementById('game-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalSubtitle = document.getElementById('modal-subtitle');
+    const modalStatusIcon = document.getElementById('modal-status-icon');
+    const modalGradeBadge = document.getElementById('modal-grade-badge');
+    const modalWpm = document.getElementById('modal-wpm');
+    const modalAccuracy = document.getElementById('modal-accuracy');
+    const modalScore = document.getElementById('modal-score');
+    const modalStreak = document.getElementById('modal-streak');
+    const modalErrors = document.getElementById('modal-errors');
+    const modalTime = document.getElementById('modal-time');
+    const modalNewRecord = document.getElementById('modal-new-record');
+    const modalXpEarned = document.getElementById('modal-xp-earned');
+    const modalXpText = document.getElementById('modal-xp-text');
+    const modalNextBtn = document.getElementById('modal-next-btn');
+    const modalRetryBtn = document.getElementById('modal-retry-btn');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalDismissBtn = document.getElementById('modal-dismiss-btn');
+
+    let currentLvl = 1;
+    const hudHealthPctMobile = document.getElementById('hud-health-pct-mobile');
+
+    gameInstance.onStatsChange = (stats: GameStats) => {
+      if (hudScore) hudScore.textContent = stats.score.toLocaleString();
+      if (hudWpm) hudWpm.textContent = `${stats.netWPM}`;
+      if (hudAccuracy) hudAccuracy.textContent = `${stats.accuracy}%`;
+      if (hudStreak) hudStreak.textContent = `${stats.streak}x`;
+      if (hudHealthPct) hudHealthPct.textContent = `${Math.floor(stats.health)}%`;
+      if (hudHealthPctMobile) hudHealthPctMobile.textContent = `${Math.floor(stats.health)}%`;
+      if (hudHealthBar) {
+        hudHealthBar.style.width = `${stats.health}%`;
+        hudHealthBar.className = `h-full transition-all duration-300 ${
+          stats.health > 50 ? 'bg-emerald-500' : stats.health > 25 ? 'bg-amber-500' : 'bg-rose-500'
+        }`;
+      }
+      if (hudLevelTag) hudLevelTag.textContent = `LEVEL ${stats.level}`;
+
+      const mins = Math.floor(stats.timeElapsedSec / 60).toString().padStart(2, '0');
+      const secs = (stats.timeElapsedSec % 60).toString().padStart(2, '0');
+      if (hudTimeTag) hudTimeTag.textContent = `${mins}:${secs}`;
+    };
+
+    gameInstance.onStateChange = (state: GameState, stats: GameStats) => {
+      if (state === 'PAUSED') {
+        pauseOverlay?.classList.remove('hidden');
+      } else {
+        pauseOverlay?.classList.add('hidden');
+      }
+
+      if (state === 'LEVEL_CLEARED' || state === 'VICTORY' || state === 'GAME_OVER') {
+        showModal(state, stats);
+      }
+    };
+
+    function showModal(state: GameState, stats: GameStats) {
+      if (!gameModal) return;
+
+      const isVictory = state === 'VICTORY';
+      const isLevelClear = state === 'LEVEL_CLEARED';
+      const isGameOver = state === 'GAME_OVER';
+
+      if (modalStatusIcon) modalStatusIcon.textContent = isVictory ? '👑' : isLevelClear ? '🎉' : '💀';
+      if (modalTitle) modalTitle.textContent = isVictory ? 'VICTORY CHAMPION!' : isLevelClear ? `Level ${currentLvl} Cleared!` : 'GAME OVER';
+      if (modalSubtitle) modalSubtitle.textContent = isVictory ? 'You mastered all 5 levels of this arena!' : isLevelClear ? 'Fantastic speed and accuracy.' : 'Defense breach. Regroup and try again!';
+
+      let grade = 'RANK S';
+      let gradeColor = 'bg-emerald-500';
+      if (stats.accuracy >= 98 && stats.netWPM >= 60) {
+        grade = 'RANK S (LEGENDARY)';
+        gradeColor = 'bg-emerald-500';
+      } else if (stats.accuracy >= 90 && stats.netWPM >= 40) {
+        grade = 'RANK A (EXCELLENT)';
+        gradeColor = 'bg-blue-500';
+      } else if (stats.accuracy >= 80) {
+        grade = 'RANK B (GOOD)';
+        gradeColor = 'bg-amber-500';
+      } else {
+        grade = 'RANK C (NEED PRACTICE)';
+        gradeColor = 'bg-rose-500';
+      }
+
+      if (modalGradeBadge) {
+        modalGradeBadge.textContent = grade;
+        modalGradeBadge.className = `rounded-full text-white font-mono font-bold px-3 py-0.5 text-xs shadow-level-1 ${gradeColor}`;
+      }
+
+      if (modalWpm) modalWpm.textContent = `${stats.netWPM}`;
+      if (modalAccuracy) modalAccuracy.textContent = `${stats.accuracy}%`;
+      if (modalScore) modalScore.textContent = `${stats.score}`;
+      if (modalStreak) modalStreak.textContent = `${stats.maxStreak}`;
+      if (modalErrors) modalErrors.textContent = `${stats.errors}`;
+      if (modalTime) modalTime.textContent = `${stats.timeElapsedSec}s`;
+
+      if (modalNextBtn) {
+        if (isGameOver || isVictory || currentLvl >= 5) {
+          modalNextBtn.classList.add('hidden');
+        } else {
+          modalNextBtn.classList.remove('hidden');
+        }
+      }
+
+      const result = storage.recordGameResult(
+        gameId,
+        stats.score,
+        stats.netWPM,
+        stats.accuracy,
+        currentLvl,
+        Math.floor(stats.correctKeystrokes / 5),
+        stats.totalKeystrokes,
+        stats.errors
+      );
+
+      if (modalNewRecord) {
+        if (result.newHighScore || result.newBestWPM) {
+          modalNewRecord.classList.remove('hidden');
+          modalNewRecord.classList.add('flex');
+        } else {
+          modalNewRecord.classList.add('hidden');
+          modalNewRecord.classList.remove('flex');
+        }
+      }
+
+      if (modalXpEarned && modalXpText) {
+        if (result.xpEarned > 0) {
+          modalXpText.textContent = `+${result.xpEarned} XP Earned!`;
+          modalXpEarned.classList.remove('hidden');
+          modalXpEarned.classList.add('flex');
+        } else {
+          modalXpEarned.classList.add('hidden');
+          modalXpEarned.classList.remove('flex');
+        }
+      }
+
+      if (isVictory || isLevelClear) {
+        try {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        } catch {}
+      }
+
+      gameModal.classList.remove('hidden');
+    }
+
+    modalNextBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+      if (currentLvl < 5) {
+        currentLvl++;
+        updateLvlBtnUI();
+        gameInstance.nextLevel();
+        try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+      }
+    });
+
+    modalRetryBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+      gameInstance.start(currentLvl);
+      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+    });
+
+    modalCloseBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    modalDismissBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    gameModal?.addEventListener('click', (e) => {
+      if (e.target === gameModal) {
+        gameModal.classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && gameModal && !gameModal.classList.contains('hidden')) {
+        gameModal.classList.add('hidden');
+      }
+    });
+
+    function updateLvlBtnUI() {
+      lvlBtns.forEach(btn => {
+        const lvl = parseInt(btn.getAttribute('data-lvl-btn') || '1', 10);
+        if (lvl === currentLvl) {
+          btn.className = 'lvl-select-btn flex h-6 w-6 items-center justify-center rounded text-xs font-bold bg-ink text-on-primary';
+        } else {
+          btn.className = 'lvl-select-btn flex h-6 w-6 items-center justify-center rounded text-xs font-bold text-body hover:bg-canvas';
+        }
+      });
+    }
+
+    lvlBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentLvl = parseInt(btn.getAttribute('data-lvl-btn') || '1', 10);
+        updateLvlBtnUI();
+        gameInstance.start(currentLvl);
+        try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+      });
+    });
+
+    const soundToggleBtn = document.getElementById('hud-sound-toggle');
+    const soundIconEl = document.getElementById('hud-sound-icon');
+    const soundNameEl = document.getElementById('hud-sound-name');
+
+    const updateSoundToggleUI = () => {
+      const cur = soundEngine.getSwitch();
+      const isMuted = soundEngine.getIsMuted() || cur === 'off';
+      if (soundIconEl) soundIconEl.textContent = isMuted ? '🔇' : '🔊';
+      const labels: Record<string, string> = {
+        clicky: 'Clicky',
+        thock: 'Thock',
+        linear: 'Linear',
+        typewriter: 'Typewriter',
+        pop: 'Bubble Pop',
+        beep: 'Digital',
+        off: 'Muted'
+      };
+      if (soundNameEl) soundNameEl.textContent = labels[cur] || 'Sound';
+    };
+
+    updateSoundToggleUI();
+    window.addEventListener('typing:sound-change', updateSoundToggleUI);
+
+    soundToggleBtn?.addEventListener('click', () => {
+      const cycle: ('clicky' | 'thock' | 'linear' | 'typewriter' | 'pop' | 'beep' | 'off')[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
+      const cur = soundEngine.getSwitch();
+      const nextIdx = (cycle.indexOf(cur as any) + 1) % cycle.length;
+      const nextSwitch = cycle[nextIdx];
+      soundEngine.setSwitch(nextSwitch);
+      soundEngine.initContext();
+      soundEngine.playKey(false, nextSwitch === 'typewriter');
+      updateSoundToggleUI();
+    });
+
+    pauseBtn?.addEventListener('click', () => {
+      if (gameInstance.state === 'PLAYING') gameInstance.pause();
+      else if (gameInstance.state === 'PAUSED') gameInstance.resume();
+    });
+
+    resumeBtn?.addEventListener('click', () => {
+      gameInstance.resume();
+      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+    });
+
+    restartBtn?.addEventListener('click', () => {
+      gameInstance.start(currentLvl);
+      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+    });
+
+    const onCanvasTap = () => {
+      soundEngine.initContext();
+      if (window.innerWidth < 640 && mobileInput) {
+        try { mobileInput.focus({ preventScroll: true }); } catch { mobileInput.focus(); }
+      } else {
+        try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+      }
+    };
+
+    canvas.addEventListener('pointerdown', onCanvasTap, { passive: true });
+    canvas.addEventListener('click', onCanvasTap);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      if (gameModal && !gameModal.classList.contains('hidden')) return;
+
+      soundEngine.initContext();
+
+      if (e.key === 'Escape') {
+        if (gameInstance.state === 'PLAYING') gameInstance.pause();
+        else if (gameInstance.state === 'PAUSED') gameInstance.resume();
+        return;
+      }
+
+      if (gameInstance.state === 'PAUSED') {
+        if (e.key === ' ' || e.key === 'Enter') {
+          gameInstance.resume();
+          return;
+        }
+      }
+
+      if (gameInstance.state === 'PLAYING') {
+        if (e.key === 'Backspace') {
+          gameInstance.handleBackspaceKey();
+          e.preventDefault();
+        } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          gameInstance.handleInputChar(e.key);
+          if (e.key === ' ') e.preventDefault();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    const virtualKeys = document.querySelectorAll('.virtual-key-btn');
+    virtualKeys.forEach(btn => {
+      btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        soundEngine.initContext();
+        if (gameInstance.state !== 'PLAYING') return;
+
+        const key = btn.getAttribute('data-virtual-key');
+        if (!key) return;
+
+        if (key === 'backspace') {
+          gameInstance.handleBackspaceKey();
+        } else {
+          gameInstance.handleInputChar(key);
+        }
+      });
+    });
+
+    mobileInput?.addEventListener('input', (e) => {
+      const val = (e.target as HTMLInputElement).value;
+      if (val.length > 0) {
+        soundEngine.initContext();
+        if (gameInstance.state === 'PLAYING') {
+          for (let i = 0; i < val.length; i++) {
+            gameInstance.handleInputChar(val[i]);
+          }
+        }
+        (e.target as HTMLInputElement).value = '';
+      }
+    });
+
+    mobileInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace') {
+        soundEngine.initContext();
+        if (gameInstance.state === 'PLAYING') {
+          gameInstance.handleBackspaceKey();
+        }
+      }
+    });
+
+    mobileInput?.addEventListener('focus', () => {
+      soundEngine.initContext();
+    });
+
+    activeCleanup = () => {
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('typing:sound-change', updateSoundToggleUI);
+    };
+
+    gameInstance.start(1);
+    try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGameArena);
+  } else {
+    initGameArena();
+  }
+  document.addEventListener('astro:page-load', initGameArena);
+  document.addEventListener('astro:before-swap', () => {
+    if (activeCleanup) {
+      activeCleanup();
+      activeCleanup = null;
+    }
+    if (activeGameInstance) {
+      activeGameInstance.destroy();
+      activeGameInstance = null;
+    }
+  });
+</script>

@@ -1,0 +1,39 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import GameCard from '../../../components/GameCard.astro';
+import { ALL_GAMES } from '../../../lib/games/gameRegistry';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../../i18n/config';
+import { t } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+const seoTitle = `${t('nav.allGames', currentLocale)} — ${t('seo.gamesTitle', currentLocale)}`;
+const seoDescription = t('seo.gamesDescription', currentLocale);
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  locale={currentLocale}
+>
+  <div class="bg-canvas-soft text-ink min-h-screen py-8 sm:py-16">
+    <div class="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-ink">{t('nav.allGames', currentLocale)}</h1>
+        <p class="text-sm text-body mt-1">{t('seo.gamesDescription', currentLocale)}</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        {ALL_GAMES.map(game => (
+          <GameCard game={game} locale={currentLocale} />
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,74 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import SpeedTestWidget from '../../../components/SpeedTestWidget.astro';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../../i18n/config';
+import { t } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+
+const seoTitle = `${t('nav.speedTest', currentLocale)} — ${t('seo.speedTestTitle', currentLocale)}`;
+const seoDescription = t('seo.speedTestDescription', currentLocale);
+
+const speedTestStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': t('nav.home', currentLocale),
+      'item': `https://typinggamezone.com/${currentLocale}/`
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': t('nav.speedTest', currentLocale),
+      'item': `https://typinggamezone.com/${currentLocale}/speed-test/`
+    }
+  ]
+};
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  locale={currentLocale}
+  structuredData={speedTestStructuredData}
+>
+  <div class="py-10 sm:py-14 bg-canvas-soft min-h-screen relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-15%,rgba(226,183,20,0.07),rgba(0,112,243,0.05),transparent)] pointer-events-none"></div>
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- Speed Test Suite Banner -->
+      <div class="text-center max-w-3xl mx-auto mb-8">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-body shadow-level-1 backdrop-blur mb-3">
+          <span class="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span class="text-ink font-semibold">Pro Speed Engine</span>
+          <span class="text-mute">•</span>
+          <span>17 Themes</span>
+          <span class="text-mute">•</span>
+          <span>Zero Latency</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink">
+          <span data-i18n="nav.speedTest">{t('nav.speedTest', currentLocale)}</span>
+        </h1>
+        <p class="mt-2 text-sm text-body leading-relaxed max-w-2xl mx-auto" data-i18n="hero.subtitle">
+          {t('hero.subtitle', currentLocale)}
+        </p>
+      </div>
+
+      <!-- Main Speed Test Widget -->
+      <SpeedTestWidget locale={currentLocale} />
+
+    </div>
+  </div>
+</Layout>

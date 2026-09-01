@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../i18n/config';
+import { t, getLocaleUrl } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+
+const seoTitle = t('seo.notFoundTitle', currentLocale);
+const seoDescription = t('seo.notFoundDescription', currentLocale);
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  locale={currentLocale}
+>
+  <div class="py-20 sm:py-32 bg-canvas-soft min-h-screen flex items-center justify-center text-center">
+    <div class="mx-auto max-w-lg px-4">
+      <div class="text-6xl mb-4">👾</div>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink mb-2">
+        {t('seo.notFoundTitle', currentLocale)}
+      </h1>
+      <p class="text-sm text-body mb-6">
+        {t('seo.notFoundDescription', currentLocale)}
+      </p>
+      <a
+        href={getLocaleUrl('/', currentLocale)}
+        class="inline-flex items-center gap-2 rounded-full px-6 py-3 text-xs sm:text-sm font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 cursor-pointer"
+        style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+      >
+        <span>{t('game.backToGames', currentLocale)}</span>
+      </a>
+    </div>
+  </div>
+</Layout>

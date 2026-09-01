@@ -1,0 +1,39 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../../i18n/config';
+import { t } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+
+const seoTitle = `${t('footer.privacy', currentLocale)} — ${t('seo.privacyTitle', currentLocale)}`;
+const seoDescription = t('seo.privacyDescription', currentLocale);
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  locale={currentLocale}
+>
+  <div class="py-12 sm:py-20 bg-canvas-soft min-h-screen">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink mb-6">
+        {t('footer.privacy', currentLocale)}
+      </h1>
+      <div class="prose dark:prose-invert max-w-none text-body text-sm space-y-4">
+        <p>At Typing Game Zone, user privacy is paramount. This policy outlines how we handle your preferences and anonymous session telemetry.</p>
+        <h2 class="text-lg font-bold text-ink mt-6 mb-2">1. Local Storage Data</h2>
+        <p>All your career stats, XP, high scores, active streaks, sound preferences, and color themes are stored directly in your browser's local storage (localStorage). We do not collect or sell your personal data.</p>
+        <h2 class="text-lg font-bold text-ink mt-6 mb-2">2. Analytics</h2>
+        <p>We use Google Analytics with anonymized IP addresses purely to understand global user traffic and optimize game load times.</p>
+      </div>
+    </div>
+  </div>
+</Layout>

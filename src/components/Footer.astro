@@ -3,7 +3,11 @@
 import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
 import { SUPPORTED_LANGUAGES } from '../lib/i18n';
 import SiteLogo from './SiteLogo.astro';
+import { getLocaleUrl, getLocaleFromPath } from '../i18n/utils';
+import { DEFAULT_LOCALE } from '../i18n/config';
 
+const currentPath = Astro.url.pathname;
+const currentLocale = getLocaleFromPath(currentPath) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
 const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
 ---
 
@@ -92,12 +96,12 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
       <div class="flex flex-col gap-3">
         <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute" data-i18n="footer.gameGenres">Game Genres</span>
         <ul class="flex flex-col gap-2 text-xs text-body">
-          <li><a href="/?cat=arcade" class="transition hover:text-ink" data-i18n="cat.arcade">Arcade (4)</a></li>
-          <li><a href="/?cat=action" class="transition hover:text-ink" data-i18n="cat.action">Action (5)</a></li>
-          <li><a href="/?cat=adventure" class="transition hover:text-ink" data-i18n="cat.adventure">Adventure (4)</a></li>
-          <li><a href="/?cat=fighting" class="transition hover:text-ink" data-i18n="cat.fighting">Fighting (4)</a></li>
-          <li><a href="/?cat=puzzle" class="transition hover:text-ink" data-i18n="cat.puzzle">Puzzle (3)</a></li>
-          <li><a href="/?cat=practice" class="transition hover:text-ink" data-i18n="cat.practice">Practice (1)</a></li>
+          <li><a href={getLocaleUrl('/#games-section', currentLocale)} class="transition hover:text-ink" data-i18n="cat.arcade">Arcade (4)</a></li>
+          <li><a href={getLocaleUrl('/#games-section', currentLocale)} class="transition hover:text-ink" data-i18n="cat.action">Action (5)</a></li>
+          <li><a href={getLocaleUrl('/#games-section', currentLocale)} class="transition hover:text-ink" data-i18n="cat.adventure">Adventure (4)</a></li>
+          <li><a href={getLocaleUrl('/#games-section', currentLocale)} class="transition hover:text-ink" data-i18n="cat.fighting">Fighting (4)</a></li>
+          <li><a href={getLocaleUrl('/#games-section', currentLocale)} class="transition hover:text-ink" data-i18n="cat.puzzle">Puzzle (3)</a></li>
+          <li><a href={getLocaleUrl('/#games-section', currentLocale)} class="transition hover:text-ink" data-i18n="cat.practice">Practice (1)</a></li>
         </ul>
       </div>
 
@@ -105,12 +109,12 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
       <div class="flex flex-col gap-3">
         <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute" data-i18n="footer.practiceAndTools">Practice & Tools</span>
         <ul class="flex flex-col gap-2 text-xs text-body">
-          <li><a href="/speed-test" class="transition hover:text-ink" data-i18n="nav.speedTest">Speed Test</a></li>
-          <li><a href="/practice" class="transition hover:text-ink" data-i18n="nav.practiceLab">Practice Lab</a></li>
-          <li><a href="/game/key-master" class="transition hover:text-ink">3D Heatmap Keyboard</a></li>
-          <li><a href="/leaderboards" class="transition hover:text-ink" data-i18n="nav.leaderboards">Leaderboards</a></li>
-          <li><a href="/arcade" class="transition hover:text-ink" data-i18n="nav.arcade">Arcade Lounge</a></li>
-          <li><a href="/faq" class="transition hover:text-ink text-link font-medium">❓ Typing FAQ (37 Q&A)</a></li>
+          <li><a href={getLocaleUrl('/speed-test', currentLocale)} class="transition hover:text-ink" data-i18n="nav.speedTest">Speed Test</a></li>
+          <li><a href={getLocaleUrl('/practice', currentLocale)} class="transition hover:text-ink" data-i18n="nav.practiceLab">Practice Lab</a></li>
+          <li><a href={getLocaleUrl('/game/key-master', currentLocale)} class="transition hover:text-ink">3D Heatmap Keyboard</a></li>
+          <li><a href={getLocaleUrl('/leaderboards', currentLocale)} class="transition hover:text-ink" data-i18n="nav.leaderboards">Leaderboards</a></li>
+          <li><a href={getLocaleUrl('/arcade', currentLocale)} class="transition hover:text-ink" data-i18n="nav.arcade">Arcade Lounge</a></li>
+          <li><a href={getLocaleUrl('/faq', currentLocale)} class="transition hover:text-ink text-link font-medium">❓ Typing FAQ (37 Q&A)</a></li>
         </ul>
       </div>
 
@@ -131,11 +135,11 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
       <div class="flex flex-col gap-3">
         <span class="text-xs font-mono font-semibold uppercase tracking-wider text-mute">Company & Legal</span>
         <ul class="flex flex-col gap-2 text-xs text-body">
-          <li><a href="/about" class="transition hover:text-ink">About Us</a></li>
-          <li><a href="/contact" class="transition hover:text-ink">Contact Us</a></li>
-          <li><a href="/privacy" class="transition hover:text-ink">Privacy Policy</a></li>
-          <li><a href="/terms" class="transition hover:text-ink">Terms & Conditions</a></li>
-          <li><a href="/faq" class="transition hover:text-ink">Knowledge Base</a></li>
+          <li><a href={getLocaleUrl('/about', currentLocale)} class="transition hover:text-ink">About Us</a></li>
+          <li><a href={getLocaleUrl('/contact', currentLocale)} class="transition hover:text-ink">Contact Us</a></li>
+          <li><a href={getLocaleUrl('/privacy', currentLocale)} class="transition hover:text-ink">Privacy Policy</a></li>
+          <li><a href={getLocaleUrl('/terms', currentLocale)} class="transition hover:text-ink">Terms & Conditions</a></li>
+          <li><a href={getLocaleUrl('/faq', currentLocale)} class="transition hover:text-ink">Knowledge Base</a></li>
         </ul>
       </div>
     </div>
@@ -145,13 +149,13 @@ const popularThemes = MONKEYTYPE_THEMES.slice(0, 8);
       <p>© {new Date().getFullYear()} Typing Game Zone (typinggamezone.com). <span data-i18n="footer.rights">All rights reserved.</span></p>
       
       <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px]">
-        <a href="/about" class="hover:text-ink transition">About</a>
+        <a href={getLocaleUrl('/about', currentLocale)} class="hover:text-ink transition">About</a>
         <span>•</span>
-        <a href="/contact" class="hover:text-ink transition">Contact</a>
+        <a href={getLocaleUrl('/contact', currentLocale)} class="hover:text-ink transition">Contact</a>
         <span>•</span>
-        <a href="/privacy" class="hover:text-ink transition">Privacy Policy</a>
+        <a href={getLocaleUrl('/privacy', currentLocale)} class="hover:text-ink transition">Privacy Policy</a>
         <span>•</span>
-        <a href="/terms" class="hover:text-ink transition">Terms of Service</a>
+        <a href={getLocaleUrl('/terms', currentLocale)} class="hover:text-ink transition">Terms of Service</a>
         <span>•</span>
         <a href="mailto:contact@typinggamezone.com" class="text-link hover:underline">contact@typinggamezone.com</a>
       </div>

@@ -1,19 +1,27 @@
 ---
 import type { GameMetadata } from '../lib/games/gameRegistry';
+import { getLocalizedGame } from '../lib/games/i18n';
+import { getLocaleUrl, getLocaleFromPath, t } from '../i18n/utils';
+import { DEFAULT_LOCALE } from '../i18n/config';
 
 interface Props {
   game: GameMetadata;
+  locale?: string;
 }
 
-const { game } = Astro.props;
+const { game: rawGame, locale } = Astro.props;
+const currentPath = Astro.url.pathname;
+const currentLocale = locale || getLocaleFromPath(currentPath) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
+const game = getLocalizedGame(rawGame, currentLocale);
+const gameUrl = getLocaleUrl(`/game/${game.id}`, currentLocale);
 ---
 
 <div
-  class="group relative flex flex-col justify-between rounded-2xl border border-hairline bg-canvas p-4 xs:p-5 sm:p-6 shadow-level-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-level-4 active:scale-[0.99] touch-manipulation"
-  data-category={game.category}
-  data-title={game.title.toLowerCase()}
-  data-tags={game.tags.join(' ').toLowerCase()}
-  data-desc={game.description.toLowerCase()}
+  class="game-card group relative flex flex-col justify-between rounded-2xl border border-hairline bg-canvas p-4 xs:p-5 sm:p-6 shadow-level-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-level-4 active:scale-[0.99] touch-manipulation"
+  data-category={rawGame.category}
+  data-title={`${game.title.toLowerCase()} ${rawGame.title.toLowerCase()}`}
+  data-tags={`${game.tags.join(' ').toLowerCase()} ${rawGame.tags.join(' ').toLowerCase()}`}
+  data-desc={`${game.description.toLowerCase()} ${rawGame.description.toLowerCase()}`}
 >
   <!-- Card Header -->
   <div>
@@ -26,9 +34,9 @@ const { game } = Astro.props;
           {game.categoryName}
         </span>
         <span class={`rounded-full px-2 xs:px-2.5 py-0.5 xs:py-1 text-[10px] xs:text-[11px] font-mono font-medium border ${
-          game.difficulty === 'Beginner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' :
-          game.difficulty === 'Intermediate' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
-          game.difficulty === 'Advanced' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
+          rawGame.difficulty === 'Beginner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' :
+          rawGame.difficulty === 'Intermediate' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
+          rawGame.difficulty === 'Advanced' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
           'bg-rose-500/10 text-rose-400 border-rose-500/30'
         }`}>
           {game.difficulty}
@@ -38,7 +46,7 @@ const { game } = Astro.props;
 
     <!-- Title & Description -->
     <h3 class="text-base xs:text-lg font-semibold tracking-tight text-ink group-hover:text-link transition-colors">
-      <a href={`/game/${game.id}`} class="focus:outline-none">{game.title}</a>
+      <a href={gameUrl} class="focus:outline-none">{game.title}</a>
     </h3>
     <p class="mt-1.5 xs:mt-2 text-xs text-body line-clamp-2 leading-relaxed">
       {game.description}
@@ -70,10 +78,11 @@ const { game } = Astro.props;
 
     <!-- Play Pill Button -->
     <a
-      href={`/game/${game.id}`}
+      href={gameUrl}
       class="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-bold text-on-primary shadow-level-1 transition hover:opacity-90 active:scale-95 min-h-[38px] min-w-[76px]"
+      style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
     >
-      <span>Play</span>
+      <span data-i18n="nav.play">{t('nav.play', currentLocale)}</span>
       <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
       </svg>

@@ -1,35 +1,54 @@
 ---
-import { FAQ_DATA, FAQ_CATEGORIES, generateFAQSchema } from '../lib/faqData';
+import {
+  getLocalizedFAQData,
+  getLocalizedFAQCategories,
+  getLocalizedFAQUI,
+  generateFAQSchema
+} from '../lib/faqData';
 
 interface Props {
   title?: string;
   subtitle?: string;
   includeSchema?: boolean;
   initialCategory?: string;
+  locale?: string;
 }
 
 const {
-  title = "Frequently Asked Questions",
-  subtitle = "Expert answers on touch typing techniques, speed benchmarks, keyboard history, finger placement, and free arcade games.",
+  locale = "en",
+  title,
+  subtitle,
   includeSchema = true,
   initialCategory = "all"
 } = Astro.props;
 
-const faqSchema = generateFAQSchema(FAQ_DATA);
+const ui = getLocalizedFAQUI(locale);
+const displayTitle = title || ui.defaultTitle;
+const displaySubtitle = subtitle || ui.defaultSubtitle;
+const faqItems = getLocalizedFAQData(locale);
+const faqCategories = getLocalizedFAQCategories(locale);
+const faqSchema = generateFAQSchema(faqItems);
 ---
 
-<section class="rounded-3xl border border-hairline bg-canvas p-6 sm:p-10 shadow-level-2 scroll-mt-20" id="faq-section">
+<section
+  class="rounded-3xl border border-hairline bg-canvas p-6 sm:p-10 shadow-level-2 scroll-mt-20"
+  id="faq-section"
+  data-locale={locale}
+  data-expand-all={ui.expandAll}
+  data-collapse-all={ui.collapseAll}
+  data-all-questions={ui.allQuestions}
+>
   <!-- Section Header -->
   <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-hairline">
     <div>
       <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-3.5 py-1 text-xs font-mono text-link shadow-level-1 mb-3">
-        <span>💡 KNOWLEDGE BASE & FAQ</span>
+        <span>💡 {ui.badge}</span>
       </div>
       <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-ink leading-tight">
-        {title}
+        {displayTitle}
       </h2>
       <p class="text-xs sm:text-sm text-body mt-2 max-w-2xl leading-relaxed">
-        {subtitle}
+        {displaySubtitle}
       </p>
     </div>
 
@@ -39,9 +58,9 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         <input
           type="text"
           id="faq-search-input"
-          placeholder="Search 37 questions..."
+          placeholder={ui.searchPlaceholder}
           class="w-full rounded-full border border-hairline bg-canvas-soft px-4 py-2.5 pl-9 text-xs font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20"
-          aria-label="Search frequently asked questions"
+          aria-label={ui.searchPlaceholder}
         />
         <svg class="absolute left-3 top-3 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -54,14 +73,14 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         class="inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline bg-canvas-soft px-4 py-2.5 text-xs font-mono font-medium text-body hover:text-ink hover:bg-canvas shadow-level-1 transition active:scale-95 whitespace-nowrap cursor-pointer"
       >
         <span id="faq-toggle-icon">🔽</span>
-        <span id="faq-toggle-text">Expand All</span>
+        <span id="faq-toggle-text">{ui.expandAll}</span>
       </button>
     </div>
   </div>
 
   <!-- Category Filter Pills -->
   <div class="flex items-center gap-2 pt-6 pb-6 border-b border-hairline/60 overflow-x-auto no-scrollbar max-w-full" id="faq-category-filters">
-    {FAQ_CATEGORIES.map((cat, idx) => (
+    {faqCategories.map((cat, idx) => (
       <button
         type="button"
         data-faq-category={cat.id}
@@ -82,16 +101,16 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
   <!-- Result Counter -->
   <div class="py-4 flex items-center justify-between text-xs font-mono text-mute">
     <div>
-      Showing <span id="faq-visible-count" class="font-bold text-ink">{FAQ_DATA.length}</span> of {FAQ_DATA.length} questions
+      {ui.showing} <span id="faq-visible-count" class="font-bold text-ink">{faqItems.length}</span> {ui.of} {faqItems.length} {ui.questions}
     </div>
     <div id="faq-active-filter-label" class="hidden sm:block text-[11px]">
-      Category: <span class="text-ink font-semibold">All Questions</span>
+      {ui.categoryLabel}: <span class="text-ink font-semibold">{ui.allQuestions}</span>
     </div>
   </div>
 
   <!-- FAQ Accordion List -->
   <div class="space-y-3 font-sans" id="faq-items-list">
-    {FAQ_DATA.map((item, index) => (
+    {faqItems.map((item, index) => (
       <details
         class="faq-item group rounded-2xl border border-hairline bg-canvas-soft/80 p-4 sm:p-5 transition hover:border-link/40 cursor-pointer"
         data-category={item.category}
@@ -125,7 +144,7 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
           <div set:html={item.answerHtml} />
           
           <div class="mt-3 pt-2 flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-mute border-t border-hairline/40">
-            <span class="font-semibold uppercase text-mute">Related:</span>
+            <span class="font-semibold uppercase text-mute">{ui.related}:</span>
             {item.keywords.map(kw => (
               <span class="rounded bg-canvas px-1.5 py-0.5 border border-hairline/60">#{kw}</span>
             ))}
@@ -138,24 +157,31 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
   <!-- Zero Results Fallback -->
   <div id="faq-no-results" class="hidden py-16 text-center">
     <div class="text-4xl mb-2">🔍</div>
-    <h3 class="text-base font-semibold text-ink">No matching questions found</h3>
-    <p class="text-xs text-mute mt-1">Try changing your search query or clicking "All Questions".</p>
+    <h3 class="text-base font-semibold text-ink">{ui.noResultsTitle}</h3>
+    <p class="text-xs text-mute mt-1">{ui.noResultsDesc}</p>
     <button
       type="button"
       id="faq-reset-search-btn"
       class="mt-4 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft cursor-pointer"
     >
-      <span>Reset Filters</span>
+      <span>{ui.resetFilters}</span>
     </button>
   </div>
 </section>
 
 {includeSchema && (
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 )}
 
 <script>
   function initFAQSection() {
+    const faqSection = document.getElementById('faq-section');
+    if (!faqSection) return;
+
+    const expandAllLabel = faqSection.getAttribute('data-expand-all') || 'Expand All';
+    const collapseAllLabel = faqSection.getAttribute('data-collapse-all') || 'Collapse All';
+    const allQuestionsLabel = faqSection.getAttribute('data-all-questions') || 'All Questions';
+
     const searchInput = document.getElementById('faq-search-input') as HTMLInputElement | null;
     const catBtns = document.querySelectorAll('.faq-cat-btn');
     const items = document.querySelectorAll('.faq-item') as NodeListOf<HTMLDetailsElement>;
@@ -231,7 +257,7 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         }
       });
 
-      if (filterLabelEl) filterLabelEl.textContent = 'All Questions';
+      if (filterLabelEl) filterLabelEl.textContent = allQuestionsLabel;
       applyFilter();
     });
 
@@ -249,7 +275,7 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         (btn as HTMLElement).style.color = 'var(--site-on-primary, #323437)';
 
         currentCategory = btn.getAttribute('data-faq-category') || 'all';
-        const label = btn.querySelector('span:nth-child(2)')?.textContent || 'All Questions';
+        const label = btn.querySelector('span:nth-child(2)')?.textContent || allQuestionsLabel;
         if (filterLabelEl) filterLabelEl.textContent = label;
 
         applyFilter();
@@ -266,7 +292,7 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
       });
 
       if (toggleIcon) toggleIcon.textContent = isAllExpanded ? '🔼' : '🔽';
-      if (toggleText) toggleText.textContent = isAllExpanded ? 'Collapse All' : 'Expand All';
+      if (toggleText) toggleText.textContent = isAllExpanded ? collapseAllLabel : expandAllLabel;
     });
   }
 

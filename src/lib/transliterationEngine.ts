@@ -601,7 +601,7 @@ export function transliterateInput(input: string, lang: string, scriptMode: 'nat
  */
 export function isNativeScriptSupported(lang: string): boolean {
   const code = normalizeLangCode(lang);
-  return ['hi', 'ja', 'ru', 'ar', 'bn', 'de', 'es', 'fr', 'pt', 'it', 'tr', 'vi', 'zh', 'ko'].includes(code);
+  return ['hi', 'ja', 'ru', 'ar', 'bn', 'de', 'es', 'fr', 'pt', 'it', 'tr', 'vi', 'zh', 'ko', 'id'].includes(code);
 }
 
 /**

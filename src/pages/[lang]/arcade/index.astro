@@ -1,0 +1,96 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import GameCard from '../../../components/GameCard.astro';
+import { ALL_GAMES } from '../../../lib/games/gameRegistry';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../../i18n/config';
+import { t, getLocaleUrl } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+
+const arcadeGames = ALL_GAMES.filter(g => ['arcade', 'action', 'fighting'].includes(g.category));
+const seoTitle = `${t('nav.arcade', currentLocale)} — ${t('seo.gamesTitle', currentLocale)}`;
+const seoDescription = t('seo.gamesDescription', currentLocale);
+
+const arcadeStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': t('nav.home', currentLocale),
+      'item': `https://typinggamezone.com/${currentLocale}/`
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': t('nav.arcade', currentLocale),
+      'item': `https://typinggamezone.com/${currentLocale}/arcade/`
+    }
+  ]
+};
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  locale={currentLocale}
+  structuredData={arcadeStructuredData}
+>
+  <div class="bg-canvas-soft text-ink min-h-screen py-8 sm:py-16">
+    <div class="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8">
+      
+      <!-- Retro Arcade Header Banner -->
+      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-hairline bg-canvas p-5 xs:p-6 sm:p-12 mb-8 sm:mb-12 shadow-level-4 scanline-effect">
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 rounded-full bg-canvas-soft border border-hairline px-3 py-1 text-xs font-mono text-link mb-3 sm:mb-4 shadow-sm">
+            <span class="animate-ping h-2 w-2 rounded-full inline-block" style="background-color: var(--site-primary, #e2b714);"></span>
+            <span>COIN-OP READY • 21 FREE GAMES</span>
+          </div>
+          <h1 class="text-2xl xs:text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight">
+            <span data-i18n="nav.arcade">{t('nav.arcade', currentLocale)}</span>
+          </h1>
+          <p class="mt-2.5 sm:mt-4 text-xs sm:text-base text-body leading-relaxed" data-i18n="hero.subtitle">
+            {t('hero.subtitle', currentLocale)}
+          </p>
+
+          <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <a
+              href={getLocaleUrl('/game/retro-invaders', currentLocale)}
+              class="inline-flex items-center justify-center gap-2 rounded-full px-5 sm:px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 min-h-[42px]"
+              style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+            >
+              <span>Retro 8-Bit Invaders</span>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+
+            <a
+              href={getLocaleUrl('/game/type-defender', currentLocale)}
+              class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 sm:px-5 py-2.5 text-xs font-bold text-ink shadow-level-1 transition hover:bg-canvas active:scale-95 min-h-[42px]"
+            >
+              <span>Type Defender 🛸</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arcade Games Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+        {arcadeGames.map(game => (
+          <GameCard game={game} locale={currentLocale} />
+        ))}
+      </div>
+
+    </div>
+  </div>
+</Layout>
