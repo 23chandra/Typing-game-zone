@@ -14,6 +14,7 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
 
 <div
   id="practice-lab-root"
+  data-locale={currentLocale}
   class="w-full max-w-5xl mx-auto rounded-3xl p-4 sm:p-8 font-mono transition-colors duration-300 relative select-none border border-hairline shadow-level-3"
   style="background-color: var(--mt-bg, var(--site-canvas-soft, #323437)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
 >
@@ -573,11 +574,42 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
   import { transliterateInput, isNativeScriptSupported, applySmartAccents } from '../lib/transliterationEngine';
   import { soundEngine } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
-  import { getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import { getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, CHAR_MAP, type PhysicalKeyDef } from '../lib/fingerMapping';
   import confetti from 'canvas-confetti';
 
   let metronomeTimer: number | null = null;
   let activeCleanups: (() => void)[] = [];
+
+  function normalizeDiacritic(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function isFuzzyMatch(typedChar: string, expectedChar: string, _lang: string): boolean {
+    if (!typedChar || !expectedChar) return false;
+    if (typedChar === expectedChar) return true;
+    if (typedChar.toLowerCase() === expectedChar.toLowerCase()) return true;
+
+    const normTyped = normalizeDiacritic(typedChar);
+    const normExp = normalizeDiacritic(expectedChar);
+    if (normTyped === normExp && normTyped.length > 0) return true;
+
+    const specialPairs: Record<string, string[]> = {
+      'ß': ['s', 'ss'],
+      'đ': ['d'], 'Đ': ['d', 'D'],
+      'ş': ['s'], 'Ş': ['s', 'S'],
+      'ğ': ['g'], 'Ğ': ['g', 'G'],
+      'ı': ['i'], 'İ': ['i', 'I'],
+      'œ': ['oe', 'o', 'e'], 'æ': ['ae', 'a', 'e'],
+      'ø': ['o'], 'å': ['a'],
+      '¿': ['?'], '¡': ['!']
+    };
+
+    if (specialPairs[expectedChar] && specialPairs[expectedChar].includes(typedChar.toLowerCase())) {
+      return true;
+    }
+
+    return false;
+  }
 
   function initPracticeLab() {
     // Clean old listeners & timers
@@ -651,10 +683,27 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
 
     if (!wordsViewport || !wordsWrapper || !inputEl || !keyboardMatrix) return;
 
+    // Supported language list
+    const validLangs = ['en', 'hi', 'ja', 'ru', 'ar', 'de', 'es', 'fr', 'bn', 'pt', 'zh', 'ko', 'it', 'tr', 'vi', 'id'];
+
+    // Detect initial language based on root data attribute, localStorage or URL
+    const datasetLocale = root.getAttribute('data-locale') || '';
+    const storedLang = localStorage.getItem('prac_lang') || localStorage.getItem('typing_language') || '';
+    const pathLocale = window.location.pathname.split('/')[1] || '';
+
+    let initialLang = 'en';
+    if (validLangs.includes(datasetLocale)) {
+      initialLang = datasetLocale;
+    } else if (validLangs.includes(pathLocale)) {
+      initialLang = pathLocale;
+    } else if (validLangs.includes(storedLang)) {
+      initialLang = storedLang;
+    }
+
     // State Variables
     let currentDrillType = 'homeRow';
-    let pracLang = 'en';
-    let scriptMode: 'native' | 'latin' = 'native';
+    let pracLang = initialLang;
+    let scriptMode: 'native' | 'latin' = (localStorage.getItem('prac_script_mode') as any) || 'native';
     let currentLatinBuffer = '';
     let targetWordCount = 20;
     let customBuffer = '';
@@ -809,10 +858,12 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
         const weakKeys = storage.getWeakestKeys(5).map(k => k.char);
         words = generateWeakKeysDrill(weakKeys, targetWordCount);
       } else {
-        const sourceList = getPracticeDrillWords(currentDrillType, pracLang, scriptMode);
-        words = [];
-        for (let i = 0; i < targetWordCount; i++) {
-          words.push(sourceList[i % sourceList.length]);
+        const sourceList = getPracticeDrillWords(currentDrillType, targetWordCount, pracLang, scriptMode);
+        words = sourceList.length >= targetWordCount ? sourceList.slice(0, targetWordCount) : [];
+        if (words.length === 0) {
+          for (let i = 0; i < targetWordCount; i++) {
+            words.push(sourceList[i % sourceList.length]);
+          }
         }
       }
 
@@ -1060,30 +1111,59 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
         const expected = currentWord[currentCharIndex];
         let isMatch = key === expected;
 
-        if (!isMatch && scriptMode === 'native' && pracLang !== 'en') {
-          // 1. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
-          const langOverrides = KEY_LABEL_OVERRIDES[pracLang] || KEY_LABEL_OVERRIDES[pracLang.slice(0, 2)];
-          if (langOverrides) {
-            const mapped = langOverrides[key.toLowerCase()]?.display;
-            if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
-              isMatch = true;
+        if (!isMatch && pracLang !== 'en') {
+          // 1. Accent & Diacritic normalization (e.g. e -> é, a -> á, c -> ç, n -> ñ, s -> ß)
+          if (isFuzzyMatch(key, expected, pracLang)) {
+            isMatch = true;
+          }
+
+          // 2. Direct keyboard layout mapping check (InScript, Cyrillic, Arabic, Kana, QWERTZ, AZERTY)
+          if (!isMatch && scriptMode === 'native') {
+            const langOverrides = KEY_LABEL_OVERRIDES[pracLang] || KEY_LABEL_OVERRIDES[pracLang.slice(0, 2)];
+            if (langOverrides) {
+              const lowerKey = key.toLowerCase();
+              const ovr = langOverrides[lowerKey];
+              if (ovr) {
+                if (key !== lowerKey && ovr.s && (ovr.s === expected || ovr.s.toLowerCase() === (expected || '').toLowerCase())) {
+                  isMatch = true;
+                } else if (ovr.display && (ovr.display === expected || ovr.display.toLowerCase() === (expected || '').toLowerCase())) {
+                  isMatch = true;
+                } else if (ovr.s && (ovr.s === expected || ovr.s.toLowerCase() === (expected || '').toLowerCase())) {
+                  isMatch = true;
+                }
+              }
             }
           }
 
-          // 2. Phonetic transliteration check
-          if (!isMatch) {
-            const trans = transliterateInput(currentLatinBuffer, pracLang, 'native');
-            const partialExpected = currentWord.slice(0, currentCharIndex + 1);
-            if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
-              isMatch = true;
+          // 3. CHAR_MAP key mapping lookup
+          if (!isMatch && scriptMode === 'native' && expected) {
+            const charData = CHAR_MAP[expected] || CHAR_MAP[expected.toLowerCase()];
+            if (charData && charData.baseKey) {
+              if (charData.baseKey.toLowerCase() === key.toLowerCase()) {
+                isMatch = true;
+              }
             }
           }
 
-          // 3. Smart Accents check
+          // 4. Smart Accents check
           if (!isMatch) {
             const smartAcc = applySmartAccents(key, pracLang);
             if (smartAcc === expected || smartAcc.toLowerCase() === (expected || '').toLowerCase()) {
               isMatch = true;
+            }
+          }
+
+          // 5. Phonetic transliteration check
+          if (!isMatch && scriptMode === 'native') {
+            const trans = transliterateInput(currentLatinBuffer, pracLang, 'native');
+            const partialExpected = currentWord.slice(0, currentCharIndex + 1);
+            if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
+              isMatch = true;
+            } else {
+              const singleTrans = transliterateInput(key, pracLang, 'native');
+              if (singleTrans === expected || singleTrans.endsWith(expected)) {
+                isMatch = true;
+              }
             }
           }
         }
@@ -1375,7 +1455,10 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
     });
 
     function setPracLanguage(langCode: string) {
-      pracLang = langCode;
+      const clean = (langCode || 'en').toLowerCase().trim().split('-')[0];
+      pracLang = validLangs.includes(clean) ? clean : 'en';
+      localStorage.setItem('prac_lang', pracLang);
+
       const flags: Record<string, string> = {
         en: '🇺🇸', hi: '🇮🇳', ja: '🇯🇵', ru: '🇷🇺', ar: '🇸🇦',
         de: '🇩🇪', es: '🇪🇸', fr: '🇫🇷', bn: '🇧🇩', pt: '🇧🇷',
@@ -1389,14 +1472,14 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
         it: 'Italiano (Italian)', tr: 'Türkçe (Turkish)', vi: 'Tiếng Việt (Vietnamese)',
         id: 'Bahasa Indonesia'
       };
-      if (langFlag) langFlag.textContent = flags[langCode] || '🌐';
-      if (langLabel) langLabel.textContent = labels[langCode] || langCode;
+      if (langFlag) langFlag.textContent = flags[pracLang] || '🌐';
+      if (langLabel) langLabel.textContent = labels[pracLang] || pracLang;
 
       pracLangOptions.forEach(opt => {
         const l = opt.getAttribute('data-prac-lang');
         const chk = opt.querySelector('.check');
         if (chk) {
-          if (l === langCode) {
+          if (l === pracLang) {
             chk.classList.remove('hidden');
             opt.classList.add('active', 'font-bold');
           } else {
@@ -1407,7 +1490,7 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
       });
 
       if (scriptToggleWrapper) {
-        if (langCode !== 'en' && isNativeScriptSupported(langCode)) {
+        if (pracLang !== 'en' && isNativeScriptSupported(pracLang)) {
           scriptToggleWrapper.classList.remove('hidden');
           if (phoneticBadge) phoneticBadge.classList.toggle('hidden', scriptMode !== 'native');
         } else {
@@ -1416,6 +1499,7 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
         }
       }
 
+      updatePracScriptUI();
       renderVirtualKeyboardDOM();
       generateDrillWords();
       focusPracticeInput();
@@ -1430,7 +1514,7 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
           scriptLatinBtn.style.backgroundColor = 'transparent';
           scriptLatinBtn.style.color = 'var(--mt-text, #d1d0c5)';
           scriptLatinBtn.classList.add('opacity-70');
-          if (phoneticBadge) phoneticBadge.classList.remove('hidden');
+          if (phoneticBadge) phoneticBadge.classList.toggle('hidden', pracLang === 'en');
         } else {
           scriptLatinBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
           scriptLatinBtn.style.color = 'var(--mt-bg, #323437)';
@@ -1445,6 +1529,7 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
 
     scriptNativeBtn?.addEventListener('click', () => {
       scriptMode = 'native';
+      localStorage.setItem('prac_script_mode', 'native');
       updatePracScriptUI();
       generateDrillWords();
       focusPracticeInput();
@@ -1452,6 +1537,7 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
 
     scriptLatinBtn?.addEventListener('click', () => {
       scriptMode = 'latin';
+      localStorage.setItem('prac_script_mode', 'latin');
       updatePracScriptUI();
       generateDrillWords();
       focusPracticeInput();
@@ -1634,11 +1720,8 @@ const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.
     window.addEventListener('monkeytype:theme-change', onThemeChange);
     activeCleanups.push(() => window.removeEventListener('monkeytype:theme-change', onThemeChange));
 
-    // Initial setup
-    generateDrillWords();
-    if (window.location.pathname.startsWith('/practice')) {
-      focusPracticeInput();
-    }
+    // Initial setup with selected language
+    setPracLanguage(pracLang);
   }
 
   if (document.readyState === 'loading') {

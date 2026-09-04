@@ -288,7 +288,7 @@ export const KEY_LABEL_OVERRIDES: Record<string, Record<string, { display: strin
     ';': { display: 'च', s: 'छ' }, "'": { display: 'ट', s: 'ठ' },
     'z': { display: 'ं', s: 'ँ' }, 'x': { display: 'म', s: 'ण' }, 'c': { display: 'न', s: 'ऩ' },
     'v': { display: 'व', s: 'ऒ' }, 'b': { display: 'ल', s: 'ळ' }, 'n': { display: 'स', s: 'ष' },
-    'm': { display: 'य', s: 'श' }, ',': { display: 'श', s: 'ष' }, '.': { display: 'ष', s: '। ' },
+    'm': { display: 'य', s: 'श' }, ',': { display: 'श', s: 'ष' }, '.': { display: 'ष', s: '।' },
     '/': { display: 'ध', s: '?' }, '`': { display: 'ृ', s: 'ऋ' },
     '1': { display: '१', s: '!' }, '2': { display: '२', s: '@' }, '3': { display: '३', s: '#' },
     '4': { display: '४', s: '$' }, '5': { display: '५', s: '%' }, '6': { display: '६', s: '^' },
@@ -357,7 +357,7 @@ export const KEY_LABEL_OVERRIDES: Record<string, Record<string, { display: strin
     'a': { display: 'ো', s: 'ও' }, 's': { display: 'ে', s: 'এ' }, 'd': { display: '্', s: 'অ' },
     'f': { display: 'ি', s: 'ই' }, 'g': { display: 'ু', s: 'উ' }, 'h': { display: 'প', s: 'ফ' },
     'j': { display: 'র', s: 'ড়' }, 'k': { display: 'ক', s: 'খ' }, 'l': { display: 'ত', s: 'থ' },
-    ';': { display: 'চ', s: 'ছ' }, "'": { display: 'ট', s: 'ঠ' },
+    ';': { display: 'চ', s: 'छ' }, "'": { display: 'ট', s: 'ঠ' },
     'z': { display: 'ং', s: 'ঁ' }, 'x': { display: 'ম', s: 'ণ' }, 'c': { display: 'ন', s: 'য' },
     'v': { display: 'ভ', s: 'র' }, 'b': { display: 'ল', s: 'ল' }, 'n': { display: 'স', s: 'ষ' },
     'm': { display: 'য', s: 'শ' }, ',': { display: 'শ', s: 'ষ' }, '.': { display: 'ষ', s: '।' },
@@ -428,6 +428,18 @@ Object.entries(KEY_LABEL_OVERRIDES).forEach(([_lang, map]) => {
 
 // Explicit Diacritics & Accents Mappings for Instant Lookups
 const EXTRA_ACCENT_KEY_MAP: Record<string, { baseKey: string; shiftKey?: string }> = {
+  // Hindi & Indic
+  '।': { baseKey: '.', shiftKey: '।' },
+  '॥': { baseKey: '.', shiftKey: '॥' },
+  '₹': { baseKey: '4', shiftKey: '₹' },
+  'ः': { baseKey: '-', shiftKey: 'ः' },
+  'ॅ': { baseKey: 'w', shiftKey: 'ॅ' },
+  'ॉ': { baseKey: 'a', shiftKey: 'ॉ' },
+  'ॐ': { baseKey: 'x', shiftKey: 'ॐ' },
+  'ज्ञ': { baseKey: 'j' },
+  'क्ष': { baseKey: 'k' },
+  'त्र': { baseKey: 'l' },
+  'श्र': { baseKey: 'm' },
   // German
   'ä': { baseKey: "'" }, 'Ä': { baseKey: "'", shiftKey: 'Ä' },
   'ö': { baseKey: ';' }, 'Ö': { baseKey: ';', shiftKey: 'Ö' },
@@ -438,6 +450,16 @@ const EXTRA_ACCENT_KEY_MAP: Record<string, { baseKey: string; shiftKey?: string 
   'á': { baseKey: 'a' }, 'Á': { baseKey: 'a', shiftKey: 'Á' },
   'é': { baseKey: 'e' }, 'É': { baseKey: 'e', shiftKey: 'É' },
   'í': { baseKey: 'i' }, 'Í': { baseKey: 'i', shiftKey: 'Í' },
+  'ó': { baseKey: 'o' }, 'Ó': { baseKey: 'o', shiftKey: 'Ó' },
+  'ú': { baseKey: 'u' }, 'Ú': { baseKey: 'u', shiftKey: 'Ú' },
+  // French
+  'è': { baseKey: 'e' }, 'ê': { baseKey: 'e' }, 'ë': { baseKey: 'e' },
+  'à': { baseKey: 'a' }, 'â': { baseKey: 'a' },
+  'ù': { baseKey: 'u' }, 'û': { baseKey: 'u' },
+  'î': { baseKey: 'i' }, 'ï': { baseKey: 'i' },
+  'ô': { baseKey: 'o' },
+  'ç': { baseKey: 'c' }, 'Ç': { baseKey: 'c', shiftKey: 'Ç' },
+  'œ': { baseKey: 'o' },
   'ó': { baseKey: 'o' }, 'Ó': { baseKey: 'o', shiftKey: 'Ó' },
   'ú': { baseKey: 'u' }, 'Ú': { baseKey: 'u', shiftKey: 'Ú' },
   // French
