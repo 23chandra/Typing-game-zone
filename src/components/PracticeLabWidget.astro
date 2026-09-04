@@ -1,6 +1,15 @@
 ---
 // Interactive Touch Typing Practice Lab Widget
 // Powered by standard ANSI QWERTY 15.0u Grid Engine with 17 Authentic Monkeytype Themes
+import { getLocaleUrl, getLocaleFromPath } from '../i18n/utils';
+import { DEFAULT_LOCALE } from '../i18n/config';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale } = Astro.props;
+const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
 ---
 
 <div
@@ -500,7 +509,7 @@
       </div>
 
       <a
-        href="/game/key-master"
+        href={getLocaleUrl('/game/key-master', currentLocale)}
         class="inline-flex items-center gap-2 rounded-xl border border-hairline px-4 py-2.5 text-xs font-bold text-link transition hover:bg-canvas"
       >
         <span>Launch 3D Key Master 🎮</span>
@@ -560,11 +569,11 @@
 </style>
 
 <script>
-  import { WORD_LISTS, generateWeakKeysDrill, getWordPoolForLanguage, getPracticeDrillWords } from '../lib/wordLists';
+  import { generateWeakKeysDrill, getPracticeDrillWords } from '../lib/wordLists';
   import { transliterateInput, isNativeScriptSupported, applySmartAccents } from '../lib/transliterationEngine';
   import { soundEngine } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
-  import { PHYSICAL_KEYBOARD_LAYOUT, getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import { getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, type PhysicalKeyDef } from '../lib/fingerMapping';
   import confetti from 'canvas-confetti';
 
   let metronomeTimer: number | null = null;

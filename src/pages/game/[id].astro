@@ -497,7 +497,7 @@ const gameStructuredData = [
     });
 
     // Focus canvas or mobile input on pointerdown / tap
-    const onCanvasTap = (e: Event) => {
+    const onCanvasTap = () => {
       soundEngine.initContext();
       if (window.innerWidth < 640 && mobileInput) {
         try { mobileInput.focus({ preventScroll: true }); } catch { mobileInput.focus(); }

@@ -17,7 +17,6 @@ export function getStaticPaths() {
 
 const { lang } = Astro.params as { lang: SupportedLocale };
 const currentLocale = lang || 'en';
-const totalGames = ALL_GAMES.length;
 
 const seoTitle = t('seo.homeTitle', currentLocale);
 const seoDescription = t('seo.homeDescription', currentLocale);

@@ -1,10 +1,15 @@
 ---
+import { getLocaleUrl, getLocaleFromPath } from '../i18n/utils';
+import { DEFAULT_LOCALE } from '../i18n/config';
+
 interface Props {
   gameTitle: string;
   gameId: string;
+  locale?: string;
 }
 
-const { gameTitle, gameId } = Astro.props;
+const { gameTitle, gameId, locale } = Astro.props;
+const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
 ---
 
 <div id="game-hud-root" data-game-id={gameId} class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-4 rounded-2xl border border-hairline bg-canvas p-2.5 xs:p-3 sm:p-4 shadow-level-2 select-none">
@@ -12,7 +17,7 @@ const { gameTitle, gameId } = Astro.props;
   <div class="flex items-center justify-between sm:justify-start gap-2 sm:gap-3 flex-shrink-0">
     <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
       <a
-        href="/"
+        href={getLocaleUrl('/', currentLocale)}
         class="flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-canvas-soft text-body hover:text-ink active:scale-95 shadow-level-1 transition min-h-[36px] min-w-[36px] flex-shrink-0"
         title="Return to Game Zone"
       >

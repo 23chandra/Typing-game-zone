@@ -92,7 +92,6 @@ export class StreetFighterGame extends BaseGame {
       }
 
       const playerX = Math.max(65, Math.min(200, this.width * 0.22));
-      const oppX = Math.max(playerX + 110, Math.min(this.width - 65, this.width * 0.78));
 
       this.comboMeter = Math.min(100, this.comboMeter + 6);
       this.spawnSparks(playerX + 40, this.height - 130, '#50e3c2', 4);

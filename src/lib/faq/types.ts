@@ -1,5 +1,3 @@
-import type { SupportedLocale } from '../../i18n/config';
-
 export type FAQCategoryType = 'games' | 'speed' | 'technique' | 'keyboards' | 'practice';
 
 export interface FAQItem {

@@ -10,7 +10,6 @@ import {
   getWordPoolForLanguage as getPoolHelper,
   getRandomWord as getWordHelper,
   getRandomWords as getWordsHelper,
-  type CategorizedGameWords,
   type TypingQuote
 } from '../data/typing/index';
 
@@ -56,7 +55,7 @@ export const WORD_LISTS = {
 export function getPracticeDrillWords(
   drillType: string = 'homeRow',
   countOrLang: number | string = 25,
-  langOrScript: string = 'en',
+  _langOrScript: string = 'en',
   _scriptMode?: string
 ): string[] {
   const count = typeof countOrLang === 'number' ? countOrLang : 25;

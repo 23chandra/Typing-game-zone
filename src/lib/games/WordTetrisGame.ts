@@ -23,7 +23,6 @@ export class WordTetrisGame extends BaseGame {
   private nextId: number = 1;
   private clearedCount: number = 0;
   private clearGoal: number = 12;
-  private colCount: number = 5;
   private idleTime: number = 0;
 
   public getLevels(): GameLevelDef[] {

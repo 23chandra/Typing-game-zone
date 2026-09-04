@@ -1,5 +1,5 @@
-import type { FAQItem, FAQCategory, FAQCategoryType, FAQUIStrings } from './types';
-import { getLocalizedFAQUI, getLocalizedFAQCategories } from './ui';
+import type { FAQItem, FAQCategory } from './types';
+import { getLocalizedFAQCategories } from './ui';
 
 import { enFAQ } from './locales/en';
 import { hiFAQ } from './locales/hi';

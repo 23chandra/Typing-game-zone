@@ -64,7 +64,8 @@
   import { MONKEYTYPE_THEMES, applyThemeGlobal } from '../lib/monkeytypeThemes';
   import { ALL_GAMES } from '../lib/games/gameRegistry';
   import { soundEngine } from '../lib/soundEngine';
-  import { SUPPORTED_LANGUAGES, setLanguage } from '../lib/i18n';
+  import { SUPPORTED_LANGUAGES, getCurrentLanguage, setLanguage } from '../lib/i18n';
+  import { getLocaleUrl } from '../i18n/utils';
 
   interface PaletteCommand {
     id: string;
@@ -112,20 +113,20 @@
         category: 'games' as const,
         icon: g.icon,
         badge: g.difficulty,
-        action: () => { window.location.href = `/game/${g.id}`; }
+        action: () => { window.location.href = getLocaleUrl(`/game/${g.id}`, getCurrentLanguage()); }
       })),
 
       // Navigation Pages
-      { id: 'nav-home', label: 'Go to Games Hub (21 Games)', category: 'pages', icon: '🎮', action: () => { window.location.href = '/#games-section'; } },
-      { id: 'nav-speed', label: 'Go to Speed Test Benchmark', category: 'pages', icon: '⚡', action: () => { window.location.href = '/speed-test'; } },
-      { id: 'nav-arcade', label: 'Go to Retro Arcade Lounge', category: 'pages', icon: '🕹️', action: () => { window.location.href = '/arcade'; } },
-      { id: 'nav-practice', label: 'Go to Touch Typing Practice Lab', category: 'pages', icon: '⌨️', action: () => { window.location.href = '/practice'; } },
-      { id: 'nav-leaderboards', label: 'Go to Leaderboards & Achievements', category: 'pages', icon: '🏆', action: () => { window.location.href = '/leaderboards'; } },
-      { id: 'nav-faq', label: 'Go to FAQ & Knowledge Base (37 Q&A)', category: 'pages', icon: '❓', action: () => { window.location.href = '/faq'; } },
-      { id: 'nav-about', label: 'Go to About Us & Mission', category: 'pages', icon: 'ℹ️', action: () => { window.location.href = '/about'; } },
-      { id: 'nav-contact', label: 'Go to Contact Us (contact@typinggamezone.com)', category: 'pages', icon: '📬', action: () => { window.location.href = '/contact'; } },
-      { id: 'nav-privacy', label: 'Go to Privacy Policy & Data Security', category: 'pages', icon: '🛡️', action: () => { window.location.href = '/privacy'; } },
-      { id: 'nav-terms', label: 'Go to Terms and Conditions', category: 'pages', icon: '📋', action: () => { window.location.href = '/terms'; } },
+      { id: 'nav-home', label: 'Go to Games Hub (21 Games)', category: 'pages', icon: '🎮', action: () => { window.location.href = getLocaleUrl('/#games-section', getCurrentLanguage()); } },
+      { id: 'nav-speed', label: 'Go to Speed Test Benchmark', category: 'pages', icon: '⚡', action: () => { window.location.href = getLocaleUrl('/speed-test', getCurrentLanguage()); } },
+      { id: 'nav-arcade', label: 'Go to Retro Arcade Lounge', category: 'pages', icon: '🕹️', action: () => { window.location.href = getLocaleUrl('/arcade', getCurrentLanguage()); } },
+      { id: 'nav-practice', label: 'Go to Touch Typing Practice Lab', category: 'pages', icon: '⌨️', action: () => { window.location.href = getLocaleUrl('/practice', getCurrentLanguage()); } },
+      { id: 'nav-leaderboards', label: 'Go to Leaderboards & Achievements', category: 'pages', icon: '🏆', action: () => { window.location.href = getLocaleUrl('/leaderboards', getCurrentLanguage()); } },
+      { id: 'nav-faq', label: 'Go to FAQ & Knowledge Base (37 Q&A)', category: 'pages', icon: '❓', action: () => { window.location.href = getLocaleUrl('/faq', getCurrentLanguage()); } },
+      { id: 'nav-about', label: 'Go to About Us & Mission', category: 'pages', icon: 'ℹ️', action: () => { window.location.href = getLocaleUrl('/about', getCurrentLanguage()); } },
+      { id: 'nav-contact', label: 'Go to Contact Us (contact@typinggamezone.com)', category: 'pages', icon: '📬', action: () => { window.location.href = getLocaleUrl('/contact', getCurrentLanguage()); } },
+      { id: 'nav-privacy', label: 'Go to Privacy Policy & Data Security', category: 'pages', icon: '🛡️', action: () => { window.location.href = getLocaleUrl('/privacy', getCurrentLanguage()); } },
+      { id: 'nav-terms', label: 'Go to Terms and Conditions', category: 'pages', icon: '📋', action: () => { window.location.href = getLocaleUrl('/terms', getCurrentLanguage()); } },
 
       // Switch Sounds
       { id: 'sound-clicky', label: 'Switch Sound: Cherry MX Blue (Clicky)', category: 'sounds', icon: '🔵', action: () => { soundEngine.setSwitch('clicky'); soundEngine.initContext(); soundEngine.playKey(); } },

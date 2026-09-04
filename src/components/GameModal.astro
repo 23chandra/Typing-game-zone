@@ -1,5 +1,14 @@
 ---
 // Modal for Level Clear, Game Over, and Victory
+import { getLocaleUrl, getLocaleFromPath } from '../i18n/utils';
+import { DEFAULT_LOCALE } from '../i18n/config';
+
+interface Props {
+  locale?: string;
+}
+
+const { locale } = Astro.props;
+const currentLocale = locale || getLocaleFromPath(Astro.url.pathname) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
 ---
 
 <div id="game-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-3 sm:p-4 hidden">
@@ -101,7 +110,7 @@
       </button>
 
       <a
-        href="/"
+        href={getLocaleUrl('/', currentLocale)}
         class="inline-flex items-center justify-center rounded-full border border-hairline bg-canvas-soft px-4 py-2.5 text-xs sm:text-sm font-medium text-body transition hover:text-ink hover:bg-canvas active:scale-95 min-h-[42px]"
       >
         <span>Hub</span>

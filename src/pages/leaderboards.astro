@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { ALL_GAMES } from '../lib/games/gameRegistry';
-import { getLocaleFromPath, t } from '../i18n/utils';
+import { getLocaleFromPath, t, getLocaleUrl } from '../i18n/utils';
 import { DEFAULT_LOCALE } from '../i18n/config';
 
 interface Props {
@@ -212,7 +212,7 @@ const leaderboardStructuredData = {
             </div>
           </div>
           <a
-            href="/practice"
+            href={getLocaleUrl('/practice', currentLocale)}
             class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold shadow-level-1 transition hover:opacity-90 active:scale-95"
             style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
           >
@@ -277,7 +277,7 @@ const leaderboardStructuredData = {
                   <td class="py-3.5 lvl-cell">Level 1</td>
                   <td class="py-3.5 text-right">
                     <a
-                      href={`/game/${game.id}`}
+                      href={getLocaleUrl(`/game/${game.id}`, currentLocale)}
                       class="rounded-full bg-canvas-soft border border-hairline px-3.5 py-1 text-[11px] font-medium text-ink hover:bg-ink hover:text-on-primary transition"
                     >
                       Play
@@ -320,7 +320,7 @@ const leaderboardStructuredData = {
 
 <script>
   import { storage } from '../lib/storage';
-  import { formatNumber, formatDate, t } from '../lib/i18n';
+  import { formatNumber } from '../lib/i18n';
   import confetti from 'canvas-confetti';
 
   function renderLeaderboards() {
