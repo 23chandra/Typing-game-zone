@@ -18,30 +18,57 @@ const currentLocale = lang || 'en';
 const arcadeGames = ALL_GAMES.filter(g => ['arcade', 'action', 'fighting'].includes(g.category));
 const seoTitle = `${t('nav.arcade', currentLocale)} — ${t('seo.gamesTitle', currentLocale)}`;
 const seoDescription = t('seo.gamesDescription', currentLocale);
+const arcadeKeywords = 'Typing game zone, 2d typing game online free, free typing game online, typing game online, 2d typing game, fast typing game online, arcade typing game, retro typing game, zombie typing game online, retro arcade typing games';
 
-const arcadeStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': t('nav.home', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/`
-    },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': t('nav.arcade', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/arcade/`
+const arcadeStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': t('nav.home', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': t('nav.arcade', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/arcade/`
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    'name': `${t('nav.arcade', currentLocale)} — Typing Game Zone`,
+    'description': seoDescription,
+    'url': `https://typinggamezone.com/${currentLocale}/arcade/`,
+    'mainEntity': {
+      '@type': 'ItemList',
+      'numberOfItems': arcadeGames.length,
+      'itemListElement': arcadeGames.map((game, idx) => ({
+        '@type': 'ListItem',
+        'position': idx + 1,
+        'item': {
+          '@type': 'VideoGame',
+          'name': game.title,
+          'description': game.description,
+          'genre': [game.categoryName, 'Typing Game', 'Arcade'],
+          'gamePlatform': 'Web Browser',
+          'url': `https://typinggamezone.com/${currentLocale}/game/${game.id}/`
+        }
+      }))
     }
-  ]
-};
+  }
+];
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
+  keywords={arcadeKeywords}
   locale={currentLocale}
   structuredData={arcadeStructuredData}
 >

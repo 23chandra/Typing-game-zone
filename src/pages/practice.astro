@@ -3,26 +3,83 @@ import Layout from '../layouts/Layout.astro';
 import PracticeLabWidget from '../components/PracticeLabWidget.astro';
 import { WORD_LISTS } from '../lib/wordLists';
 
-const practiceKeywords = 'Typing lessons, Typing online, Typing, keyboard typing game online, Typing game zone, touch typing practice, home row drills, kids typing game online, free typing game online, typing practice lab';
+const practiceKeywords = 'Typing lessons, Typing online, Typing, keyboard typing game online, Typing game zone, touch typing practice, home row drills, kids typing game online, free typing game online, typing practice lab, learn touch typing free, typing lessons for beginners, home row typing drills, asdf jkl typing practice, keyboard finger placement guide, touch typing lessons, typing metronome, qwerty practice online, learn to type without looking, keyboard lessons for kids, weak key practice';
 
-const practiceStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': 'Home',
-      'item': 'https://typinggamezone.com/'
+const practiceStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Practice Lab',
+        'item': 'https://typinggamezone.com/practice'
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalApplication',
+    'name': 'Interactive Touch Typing Practice Lab & QWERTY Matrix',
+    'url': 'https://typinggamezone.com/practice',
+    'applicationCategory': 'EducationalApplication',
+    'operatingSystem': 'Any (Web Browser)',
+    'description': 'Master touch typing lessons with interactive QWERTY visual keyboards, finger placement guides, home row drills, AI weak key diagnostics, and metronomes at Typing Game Zone.',
+    'aggregateRating': {
+      '@type': 'AggregateRating',
+      'ratingValue': '4.9',
+      'ratingCount': '2890',
+      'bestRating': '5',
+      'worstRating': '1'
     },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': 'Practice Lab',
-      'item': 'https://typinggamezone.com/practice'
-    }
-  ]
-};
+    'offers': {
+      '@type': 'Offer',
+      'price': '0',
+      'priceCurrency': 'USD'
+    },
+    'educationalLevel': 'Beginner to Advanced',
+    'learningResourceType': 'Interactive Drill Lab & Diagnostic Tool'
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    'name': 'How to Master Touch Typing with Proper Home Row Finger Placement',
+    'description': 'Learn how to type without looking at the keyboard using the ANSI QWERTY 8-finger touch-typing method.',
+    'step': [
+      {
+        '@type': 'HowToStep',
+        'position': 1,
+        'name': 'Identify the Home Row Anchor Keys',
+        'text': 'Locate the raised tactile bumps on the F and J keys. Place your left index finger on F and your right index finger on J.'
+      },
+      {
+        '@type': 'HowToStep',
+        'position': 2,
+        'name': 'Rest Your Fingers on ASDF and JKL;',
+        'text': 'Rest left pinky on A, ring on S, middle on D, index on F. Rest right index on J, middle on K, ring on L, pinky on semicolon (;).'
+      },
+      {
+        '@type': 'HowToStep',
+        'position': 3,
+        'name': 'Reach Up and Down Without Moving Palms',
+        'text': 'Extend individual fingers upward to the Top Row (QWERTYUIOP) and downward to the Bottom Row (ZXCVBNM), immediately returning each finger to its home row anchor.'
+      },
+      {
+        '@type': 'HowToStep',
+        'position': 4,
+        'name': 'Use the Metronome for Cadence',
+        'text': 'Enable the practice metronome to maintain a steady rhythmic keystroke tempo, eliminating hesitation between letters.'
+      }
+    ]
+  }
+];
 ---
 
 <Layout

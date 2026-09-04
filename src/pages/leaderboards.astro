@@ -9,26 +9,35 @@ interface Props {
 }
 
 const currentLocale = Astro.props.locale || getLocaleFromPath(Astro.url.pathname) || (Astro.currentLocale as string) || DEFAULT_LOCALE;
-const leaderboardKeywords = 'Typing game zone, player telemetry, typing leaderboards, keyboard speed records, typing game online, daily typing quests, fast typing game online, WPM rankings';
+const leaderboardKeywords = 'Typing game zone, player telemetry, typing leaderboards, keyboard speed records, typing game online, daily typing quests, fast typing game online, WPM rankings, typing high scores, global typing rankings, typing xp levels, typing streaks, keyboard speed certificates, competitive typing leaderboard, daily typing practice rewards';
 
-const leaderboardStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': t('nav.home', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/`
-    },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': t('nav.leaderboards', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/leaderboards/`
-    }
-  ]
-};
+const leaderboardStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': t('nav.home', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': t('nav.leaderboards', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/leaderboards/`
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    'name': `${t('lead.title', currentLocale)} — Typing Game Zone`,
+    'url': `https://typinggamezone.com/${currentLocale}/leaderboards/`,
+    'description': t('seo.leaderboardsDescription', currentLocale)
+  }
+];
 ---
 
 <Layout

@@ -20,15 +20,41 @@ const currentLocale = lang || 'en';
 
 const seoTitle = t('seo.homeTitle', currentLocale);
 const seoDescription = t('seo.homeDescription', currentLocale);
+const seoKeywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, typing game online for kids, typing master word typing game online, kids typing game online, keyboard typing game online, zombie typing game online, 2d typing game online, 2d typing game online free, 2d typing game, typing game zone guess who i am, free typing game zone, typing game zone snake, typing faq';
 const localizedFAQ = getLocalizedFAQData(currentLocale);
 const faqStructuredData = generateFAQSchema(localizedFAQ);
+
+const gameCatalogStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': `${t('hero.gamesCount', currentLocale)} — Typing Game Zone`,
+  'description': seoDescription,
+  'numberOfItems': ALL_GAMES.length,
+  'itemListElement': ALL_GAMES.map((game, index) => ({
+    '@type': 'ListItem',
+    'position': index + 1,
+    'item': {
+      '@type': 'VideoGame',
+      'name': game.title,
+      'description': game.description,
+      'genre': [game.categoryName, 'Typing Game', 'Arcade', 'Educational'],
+      'gamePlatform': 'Web Browser',
+      'applicationCategory': 'GameApplication',
+      'playMode': 'SinglePlayer',
+      'url': `https://typinggamezone.com/${currentLocale}/game/${game.id}/`
+    }
+  }))
+};
+
+const pageStructuredData = [faqStructuredData, gameCatalogStructuredData];
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
+  keywords={seoKeywords}
   locale={currentLocale}
-  structuredData={faqStructuredData}
+  structuredData={pageStructuredData}
 >
   <!-- 1. Hero Band with Atmospheric Mesh Gradient Backdrop -->
   <section class="relative overflow-hidden border-b border-hairline bg-canvas py-16 sm:py-24 mesh-gradient-hero">

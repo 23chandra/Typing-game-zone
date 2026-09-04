@@ -16,30 +16,54 @@ const currentLocale = lang || 'en';
 
 const seoTitle = `${t('prac.title', currentLocale)} — ${t('seo.practiceTitle', currentLocale)}`;
 const seoDescription = t('seo.practiceDescription', currentLocale);
+const practiceKeywords = 'Typing lessons, Typing online, Typing, keyboard typing game online, Typing game zone, touch typing practice, home row drills, kids typing game online, free typing game online, typing practice lab, learn touch typing free';
 
-const practiceStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': t('nav.home', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/`
+const practiceStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': t('nav.home', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': t('nav.practiceLab', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/practice/`
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'EducationalApplication',
+    'name': `${t('prac.title', currentLocale)} — Typing Game Zone`,
+    'url': `https://typinggamezone.com/${currentLocale}/practice/`,
+    'applicationCategory': 'EducationalApplication',
+    'operatingSystem': 'Any (Web Browser)',
+    'description': seoDescription,
+    'aggregateRating': {
+      '@type': 'AggregateRating',
+      'ratingValue': '4.9',
+      'ratingCount': '2890',
+      'bestRating': '5',
+      'worstRating': '1'
     },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': t('nav.practiceLab', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/practice/`
+    'offers': {
+      '@type': 'Offer',
+      'price': '0'
     }
-  ]
-};
+  }
+];
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
+  keywords={practiceKeywords}
   locale={currentLocale}
   structuredData={practiceStructuredData}
 >

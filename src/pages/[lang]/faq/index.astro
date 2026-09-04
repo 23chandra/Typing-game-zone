@@ -18,12 +18,34 @@ const currentLocale = lang || 'en';
 const localizedFAQ = getLocalizedFAQData(currentLocale);
 const seoTitle = `${t('footer.faq', currentLocale)} — ${t('seo.faqTitle', currentLocale)}`;
 const seoDescription = t('seo.faqDescription', currentLocale);
-const faqStructuredData = generateFAQSchema(localizedFAQ);
+const seoKeywords = 'typing faq, typing questions, touch typing faq, what is a good typing speed, what is 20 wpm, who invented qwerty, how to practice typing, typing game online free, 10 key typing skills, typing games free, typing speed by age';
+
+const breadcrumbStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': t('nav.home', currentLocale),
+      'item': `https://typinggamezone.com/${currentLocale}/`
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': t('footer.faq', currentLocale),
+      'item': `https://typinggamezone.com/${currentLocale}/faq/`
+    }
+  ]
+};
+
+const faqStructuredData = [breadcrumbStructuredData, generateFAQSchema(localizedFAQ)];
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
+  keywords={seoKeywords}
   locale={currentLocale}
   structuredData={faqStructuredData}
 >

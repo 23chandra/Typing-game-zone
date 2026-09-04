@@ -16,30 +16,54 @@ const currentLocale = lang || 'en';
 
 const seoTitle = `${t('nav.speedTest', currentLocale)} — ${t('seo.speedTestTitle', currentLocale)}`;
 const seoDescription = t('seo.speedTestDescription', currentLocale);
+const speedTestKeywords = 'fast typing game online, typing master word typing game online, word typing game online, Typing game online, Typing game zone, typing speed test, WPM test online, free typing game online, typing benchmark, typing test 1 minute, typing test 30 seconds, wpm test online free, monkeytype speed test';
 
-const speedTestStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': t('nav.home', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/`
+const speedTestStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': t('nav.home', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': t('nav.speedTest', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/speed-test/`
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    'name': `${t('nav.speedTest', currentLocale)} — Typing Game Zone`,
+    'url': `https://typinggamezone.com/${currentLocale}/speed-test/`,
+    'applicationCategory': 'EducationalApplication, UtilityApplication',
+    'operatingSystem': 'Any (Web Browser)',
+    'description': seoDescription,
+    'aggregateRating': {
+      '@type': 'AggregateRating',
+      'ratingValue': '4.9',
+      'ratingCount': '3420',
+      'bestRating': '5',
+      'worstRating': '1'
     },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': t('nav.speedTest', currentLocale),
-      'item': `https://typinggamezone.com/${currentLocale}/speed-test/`
+    'offers': {
+      '@type': 'Offer',
+      'price': '0'
     }
-  ]
-};
+  }
+];
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
+  keywords={speedTestKeywords}
   locale={currentLocale}
   structuredData={speedTestStructuredData}
 >

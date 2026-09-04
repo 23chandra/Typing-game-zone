@@ -15,12 +15,41 @@ const currentLocale = lang || 'en';
 
 const seoTitle = `${t('footer.privacy', currentLocale)} — ${t('seo.privacyTitle', currentLocale)}`;
 const seoDescription = t('seo.privacyDescription', currentLocale);
+const seoKeywords = 'privacy policy, typing game zone privacy, privacy terms, touch typing privacy, online typing game privacy, local storage policy';
+
+const privacyStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  'name': `${t('footer.privacy', currentLocale)} — Typing Game Zone`,
+  'url': `https://typinggamezone.com/${currentLocale}/privacy/`,
+  'description': seoDescription,
+  'breadcrumb': {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': t('nav.home', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': t('footer.privacy', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/privacy/`
+      }
+    ]
+  }
+};
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
+  keywords={seoKeywords}
   locale={currentLocale}
+  structuredData={privacyStructuredData}
 >
   <div class="py-12 sm:py-20 bg-canvas-soft min-h-screen">
     <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">

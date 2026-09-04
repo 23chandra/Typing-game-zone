@@ -6,26 +6,51 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
 // Filter Arcade, Action, and Fighting games
 const arcadeGames = ALL_GAMES.filter(g => ['arcade', 'action', 'fighting'].includes(g.category));
 
-const arcadeKeywords = 'Typing game zone, 2d typing game online free, free typing game online, typing game online, 2d typing game, fast typing game online, arcade typing game, retro typing game, zombie typing game online';
+const arcadeKeywords = 'Typing game zone, 2d typing game online free, free typing game online, typing game online, 2d typing game, fast typing game online, arcade typing game, retro typing game, zombie typing game online, retro arcade typing games, typing games for pc, 2d browser typing games, keyboard shooting games, fighting typing game online, action typing game free, typing combat simulator, arcade typing lessons, free retro games online';
 
-const arcadeStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': 'Home',
-      'item': 'https://typinggamezone.com/'
-    },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': 'Arcade Lounge',
-      'item': 'https://typinggamezone.com/arcade'
+const arcadeStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Arcade Lounge',
+        'item': 'https://typinggamezone.com/arcade'
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    'name': 'Retro Arcade Lounge — Play 2D Typing Games Online Free',
+    'description': 'Play free 2D arcade typing games online including retro space invaders, zombie defense, katana slicing, and martial arts combat.',
+    'url': 'https://typinggamezone.com/arcade',
+    'mainEntity': {
+      '@type': 'ItemList',
+      'numberOfItems': arcadeGames.length,
+      'itemListElement': arcadeGames.map((game, idx) => ({
+        '@type': 'ListItem',
+        'position': idx + 1,
+        'item': {
+          '@type': 'VideoGame',
+          'name': game.title,
+          'description': game.description,
+          'genre': [game.categoryName, 'Typing Game', 'Arcade'],
+          'gamePlatform': 'Web Browser',
+          'url': `https://typinggamezone.com/game/${game.id}`
+        }
+      }))
     }
-  ]
-};
+  }
+];
 ---
 
 <Layout
@@ -85,6 +110,54 @@ const arcadeStructuredData = {
           <GameCard game={game} />
         ))}
       </div>
+
+      <!-- Comprehensive Arcade SEO Editorial & Strategy Guide -->
+      <article class="mt-16 sm:mt-24 rounded-3xl border border-hairline bg-canvas p-6 sm:p-10 shadow-level-2 text-body">
+        <header class="max-w-3xl mb-8">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-link">ARCADE MASTERY GUIDE</span>
+          <h2 class="text-2xl sm:text-4xl font-bold text-ink mt-2 tracking-tight">
+            Mastering 2D Arcade Typing Games: Reflexes, Rhythm & Combat Velocity
+          </h2>
+          <p class="text-sm text-body mt-2 leading-relaxed">
+            Learn how arcade gamification transforms computer keyboard practice into an instinctive, high-speed neuromuscular reflex.
+          </p>
+        </header>
+
+        <div class="space-y-6 text-xs sm:text-sm leading-relaxed">
+          <p>
+            Traditional typing drills focus purely on copying text from a static prompt. In contrast, <strong>arcade typing games</strong> introduce high-stakes real-time pressure: enemy ships descend from the top of the canvas, mutant hordes breach barricades, and boss monsters execute lethal charge attacks unless countered by rapid, accurate keystrokes. This gamified stress mimics competitive gaming and fast-paced workplace communication, forcing your brain to automate touch typing without second-guessing finger positions.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+            <div class="rounded-2xl border border-hairline bg-canvas-soft p-5">
+              <span class="text-xl mb-2 block">🎯 Target Prioritization</span>
+              <h3 class="text-sm font-bold text-ink mb-1">Combat Word Recognition</h3>
+              <p class="text-mute text-xs">Train your peripheral vision to identify high-threat target words first, locking onto enemies before they reach your defensive perimeter.</p>
+            </div>
+
+            <div class="rounded-2xl border border-hairline bg-canvas-soft p-5">
+              <span class="text-xl mb-2 block">⚡ Combo Multipliers</span>
+              <h3 class="text-sm font-bold text-ink mb-1">Cadence Consistency</h3>
+              <p class="text-mute text-xs">Maintain steady rhythmic keystrokes without stopping. Consecutive typo-free words boost your score multipliers and unleash devastating screen-clearing super moves.</p>
+            </div>
+
+            <div class="rounded-2xl border border-hairline bg-canvas-soft p-5">
+              <span class="text-xl mb-2 block">🔊 Acoustic Feedback</span>
+              <h3 class="text-sm font-bold text-ink mb-1">Procedural Switch Audio</h3>
+              <p class="text-mute text-xs">Every keystroke triggers responsive mechanical switch acoustics, reinforcing accurate keystroke confirmation through authentic auditory cues.</p>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-hairline flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+            <span class="text-mute">Want to benchmark your raw words per minute before combat?</span>
+            <div class="flex items-center gap-2">
+              <a href="/speed-test" class="text-link hover:underline font-bold">Try Speed Test Bench →</a>
+              <span class="text-mute">•</span>
+              <a href="/practice" class="text-link hover:underline font-bold">Practice Home Row Drills →</a>
+            </div>
+          </div>
+        </div>
+      </article>
 
     </div>
   </div>

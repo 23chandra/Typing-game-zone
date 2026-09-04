@@ -15,12 +15,54 @@ const currentLocale = lang || 'en';
 
 const seoTitle = `${t('footer.contact', currentLocale)} — ${t('seo.contactTitle', currentLocale)}`;
 const seoDescription = t('seo.contactDescription', currentLocale);
+const seoKeywords = 'contact typing game zone, typing game support, typing game feedback, typing game bug report, contact typing arcade';
+
+const contactStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  'name': `${t('footer.contact', currentLocale)} — Typing Game Zone`,
+  'url': `https://typinggamezone.com/${currentLocale}/contact/`,
+  'description': seoDescription,
+  'mainEntity': {
+    '@type': 'Organization',
+    'name': 'Typing Game Zone',
+    'url': 'https://typinggamezone.com',
+    'email': 'contact@typinggamezone.com',
+    'contactPoint': [
+      {
+        '@type': 'ContactPoint',
+        'email': 'contact@typinggamezone.com',
+        'contactType': 'Customer Support'
+      }
+    ]
+  },
+  'breadcrumb': {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': t('nav.home', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/`
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': t('footer.contact', currentLocale),
+        'item': `https://typinggamezone.com/${currentLocale}/contact/`
+      }
+    ]
+  }
+};
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
+  keywords={seoKeywords}
   locale={currentLocale}
+  structuredData={contactStructuredData}
 >
   <div class="py-12 sm:py-20 bg-canvas-soft min-h-screen">
     <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">

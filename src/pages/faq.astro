@@ -5,9 +5,28 @@ import { generateFAQSchema, FAQ_DATA } from '../lib/faqData';
 
 const seoTitle = 'Frequently Asked Questions (FAQ) — Touch Typing, WPM Benchmarks & Free Games | Typing Game Zone';
 const seoDescription = 'Explore answers to 37 top typing questions on Typing Game Zone: Learn about touch typing, QWERTY vs AZERTY, 10-key numpad skills, good typing speeds by age, 2D arcade games, and mechanical switch audio.';
-const seoKeywords = 'typing faq, typing questions, touch typing faq, what is a good typing speed, what is 20 wpm, who invented qwerty, how to practice typing, typing game online free, 10 key typing skills, typing games free, typing speed by age';
+const seoKeywords = 'typing faq, typing questions, touch typing faq, what is a good typing speed, what is 20 wpm, who invented qwerty, how to practice typing, typing game online free, 10 key typing skills, typing games free, typing speed by age, fast typing tips, learn touch typing questions, qwerty keyboard layout faq, typing test faq, how to type faster faq, mechanical keyboard sounds for typing';
 
-const faqStructuredData = generateFAQSchema(FAQ_DATA);
+const breadcrumbStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': 'Home',
+      'item': 'https://typinggamezone.com/'
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': 'FAQ & Knowledge Base',
+      'item': 'https://typinggamezone.com/faq'
+    }
+  ]
+};
+
+const faqStructuredData = [breadcrumbStructuredData, generateFAQSchema(FAQ_DATA)];
 ---
 
 <Layout

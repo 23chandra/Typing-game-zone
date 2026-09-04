@@ -14,13 +14,80 @@ const seoDescription = 'Play 21 free 2D typing games online at Typing Game Zone!
 const seoKeywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, typing game online for kids, typing master word typing game online, kids typing game online, keyboard typing game online, zombie typing game online, 2d typing game online, 2d typing game online free, 2d typing game, typing game zone guess who i am, free typing game zone, typing game zone snake, typing faq';
 
 const faqStructuredData = generateFAQSchema(FAQ_DATA);
+
+const gameCatalogStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': '21 Free 2D Typing Games Online',
+  'description': 'Complete collection of free 2D typing games online on Typing Game Zone',
+  'numberOfItems': ALL_GAMES.length,
+  'itemListElement': ALL_GAMES.map((game, index) => ({
+    '@type': 'ListItem',
+    'position': index + 1,
+    'item': {
+      '@type': 'VideoGame',
+      'name': game.title,
+      'description': game.description,
+      'genre': [game.categoryName, 'Typing Game', 'Arcade', 'Educational'],
+      'gamePlatform': 'Web Browser',
+      'applicationCategory': 'GameApplication',
+      'playMode': 'SinglePlayer',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      },
+      'url': `https://typinggamezone.com/game/${game.id}`
+    }
+  }))
+};
+
+const navigationStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': 'Typing Game Zone Main Navigation',
+  'itemListElement': [
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 1,
+      'name': 'Arcade Lounge',
+      'url': 'https://typinggamezone.com/arcade'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 2,
+      'name': 'Speed Test Bench',
+      'url': 'https://typinggamezone.com/speed-test'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 3,
+      'name': 'Touch Typing Practice Lab',
+      'url': 'https://typinggamezone.com/practice'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 4,
+      'name': 'Career Hub & Leaderboards',
+      'url': 'https://typinggamezone.com/leaderboards'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 5,
+      'name': 'Typing FAQ & Knowledge Base',
+      'url': 'https://typinggamezone.com/faq'
+    }
+  ]
+};
+
+const pageStructuredData = [faqStructuredData, gameCatalogStructuredData, navigationStructuredData];
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
   keywords={seoKeywords}
-  structuredData={faqStructuredData}
+  structuredData={pageStructuredData}
 >
   <!-- 1. Hero Band with Atmospheric Mesh Gradient Backdrop -->
   <section class="relative overflow-hidden border-b border-hairline bg-canvas py-16 sm:py-24 mesh-gradient-hero">

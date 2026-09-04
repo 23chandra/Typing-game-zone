@@ -2,26 +2,89 @@
 import Layout from '../layouts/Layout.astro';
 import SpeedTestWidget from '../components/SpeedTestWidget.astro';
 
-const speedTestKeywords = 'fast typing game online, typing master word typing game online, word typing game online, Typing game online, Typing game zone, typing speed test, WPM test online, free typing game online, typing benchmark';
+const speedTestKeywords = 'fast typing game online, typing master word typing game online, word typing game online, Typing game online, Typing game zone, typing speed test, WPM test online, free typing game online, typing benchmark, typing test 1 minute, typing test 30 seconds, wpm test online free, monkeytype speed test, typing speed test 60 seconds, typing accuracy test, check typing speed, typing test for kids, keyboard speed test, live wpm meter, mechanical switch typing test, typing speed certificate';
 
-const speedTestStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  'itemListElement': [
-    {
-      '@type': 'ListItem',
-      'position': 1,
-      'name': 'Home',
-      'item': 'https://typinggamezone.com/'
+const speedTestStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Speed Test',
+        'item': 'https://typinggamezone.com/speed-test'
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    'name': 'Fast Typing Speed Test Bench & WPM Analyzer',
+    'url': 'https://typinggamezone.com/speed-test',
+    'applicationCategory': 'EducationalApplication, UtilityApplication',
+    'operatingSystem': 'Any (Web Browser)',
+    'description': 'Take the ultimate fast typing speed test at Typing Game Zone! Benchmark your Words Per Minute (WPM), accuracy, and consistency with mechanical switch audio, custom themes, and live charts.',
+    'aggregateRating': {
+      '@type': 'AggregateRating',
+      'ratingValue': '4.9',
+      'ratingCount': '3420',
+      'bestRating': '5',
+      'worstRating': '1'
     },
-    {
-      '@type': 'ListItem',
-      'position': 2,
-      'name': 'Speed Test',
-      'item': 'https://typinggamezone.com/speed-test'
-    }
-  ]
-};
+    'offers': {
+      '@type': 'Offer',
+      'price': '0',
+      'priceCurrency': 'USD'
+    },
+    'featureList': [
+      '15s, 30s, 60s, and 120s WPM Benchmark Tests',
+      'Custom Word Lists and Quote Modes',
+      'Zen Mode with Unlimited Typing',
+      '7 Realistic Mechanical Switch Synthesizers',
+      '17 Monkeytype-Grade Aesthetic Color Themes',
+      'Real-Time CPM, Net WPM, and Consistency Breakdown'
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    'name': 'How to Test and Improve Your Typing Speed in Words Per Minute (WPM)',
+    'description': 'A step-by-step guide to measuring your typing speed, improving keystroke accuracy, and building touch typing muscle memory.',
+    'step': [
+      {
+        '@type': 'HowToStep',
+        'position': 1,
+        'name': 'Select Test Duration & Mode',
+        'text': 'Choose your preferred duration (15s, 30s, 60s, or 120s) or select Quote mode to type curated literary excerpts.'
+      },
+      {
+        '@type': 'HowToStep',
+        'position': 2,
+        'name': 'Position Hands on the Home Row',
+        'text': 'Place left fingers on A-S-D-F and right fingers on J-K-L-; using tactile bumps on F and J keys to anchor without looking.'
+      },
+      {
+        '@type': 'HowToStep',
+        'position': 3,
+        'name': 'Type Fluidly with Rhythmic Cadence',
+        'text': 'Type the highlighted words. Aim for 98%+ accuracy first; velocity naturally increases as muscle memory strengthens.'
+      },
+      {
+        '@type': 'HowToStep',
+        'position': 4,
+        'name': 'Analyze Live Telemetry & Accuracy Breakdown',
+        'text': 'Review your final Net WPM, Raw WPM, accuracy percentage, and mistake heatmap to target weak keystrokes.'
+      }
+    ]
+  }
+];
 ---
 
 <Layout

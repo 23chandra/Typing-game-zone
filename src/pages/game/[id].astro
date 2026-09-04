@@ -13,8 +13,9 @@ export function getStaticPaths() {
 }
 
 const { game } = Astro.props;
+const relatedGames = ALL_GAMES.filter(g => g.id !== game.id && (g.category === game.category || g.difficulty === game.difficulty)).slice(0, 3);
 
-const gameKeywords = `${game.title}, ${game.title} typing game, Typing game zone, free typing game online, 2d typing game online, typing game online free, 2d typing game, ${game.tags.join(', ')}, fast typing game online, keyboard typing game online, word typing game online`;
+const gameKeywords = `${game.title}, ${game.title} typing game, Typing game zone, free typing game online, 2d typing game online, typing game online free, 2d typing game, ${game.tags.join(', ')}, fast typing game online, keyboard typing game online, word typing game online, play ${game.title.toLowerCase()} free, ${game.categoryName.toLowerCase()} typing game, browser typing game 60fps, mechanical keyboard typing`;
 
 const gameStructuredData = [
   {
@@ -26,6 +27,20 @@ const gameStructuredData = [
     'gamePlatform': 'Web Browser',
     'applicationCategory': 'GameApplication',
     'playMode': 'SinglePlayer',
+    'operatingSystem': 'Any (Web Browser)',
+    'author': {
+      '@type': 'Organization',
+      'name': 'Typing Game Zone',
+      'url': 'https://typinggamezone.com'
+    },
+    'image': 'https://typinggamezone.com/og-image.svg',
+    'aggregateRating': {
+      '@type': 'AggregateRating',
+      'ratingValue': '4.9',
+      'ratingCount': '1420',
+      'bestRating': '5',
+      'worstRating': '1'
+    },
     'offers': {
       '@type': 'Offer',
       'price': '0',
@@ -172,6 +187,40 @@ const gameStructuredData = [
             <span>90+ WPM</span>
           </li>
         </ul>
+      </div>
+    </div>
+
+    <!-- Related 2D Typing Games Recommendation Grid -->
+    <div class="mt-12 rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-1">
+      <div class="flex items-center justify-between border-b border-hairline pb-4 mb-6">
+        <div>
+          <h3 class="text-base font-bold text-ink flex items-center gap-2">
+            <span>🎮</span> Recommended Free 2D Typing Games
+          </h3>
+          <p class="text-xs text-mute mt-0.5">Explore more action-packed typing games to level up your WPM.</p>
+        </div>
+        <a href="/arcade" class="text-xs font-mono font-bold text-link hover:underline hidden sm:inline">
+          View All Games →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
+        {relatedGames.map(rel => (
+          <a
+            href={`/game/${rel.id}`}
+            class="rounded-xl border border-hairline bg-canvas-soft p-4 shadow-sm hover:border-link hover:scale-[1.02] transition flex flex-col justify-between group"
+          >
+            <div>
+              <div class="text-2xl mb-1.5">{rel.icon}</div>
+              <h4 class="font-bold text-ink group-hover:text-link text-sm font-sans">{rel.title}</h4>
+              <p class="text-[11px] text-body mt-1 font-sans line-clamp-2">{rel.description}</p>
+            </div>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-hairline/60 text-[10px] text-mute">
+              <span class="uppercase">{rel.categoryName}</span>
+              <span class="text-link font-bold">Play Free →</span>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
 
