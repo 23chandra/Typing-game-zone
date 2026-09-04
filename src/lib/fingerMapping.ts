@@ -460,16 +460,6 @@ const EXTRA_ACCENT_KEY_MAP: Record<string, { baseKey: string; shiftKey?: string 
   'ô': { baseKey: 'o' },
   'ç': { baseKey: 'c' }, 'Ç': { baseKey: 'c', shiftKey: 'Ç' },
   'œ': { baseKey: 'o' },
-  'ó': { baseKey: 'o' }, 'Ó': { baseKey: 'o', shiftKey: 'Ó' },
-  'ú': { baseKey: 'u' }, 'Ú': { baseKey: 'u', shiftKey: 'Ú' },
-  // French
-  'è': { baseKey: 'e' }, 'ê': { baseKey: 'e' }, 'ë': { baseKey: 'e' },
-  'à': { baseKey: 'a' }, 'â': { baseKey: 'a' },
-  'ù': { baseKey: 'u' }, 'û': { baseKey: 'u' },
-  'î': { baseKey: 'i' }, 'ï': { baseKey: 'i' },
-  'ô': { baseKey: 'o' },
-  'ç': { baseKey: 'c' }, 'Ç': { baseKey: 'c', shiftKey: 'Ç' },
-  'œ': { baseKey: 'o' },
   // Portuguese
   'ã': { baseKey: 'a' }, 'õ': { baseKey: 'o' },
   'Ã': { baseKey: 'a', shiftKey: 'Ã' }, 'Õ': { baseKey: 'o', shiftKey: 'Õ' },
