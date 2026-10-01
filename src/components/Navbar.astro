@@ -1,0 +1,641 @@
+---
+// Navigation bar following DESIGN.md specifications with Global Monkeytype Theme Switcher
+import { MONKEYTYPE_THEMES } from '../lib/monkeytypeThemes';
+import { SUPPORTED_LANGUAGES } from '../lib/i18n';
+import SiteLogo from './SiteLogo.astro';
+---
+
+<header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8">
+    <!-- Brand Logo -->
+    <a href="/" class="group flex items-center gap-2 sm:gap-3 flex-shrink-0">
+      <SiteLogo class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl shadow-level-2 transition-transform duration-200 group-hover:scale-105 border border-hairline flex-shrink-0" />
+      <div class="flex flex-col flex-shrink min-w-0">
+        <span class="text-xs xs:text-sm sm:text-base font-bold tracking-tight text-ink truncate leading-tight">Typing Game Zone</span>
+        <span class="hidden md:inline text-[10px] font-medium tracking-wide uppercase text-mute font-mono whitespace-nowrap mt-0.5">typinggamezone.com</span>
+      </div>
+    </a>
+
+    <!-- Desktop Nav Links (Visible on tablets & desktop 1024px+) -->
+    <nav class="hidden lg:flex items-center gap-1 rounded-full border border-hairline bg-canvas-soft p-1 text-xs font-medium shadow-level-1">
+      <a href="/#games-section" data-i18n="nav.games" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Games (21)</a>
+      <a href="/arcade" data-i18n="nav.arcade" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Arcade Lounge</a>
+      <a href="/speed-test" data-i18n="nav.speedTest" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Speed Test</a>
+      <a href="/practice" data-i18n="nav.practiceLab" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Practice Lab</a>
+      <a href="/leaderboards" data-i18n="nav.leaderboards" class="rounded-full px-3.5 py-1.5 text-body transition-colors hover:text-ink hover:bg-canvas whitespace-nowrap">Leaderboards</a>
+    </nav>
+
+    <!-- Controls: Language + Global Theme + Sound Switcher + Command Hint + Play CTA -->
+    <div class="flex items-center gap-1.5 sm:gap-2 lg:gap-2.5 flex-shrink-0">
+      
+      <!-- Global Language Picker Dropdown -->
+      <div class="relative" id="nav-lang-container">
+        <button
+          id="nav-lang-btn"
+          type="button"
+          class="flex items-center gap-1 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          title="Switch Language / भाषा बदलें / Cambiar idioma"
+          aria-expanded="false"
+        >
+          <span id="nav-lang-flag" class="text-sm">🇺🇸</span>
+          <span id="nav-lang-current-label" class="hidden md:inline font-bold">EN</span>
+          <svg class="h-3.5 w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          id="nav-lang-menu"
+          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs flex flex-col max-h-[75vh]"
+          style="background-color: var(--site-canvas, #2c2e31);"
+        >
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1 text-[11px] text-mute uppercase font-bold">
+            <span data-i18n="nav.language">Language ({SUPPORTED_LANGUAGES.length})</span>
+            <span class="text-[10px] text-mute">Global i18n</span>
+          </div>
+
+          <!-- Quick Search Filter -->
+          <input
+            type="text"
+            id="nav-lang-search"
+            placeholder="Search language..."
+            class="w-full rounded-xl px-3 py-1.5 text-xs border mb-2 focus:outline-none"
+            style="background-color: var(--site-canvas-soft, #323437); border-color: var(--site-hairline); color: var(--site-ink);"
+          />
+
+          <!-- Languages List -->
+          <div id="nav-lang-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-60 smooth-scroll-x">
+            {SUPPORTED_LANGUAGES.map(lang => (
+              <button
+                type="button"
+                data-lang={lang.code}
+                class="nav-lang-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft cursor-pointer min-h-[38px]"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">{lang.flag}</span>
+                  <div class="flex flex-col">
+                    <span class="font-bold text-xs">{lang.nativeName}</span>
+                    <span class="text-[10px] text-mute">{lang.name}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[9px] uppercase font-mono text-mute bg-canvas-soft px-1.5 py-0.5 rounded">{lang.code}</span>
+                  <span class="nav-lang-check text-xs font-bold text-success hidden">✓</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Global Theme Picker Dropdown -->
+      <div class="relative" id="nav-theme-container">
+        <button
+          id="nav-theme-btn"
+          type="button"
+          class="flex items-center gap-1 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          title="Switch Website Color Theme (17 Themes)"
+          aria-expanded="false"
+        >
+          <span id="nav-theme-dot" class="h-2.5 w-2.5 rounded-full shadow-xs transition-colors flex-shrink-0" style="background-color: var(--site-primary, #e2b714);"></span>
+          <span id="nav-theme-current-label" class="hidden md:inline font-bold">Serika Dark</span>
+          <svg class="h-3.5 w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          id="nav-theme-menu"
+          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs max-h-[75vh] flex flex-col"
+          style="background-color: var(--site-canvas, #2c2e31);"
+        >
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1">
+            <span class="text-[11px] font-bold text-mute uppercase" data-i18n="nav.siteTheme">Site Theme (17)</span>
+            <span class="text-[10px] text-mute">Typing Game Zone</span>
+          </div>
+
+          <!-- Quick Search Filter -->
+          <input
+            type="text"
+            id="nav-theme-search"
+            placeholder="Search themes..."
+            class="w-full rounded-xl px-3 py-1.5 text-xs border mb-2 focus:outline-none"
+            style="background-color: var(--site-canvas-soft, #323437); border-color: var(--site-hairline); color: var(--site-ink);"
+          />
+
+          <!-- Themes List -->
+          <div id="nav-theme-list" class="overflow-y-auto flex-1 flex flex-col gap-1 pr-1 max-h-60 smooth-scroll-x">
+            {MONKEYTYPE_THEMES.map(theme => (
+              <button
+                type="button"
+                data-theme-id={theme.id}
+                class="nav-theme-opt flex items-center justify-between rounded-xl px-2.5 py-2 text-left transition hover:bg-canvas-soft cursor-pointer min-h-[38px]"
+              >
+                <div class="flex flex-col">
+                  <span class="font-bold text-xs" style={`color: ${theme.main};`}>{theme.name}</span>
+                  <span class="text-[9px] opacity-60 uppercase">{theme.category}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${theme.main};`}></span>
+                  <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${theme.sub};`}></span>
+                  <span class="h-2.5 w-2.5 rounded-full" style={`background-color: ${theme.text};`}></span>
+                  <span class="nav-theme-check ml-1 text-xs font-bold text-success hidden">✓</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Sound Switcher Dropdown (Hidden on mobile < 640px, visible on sm+) -->
+      <div class="relative hidden sm:block" id="sound-dropdown-container">
+        <button
+          id="sound-menu-btn"
+          type="button"
+          class="flex items-center gap-1.5 sm:gap-2 rounded-xl border border-hairline bg-canvas px-2.5 sm:px-3 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+          title="Switch Sound Profile"
+          aria-expanded="false"
+        >
+          <span id="sound-icon" class="text-sm">🔊</span>
+          <span id="current-switch-label" class="hidden 2xl:inline font-bold">Blue Clicky</span>
+          <svg class="h-3.5 w-3.5 opacity-60 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          id="sound-menu"
+          class="absolute right-0 mt-2 hidden w-52 rounded-2xl border border-hairline bg-canvas p-1.5 shadow-level-4 z-50 font-mono text-xs"
+          style="background-color: var(--site-canvas, #2c2e31);"
+        >
+          <div class="px-2 py-1 text-[11px] text-mute uppercase border-b border-hairline mb-1" data-i18n="nav.switchSynthesis">
+            Switch Synthesis
+          </div>
+          <button data-switch="clicky" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+            <span>🔵 Blue (Clicky)</span>
+            <span class="switch-check text-success hidden">✓</span>
+          </button>
+          <button data-switch="thock" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+            <span>🐼 Panda (Thock)</span>
+            <span class="switch-check text-success hidden">✓</span>
+          </button>
+          <button data-switch="linear" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+            <span>🔴 Red (Linear)</span>
+            <span class="switch-check text-success hidden">✓</span>
+          </button>
+          <button data-switch="typewriter" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+            <span>📻 Typewriter Bell</span>
+            <span class="switch-check text-success hidden">✓</span>
+          </button>
+          <button data-switch="pop" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+            <span>🫧 Bubble Pop</span>
+            <span class="switch-check text-success hidden">✓</span>
+          </button>
+          <button data-switch="beep" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink cursor-pointer">
+            <span>👾 Digital Beep</span>
+            <span class="switch-check text-success hidden">✓</span>
+          </button>
+          <button data-switch="off" class="switch-opt flex w-full items-center justify-between rounded-xl px-2.5 py-1.5 text-body hover:bg-canvas-soft hover:text-ink border-t border-hairline mt-1 cursor-pointer">
+            <span>🔇 Mute Sound</span>
+            <span class="switch-check text-success hidden">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Subtle Vertical Divider (Visible on desktop) -->
+      <div class="hidden xl:block h-5 w-px bg-hairline/80 mx-0.5"></div>
+
+      <!-- Player Level & Streak Telemetry Pill (Desktop 2xl Only) -->
+      <a
+        href="/leaderboards"
+        id="nav-player-pill"
+        class="hidden 2xl:flex items-center gap-2.5 rounded-xl border border-hairline bg-canvas px-3 py-1.5 text-xs font-mono font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft group cursor-pointer whitespace-nowrap"
+        title="View Player Profile, Level & Daily Quests"
+      >
+        <span class="flex items-center gap-1 text-warning">
+          <span>🔥</span>
+          <span id="nav-streak-val">1</span>
+        </span>
+        <span class="h-3.5 w-px bg-hairline"></span>
+        <span class="flex items-center gap-1.5">
+          <span id="nav-level-badge" class="px-1.5 py-0.5 rounded-md text-[10px] font-bold" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);">Lvl 1</span>
+          <span id="nav-rank-title" class="hidden 2xl:inline text-mute font-normal text-[11px]" data-i18n="nav.novice">Novice</span>
+        </span>
+      </a>
+
+      <!-- Command Palette Launcher Button (Desktop xl+) -->
+      <button
+        type="button"
+        id="nav-cmd-launcher"
+        class="hidden xl:flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas px-2.5 py-1.5 text-xs font-mono font-medium text-body shadow-level-1 transition hover:text-ink hover:bg-canvas-soft cursor-pointer whitespace-nowrap"
+        title="Open Command Palette (Ctrl+K / Esc)"
+      >
+        <span class="font-bold text-ink">>_</span>
+        <kbd class="rounded bg-canvas-soft px-1.5 py-0.5 text-[10px] font-semibold border border-hairline opacity-75">⌘K</kbd>
+      </button>
+
+      <!-- Quick Play Primary CTA -->
+      <a
+        href="/game/type-defender"
+        class="inline-flex items-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-bold shadow-level-2 transition-all hover:opacity-95 hover:scale-105 active:scale-95 whitespace-nowrap cursor-pointer flex-shrink-0"
+        style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+        title="Play 21 Free Arcade Typing Games"
+      >
+        <span class="text-xs">🎮</span>
+        <span data-i18n="nav.play">Play</span>
+        <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+
+      <!-- Mobile Menu Hamburger Button (Hidden on lg+) -->
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        class="lg:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-hairline bg-canvas text-body shadow-level-1 hover:bg-canvas-soft hover:text-ink transition cursor-pointer flex-shrink-0"
+        aria-label="Toggle navigation"
+      >
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown Navigation Drawer -->
+  <div id="mobile-menu-drawer" class="hidden border-b border-hairline bg-canvas px-4 py-4 lg:hidden font-mono text-xs shadow-level-4 animate-in slide-in-from-top-2 duration-150">
+    <div class="flex flex-col gap-1 font-medium mb-3">
+      <a href="/#games-section" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">🎮</span> <span data-i18n="nav.games">Games (21)</span>
+      </a>
+      <a href="/arcade" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">🕹️</span> <span data-i18n="nav.arcade">Arcade Lounge</span>
+      </a>
+      <a href="/speed-test" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">⚡</span> <span data-i18n="nav.speedTest">Speed Test</span>
+      </a>
+      <a href="/practice" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">⌨️</span> <span data-i18n="nav.practiceLab">Practice Lab</span>
+      </a>
+      <a href="/leaderboards" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
+      </a>
+      <a href="/faq" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">❓</span> <span>Typing FAQ (37 Q&A)</span>
+      </a>
+      <a href="/about" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">ℹ️</span> <span>About Us</span>
+      </a>
+      <a href="/contact" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
+        <span class="text-base">📬</span> <span>Contact Us</span>
+      </a>
+    </div>
+
+    <!-- Mobile Sound Toggle Bar -->
+    <div class="py-2.5 px-3 mb-3 rounded-xl bg-canvas-soft border border-hairline flex items-center justify-between">
+      <span class="text-[11px] text-mute flex items-center gap-1.5">
+        <span id="mobile-sound-icon">🔊</span>
+        <span>Sound: <strong id="mobile-sound-label" class="text-ink">Clicky</strong></span>
+      </span>
+      <button
+        type="button"
+        id="mobile-sound-cycle-btn"
+        class="rounded-lg px-2.5 py-1 text-[10px] font-bold border border-hairline bg-canvas text-body hover:text-ink cursor-pointer"
+      >
+        Cycle Sound ↻
+      </button>
+    </div>
+
+    <!-- Mobile Command & Play Quick Actions -->
+    <div class="pt-3 border-t border-hairline flex items-center justify-between gap-3">
+      <button
+        type="button"
+        id="mobile-cmd-btn"
+        class="flex items-center gap-1.5 rounded-xl border border-hairline bg-canvas-soft px-3 py-2.5 text-xs font-mono font-bold text-ink cursor-pointer hover:bg-canvas transition min-h-[44px]"
+      >
+        <span>>_</span> <span data-i18n="nav.commandPalette">Command Palette</span>
+        <kbd class="text-[10px] opacity-60">⌘K</kbd>
+      </button>
+      <a
+        href="/game/type-defender"
+        class="inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 min-h-[44px]"
+        style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+      >
+        <span data-i18n="nav.playGame">Play Game</span>
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  import { soundEngine, type SwitchSoundType } from '../lib/soundEngine';
+  import { applyThemeGlobal, getThemeById, type MonkeytypeTheme } from '../lib/monkeytypeThemes';
+  import { storage } from '../lib/storage';
+  import { getCurrentLanguage, setLanguage, getLanguageDef, initI18n } from '../lib/i18n';
+
+  function initNavbar() {
+    initI18n();
+
+    const streakValEl = document.getElementById('nav-streak-val');
+    const levelBadgeEl = document.getElementById('nav-level-badge');
+    const rankTitleEl = document.getElementById('nav-rank-title');
+
+    const updatePlayerTelemetryUI = () => {
+      try {
+        const profile = storage.getProfile();
+        const lvlInfo = storage.getLevelInfo(profile.xp);
+        if (streakValEl) streakValEl.textContent = `${profile.currentStreak || 1}`;
+        if (levelBadgeEl) {
+          levelBadgeEl.textContent = `Lvl ${lvlInfo.level}`;
+          levelBadgeEl.style.backgroundColor = lvlInfo.color;
+        }
+        if (rankTitleEl) rankTitleEl.textContent = lvlInfo.title;
+      } catch {}
+    };
+
+    updatePlayerTelemetryUI();
+    window.addEventListener('typing:xp-gained', updatePlayerTelemetryUI);
+
+    const langBtn = document.getElementById('nav-lang-btn');
+    const langMenu = document.getElementById('nav-lang-menu');
+    const langFlag = document.getElementById('nav-lang-flag');
+    const langLabel = document.getElementById('nav-lang-current-label');
+    const langSearch = document.getElementById('nav-lang-search') as HTMLInputElement | null;
+
+    const soundBtn = document.getElementById('sound-menu-btn');
+    const soundMenu = document.getElementById('sound-menu');
+    const soundLabel = document.getElementById('current-switch-label');
+    const soundIcon = document.getElementById('sound-icon');
+
+    const themeBtn = document.getElementById('nav-theme-btn');
+    const themeMenu = document.getElementById('nav-theme-menu');
+    const themeLabel = document.getElementById('nav-theme-current-label');
+    const themeSearch = document.getElementById('nav-theme-search') as HTMLInputElement | null;
+
+    const cmdLauncher = document.getElementById('nav-cmd-launcher');
+    const mobileCmdBtn = document.getElementById('mobile-cmd-btn');
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileDrawer = document.getElementById('mobile-menu-drawer');
+
+    // Mobile nav toggle
+    mobileBtn?.addEventListener('click', () => {
+      mobileDrawer?.classList.toggle('hidden');
+    });
+
+    // Command palette launcher
+    const openCmd = () => {
+      if ((window as any).toggleGlobalCommandPalette) {
+        (window as any).toggleGlobalCommandPalette();
+      }
+    };
+    cmdLauncher?.addEventListener('click', openCmd);
+    mobileCmdBtn?.addEventListener('click', () => {
+      mobileDrawer?.classList.add('hidden');
+      openCmd();
+    });
+
+    // --- LANGUAGE SWITCHER UI SYNC ---
+    const updateLangUI = (code?: string) => {
+      const cur = code || getCurrentLanguage();
+      const def = getLanguageDef(cur);
+      if (langFlag) langFlag.textContent = def.flag;
+      if (langLabel) langLabel.textContent = def.code.toUpperCase();
+
+      document.querySelectorAll('.nav-lang-opt').forEach((el) => {
+        const lCode = el.getAttribute('data-lang');
+        const check = el.querySelector('.nav-lang-check');
+        if (check) {
+          if (lCode === cur) {
+            check.classList.remove('hidden');
+            el.classList.add('font-bold');
+          } else {
+            check.classList.add('hidden');
+            el.classList.remove('font-bold');
+          }
+        }
+      });
+    };
+
+    langBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      soundMenu?.classList.add('hidden');
+      themeMenu?.classList.add('hidden');
+      langMenu?.classList.toggle('hidden');
+      if (!langMenu?.classList.contains('hidden')) {
+        try {
+          langSearch?.focus({ preventScroll: true });
+        } catch {
+          langSearch?.focus();
+        }
+      }
+    });
+
+    langSearch?.addEventListener('input', (e) => {
+      const q = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      document.querySelectorAll('.nav-lang-opt').forEach((el) => {
+        const lCode = el.getAttribute('data-lang') || '';
+        const def = getLanguageDef(lCode);
+        const match =
+          def.name.toLowerCase().includes(q) ||
+          def.nativeName.toLowerCase().includes(q) ||
+          def.code.toLowerCase().includes(q) ||
+          (def.region && def.region.toLowerCase().includes(q));
+        (el as HTMLElement).style.display = match ? 'flex' : 'none';
+      });
+    });
+
+    document.querySelectorAll('.nav-lang-opt').forEach((el) => {
+      el.addEventListener('click', () => {
+        const lCode = el.getAttribute('data-lang');
+        if (lCode) {
+          setLanguage(lCode);
+          updateLangUI(lCode);
+          langMenu?.classList.add('hidden');
+        }
+      });
+    });
+
+    window.addEventListener('typing:language-change', (e: any) => {
+      updateLangUI(e.detail?.lang);
+    });
+
+    // --- SOUND ENGINE UI SYNC ---
+    const mobileSoundIcon = document.getElementById('mobile-sound-icon');
+    const mobileSoundLabel = document.getElementById('mobile-sound-label');
+    const mobileSoundCycleBtn = document.getElementById('mobile-sound-cycle-btn');
+
+    const updateSoundUI = () => {
+      const cur = soundEngine.getSwitch();
+      const isMuted = soundEngine.getIsMuted() || cur === 'off';
+      if (soundIcon) soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      if (mobileSoundIcon) mobileSoundIcon.textContent = isMuted ? '🔇' : '🔊';
+
+      const labels: Record<SwitchSoundType, string> = {
+        clicky: 'Blue Clicky',
+        thock: 'Panda Thock',
+        linear: 'Red Linear',
+        typewriter: 'Typewriter',
+        pop: 'Bubble Pop',
+        beep: 'Digital Beep',
+        off: 'Muted'
+      };
+      if (soundLabel) soundLabel.textContent = labels[cur] || 'Sound';
+      if (mobileSoundLabel) mobileSoundLabel.textContent = labels[cur] || 'Sound';
+
+      // Update checkmarks
+      document.querySelectorAll('.switch-opt').forEach((el) => {
+        const sw = el.getAttribute('data-switch');
+        const check = el.querySelector('.switch-check');
+        if (check) {
+          if (sw === cur) check.classList.remove('hidden');
+          else check.classList.add('hidden');
+        }
+      });
+    };
+
+    soundBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      soundEngine.initContext();
+      langMenu?.classList.add('hidden');
+      themeMenu?.classList.add('hidden');
+      soundMenu?.classList.toggle('hidden');
+    });
+
+    mobileSoundCycleBtn?.addEventListener('click', () => {
+      const cycle: SwitchSoundType[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
+      const cur = soundEngine.getSwitch();
+      const nextIdx = (cycle.indexOf(cur) + 1) % cycle.length;
+      const nextSwitch = cycle[nextIdx];
+      soundEngine.initContext();
+      soundEngine.setSwitch(nextSwitch);
+      if (nextSwitch !== 'off') {
+        soundEngine.playKey(false, nextSwitch === 'typewriter');
+      }
+      updateSoundUI();
+    });
+
+    // Close mobile drawer on navigation link click
+    mobileDrawer?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileDrawer?.classList.add('hidden');
+      });
+    });
+
+    document.querySelectorAll('.switch-opt').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const sw = el.getAttribute('data-switch') as SwitchSoundType;
+        if (sw) {
+          soundEngine.initContext();
+          soundEngine.setSwitch(sw);
+          if (sw !== 'off') {
+            soundEngine.playKey(false, sw === 'typewriter');
+          }
+          updateSoundUI();
+          soundMenu?.classList.add('hidden');
+        }
+      });
+    });
+
+    window.addEventListener('typing:sound-change', () => {
+      updateSoundUI();
+    });
+
+    // --- THEME ENGINE UI SYNC ---
+    const updateThemeUI = (theme?: MonkeytypeTheme) => {
+      const curId = theme ? theme.id : (localStorage.getItem('monkeytype_theme') || 'serika_dark');
+      const curTheme = theme || getThemeById(curId);
+
+      if (themeLabel) themeLabel.textContent = curTheme.name;
+      const themeDot = document.getElementById('nav-theme-dot');
+      if (themeDot) themeDot.style.backgroundColor = curTheme.main;
+
+      // Update active checkmarks
+      document.querySelectorAll('.nav-theme-opt').forEach((el) => {
+        const tId = el.getAttribute('data-theme-id');
+        const check = el.querySelector('.nav-theme-check');
+        if (check) {
+          if (tId === curId) {
+            check.classList.remove('hidden');
+            el.classList.add('font-bold');
+          } else {
+            check.classList.add('hidden');
+            el.classList.remove('font-bold');
+          }
+        }
+      });
+    };
+
+    themeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langMenu?.classList.add('hidden');
+      soundMenu?.classList.add('hidden');
+      themeMenu?.classList.toggle('hidden');
+      if (!themeMenu?.classList.contains('hidden')) {
+        try {
+          themeSearch?.focus({ preventScroll: true });
+        } catch {
+          themeSearch?.focus();
+        }
+      }
+    });
+
+    themeSearch?.addEventListener('input', (e) => {
+      const q = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      document.querySelectorAll('.nav-theme-opt').forEach((el) => {
+        const tId = el.getAttribute('data-theme-id') || '';
+        const themeObj = getThemeById(tId);
+        const match = themeObj.name.toLowerCase().includes(q) || themeObj.id.toLowerCase().includes(q) || themeObj.category.toLowerCase().includes(q);
+        (el as HTMLElement).style.display = match ? 'flex' : 'none';
+      });
+    });
+
+    document.querySelectorAll('.nav-theme-opt').forEach((el) => {
+      el.addEventListener('click', () => {
+        const tId = el.getAttribute('data-theme-id');
+        if (tId) {
+          const selectedTheme = getThemeById(tId);
+          applyThemeGlobal(selectedTheme);
+          updateThemeUI(selectedTheme);
+          themeMenu?.classList.add('hidden');
+        }
+      });
+    });
+
+    // Listen to global theme change event
+    window.addEventListener('monkeytype:theme-change', (e: any) => {
+      updateThemeUI(e.detail);
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!langMenu?.contains(e.target as Node) && !langBtn?.contains(e.target as Node)) {
+        langMenu?.classList.add('hidden');
+      }
+      if (!soundMenu?.contains(e.target as Node) && !soundBtn?.contains(e.target as Node)) {
+        soundMenu?.classList.add('hidden');
+      }
+      if (!themeMenu?.contains(e.target as Node) && !themeBtn?.contains(e.target as Node)) {
+        themeMenu?.classList.add('hidden');
+      }
+    });
+
+    updateLangUI();
+    updateSoundUI();
+    updateThemeUI();
+  }
+
+  // Run on mount
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavbar);
+  } else {
+    initNavbar();
+  }
+  document.addEventListener('astro:page-load', initNavbar);
+</script>

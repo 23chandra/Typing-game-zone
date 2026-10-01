@@ -1,0 +1,91 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GameCard from '../components/GameCard.astro';
+import { ALL_GAMES } from '../lib/games/gameRegistry';
+
+// Filter Arcade, Action, and Fighting games
+const arcadeGames = ALL_GAMES.filter(g => ['arcade', 'action', 'fighting'].includes(g.category));
+
+const arcadeKeywords = 'Typing game zone, 2d typing game online free, free typing game online, typing game online, 2d typing game, fast typing game online, arcade typing game, retro typing game, zombie typing game online';
+
+const arcadeStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': 'Home',
+      'item': 'https://typinggamezone.com/'
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': 'Arcade Lounge',
+      'item': 'https://typinggamezone.com/arcade'
+    }
+  ]
+};
+---
+
+<Layout
+  title="Retro Arcade Lounge — Play 2D Typing Games Online Free | Typing Game Zone"
+  description="Step into the Retro Arcade Lounge at Typing Game Zone! Play free 2D typing games online including retro space invaders, zombie defense, katana slicing, and martial arts combat."
+  keywords={arcadeKeywords}
+  structuredData={arcadeStructuredData}
+>
+  <div class="bg-canvas-soft text-ink min-h-screen py-12 sm:py-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Retro Arcade Header Banner -->
+      <div class="relative overflow-hidden rounded-3xl border border-hairline bg-canvas p-8 sm:p-12 mb-12 shadow-level-4 scanline-effect">
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 rounded-full bg-canvas-soft border border-hairline px-3 py-1 text-xs font-mono text-link mb-4 shadow-sm">
+            <span class="animate-ping h-2 w-2 rounded-full inline-block" style="background-color: var(--site-primary, #e2b714);"></span>
+            <span>COIN-OP READY • INSERT 100 WPM TO PLAY</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight">
+            <span data-i18n="nav.arcade">The Retro Arcade Lounge</span>
+          </h1>
+          <p class="mt-4 text-sm sm:text-base text-body leading-relaxed" data-i18n="hero.subtitle">
+            Classic 8-bit space invaders, planetary orbital defenses, neon ninja blades, and Hadoken brawlers. Grab your keyboard and dominate the arcade high-score table.
+          </p>
+
+          <div class="mt-6 flex flex-wrap items-center gap-3">
+            <a
+              href="/game/retro-invaders"
+              class="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95"
+              style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+            >
+              <span>Launch Retro Invaders</span>
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+            <a
+              href="/game/street-fighter"
+              class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-2.5 text-xs font-bold text-ink transition hover:bg-canvas active:scale-95"
+            >
+              <span>Street Fighter Typer 🥊</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arcade Games Grid -->
+      <div class="mb-8 flex items-center justify-between border-b border-hairline pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-ink">Arcade, Combat & Defense Titles ({arcadeGames.length})</h2>
+          <p class="text-xs text-mute mt-0.5">High intensity typing games with multi-phase bosses.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-ink">
+        {arcadeGames.map(game => (
+          <GameCard game={game} />
+        ))}
+      </div>
+
+    </div>
+  </div>
+</Layout>

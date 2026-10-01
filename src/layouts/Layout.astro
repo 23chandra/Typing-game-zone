@@ -1,0 +1,323 @@
+---
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  ogType?: string;
+  structuredData?: Record<string, any> | Record<string, any>[];
+}
+
+const {
+  title = 'Typing Game Zone — Free 2D Typing Games Online, Speed Tests & Typing Lessons',
+  description = 'Play 21 free 2D typing games online at Typing Game Zone! Master fast typing with arcade action, zombie survival, typing lessons, speed tests, and mechanical switch audio.',
+  keywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, typing game online for kids, typing master word typing game online, kids typing game online, keyboard typing game online, zombie typing game online, 2d typing game online, 2d typing game online free, 2d typing game, typing game zone guess who i am, free typing game zone, typing game zone snake',
+  canonicalUrl = new URL(Astro.url.pathname, 'https://typinggamezone.com').href,
+  ogImage = 'https://typinggamezone.com/og-image.svg',
+  ogType = 'website',
+  structuredData
+} = Astro.props;
+
+// Core WebSite & WebApplication Schema.org JSON-LD
+const baseStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    'name': 'Typing Game Zone',
+    'alternateName': ['TypingGameZone', 'Typing Game Zone Online'],
+    'url': 'https://typinggamezone.com',
+    'description': 'Free 2D typing games online, keyboard speed tests, touch typing lessons, and arcade typing practice.',
+    'inLanguage': 'en-US',
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'Typing Game Zone',
+      'url': 'https://typinggamezone.com',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': 'https://typinggamezone.com/logo.svg'
+      }
+    }
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    'name': 'Typing Game Zone',
+    'url': 'https://typinggamezone.com',
+    'applicationCategory': 'GameApplication, EducationalApplication',
+    'operatingSystem': 'Any (Web Browser)',
+    'offers': {
+      '@type': 'Offer',
+      'price': '0',
+      'priceCurrency': 'USD'
+    },
+    'description': 'Comprehensive suite of 21 free 2D typing games online, customizable speed tests, and interactive typing lessons with mechanical switch sound synthesis.'
+  }
+];
+
+const allStructuredData = structuredData
+  ? Array.isArray(structuredData)
+    ? [...baseStructuredData, ...structuredData]
+    : [...baseStructuredData, structuredData]
+  : baseStructuredData;
+---
+
+<!doctype html>
+<html lang="en" data-theme="serika_dark" class="dark w-full max-w-full">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-8T1BYV4KWR"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-8T1BYV4KWR');
+    </script>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="TypingGameZone" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#323437" />
+    <meta name="author" content="Typing Game Zone" />
+
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:site_name" content="Typing Game Zone" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@TypingGameZone" />
+    <meta name="twitter:creator" content="@TypingGameZone" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={title} />
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(allStructuredData)} />
+
+    <!-- International SEO hreflang tags -->
+    <link rel="alternate" hreflang="x-default" href="https://typinggamezone.com" />
+    <link rel="alternate" hreflang="en" href="https://typinggamezone.com?lang=en" />
+    <link rel="alternate" hreflang="hi" href="https://typinggamezone.com?lang=hi" />
+    <link rel="alternate" hreflang="es" href="https://typinggamezone.com?lang=es" />
+    <link rel="alternate" hreflang="fr" href="https://typinggamezone.com?lang=fr" />
+    <link rel="alternate" hreflang="de" href="https://typinggamezone.com?lang=de" />
+    <link rel="alternate" hreflang="ja" href="https://typinggamezone.com?lang=ja" />
+    <link rel="alternate" hreflang="pt" href="https://typinggamezone.com?lang=pt" />
+    <link rel="alternate" hreflang="ru" href="https://typinggamezone.com?lang=ru" />
+    <link rel="alternate" hreflang="ar" href="https://typinggamezone.com?lang=ar" />
+    <link rel="alternate" hreflang="zh" href="https://typinggamezone.com?lang=zh" />
+    <link rel="alternate" hreflang="it" href="https://typinggamezone.com?lang=it" />
+    <link rel="alternate" hreflang="ko" href="https://typinggamezone.com?lang=ko" />
+    <link rel="alternate" hreflang="id" href="https://typinggamezone.com?lang=id" />
+    <link rel="alternate" hreflang="tr" href="https://typinggamezone.com?lang=tr" />
+    <link rel="alternate" hreflang="vi" href="https://typinggamezone.com?lang=vi" />
+    <link rel="alternate" hreflang="bn" href="https://typinggamezone.com?lang=bn" />
+
+    <!-- Google Fonts for Geist, Inter & International Typography Support -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+
+    <!-- Instant Zero-FOUC Global Theme & Language/RTL Injection -->
+    <script is:inline>
+      (function() {
+        try {
+          // Instant Zero-FOUC Language & RTL Detection
+          const rtlLangs = ['ar', 'fa', 'he', 'ur'];
+          const supportedLangs = ['en', 'hi', 'es', 'fr', 'de', 'ja', 'pt', 'ru', 'ar', 'zh', 'it', 'ko', 'id', 'tr', 'vi', 'bn'];
+          let curLang = localStorage.getItem('typing_game_zone_lang');
+
+          if (!curLang && navigator && navigator.languages) {
+            for (const l of navigator.languages) {
+              const code = l.toLowerCase().split('-')[0];
+              if (supportedLangs.includes(code)) {
+                curLang = code;
+                break;
+              }
+            }
+          }
+          if (!curLang) curLang = 'en';
+
+          const isRTL = rtlLangs.includes(curLang);
+          const rootEl = document.documentElement;
+          rootEl.setAttribute('lang', curLang);
+          rootEl.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+          const themes = {
+            serika_dark: { bg: '#323437', main: '#e2b714', sub: '#646669', subAlt: '#2c2e31', text: '#d1d0c5', error: '#ca4754', errorExtra: '#7e2a33', isLight: false },
+            carbon: { bg: '#313131', main: '#f66e0d', sub: '#616161', subAlt: '#262626', text: '#f5e6c8', error: '#e45c5c', errorExtra: '#b23a3a', isLight: false },
+            matrix: { bg: '#000000', main: '#15ff00', sub: '#006600', subAlt: '#041d04', text: '#d1ffd1', error: '#da3333', errorExtra: '#791717', isLight: false },
+            dracula: { bg: '#282a36', main: '#bd93f9', sub: '#6272a4', subAlt: '#21222c', text: '#f8f8f2', error: '#ff5555', errorExtra: '#8b0000', isLight: false },
+            nord: { bg: '#2e3440', main: '#88c0d0', sub: '#4c566a', subAlt: '#242933', text: '#d8dee9', error: '#bf616a', errorExtra: '#88383e', isLight: false },
+            cyberpunk: { bg: '#181425', main: '#ffee00', sub: '#5a3978', subAlt: '#231738', text: '#00ffff', error: '#ff0055', errorExtra: '#990033', isLight: false },
+            olivia: { bg: '#1c1b1d', main: '#deaf9d', sub: '#4b4447', subAlt: '#262427', text: '#f2efed', error: '#e05561', errorExtra: '#8b2630', isLight: false },
+            gruvbox_dark: { bg: '#282828', main: '#d79921', sub: '#928374', subAlt: '#1d2021', text: '#ebdbb2', error: '#fb4934', errorExtra: '#cc241d', isLight: false },
+            '8008': { bg: '#333a45', main: '#f44c7f', sub: '#939eae', subAlt: '#272d37', text: '#e9ecf0', error: '#da3333', errorExtra: '#791717', isLight: false },
+            bento: { bg: '#2d394d', main: '#ff7a90', sub: '#4a5b78', subAlt: '#242f40', text: '#fffaf8', error: '#ee2a4a', errorExtra: '#9b182d', isLight: false },
+            botanical: { bg: '#1e2a22', main: '#88b395', sub: '#495e54', subAlt: '#141d17', text: '#e1ece6', error: '#e26d5c', errorExtra: '#8a3b30', isLight: false },
+            moonlight: { bg: '#191f28', main: '#c69f68', sub: '#4b5975', subAlt: '#11161d', text: '#cccccd', error: '#ff757f', errorExtra: '#a8363f', isLight: false },
+            taro: { bg: '#130f1a', main: '#b382d9', sub: '#493d59', subAlt: '#1d1726', text: '#ffe7ff', error: '#f35588', errorExtra: '#8c1f44', isLight: false },
+            miami_nights: { bg: '#18181a', main: '#e4609b', sub: '#47bac0', subAlt: '#242429', text: '#fff1f6', error: '#ff5555', errorExtra: '#a82b2b', isLight: false },
+            shadow: { bg: '#000000', main: '#eeeeee', sub: '#444444', subAlt: '#111111', text: '#dddddd', error: '#ff4444', errorExtra: '#882222', isLight: false },
+            milkshake: { bg: '#f0f2f5', main: '#212b43', sub: '#8f9db6', subAlt: '#ffffff', text: '#212b43', error: '#ff5252', errorExtra: '#9b1c1c', isLight: true },
+            retro_90s: { bg: '#2b2d42', main: '#ffb703', sub: '#8d99ae', subAlt: '#1f2030', text: '#edf2f4', error: '#ef233c', errorExtra: '#d90429', isLight: false }
+          };
+
+          const savedId = localStorage.getItem('monkeytype_theme') || 'serika_dark';
+          const t = themes[savedId] || themes.serika_dark;
+          const root = document.documentElement;
+
+          root.setAttribute('data-theme', savedId);
+          if (t.isLight) {
+            root.classList.remove('dark');
+          } else {
+            root.classList.add('dark');
+          }
+
+          // Monkeytype tokens
+          root.style.setProperty('--mt-bg', t.bg);
+          root.style.setProperty('--mt-main', t.main);
+          root.style.setProperty('--mt-caret', t.main);
+          root.style.setProperty('--mt-sub', t.sub);
+          root.style.setProperty('--mt-sub-alt', t.subAlt);
+          root.style.setProperty('--mt-text', t.text);
+          root.style.setProperty('--mt-error', t.error);
+          root.style.setProperty('--mt-error-extra', t.errorExtra);
+
+          // Site-wide tokens
+          if (t.isLight) {
+            root.style.setProperty('--site-bg', t.bg);
+            root.style.setProperty('--site-canvas', '#ffffff');
+            root.style.setProperty('--site-canvas-soft', t.bg);
+            root.style.setProperty('--site-canvas-soft-2', '#e2e8f0');
+            root.style.setProperty('--site-ink', t.text);
+            root.style.setProperty('--site-primary', t.main);
+            root.style.setProperty('--site-on-primary', '#ffffff');
+            root.style.setProperty('--site-body', '#475569');
+            root.style.setProperty('--site-mute', t.sub);
+            root.style.setProperty('--site-hairline', 'rgba(0, 0, 0, 0.08)');
+            root.style.setProperty('--site-hairline-strong', t.sub);
+            root.style.setProperty('--site-link', t.main);
+            root.style.setProperty('--site-link-deep', t.main);
+            root.style.setProperty('--site-link-bg-soft', '#e2e8f0');
+            root.style.setProperty('--site-success', '#10b981');
+            root.style.setProperty('--site-error', t.error);
+            root.style.setProperty('--site-error-soft', 'rgba(239, 68, 68, 0.15)');
+            root.style.setProperty('--site-error-deep', t.errorExtra);
+            root.style.setProperty('--site-warning', '#f59e0b');
+            root.style.setProperty('--site-warning-soft', 'rgba(245, 158, 11, 0.15)');
+            root.style.setProperty('--site-warning-deep', '#d97706');
+          } else {
+            root.style.setProperty('--site-bg', t.bg);
+            root.style.setProperty('--site-canvas', t.subAlt);
+            root.style.setProperty('--site-canvas-soft', t.bg);
+            root.style.setProperty('--site-canvas-soft-2', t.subAlt);
+            root.style.setProperty('--site-ink', t.text);
+            root.style.setProperty('--site-primary', t.main);
+            root.style.setProperty('--site-on-primary', t.bg);
+            root.style.setProperty('--site-body', t.text);
+            root.style.setProperty('--site-mute', t.sub);
+            root.style.setProperty('--site-hairline', 'rgba(255, 255, 255, 0.08)');
+            root.style.setProperty('--site-hairline-strong', t.sub);
+            root.style.setProperty('--site-link', t.main);
+            root.style.setProperty('--site-link-deep', t.main);
+            root.style.setProperty('--site-link-bg-soft', t.subAlt);
+            root.style.setProperty('--site-success', t.main);
+            root.style.setProperty('--site-error', t.error);
+            root.style.setProperty('--site-error-soft', 'rgba(202, 71, 84, 0.2)');
+            root.style.setProperty('--site-error-deep', t.errorExtra);
+            root.style.setProperty('--site-warning', t.main);
+            root.style.setProperty('--site-warning-soft', 'rgba(226, 183, 20, 0.2)');
+            root.style.setProperty('--site-warning-deep', t.main);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col antialiased w-full max-w-full" style="background-color: var(--site-bg, #323437); color: var(--site-ink, #d1d0c5); overflow-x: clip;">
+    <!-- Global Command Palette Modal -->
+    <CommandPalette />
+
+    <!-- Navbar Header -->
+    <Navbar />
+
+    <!-- Main Page Content -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+  </body>
+</html>
+
+<script>
+  import { initGlobalTheme } from '../lib/monkeytypeThemes';
+  import { soundEngine } from '../lib/soundEngine';
+  import { initI18n } from '../lib/i18n';
+
+  // Global AudioContext unlocker on first user gesture
+  const unlockAudioContext = () => {
+    soundEngine.initContext();
+    window.removeEventListener('pointerdown', unlockAudioContext);
+    window.removeEventListener('keydown', unlockAudioContext);
+    window.removeEventListener('touchstart', unlockAudioContext);
+  };
+  window.addEventListener('pointerdown', unlockAudioContext, { passive: true });
+  window.addEventListener('keydown', unlockAudioContext, { passive: true });
+  window.addEventListener('touchstart', unlockAudioContext, { passive: true });
+
+  // Sync across tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'monkeytype_theme') {
+      initGlobalTheme();
+    }
+    if (e.key === 'typing_game_zone_lang') {
+      initI18n();
+    }
+  });
+
+  function initApp() {
+    initGlobalTheme();
+    initI18n();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+  } else {
+    initApp();
+  }
+  document.addEventListener('astro:page-load', initApp);
+</script>

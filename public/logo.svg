@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-label="White keyboard game controller logo">
+  <rect width="1200" height="1200" fill="#000"/>
+
+  <g fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Controller / outer silhouette -->
+    <path d="M430 325
+             C345 325 270 330 235 380
+             C195 438 180 555 160 690
+             C145 795 150 860 190 895
+             C230 930 290 910 335 855
+             L430 735
+             C450 710 475 700 505 700
+             H695
+             C725 700 750 710 770 735
+             L865 855
+             C910 910 970 930 1010 895
+             C1050 860 1055 795 1040 690
+             C1020 555 1005 438 965 380
+             C930 330 855 325 770 325
+             Z"/>
+
+    <!-- Top divider accents -->
+    <path d="M430 325 L470 375"/>
+    <path d="M770 325 L730 375"/>
+
+    <!-- Top row -->
+    <rect x="270" y="395" width="82" height="42" rx="21"/>
+    <rect x="382" y="395" width="82" height="42" rx="21"/>
+    <rect x="494" y="395" width="82" height="42" rx="21"/>
+    <rect x="606" y="395" width="82" height="42" rx="21"/>
+    <rect x="718" y="395" width="82" height="42" rx="21"/>
+    <rect x="830" y="395" width="82" height="42" rx="21"/>
+
+    <!-- Second row -->
+    <circle cx="285" cy="470" r="21"/>
+    <circle cx="342" cy="470" r="21"/>
+    <circle cx="399" cy="470" r="21"/>
+    <circle cx="456" cy="470" r="21"/>
+    <circle cx="513" cy="470" r="21"/>
+    <circle cx="570" cy="470" r="21"/>
+    <circle cx="627" cy="470" r="21"/>
+    <circle cx="684" cy="470" r="21"/>
+    <circle cx="741" cy="470" r="21"/>
+    <rect x="782" y="449" width="130" height="42" rx="21"/>
+
+    <!-- Third row -->
+    <rect x="270" y="525" width="82" height="42" rx="21"/>
+    <circle cx="385" cy="546" r="21"/>
+    <circle cx="442" cy="546" r="21"/>
+    <circle cx="499" cy="546" r="21"/>
+    <circle cx="556" cy="546" r="21"/>
+    <circle cx="613" cy="546" r="21"/>
+    <circle cx="670" cy="546" r="21"/>
+    <circle cx="727" cy="546" r="21"/>
+    <circle cx="784" cy="546" r="21"/>
+    <circle cx="841" cy="546" r="21"/>
+
+    <!-- Bottom row / spacebar -->
+    <rect x="270" y="595" width="95" height="42" rx="21"/>
+    <circle cx="410" cy="616" r="21"/>
+    <rect x="455" y="595" width="290" height="42" rx="21"/>
+    <rect x="775" y="595" width="105" height="42" rx="21"/>
+  </g>
+</svg>

@@ -1,0 +1,228 @@
+---
+// Virtual Keyboard & Mobile Input Bar for Responsive Touch Devices & Tablets
+// Supports international keyboard layouts: QWERTY, AZERTY, QWERTZ, Dvorak, Colemak
+---
+
+<div class="mt-4 flex flex-col items-center gap-3 w-full" id="virtual-keyboard-root">
+  <!-- Mobile Hidden Virtual Input Bar (focused automatically on tap to trigger soft keyboard) -->
+  <div class="relative w-full max-w-lg">
+    <input
+      type="text"
+      id="mobile-game-input"
+      class="w-full rounded-xl border border-hairline bg-canvas px-4 py-3 text-center text-sm font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 sm:hidden cursor-text"
+      placeholder="Tap here to type with soft keyboard..."
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+    />
+  </div>
+
+  <!-- On-Screen Interactive Keyboard (Responsive for touch screen tablets & desktops) -->
+  <div class="w-full max-w-2xl select-none px-1">
+    <div class="rounded-xl border border-hairline bg-canvas p-2 sm:p-3.5 shadow-level-1 text-center">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[11px] font-mono text-mute px-1 mb-2.5">
+        <span class="flex items-center gap-1.5 self-start sm:self-auto">
+          <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Touch Typing Zone</span>
+        </span>
+        
+        <!-- Layout Switcher Pills -->
+        <div class="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full pb-0.5" id="vk-layout-switcher">
+          <span class="text-[10px] uppercase font-bold mr-1 text-mute whitespace-nowrap">Layout:</span>
+          <button type="button" data-layout="qwerty" class="vk-layout-btn active px-2 py-0.5 rounded text-[10px] font-bold border transition cursor-pointer whitespace-nowrap" style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437); border-color: var(--site-primary, #e2b714);">QWERTY</button>
+          <button type="button" data-layout="azerty" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">AZERTY</button>
+          <button type="button" data-layout="qwertz" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">QWERTZ</button>
+          <button type="button" data-layout="dvorak" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">DVORAK</button>
+          <button type="button" data-layout="hindi" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">हिन्दी</button>
+          <button type="button" data-layout="russian" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">Русский</button>
+          <button type="button" data-layout="arabic" class="vk-layout-btn px-2 py-0.5 rounded text-[10px] font-bold border border-hairline bg-canvas-soft text-mute hover:text-ink transition cursor-pointer whitespace-nowrap">العربية</button>
+        </div>
+      </div>
+
+      <!-- Key Rows Container (Dynamic Layout Matrix) -->
+      <div id="vk-rows-container" class="flex flex-col gap-1 sm:gap-1.5 font-mono text-xs w-full">
+        <!-- Row 1 -->
+        <div class="flex justify-center gap-0.5 sm:gap-1 w-full" id="vk-row-1">
+          {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map(k => (
+            <button
+              type="button"
+              data-virtual-key={k.toLowerCase()}
+              class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+        <!-- Row 2 -->
+        <div class="flex justify-center gap-0.5 sm:gap-1 w-full" id="vk-row-2">
+          {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';'].map(k => (
+            <button
+              type="button"
+              data-virtual-key={k.toLowerCase()}
+              class={`virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border font-bold text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0 ${
+                ['F', 'J'].includes(k) ? 'border-link text-link underline font-extrabold' : 'border-hairline text-ink'
+              }`}
+            >
+              {k}
+            </button>
+          ))}
+        </div>
+        <!-- Row 3 -->
+        <div class="flex justify-center gap-0.5 sm:gap-1 w-full" id="vk-row-3">
+          <button
+            type="button"
+            data-virtual-key="backspace"
+            class="virtual-key-btn flex-initial min-w-[32px] sm:min-w-[44px] h-8 sm:h-10 px-1.5 sm:px-2 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[10px] sm:text-[11px] text-error shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-error active:text-white transition cursor-pointer"
+          >
+            ⌫
+          </button>
+          {['Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.'].map(k => (
+            <button
+              type="button"
+              data-virtual-key={k.toLowerCase()}
+              class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
+            >
+              {k}
+            </button>
+          ))}
+          <button
+            type="button"
+            data-virtual-key=" "
+            class="virtual-key-btn flex-initial min-w-[38px] sm:min-w-[56px] h-8 sm:h-10 px-1.5 sm:px-3 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[9px] sm:text-[10px] text-ink shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+          >
+            SPACE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { KEYBOARD_LAYOUTS } from '../lib/wordLists';
+  import { soundEngine } from '../lib/soundEngine';
+
+  function initVirtualKeyboard() {
+    const layoutBtns = document.querySelectorAll('.vk-layout-btn');
+    const row1 = document.getElementById('vk-row-1');
+    const row2 = document.getElementById('vk-row-2');
+    const row3 = document.getElementById('vk-row-3');
+
+    let curLayout = localStorage.getItem('typing_game_zone_layout') || 'qwerty';
+
+    const renderLayout = (layoutKey: string) => {
+      const def = KEYBOARD_LAYOUTS[layoutKey] || KEYBOARD_LAYOUTS.qwerty;
+      if (!row1 || !row2 || !row3) return;
+
+      // Update row 1
+      row1.innerHTML = def.rows[0].map(k => `
+        <button
+          type="button"
+          data-virtual-key="${k.toLowerCase()}"
+          class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
+        >
+          ${k.toUpperCase()}
+        </button>
+      `).join('');
+
+      // Update row 2
+      row2.innerHTML = def.rows[1].map(k => {
+        const isHoming = ['f', 'j', 'u', 'h', 't', 'n'].includes(k.toLowerCase());
+        return `
+        <button
+          type="button"
+          data-virtual-key="${k.toLowerCase()}"
+          class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border ${isHoming ? 'border-link text-link underline font-extrabold' : 'border-hairline text-ink'} font-bold text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
+        >
+          ${k.toUpperCase()}
+        </button>
+      `;}).join('');
+
+      // Update row 3
+      const midKeys = def.rows[2].map(k => `
+        <button
+          type="button"
+          data-virtual-key="${k.toLowerCase()}"
+          class="virtual-key-btn flex-1 min-w-[24px] max-w-[44px] h-8 sm:h-10 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-ink text-[11px] sm:text-xs shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer p-0"
+        >
+          ${k.toUpperCase()}
+        </button>
+      `).join('');
+
+      row3.innerHTML = `
+        <button
+          type="button"
+          data-virtual-key="backspace"
+          class="virtual-key-btn flex-initial min-w-[32px] sm:min-w-[44px] h-8 sm:h-10 px-1.5 sm:px-2 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[10px] sm:text-[11px] text-error shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-error active:text-white transition cursor-pointer"
+        >
+          ⌫
+        </button>
+        ${midKeys}
+        <button
+          type="button"
+          data-virtual-key=" "
+          class="virtual-key-btn flex-initial min-w-[38px] sm:min-w-[56px] h-8 sm:h-10 px-1.5 sm:px-3 flex items-center justify-center rounded-lg bg-canvas-soft border border-hairline font-bold text-[9px] sm:text-[10px] text-ink shadow-level-1 hover:bg-canvas-soft-2 active:scale-95 active:bg-ink active:text-on-primary transition cursor-pointer"
+        >
+          SPACE
+        </button>
+      `;
+
+      // Update active layout button state
+      layoutBtns.forEach(btn => {
+        const lKey = btn.getAttribute('data-layout');
+        if (lKey === layoutKey) {
+          btn.classList.add('active');
+          (btn as HTMLElement).style.backgroundColor = 'var(--site-primary, #e2b714)';
+          (btn as HTMLElement).style.color = 'var(--site-on-primary, #323437)';
+          (btn as HTMLElement).style.borderColor = 'var(--site-primary, #e2b714)';
+        } else {
+          btn.classList.remove('active');
+          (btn as HTMLElement).style.backgroundColor = '';
+          (btn as HTMLElement).style.color = '';
+          (btn as HTMLElement).style.borderColor = '';
+        }
+      });
+
+      // Bind key click events to synthesize keyboard events
+      document.querySelectorAll('.virtual-key-btn').forEach(btn => {
+        btn.addEventListener('pointerdown', (e) => {
+          e.preventDefault();
+          const key = btn.getAttribute('data-virtual-key');
+          if (!key) return;
+
+          soundEngine.initContext();
+          soundEngine.playKey();
+
+          const keyEvent = new KeyboardEvent('keydown', {
+            key: key === 'backspace' ? 'Backspace' : key,
+            bubbles: true,
+            cancelable: true
+          });
+          window.dispatchEvent(keyEvent);
+        });
+      });
+    };
+
+    layoutBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const l = btn.getAttribute('data-layout');
+        if (l && KEYBOARD_LAYOUTS[l]) {
+          curLayout = l;
+          try { localStorage.setItem('typing_game_zone_layout', l); } catch {}
+          renderLayout(l);
+          window.dispatchEvent(new CustomEvent('typing:layout-change', { detail: { layout: l } }));
+        }
+      });
+    });
+
+    renderLayout(curLayout);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initVirtualKeyboard);
+  } else {
+    initVirtualKeyboard();
+  }
+  document.addEventListener('astro:page-load', initVirtualKeyboard);
+</script>

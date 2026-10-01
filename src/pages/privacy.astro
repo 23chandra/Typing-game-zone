@@ -1,0 +1,340 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const seoTitle = 'Privacy Policy — Typing Game Zone';
+const seoDescription = 'Read the official Privacy Policy for Typing Game Zone. Learn about our privacy-first design, local storage data retention, cookie policies, and contact information.';
+const seoKeywords = 'privacy policy, typing game zone privacy, privacy terms, touch typing privacy, online typing game privacy, local storage policy';
+
+const privacyStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  'name': 'Privacy Policy — Typing Game Zone',
+  'url': 'https://typinggamezone.com/privacy',
+  'description': seoDescription,
+  'publisher': {
+    '@type': 'Organization',
+    'name': 'Typing Game Zone',
+    'url': 'https://typinggamezone.com',
+    'contactPoint': {
+      '@type': 'ContactPoint',
+      'email': 'jisahu2003@gmail.com',
+      'contactType': 'Customer Support'
+    }
+  },
+  'breadcrumb': {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Privacy Policy',
+        'item': 'https://typinggamezone.com/privacy'
+      }
+    ]
+  }
+};
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  keywords={seoKeywords}
+  canonicalUrl="https://typinggamezone.com/privacy"
+  structuredData={privacyStructuredData}
+>
+  <div class="py-12 sm:py-16 bg-canvas-soft border-b border-hairline">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs font-mono text-mute mb-6" aria-label="Breadcrumb">
+        <a href="/" class="hover:text-ink transition">Home</a>
+        <span>/</span>
+        <span class="text-ink font-semibold">Privacy Policy</span>
+      </nav>
+
+      <!-- Page Header -->
+      <div class="text-left">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-link shadow-level-1 backdrop-blur mb-4">
+          <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>PRIVACY-FIRST ARCHITECTURE</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight font-sans">
+          Privacy Policy
+        </h1>
+        <p class="mt-4 text-sm sm:text-base text-body max-w-2xl leading-relaxed font-sans">
+          Your privacy is paramount at Typing Game Zone. We are committed to transparency, minimal data collection, and giving you total control over your typing practice data.
+        </p>
+        <div class="mt-4 flex flex-wrap items-center gap-4 text-xs font-mono text-mute">
+          <span>Effective Date: August 2026</span>
+          <span>•</span>
+          <span>Last Updated: August 28, 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="py-12 sm:py-16 bg-canvas">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      
+      <!-- Key Highlights Callout Box -->
+      <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 sm:p-8 mb-12 shadow-level-2">
+        <h2 class="text-lg font-bold text-ink mb-4 flex items-center gap-2 font-mono">
+          <span>🛡️</span> Key Privacy Highlights at a Glance
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1">🎮 No Mandatory Registration</span>
+            <p class="text-mute">You can play all 21 games, run speed tests, and use the practice lab without creating an account or providing personal details.</p>
+          </div>
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1">💾 Local-First Storage</span>
+            <p class="text-mute">Your high scores, WPM statistics, theme preferences, and switch audio settings remain stored locally on your device in your browser's localStorage.</p>
+          </div>
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1">🚫 No Selling of Personal Data</span>
+            <p class="text-mute">We never sell, rent, monetize, or trade your personal information or typing keystrokes to third-party data brokers.</p>
+          </div>
+          <div class="rounded-2xl border border-hairline bg-canvas p-4">
+            <span class="font-bold text-ink block mb-1">📬 Easy Direct Contact</span>
+            <p class="text-mute">Questions or data requests? Contact us directly anytime at <a href="mailto:jisahu2003@gmail.com" class="text-link underline">jisahu2003@gmail.com</a>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table of Contents -->
+      <div class="rounded-2xl border border-hairline bg-canvas-soft p-6 mb-12 text-xs font-mono">
+        <h3 class="font-bold text-ink uppercase tracking-wider mb-3">Table of Contents</h3>
+        <ol class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-body list-decimal list-inside">
+          <li><a href="#section-1" class="hover:text-link transition">1. Introduction & Scope</a></li>
+          <li><a href="#section-2" class="hover:text-link transition">2. Information We Collect</a></li>
+          <li><a href="#section-3" class="hover:text-link transition">3. How We Use Information</a></li>
+          <li><a href="#section-4" class="hover:text-link transition">4. Local Storage & Cookie Usage</a></li>
+          <li><a href="#section-5" class="hover:text-link transition">5. Third-Party Services & Analytics</a></li>
+          <li><a href="#section-6" class="hover:text-link transition">6. Children's Privacy (COPPA)</a></li>
+          <li><a href="#section-7" class="hover:text-link transition">7. Data Security & Storage</a></li>
+          <li><a href="#section-8" class="hover:text-link transition">8. Your Rights (GDPR & CCPA)</a></li>
+          <li><a href="#section-9" class="hover:text-link transition">9. Changes to This Policy</a></li>
+          <li><a href="#section-10" class="hover:text-link transition">10. Contact Information</a></li>
+        </ol>
+      </div>
+
+      <!-- Legal Content Sections -->
+      <div class="space-y-12 text-sm leading-relaxed text-body font-sans">
+        
+        <!-- Section 1 -->
+        <section id="section-1" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            1. Introduction & Scope
+          </h2>
+          <p class="mb-3">
+            Welcome to <strong>Typing Game Zone</strong> ("we", "our", or "us"), accessible via <a href="https://typinggamezone.com" class="text-link hover:underline">typinggamezone.com</a>. We operate a free online arcade featuring 21 2D typing games, touch typing practice modules, WPM speed benchmarks, mechanical keyboard sound synthesis, and multi-language keyboard tools.
+          </p>
+          <p>
+            This Privacy Policy explains how we collect, use, store, and safeguard your information when you visit our website. By accessing or using Typing Game Zone, you acknowledge that you have read and understood this Privacy Policy.
+          </p>
+        </section>
+
+        <!-- Section 2 -->
+        <section id="section-2" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            2. Information We Collect
+          </h2>
+          <p class="mb-4">
+            We follow a strict policy of data minimization. We only collect the minimal technical data required to deliver reliable, high-performance web experiences.
+          </p>
+          
+          <h3 class="text-base font-bold text-ink mb-2">A. Information Stored Locally on Your Browser</h3>
+          <p class="mb-3">
+            Typing Game Zone is built on a <em>client-side local-first architecture</em>. When you play games or complete typing tests, the following data is saved directly in your browser's <code class="font-mono text-xs bg-canvas-soft px-1.5 py-0.5 rounded border border-hairline">localStorage</code> and is <strong>not</strong> transmitted to or stored on our servers:
+          </p>
+          <ul class="list-disc list-inside space-y-1.5 ml-2 mb-4 text-mute">
+            <li>Game high scores, levels unlocked, and survival progress.</li>
+            <li>Typing speed history (WPM, accuracy percentage, consistency rate, error counts).</li>
+            <li>User interface preferences (chosen color theme from 17 Monkeytype palettes).</li>
+            <li>Audio synthesizer settings (mechanical switch sound profile, volume, and mute state).</li>
+            <li>Selected language and input layout preferences.</li>
+          </ul>
+
+          <h3 class="text-base font-bold text-ink mb-2">B. Information You Voluntarily Provide</h3>
+          <p class="mb-3">
+            If you contact us via email at <a href="mailto:jisahu2003@gmail.com" class="text-link underline">jisahu2003@gmail.com</a> or submit a message through our Contact Us form, we receive your email address, name (if provided), and any details you share in your message. This data is used solely to respond to your inquiry.
+          </p>
+
+          <h3 class="text-base font-bold text-ink mb-2">C. Technical & Diagnostic Data (Server Logs)</h3>
+          <p>
+            Like virtually all web platforms, our web host may automatically log standard technical data when you load pages, such as your IP address, browser type, operating system, referring URL, date/time stamps, and requested resource paths. This data is used solely for security maintenance, DDoS mitigation, and server performance diagnostics.
+          </p>
+        </section>
+
+        <!-- Section 3 -->
+        <section id="section-3" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            3. How We Use Information
+          </h2>
+          <p class="mb-3">We use collected technical and contact information strictly for legitimate operational purposes, including:</p>
+          <ul class="list-disc list-inside space-y-2 ml-2 text-mute">
+            <li>Providing, optimizing, and ensuring smooth 60 FPS gameplay across all 21 games.</li>
+            <li>Remembering your visual and audio customization choices across sessions.</li>
+            <li>Troubleshooting technical bugs, browser compatibility issues, and latency anomalies.</li>
+            <li>Responding to player questions, suggestions, bug reports, and feedback.</li>
+            <li>Protecting the integrity, safety, and security of our platform and users.</li>
+          </ul>
+        </section>
+
+        <!-- Section 4 -->
+        <section id="section-4" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            4. Local Storage & Cookie Usage
+          </h2>
+          <p class="mb-3">
+            Typing Game Zone primarily relies on modern browser <code class="font-mono text-xs bg-canvas-soft px-1.5 py-0.5 rounded border border-hairline">localStorage</code> instead of intrusive tracking cookies.
+          </p>
+          <div class="rounded-2xl border border-hairline bg-canvas-soft p-5 mb-4">
+            <h4 class="font-bold text-ink text-xs uppercase font-mono mb-2">How to clear your local data:</h4>
+            <p class="text-xs text-mute leading-relaxed">
+              You maintain 100% control over your stored progress. You can clear your game scores and custom settings at any time by clearing your browser cache and site data for typinggamezone.com in your browser settings.
+            </p>
+          </div>
+          <p>
+            We do not use tracking cookies for cross-site behavioral profiling or retargeting advertisements.
+          </p>
+        </section>
+
+        <!-- Section 5 -->
+        <section id="section-5" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            5. Third-Party Services & Analytics
+          </h2>
+          <p class="mb-3">
+            We may use privacy-centric third-party hosting infrastructures (such as Vercel, Netlify, or Cloudflare) and Google Fonts to deliver lightning-fast static assets and fonts. These providers may process technical network requests in compliance with industry-standard privacy and security frameworks.
+          </p>
+          <p>
+            We do not permit third-party advertising networks to track your browsing behaviors across external websites.
+          </p>
+        </section>
+
+        <!-- Section 6 -->
+        <section id="section-6" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            6. Children's Privacy (COPPA Compliance)
+          </h2>
+          <p class="mb-3">
+            Typing Game Zone is an educational and entertainment platform designed for typists, students, and gamers of all age groups. Because we do not require account registration or collect personal identifiable information, our platform is safe for children and students practicing typing in classrooms and at home.
+          </p>
+          <p>
+            We comply with the Children's Online Privacy Protection Act (COPPA) and do not knowingly collect personal information from children under the age of 13. If you believe a child has provided us with personal information via direct contact, please reach out to us at <a href="mailto:jisahu2003@gmail.com" class="text-link underline">jisahu2003@gmail.com</a> and we will promptly delete it.
+          </p>
+        </section>
+
+        <!-- Section 7 -->
+        <section id="section-7" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            7. Data Security & Storage
+          </h2>
+          <p class="mb-3">
+            We employ industry-standard HTTPS encryption (SSL/TLS) for all data transmitted between your browser and our servers. Our client-side games and tools run safely within your browser's sandboxed environment without executing arbitrary external binaries.
+          </p>
+          <p>
+            While no method of electronic transmission or internet storage is 100% secure, our architecture minimizes risk by eliminating centralized personal user databases.
+          </p>
+        </section>
+
+        <!-- Section 8 -->
+        <section id="section-8" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            8. Your Data Protection Rights (GDPR & CCPA)
+          </h2>
+          <p class="mb-3">
+            Depending on your location, you may have specific privacy rights under regulations such as the General Data Protection Regulation (GDPR) or California Consumer Privacy Act (CCPA/CPRA):
+          </p>
+          <ul class="list-disc list-inside space-y-2 ml-2 text-mute mb-4">
+            <li><strong>Right of Access & Portability:</strong> You have the right to request details of any personal data we hold about you.</li>
+            <li><strong>Right to Erasure (Right to be Forgotten):</strong> You may request the deletion of any personal communications or contact records.</li>
+            <li><strong>Right to Rectification:</strong> You may request corrections to any inaccurate personal information.</li>
+            <li><strong>Right to Non-Discrimination:</strong> We never discriminate against any user for exercising their privacy rights.</li>
+          </ul>
+          <p>
+            To exercise any of these rights, please email us at <a href="mailto:jisahu2003@gmail.com" class="text-link underline">jisahu2003@gmail.com</a>.
+          </p>
+        </section>
+
+        <!-- Section 9 -->
+        <section id="section-9" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            9. Changes to This Privacy Policy
+          </h2>
+          <p>
+            We may periodically update this Privacy Policy to reflect enhancements to our games, new features, or evolving legal standards. Any revisions will be posted directly on this page with an updated "Last Updated" timestamp. We encourage you to review this page periodically.
+          </p>
+        </section>
+
+        <!-- Section 10 -->
+        <section id="section-10" class="scroll-mt-24">
+          <h2 class="text-xl sm:text-2xl font-bold text-ink mb-4 font-mono">
+            10. Contact Information
+          </h2>
+          <p class="mb-6">
+            If you have questions, concerns, feedback, or data inquiries regarding this Privacy Policy or our practices, please contact us directly:
+          </p>
+
+          <!-- Contact Email Card -->
+          <div class="rounded-3xl border border-hairline bg-canvas-soft p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-level-2">
+            <div>
+              <span class="text-xs font-mono text-mute uppercase font-bold block mb-1">Official Privacy Contact</span>
+              <span class="text-lg sm:text-xl font-bold text-ink font-mono block">jisahu2003@gmail.com</span>
+              <span class="text-xs text-mute mt-1 block">Typing Game Zone • Dedicated Support Team</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <a
+                href="mailto:jisahu2003@gmail.com?subject=Privacy%20Inquiry%20-%20Typing%20Game%20Zone"
+                class="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95"
+                style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
+              >
+                <span>✉️ Send Email</span>
+              </a>
+              <button
+                type="button"
+                id="copy-privacy-email-btn"
+                class="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2.5 text-xs font-mono font-medium text-ink transition hover:bg-canvas-soft-2 cursor-pointer"
+              >
+                <span id="copy-btn-text">📋 Copy Email</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Bottom Related Links -->
+      <div class="mt-16 pt-8 border-t border-hairline flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-mute">
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="/terms" class="hover:text-ink transition">Terms & Conditions →</a>
+          <a href="/about" class="hover:text-ink transition">About Us →</a>
+          <a href="/contact" class="hover:text-ink transition">Contact Us →</a>
+        </div>
+        <a href="#top" class="hover:text-ink transition">Back to Top ↑</a>
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const copyBtn = document.getElementById('copy-privacy-email-btn');
+  const copyBtnText = document.getElementById('copy-btn-text');
+
+  copyBtn?.addEventListener('click', () => {
+    navigator.clipboard.writeText('jisahu2003@gmail.com').then(() => {
+      if (copyBtnText) copyBtnText.textContent = '✓ Copied!';
+      setTimeout(() => {
+        if (copyBtnText) copyBtnText.textContent = '📋 Copy Email';
+      }, 2000);
+    });
+  });
+</script>

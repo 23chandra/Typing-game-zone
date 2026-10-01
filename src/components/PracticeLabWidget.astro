@@ -1,0 +1,1649 @@
+---
+// Interactive Touch Typing Practice Lab Widget
+// Powered by standard ANSI QWERTY 15.0u Grid Engine with 17 Authentic Monkeytype Themes
+---
+
+<div
+  id="practice-lab-root"
+  class="w-full max-w-5xl mx-auto rounded-3xl p-4 sm:p-8 font-mono transition-colors duration-300 relative select-none border border-hairline shadow-level-3"
+  style="background-color: var(--mt-bg, var(--site-canvas-soft, #323437)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
+>
+  <!-- Top Drill Selector & Controls Bar -->
+  <div
+    id="prac-top-controls"
+    class="flex flex-wrap items-center justify-between gap-3 rounded-2xl p-2 sm:p-2.5 text-xs font-semibold select-none border border-hairline shadow-sm mb-6 transition-colors"
+    style="background-color: var(--mt-sub-alt, var(--site-canvas, #2c2e31)); color: var(--mt-sub, var(--site-mute, #646669));"
+  >
+    <!-- Left: Drill Categories (Scrollable on mobile) -->
+    <div class="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full pb-1 py-0.5 flex-1 min-w-0" id="prac-categories-bar">
+      <button type="button" data-drill="homeRow" class="prac-cat-btn active flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer whitespace-nowrap flex-shrink-0" style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));">
+        <span>🏠</span>
+        <span>Home Row</span>
+      </button>
+      <button type="button" data-drill="topRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
+        <span>⬆️</span>
+        <span>Top Row</span>
+      </button>
+      <button type="button" data-drill="bottomRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
+        <span>⬇️</span>
+        <span>Bottom Row</span>
+      </button>
+      <button type="button" data-drill="numberRow" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
+        <span>🔢</span>
+        <span>Numbers</span>
+      </button>
+      <button type="button" data-drill="symbols" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
+        <span>💻</span>
+        <span>Code</span>
+      </button>
+      <button type="button" data-drill="pangrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
+        <span>🔠</span>
+        <span>Pangrams</span>
+      </button>
+      <button type="button" data-drill="ngrams" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
+        <span>⚡</span>
+        <span>N-Grams</span>
+      </button>
+      <button type="button" data-drill="pinkyDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);">
+        <span>🌸</span>
+        <span>Pinky</span>
+      </button>
+      <button type="button" data-drill="ringDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 45%, var(--mt-sub, #646669));">
+        <span>🔮</span>
+        <span>Ring</span>
+      </button>
+      <button type="button" data-drill="middleDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: color-mix(in srgb, var(--mt-main, #e2b714) 75%, var(--mt-text, #d1d0c5));">
+        <span>💎</span>
+        <span>Middle</span>
+      </button>
+      <button type="button" data-drill="indexDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: var(--mt-main, #10b981);">
+        <span>🌿</span>
+        <span>Index</span>
+      </button>
+      <button type="button" data-drill="thumbDrills" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0" style="color: var(--mt-caret, var(--mt-main, #e2b714));">
+        <span>⚡</span>
+        <span>Thumbs</span>
+      </button>
+      <button type="button" data-drill="custom" class="prac-cat-btn flex items-center gap-1 rounded-xl px-2.5 py-1.5 font-bold transition cursor-pointer hover:text-ink opacity-75 hover:opacity-100 whitespace-nowrap flex-shrink-0">
+        <span>✏️</span>
+        <span>Custom</span>
+      </button>
+    </div>
+
+    <!-- Right: Controls (Word Count & Metronome) -->
+    <div class="flex items-center gap-2 flex-shrink-0">
+
+      <!-- Drill Length Toggle -->
+      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline" style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));">
+        <button type="button" data-count="10" class="prac-count-btn px-2 py-1 rounded-lg transition cursor-pointer text-[11px] opacity-75 hover:opacity-100">10w</button>
+        <button type="button" data-count="20" class="prac-count-btn active px-2 py-1 rounded-lg font-bold transition cursor-pointer text-[11px]" style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));">20w</button>
+        <button type="button" data-count="40" class="prac-count-btn px-2 py-1 rounded-lg transition cursor-pointer text-[11px] opacity-75 hover:opacity-100">40w</button>
+      </div>
+
+      <!-- Language Selector for Practice Lab -->
+      <div class="relative z-50" id="prac-lang-dropdown-wrapper">
+        <button
+          type="button"
+          id="prac-lang-btn"
+          class="flex items-center gap-1 rounded-xl border border-hairline px-2.5 py-1.5 text-xs font-mono font-medium transition cursor-pointer hover:bg-canvas"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
+          title="Select Practice Language & Script"
+        >
+          <span id="prac-lang-flag">🌐</span>
+          <span id="prac-lang-label">English</span>
+          <svg class="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div
+          id="prac-lang-menu"
+          class="absolute right-0 top-full mt-1 hidden min-w-48 rounded-xl border border-hairline p-1.5 shadow-2xl z-50 text-xs font-mono max-h-72 overflow-y-auto"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));"
+        >
+          <button type="button" data-prac-lang="en" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)] active font-bold">
+            <span>🇺🇸 English (ANSI)</span>
+            <span class="check text-[var(--mt-main)]">✓</span>
+          </button>
+          <button type="button" data-prac-lang="hi" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇳 हिन्दी (Hindi)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ja" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇯🇵 日本語 (Japanese)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ru" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇷🇺 Русский (Russian)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ar" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇸🇦 العربية (Arabic)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="de" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇩🇪 Deutsch (German)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="es" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇪🇸 Español (Spanish)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="fr" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇫🇷 Français (French)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="bn" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇧🇩 বাংলা (Bengali)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="pt" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇧🇷 Português</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="zh" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇨🇳 简体中文 (Chinese)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="ko" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇰🇷 한국어 (Korean)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="it" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇹 Italiano (Italian)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="tr" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇹🇷 Türkçe (Turkish)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="vi" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇻🇳 Tiếng Việt (Vietnamese)</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+          <button type="button" data-prac-lang="id" class="prac-lang-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:text-[var(--mt-main)]">
+            <span>🇮🇩 Bahasa Indonesia</span>
+            <span class="check text-[var(--mt-main)] hidden">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Script Mode Toggle (Native Script vs Latin / Romaji) -->
+      <div id="prac-script-toggle-wrapper" class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline hidden" style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));">
+        <button
+          type="button"
+          id="prac-script-native-btn"
+          class="px-2 py-0.5 rounded-lg text-[11px] font-bold transition-all cursor-pointer"
+          style="background-color: var(--mt-main, #e2b714); color: var(--mt-bg, #323437);"
+          title="Practice in Native Script with Phonetic Engine"
+        >
+          <span>🔤 Native</span>
+        </button>
+        <button
+          type="button"
+          id="prac-script-latin-btn"
+          class="px-2 py-0.5 rounded-lg text-[11px] font-medium transition-all cursor-pointer opacity-70 hover:opacity-100"
+          title="Practice in Latin Alphabet"
+        >
+          <span>🔡 Latin</span>
+        </button>
+      </div>
+
+      <!-- Metronome Pacer Dropdown -->
+      <div class="relative">
+        <button
+          type="button"
+          id="prac-metronome-btn"
+          class="flex items-center gap-1 rounded-xl border border-hairline px-2.5 py-1.5 text-xs font-mono font-medium transition cursor-pointer hover:bg-canvas"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31)); color: var(--mt-text, var(--site-ink, #d1d0c5));"
+          title="Metronome Typing Cadence Guide"
+        >
+          <span>⏱️</span>
+          <span id="prac-metronome-label">Metro: OFF</span>
+        </button>
+
+        <div
+          id="prac-metronome-menu"
+          class="absolute right-0 mt-1 hidden min-w-32 rounded-xl border border-hairline p-1 shadow-xl z-50 text-xs font-mono"
+          style="background-color: var(--mt-bg, var(--site-canvas, #2c2e31));"
+        >
+          <button type="button" data-bpm="0" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft active font-bold">
+            <span>OFF</span>
+            <span class="bpm-check text-success">✓</span>
+          </button>
+          <button type="button" data-bpm="60" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>60 BPM (Slow)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+          <button type="button" data-bpm="80" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>80 BPM (Target)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+          <button type="button" data-bpm="100" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>100 BPM (Brisk)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+          <button type="button" data-bpm="120" class="prac-bpm-opt flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left transition hover:bg-canvas-soft">
+            <span>120 BPM (Fast)</span>
+            <span class="bpm-check text-success hidden">✓</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Typing Arena & Prompt Box -->
+  <div id="prac-typing-view" class="relative mb-6">
+    
+    <!-- Header Mini Telemetry Row -->
+    <div class="flex items-center justify-between mb-3 px-1 text-xs select-none">
+      <div class="flex items-center gap-4">
+        <div>
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Progress</span>
+          <span id="prac-live-progress" class="font-bold text-sm" style="color: var(--mt-text, #d1d0c5);">0 / 20</span>
+        </div>
+        <div>
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Live WPM</span>
+          <span id="prac-live-wpm" class="font-bold text-sm" style="color: var(--mt-main, var(--site-primary, #e2b714));">0</span>
+        </div>
+        <div>
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Accuracy</span>
+          <span id="prac-live-acc" class="font-bold text-sm" style="color: var(--mt-text, #d1d0c5);">100%</span>
+        </div>
+        <div>
+          <span class="text-mute uppercase text-[10px] block" style="color: var(--mt-sub, #646669);">Streak</span>
+          <span class="font-bold text-sm flex items-center gap-0.5" style="color: var(--mt-main, #e2b714);">
+            <span>🔥</span>
+            <span id="prac-live-streak">0</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Phonetic Badge -->
+        <div id="prac-phonetic-badge" class="hidden items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono border border-hairline" style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-main, #e2b714);">
+          <span>✨ Phonetic Typing: Active</span>
+        </div>
+
+        <!-- Quick Reset Button -->
+        <button
+          type="button"
+          id="prac-restart-btn"
+          class="flex items-center gap-1.5 rounded-xl border border-hairline px-3 py-1.5 text-xs font-bold transition hover:opacity-100 opacity-80 cursor-pointer"
+          style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-text, #d1d0c5);"
+          title="Restart Drill (Tab)"
+        >
+          <span>⟲</span>
+          <span class="hidden sm:inline">Restart (Tab)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Words Display Arena -->
+    <div
+      id="prac-words-viewport"
+      class="relative h-32 sm:h-36 overflow-hidden rounded-2xl p-4 sm:p-6 text-xl sm:text-2xl leading-[1.8] tracking-wide cursor-text select-none border border-hairline transition-all shadow-inner"
+      style="background-color: var(--mt-sub-alt, #2c2e31); border-color: var(--site-hairline);"
+    >
+      <div
+        id="prac-words-wrapper"
+        class="relative transition-transform duration-100 ease-out select-none flex flex-wrap"
+      >
+        <!-- Caret Element -->
+        <div
+          id="prac-caret"
+          class="absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0"
+          style="background-color: var(--mt-caret, var(--mt-main, #e2b714)); width: 3px; border-radius: 9999px;"
+        ></div>
+      </div>
+
+      <!-- Single Hidden Input Dispatcher (Full area coverage for instant focus) -->
+      <input
+        id="prac-unified-input"
+        type="text"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-text z-10"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        tabindex="0"
+        aria-label="Type here"
+      />
+
+      <!-- Out-of-Focus Overlay -->
+      <div
+        id="prac-focus-overlay"
+        class="absolute inset-0 flex items-center justify-center backdrop-blur-xs transition-opacity duration-200 cursor-pointer z-30 hidden"
+        style="background-color: rgba(0, 0, 0, 0.45);"
+      >
+        <div class="flex items-center gap-2 rounded-full px-5 py-2 shadow-2xl border border-hairline text-xs font-semibold animate-pulse" style="background-color: var(--mt-bg, #323437); color: var(--mt-text, #d1d0c5);">
+          <span>🔒 Click or press any key to focus practice</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Finger Instructor Callout Ribbon -->
+  <div
+    id="prac-instructor-ribbon"
+    class="rounded-2xl p-3.5 mb-6 border border-hairline flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs shadow-sm transition-all"
+    style="background-color: var(--mt-sub-alt, #2c2e31);"
+  >
+    <div class="flex items-center gap-3">
+      <div id="prac-finger-dot" class="h-4 w-4 rounded-full border border-black/30 shadow-md animate-pulse" style="background-color: var(--mt-main, #e2b714);"></div>
+      <div class="flex flex-col">
+        <span class="text-[10px] text-mute uppercase tracking-wider font-semibold" style="color: var(--mt-sub, #646669);">Live Finger Guidance:</span>
+        <span id="prac-finger-instruction" class="font-bold text-sm" style="color: var(--mt-text, #d1d0c5);">👉 Rest Index Fingers on [F] & [J] Tactile Bumps</span>
+      </div>
+    </div>
+
+    <!-- Hand & Quadrant Zone Badge -->
+    <div id="prac-hand-badge" class="flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold border border-hairline shadow-sm" style="background-color: var(--mt-bg, #323437);">
+      <span id="prac-hand-side" style="color: var(--mt-text, #d1d0c5);">Left Hand</span>
+      <span>•</span>
+      <span id="prac-hand-finger" style="color: var(--mt-main, #e2b714);">Index Quadrant</span>
+    </div>
+  </div>
+
+  <!-- Interactive QWERTY Visual Keyboard with Real-time Key Highlights -->
+  <div
+    id="prac-keyboard-card"
+    class="rounded-3xl border border-hairline p-3 sm:p-6 shadow-level-2 select-none overflow-x-auto smooth-scroll-x transition-colors"
+    style="background-color: var(--mt-sub-alt, #2c2e31);"
+  >
+    
+    <!-- Top Legend & Appearance Controls Bar -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[11px] mb-5 pb-3 border-b border-hairline w-full">
+      
+      <!-- Top Left: Title & 5 Quadrant Filter Chips (100% Theme Dynamic) -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <span class="font-bold uppercase tracking-wider text-xs whitespace-nowrap" style="color: var(--mt-text, #d1d0c5);">⌨️ Focus:</span>
+
+        <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar max-w-full pb-0.5" id="prac-quad-filters-wrapper">
+          <button
+            type="button"
+            data-filter-quadrant="pinkyDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%); color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%);"></span>
+            <span>Pinky</span>
+          </button>
+          <button
+            type="button"
+            data-filter-quadrant="ringDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%); color: color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%);"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%);"></span>
+            <span>Ring</span>
+          </button>
+          <button
+            type="button"
+            data-filter-quadrant="middleDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%); color: color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%);"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%);"></span>
+            <span>Middle</span>
+          </button>
+          <button
+            type="button"
+            data-filter-quadrant="indexDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid var(--mt-main, #e2b714); color: var(--mt-main, #e2b714);"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: var(--mt-main, #e2b714);"></span>
+            <span>Index</span>
+          </button>
+          <button
+            type="button"
+            data-filter-quadrant="thumbDrills"
+            class="prac-quad-filter flex items-center gap-1.5 px-2.5 py-1 rounded-xl border transition hover:scale-105 cursor-pointer font-bold text-[10px] sm:text-[11px] shadow-sm whitespace-nowrap flex-shrink-0"
+            style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline); border-left: 3.5px solid var(--mt-caret, var(--mt-main, #e2b714)); color: var(--mt-caret, var(--mt-main, #e2b714));"
+          >
+            <span class="h-2 w-2 rounded-full dot-indicator" style="background-color: var(--mt-caret, var(--mt-main, #e2b714));"></span>
+            <span>Thumbs</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Top Right: Appearance Mode Switcher Pill -->
+      <div class="flex items-center gap-1 rounded-xl p-0.5 border border-hairline flex-shrink-0" style="background-color: var(--mt-bg, #323437); border-color: var(--site-hairline);">
+        <button
+          type="button"
+          id="prac-mode-theme-btn"
+          class="prac-style-toggle active px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer"
+          style="background-color: var(--mt-main, #e2b714); color: var(--site-on-primary, var(--mt-bg, #323437));"
+          title="Keys 100% styled to match website theme"
+        >
+          🎨 Theme Match
+        </button>
+        <button
+          type="button"
+          id="prac-mode-quad-btn"
+          class="prac-style-toggle px-2.5 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer opacity-70 hover:opacity-100"
+          style="color: var(--mt-text, #d1d0c5);"
+          title="Keys show color-coded finger quadrants"
+        >
+          🌈 Quadrants
+        </button>
+      </div>
+    </div>
+
+    <!-- Keycaps Matrix Wrapper (Centered & Perfectly Proportioned 15.0u System) -->
+    <div class="flex justify-center w-full min-w-0">
+      <div id="prac-keyboard-matrix" class="flex flex-col gap-1 sm:gap-1.5 text-xs font-mono select-none w-full max-w-[760px] items-center">
+        <!-- Injected dynamically via JavaScript with exact mathematical 15.0u grid -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Drill Scorecard Result Modal -->
+  <div
+    id="prac-result-view"
+    class="hidden my-4 rounded-3xl p-6 sm:p-8 border border-hairline shadow-2xl font-mono text-xs animate-in fade-in zoom-in-95 duration-200"
+    style="background-color: var(--mt-sub-alt, #2c2e31);"
+  >
+    <div class="flex items-center justify-between pb-4 border-b border-hairline mb-6">
+      <div class="flex items-center gap-2.5">
+        <span id="prac-scorecard-icon" class="text-3xl">🎉</span>
+        <div>
+          <h3 id="prac-scorecard-title" class="text-lg font-bold" style="color: var(--mt-text, #d1d0c5);">Drill Completed!</h3>
+          <p class="text-[11px]" style="color: var(--mt-sub, #646669);">Touch-typing muscle memory reinforced.</p>
+        </div>
+      </div>
+
+      <div id="prac-rank-badge" class="rounded-full px-3.5 py-1 text-xs font-bold text-white shadow-md bg-emerald-500">
+        RANK S
+      </div>
+    </div>
+
+    <!-- Metrics Hero -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Net WPM</span>
+        <div id="prac-res-wpm" class="text-3xl font-bold mt-1" style="color: var(--mt-main, #e2b714);">0</div>
+      </div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Accuracy</span>
+        <div id="prac-res-acc" class="text-3xl font-bold mt-1" style="color: var(--mt-text, #d1d0c5);">100%</div>
+      </div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Max Streak</span>
+        <div id="prac-res-streak" class="text-3xl font-bold mt-1 text-warning">0x</div>
+      </div>
+      <div class="rounded-2xl border border-hairline p-4" style="background-color: var(--mt-bg, #323437);">
+        <span class="text-[10px] uppercase" style="color: var(--mt-sub, #646669);">Errors</span>
+        <div id="prac-res-errors" class="text-3xl font-bold mt-1 text-error">0</div>
+      </div>
+    </div>
+
+    <!-- Scorecard Action Buttons -->
+    <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-hairline">
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          id="prac-next-drill-btn"
+          class="flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs font-bold shadow-lg transition hover:scale-105 active:scale-95 cursor-pointer"
+          style="background-color: var(--mt-main, var(--site-primary, #e2b714)); color: var(--site-on-primary, var(--mt-bg, #323437));"
+        >
+          <span>Next Drill →</span>
+        </button>
+        <button
+          type="button"
+          id="prac-repeat-drill-btn"
+          class="flex items-center gap-2 rounded-xl border border-hairline px-4 py-2.5 text-xs font-bold transition hover:bg-canvas cursor-pointer"
+        >
+          <span>Repeat Drill (Tab)</span>
+        </button>
+      </div>
+
+      <a
+        href="/game/key-master"
+        class="inline-flex items-center gap-2 rounded-xl border border-hairline px-4 py-2.5 text-xs font-bold text-link transition hover:bg-canvas"
+      >
+        <span>Launch 3D Key Master 🎮</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Custom Text Drill Modal -->
+  <div
+    id="prac-custom-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-md bg-black/60 hidden select-none"
+  >
+    <div
+      class="w-full max-w-lg rounded-3xl p-6 border border-hairline shadow-2xl font-mono relative"
+      style="background-color: var(--mt-bg, #323437); color: var(--mt-text, #d1d0c5);"
+    >
+      <div class="flex items-center justify-between pb-3 border-b border-hairline mb-4">
+        <h3 class="text-sm font-bold" style="color: var(--mt-main, #e2b714);">Custom Practice Text</h3>
+        <button type="button" id="prac-custom-close" class="text-base px-2 hover:opacity-75 cursor-pointer">✕</button>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-xs mb-2" style="color: var(--mt-sub, #646669);">Paste any custom passage or programming drill:</label>
+        <textarea
+          id="prac-custom-textarea"
+          rows="5"
+          placeholder="Paste articles, code snippets, vocabulary lists, or numbers here..."
+          class="w-full rounded-xl p-3 text-xs leading-relaxed border border-hairline focus:outline-none font-mono"
+          style="background-color: var(--mt-sub-alt, #2c2e31); color: var(--mt-text, #d1d0c5);"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 text-xs">
+        <button type="button" id="prac-custom-cancel" class="rounded-xl px-4 py-2 font-bold cursor-pointer hover:bg-canvas-soft">Cancel</button>
+        <button type="button" id="prac-custom-apply" class="rounded-xl px-5 py-2 font-bold shadow-md cursor-pointer" style="background-color: var(--mt-main, #e2b714); color: var(--site-on-primary, var(--mt-bg, #323437));">Set & Practice</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  #prac-keyboard-matrix {
+    --key-unit: clamp(17px, 5.7vw, 44px);
+    --key-gap: clamp(1.5px, 0.4vw, 6px);
+    --key-height: clamp(30px, 4.8vw, 48px);
+  }
+  .prac-keycap {
+    font-family: 'Geist Mono', monospace;
+    user-select: none;
+    touch-action: manipulation;
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+  .prac-keycap:hover {
+    filter: brightness(1.15);
+  }
+</style>
+
+<script>
+  import { WORD_LISTS, generateWeakKeysDrill, getWordPoolForLanguage, getPracticeDrillWords } from '../lib/wordLists';
+  import { transliterateInput, isNativeScriptSupported, applySmartAccents } from '../lib/transliterationEngine';
+  import { soundEngine } from '../lib/soundEngine';
+  import { storage } from '../lib/storage';
+  import { PHYSICAL_KEYBOARD_LAYOUT, getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import confetti from 'canvas-confetti';
+
+  let metronomeTimer: number | null = null;
+  let activeCleanups: (() => void)[] = [];
+
+  function initPracticeLab() {
+    // Clean old listeners & timers
+    if (metronomeTimer) {
+      clearInterval(metronomeTimer);
+      metronomeTimer = null;
+    }
+    activeCleanups.forEach(c => c());
+    activeCleanups = [];
+
+    const root = document.getElementById('practice-lab-root');
+    if (!root) return;
+
+    // DOM Elements
+    const wordsViewport = document.getElementById('prac-words-viewport');
+    const wordsWrapper = document.getElementById('prac-words-wrapper');
+    const caret = document.getElementById('prac-caret');
+    const inputEl = document.getElementById('prac-unified-input') as HTMLInputElement | null;
+    const focusOverlay = document.getElementById('prac-focus-overlay');
+    const typingView = document.getElementById('prac-typing-view');
+    const resultView = document.getElementById('prac-result-view');
+    const keyboardMatrix = document.getElementById('prac-keyboard-matrix');
+
+    // Telemetry Elements
+    const liveProgress = document.getElementById('prac-live-progress');
+    const liveWpm = document.getElementById('prac-live-wpm');
+    const liveAcc = document.getElementById('prac-live-acc');
+    const liveStreak = document.getElementById('prac-live-streak');
+    const restartBtn = document.getElementById('prac-restart-btn');
+
+    // Language & Script Mode Elements
+    const langBtn = document.getElementById('prac-lang-btn');
+    const langMenu = document.getElementById('prac-lang-menu');
+    const langLabel = document.getElementById('prac-lang-label');
+    const langFlag = document.getElementById('prac-lang-flag');
+    const scriptToggleWrapper = document.getElementById('prac-script-toggle-wrapper');
+    const scriptNativeBtn = document.getElementById('prac-script-native-btn');
+    const scriptLatinBtn = document.getElementById('prac-script-latin-btn');
+    const phoneticBadge = document.getElementById('prac-phonetic-badge');
+
+    // Instructor Elements
+    const fingerDot = document.getElementById('prac-finger-dot');
+    const fingerInstruction = document.getElementById('prac-finger-instruction');
+    const handSideEl = document.getElementById('prac-hand-side');
+    const handFingerEl = document.getElementById('prac-hand-finger');
+
+    // Keyboard Mode Switcher Elements
+    const modeThemeBtn = document.getElementById('prac-mode-theme-btn');
+    const modeQuadBtn = document.getElementById('prac-mode-quad-btn');
+
+    // Scorecard Elements
+    const resWpm = document.getElementById('prac-res-wpm');
+    const resAcc = document.getElementById('prac-res-acc');
+    const resStreak = document.getElementById('prac-res-streak');
+    const resErrors = document.getElementById('prac-res-errors');
+    const rankBadge = document.getElementById('prac-rank-badge');
+    const nextDrillBtn = document.getElementById('prac-next-drill-btn');
+    const repeatDrillBtn = document.getElementById('prac-repeat-drill-btn');
+
+    // Metronome Elements
+    const metroBtn = document.getElementById('prac-metronome-btn');
+    const metroMenu = document.getElementById('prac-metronome-menu');
+    const metroLabel = document.getElementById('prac-metronome-label');
+
+    // Custom Modal Elements
+    const customModal = document.getElementById('prac-custom-modal');
+    const customClose = document.getElementById('prac-custom-close');
+    const customCancel = document.getElementById('prac-custom-cancel');
+    const customApply = document.getElementById('prac-custom-apply');
+    const customTextarea = document.getElementById('prac-custom-textarea') as HTMLTextAreaElement | null;
+
+    if (!wordsViewport || !wordsWrapper || !inputEl || !keyboardMatrix) return;
+
+    // State Variables
+    let currentDrillType = 'homeRow';
+    let pracLang = 'en';
+    let scriptMode: 'native' | 'latin' = 'native';
+    let currentLatinBuffer = '';
+    let targetWordCount = 20;
+    let customBuffer = '';
+    let keyboardColorMode: 'theme' | 'quadrant' = (localStorage.getItem('prac_keyboard_mode') as any) || 'theme';
+
+    let words: string[] = [];
+    let currentWordIndex = 0;
+    let currentCharIndex = 0;
+    let correctChars = 0;
+    let errorChars = 0;
+    let currentStreak = 0;
+    let maxStreak = 0;
+    let totalKeystrokes = 0;
+    let startTime = 0;
+    let isDrillRunning = false;
+    let isDrillComplete = false;
+    let wordCharStates: (boolean | null)[][] = [];
+
+    // Deduplication tracker
+    let lastPracticeKeyTime = 0;
+    let lastPracticeKey = '';
+
+    // Map for O(1) Keycap Lookups
+    const keycapsMap = new Map<string, HTMLElement>();
+
+    // Render Physical On-Screen Keyboard Styled According to Website Theme
+    function renderVirtualKeyboardDOM() {
+      if (!keyboardMatrix) return;
+      keyboardMatrix.innerHTML = '';
+      keycapsMap.clear();
+
+      const activeLayout = getPhysicalKeyboardLayout(pracLang);
+
+      activeLayout.forEach(row => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'flex justify-center w-full select-none';
+        rowDiv.style.gap = 'var(--key-gap)';
+
+        row.forEach((keyDef: PhysicalKeyDef) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          const fData = getFingerQuadrantData(keyDef.k);
+          const u = keyDef.w;
+          
+          btn.className = 'prac-keycap relative flex flex-col items-center justify-center rounded-xl font-bold cursor-pointer';
+          
+          // Apply Dynamic Theme Styling
+          const topAccentColor = keyboardColorMode === 'theme' ? 'var(--mt-sub, #646669)' : fData.color;
+          const borderColor = keyboardColorMode === 'theme' ? 'var(--site-hairline, rgba(255, 255, 255, 0.08))' : fData.borderTint;
+
+          btn.style.cssText = `
+            width: calc(${u} * var(--key-unit) + ${(u - 1)} * var(--key-gap));
+            height: var(--key-height);
+            flex-shrink: 0;
+            flex-grow: 0;
+            background-color: var(--mt-bg, var(--site-canvas, #2c2e31));
+            color: var(--mt-text, var(--site-ink, #d1d0c5));
+            border: 1px solid ${borderColor};
+            border-top: 3px solid ${topAccentColor};
+            box-shadow: 0 3px 0 0 rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.25);
+          `;
+          btn.setAttribute('data-base-key', keyDef.k.toLowerCase());
+          if (keyDef.s) btn.setAttribute('data-shift-key', keyDef.s);
+          btn.setAttribute('data-default-border', borderColor);
+          btn.setAttribute('data-quadrant-color', fData.color);
+
+          // Labels with clean theme typography
+          const subTextColor = keyboardColorMode === 'theme' ? 'var(--mt-sub, #646669)' : fData.color;
+
+          if (keyDef.s) {
+            btn.innerHTML = `
+              <span class="text-[9px] sm:text-[10px] leading-none opacity-80" style="color: ${subTextColor};">${keyDef.s}</span>
+              <span class="text-xs sm:text-sm font-bold leading-none mt-1" style="color: var(--mt-text, #d1d0c5);">${keyDef.display}</span>
+            `;
+          } else if (keyDef.k === ' ') {
+            btn.innerHTML = `
+              <span class="text-[10px] sm:text-[11px] uppercase tracking-widest font-bold opacity-80" style="color: ${subTextColor};">SPACEBAR</span>
+            `;
+          } else if (keyDef.isAnchor) {
+            const anchorBumpColor = keyboardColorMode === 'theme' ? 'var(--mt-main, #e2b714)' : fData.color;
+            btn.innerHTML = `
+              <span class="text-xs sm:text-sm font-bold leading-none" style="color: var(--mt-text, #d1d0c5);">${keyDef.display}</span>
+              <span class="w-3.5 sm:w-4 h-1 rounded-full mt-1.5 shadow-sm" style="background-color: ${anchorBumpColor};"></span>
+            `;
+          } else if (keyDef.w > 1.0) {
+            btn.innerHTML = `
+              <span class="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider opacity-85" style="color: var(--mt-sub, #646669);">${keyDef.display}</span>
+            `;
+          } else {
+            btn.innerHTML = `
+              <span class="text-xs sm:text-sm font-bold leading-none" style="color: var(--mt-text, #d1d0c5);">${keyDef.display}</span>
+            `;
+          }
+
+          // Register in Keycaps Map for fast O(1) lookup
+          keycapsMap.set(keyDef.k.toLowerCase(), btn);
+          if (keyDef.s) keycapsMap.set(keyDef.s, btn);
+          keycapsMap.set(keyDef.display.toLowerCase(), btn);
+          if (keyDef.display) keycapsMap.set(keyDef.display, btn);
+
+          // Click keycap handler
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            soundEngine.initContext();
+            if (keyDef.k === 'backspace') {
+              handleKey('Backspace');
+            } else if (keyDef.k === ' ') {
+              handleKey(' ');
+            } else if (keyDef.display) {
+              handleKey(keyDef.display);
+            } else if (keyDef.k.length === 1) {
+              handleKey(keyDef.k);
+            }
+            focusPracticeInput();
+          });
+
+          rowDiv.appendChild(btn);
+        });
+
+        keyboardMatrix.appendChild(rowDiv);
+      });
+
+      updateInstructorAndKeyboard();
+    }
+
+    renderVirtualKeyboardDOM();
+
+    // Generate Drill Word List
+    function generateDrillWords() {
+      isDrillRunning = false;
+      isDrillComplete = false;
+      currentWordIndex = 0;
+      currentCharIndex = 0;
+      currentLatinBuffer = '';
+      correctChars = 0;
+      errorChars = 0;
+      currentStreak = 0;
+      maxStreak = 0;
+      totalKeystrokes = 0;
+
+      resultView?.classList.add('hidden');
+      typingView?.classList.remove('hidden');
+
+      if (currentDrillType === 'custom') {
+        if (!customBuffer) customBuffer = 'the quick brown fox jumps over the lazy dog';
+        const rawWords = customBuffer.trim().split(/\s+/).filter(Boolean);
+        words = [];
+        for (let i = 0; i < targetWordCount; i++) {
+          words.push(rawWords[i % rawWords.length]);
+        }
+      } else if (currentDrillType === 'weakKeys') {
+        const weakKeys = storage.getWeakestKeys(5).map(k => k.char);
+        words = generateWeakKeysDrill(weakKeys, targetWordCount);
+      } else {
+        const sourceList = getPracticeDrillWords(currentDrillType, pracLang, scriptMode);
+        words = [];
+        for (let i = 0; i < targetWordCount; i++) {
+          words.push(sourceList[i % sourceList.length]);
+        }
+      }
+
+      wordCharStates = words.map(w => new Array(w.length).fill(null));
+
+      if (liveProgress) liveProgress.textContent = `0 / ${words.length}`;
+      if (liveWpm) liveWpm.textContent = '0';
+      if (liveAcc) liveAcc.textContent = '100%';
+      if (liveStreak) liveStreak.textContent = '0';
+
+      renderWordsDOM();
+      requestAnimationFrame(() => {
+        positionCaret();
+        updateInstructorAndKeyboard();
+        if (window.location.pathname.startsWith('/practice')) {
+          focusPracticeInput();
+        }
+      });
+    }
+
+    // Render Word Viewport Elements
+    function renderWordsDOM() {
+      if (!wordsWrapper) return;
+      const caretEl = caret;
+      wordsWrapper.innerHTML = '';
+      if (caretEl) wordsWrapper.appendChild(caretEl);
+      wordsWrapper.style.transform = 'translateY(0px)';
+
+      words.forEach((w, wIdx) => {
+        const wordDiv = document.createElement('div');
+        wordDiv.className = `prac-word inline-block mr-3 mb-1.5 transition-colors ${wIdx === currentWordIndex ? 'active-word font-bold' : ''}`;
+        wordDiv.setAttribute('data-word-idx', `${wIdx}`);
+
+        w.split('').forEach((ch, cIdx) => {
+          const letterSpan = document.createElement('span');
+          letterSpan.textContent = ch;
+          letterSpan.className = 'prac-letter transition-colors';
+          letterSpan.setAttribute('data-char-idx', `${cIdx}`);
+          letterSpan.style.color = 'var(--mt-sub, #646669)';
+          wordDiv.appendChild(letterSpan);
+        });
+
+        wordsWrapper.appendChild(wordDiv);
+      });
+    }
+
+    // Smooth Caret Positioning & Line Jumping
+    function positionCaret() {
+      if (!caret || !wordsWrapper || isDrillComplete) {
+        if (caret) caret.style.opacity = '0';
+        return;
+      }
+
+      const activeWordDiv = wordsWrapper.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+      if (!activeWordDiv) {
+        caret.style.opacity = '0';
+        return;
+      }
+
+      const letters = activeWordDiv.querySelectorAll('.prac-letter:not(.extra-char)') as NodeListOf<HTMLElement>;
+      let targetX = activeWordDiv.offsetLeft;
+      let targetY = activeWordDiv.offsetTop;
+      const targetH = activeWordDiv.offsetHeight || 38;
+
+      if (currentCharIndex < letters.length) {
+        const activeLetter = letters[currentCharIndex];
+        targetX = activeLetter.offsetLeft;
+        targetY = activeLetter.offsetTop;
+      } else if (letters.length > 0) {
+        const lastLetter = letters[letters.length - 1];
+        targetX = lastLetter.offsetLeft + lastLetter.offsetWidth;
+        targetY = lastLetter.offsetTop;
+      }
+
+      caret.style.transform = `translate(${targetX}px, ${targetY + 4}px)`;
+      caret.style.height = `${targetH - 8}px`;
+      caret.style.opacity = '1';
+
+      // Auto line jump scrolling
+      const singleLineH = targetH || 38;
+      const scrollOffset = Math.max(0, activeWordDiv.offsetTop - singleLineH);
+      wordsWrapper.style.transform = `translateY(-${scrollOffset}px)`;
+    }
+
+    // Dynamic Live Finger Placement Instructor & Visual Key Highlights
+    function updateInstructorAndKeyboard() {
+      if (isDrillComplete) return;
+
+      const currentWord = words[currentWordIndex] || '';
+      let targetChar = currentWord[currentCharIndex];
+
+      // If at end of word, next key is Spacebar
+      if (currentCharIndex >= currentWord.length) {
+        targetChar = ' ';
+      }
+
+      if (!targetChar) return;
+
+      const fData = getFingerQuadrantData(targetChar);
+      const highlightColor = keyboardColorMode === 'theme' ? 'var(--mt-main, var(--site-primary, #e2b714))' : fData.color;
+
+      // Update Ribbon
+      if (fingerDot) fingerDot.style.backgroundColor = highlightColor;
+      if (fingerInstruction) {
+        const displayChar = targetChar === ' ' ? 'SPACEBAR' : targetChar;
+        const keyHint = (fData.baseKey && fData.baseKey !== targetChar && targetChar !== ' ') ? `(Key: ${fData.baseKey.toUpperCase()})` : '';
+        const shiftHint = fData.shiftKey ? `(Shift + ${fData.baseKey.toUpperCase()})` : keyHint;
+        fingerInstruction.innerHTML = `👉 Strike <span class="font-bold underline" style="color: ${highlightColor};">[${displayChar}]</span> ${shiftHint} using your <strong style="color: ${highlightColor};">${fData.fingerName}</strong>`;
+      }
+      if (handSideEl) handSideEl.textContent = fData.hand;
+      if (handFingerEl) {
+        handFingerEl.textContent = fData.quadrantName;
+        handFingerEl.style.color = highlightColor;
+      }
+
+      // Reset all keycaps back to their default theme state
+      keyboardMatrix?.querySelectorAll('.prac-keycap').forEach(kc => {
+        const el = kc as HTMLElement;
+        const defaultBorder = el.getAttribute('data-default-border') || 'var(--site-hairline)';
+        const quadColor = el.getAttribute('data-quadrant-color') || '#ffffff';
+        const topColor = keyboardColorMode === 'theme' ? 'var(--mt-sub, #646669)' : quadColor;
+
+        el.style.boxShadow = '0 3px 0 0 rgba(0, 0, 0, 0.4), 0 4px 6px -1px rgba(0, 0, 0, 0.25)';
+        el.style.transform = 'translateY(0px) scale(1)';
+        el.style.backgroundColor = 'var(--mt-bg, var(--site-canvas, #2c2e31))';
+        el.style.color = 'var(--mt-text, var(--site-ink, #d1d0c5))';
+        el.style.borderColor = defaultBorder;
+        el.style.borderTop = `3px solid ${topColor}`;
+        el.classList.remove('ring-2', 'ring-offset-1');
+      });
+
+      // Find matched keycap using Map (with universal fallback)
+      const matchedKeycap = keycapsMap.get(targetChar) ||
+        keycapsMap.get(targetChar.toLowerCase()) ||
+        keycapsMap.get(fData.baseKey) ||
+        keycapsMap.get(fData.baseKey.toLowerCase());
+
+      if (matchedKeycap) {
+        matchedKeycap.style.boxShadow = `0 0 24px 4px ${highlightColor}, 0 3px 0 0 rgba(0, 0, 0, 0.5)`;
+        matchedKeycap.style.transform = 'translateY(-3px) scale(1.05)';
+        matchedKeycap.style.backgroundColor = highlightColor;
+        matchedKeycap.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+        matchedKeycap.style.borderColor = highlightColor;
+        matchedKeycap.style.borderTop = `3px solid ${highlightColor}`;
+        matchedKeycap.classList.add('ring-2');
+      }
+    }
+
+    // Keystroke Processor
+    function handleKey(key: string) {
+      if (isDrillComplete) return;
+
+      // Deduplication guard: ignore duplicate event within 30ms
+      const now = performance.now();
+      if (now - lastPracticeKeyTime < 30 && key === lastPracticeKey) {
+        return;
+      }
+      lastPracticeKeyTime = now;
+      lastPracticeKey = key;
+
+      if (!isDrillRunning) {
+        isDrillRunning = true;
+        startTime = Date.now();
+      }
+
+      const currentWord = words[currentWordIndex];
+      if (!currentWord) return;
+
+      const activeWordDiv = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+      const letters = activeWordDiv?.querySelectorAll('.prac-letter:not(.extra-char)') as NodeListOf<HTMLElement> | undefined;
+
+      // Visual press on keycap
+      const pressedKeycap = keycapsMap.get(key) || keycapsMap.get(key.toLowerCase());
+      if (pressedKeycap) {
+        pressedKeycap.style.transform = 'translateY(2px) scale(0.97)';
+        pressedKeycap.style.boxShadow = '0 1px 0 0 rgba(0, 0, 0, 0.3)';
+        setTimeout(() => {
+          if (!isDrillComplete) {
+            updateInstructorAndKeyboard();
+          }
+        }, 90);
+      }
+
+      // Space Key -> Advance Word
+      if (key === ' ') {
+        soundEngine.playKey(true);
+        currentLatinBuffer = '';
+
+        if (currentCharIndex > 0) {
+          if (letters && currentCharIndex < letters.length) {
+            // Penalize untyped characters
+            for (let i = currentCharIndex; i < letters.length; i++) {
+              letters[i].style.color = 'var(--mt-error, #ca4754)';
+              letters[i].style.opacity = '0.5';
+              errorChars++;
+              if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][i] = false;
+            }
+          }
+
+          if (activeWordDiv) activeWordDiv.classList.remove('active-word', 'font-bold');
+          currentWordIndex++;
+          currentCharIndex = 0;
+
+          if (liveProgress) liveProgress.textContent = `${currentWordIndex} / ${words.length}`;
+
+          if (currentWordIndex >= words.length) {
+            finishDrill();
+            return;
+          }
+
+          const nextWordDiv = wordsWrapper?.querySelector(`[data-word-idx="${currentWordIndex}"]`) as HTMLElement | null;
+          if (nextWordDiv) nextWordDiv.classList.add('active-word', 'font-bold');
+          positionCaret();
+          updateInstructorAndKeyboard();
+        }
+        return;
+      }
+
+      // Backspace Handler
+      if (key === 'Backspace') {
+        soundEngine.playKey();
+        currentLatinBuffer = currentLatinBuffer.slice(0, -1);
+
+        if (currentCharIndex > 0) {
+          currentCharIndex--;
+          const prevStatus = wordCharStates[currentWordIndex]?.[currentCharIndex];
+          if (prevStatus === true) correctChars = Math.max(0, correctChars - 1);
+          else if (prevStatus === false) errorChars = Math.max(0, errorChars - 1);
+
+          if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = null;
+          if (letters && letters[currentCharIndex]) {
+            letters[currentCharIndex].style.color = 'var(--mt-sub, #646669)';
+            letters[currentCharIndex].style.opacity = '1';
+          }
+          positionCaret();
+          updateInstructorAndKeyboard();
+        }
+        return;
+      }
+
+      // Printable Single Characters
+      if (key.length === 1) {
+        totalKeystrokes++;
+        currentLatinBuffer += key;
+        const expected = currentWord[currentCharIndex];
+        let isMatch = key === expected;
+
+        if (!isMatch && scriptMode === 'native' && pracLang !== 'en') {
+          // 1. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
+          const langOverrides = KEY_LABEL_OVERRIDES[pracLang] || KEY_LABEL_OVERRIDES[pracLang.slice(0, 2)];
+          if (langOverrides) {
+            const mapped = langOverrides[key.toLowerCase()]?.display;
+            if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
+              isMatch = true;
+            }
+          }
+
+          // 2. Phonetic transliteration check
+          if (!isMatch) {
+            const trans = transliterateInput(currentLatinBuffer, pracLang, 'native');
+            const partialExpected = currentWord.slice(0, currentCharIndex + 1);
+            if (trans === partialExpected || trans.endsWith(expected) || (trans.length > 0 && partialExpected.endsWith(trans[trans.length - 1]))) {
+              isMatch = true;
+            }
+          }
+
+          // 3. Smart Accents check
+          if (!isMatch) {
+            const smartAcc = applySmartAccents(key, pracLang);
+            if (smartAcc === expected || smartAcc.toLowerCase() === (expected || '').toLowerCase()) {
+              isMatch = true;
+            }
+          }
+        }
+        storage.recordKeystroke(expected || key, !isMatch);
+
+        if (letters && currentCharIndex < letters.length) {
+          const letterEl = letters[currentCharIndex];
+
+          if (isMatch) {
+            correctChars++;
+            currentStreak++;
+            maxStreak = Math.max(maxStreak, currentStreak);
+            if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = true;
+            soundEngine.playKey();
+            letterEl.style.color = 'var(--mt-text, #d1d0c5)';
+            letterEl.style.fontWeight = 'bold';
+          } else {
+            errorChars++;
+            currentStreak = 0;
+            if (wordCharStates[currentWordIndex]) wordCharStates[currentWordIndex][currentCharIndex] = false;
+            soundEngine.playError();
+            letterEl.style.color = 'var(--mt-error, #ca4754)';
+            letterEl.style.fontWeight = 'bold';
+          }
+        }
+
+        currentCharIndex++;
+
+        // Live Telemetry Calculation
+        const elapsedMin = Math.max(0.016, (Date.now() - startTime) / 60000);
+        const netWpm = Math.max(0, Math.round(((correctChars - errorChars) / 5) / elapsedMin));
+        const acc = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
+
+        if (liveWpm) liveWpm.textContent = `${netWpm}`;
+        if (liveAcc) liveAcc.textContent = `${acc}%`;
+        if (liveStreak) liveStreak.textContent = `${currentStreak}`;
+
+        positionCaret();
+        updateInstructorAndKeyboard();
+
+        // Finish on final char of last word
+        if (currentWordIndex === words.length - 1 && currentCharIndex >= currentWord.length) {
+          finishDrill();
+        }
+      }
+    }
+
+    // Finish Drill & Render Scorecard
+    function finishDrill() {
+      isDrillRunning = false;
+      isDrillComplete = true;
+      if (caret) caret.style.opacity = '0';
+
+      const elapsedSec = Math.max(1, (Date.now() - startTime) / 1000);
+      const minutes = elapsedSec / 60;
+      const netWpmVal = Math.max(0, Math.round(((correctChars - errorChars) / 5) / minutes));
+      const accuracyVal = totalKeystrokes > 0 ? Math.round((correctChars / totalKeystrokes) * 100) : 100;
+
+      // Grade calculation
+      let grade = 'RANK S';
+      let gradeClass = 'bg-emerald-500';
+      if (accuracyVal >= 98 && netWpmVal >= 55) {
+        grade = '👑 RANK S (LEGENDARY)';
+        gradeClass = 'bg-emerald-500';
+      } else if (accuracyVal >= 92 && netWpmVal >= 40) {
+        grade = '🎯 RANK A (EXCELLENT)';
+        gradeClass = 'bg-blue-500';
+      } else if (accuracyVal >= 80) {
+        grade = '⚡ RANK B (PROFICIENT)';
+        gradeClass = 'bg-amber-500';
+      } else {
+        grade = '🌱 RANK C (NEEDS PRACTICE)';
+        gradeClass = 'bg-rose-500';
+      }
+
+      if (resWpm) resWpm.textContent = `${netWpmVal}`;
+      if (resAcc) resAcc.textContent = `${accuracyVal}%`;
+      if (resStreak) resStreak.textContent = `${maxStreak}x`;
+      if (resErrors) resErrors.textContent = `${errorChars}`;
+      if (rankBadge) {
+        rankBadge.textContent = grade;
+        rankBadge.className = `rounded-full px-3.5 py-1 text-xs font-bold text-white shadow-md ${gradeClass}`;
+      }
+
+      // Record to storage
+      storage.recordGameResult('practice-lab', netWpmVal * 10, netWpmVal, accuracyVal, 1, words.length, totalKeystrokes, errorChars);
+      storage.updateDailyQuestProgress('drills', 1);
+
+      typingView?.classList.add('hidden');
+      resultView?.classList.remove('hidden');
+
+      soundEngine.playVictory();
+      if (accuracyVal >= 90) {
+        try {
+          confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        } catch {}
+      }
+    }
+
+    // Metronome Cadence Synthesizer
+    function setMetronomeBPM(bpm: number) {
+      if (metronomeTimer) {
+        clearInterval(metronomeTimer);
+        metronomeTimer = null;
+      }
+
+      if (metroLabel) metroLabel.textContent = bpm === 0 ? 'Metro: OFF' : `Metro: ${bpm} BPM`;
+
+      if (bpm > 0) {
+        const intervalMs = (60 / bpm) * 1000;
+        metronomeTimer = window.setInterval(() => {
+          soundEngine.initContext();
+          soundEngine.playKey(false);
+        }, intervalMs);
+      }
+    }
+
+    // Focus Handlers
+    const focusPracticeInput = () => {
+      soundEngine.initContext();
+      try {
+        inputEl?.focus({ preventScroll: true });
+      } catch {
+        inputEl?.focus();
+      }
+      focusOverlay?.classList.add('hidden');
+      positionCaret();
+      updateInstructorAndKeyboard();
+    };
+
+    wordsViewport.addEventListener('click', focusPracticeInput);
+    focusOverlay?.addEventListener('click', focusPracticeInput);
+    activeCleanups.push(() => {
+      wordsViewport.removeEventListener('click', focusPracticeInput);
+      focusOverlay?.removeEventListener('click', focusPracticeInput);
+    });
+
+    inputEl?.addEventListener('blur', () => {
+      if (isDrillRunning && !isDrillComplete) focusOverlay?.classList.remove('hidden');
+    });
+    inputEl?.addEventListener('focus', () => {
+      focusOverlay?.classList.add('hidden');
+      positionCaret();
+    });
+
+    // Keydown input listeners
+    const onInputKeyDown = (e: KeyboardEvent) => {
+      soundEngine.initContext();
+
+      if (e.key === ' ' || e.key === 'Backspace' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        e.stopPropagation();
+        handleKey(e.key);
+      }
+    };
+    inputEl?.addEventListener('keydown', onInputKeyDown);
+    activeCleanups.push(() => inputEl?.removeEventListener('keydown', onInputKeyDown));
+
+    // Global Keybinds
+    const onGlobalKey = (e: KeyboardEvent) => {
+      const isPracticePage = window.location.pathname.startsWith('/practice');
+      const target = e.target as HTMLElement | null;
+      if (target && target !== inputEl && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+        return;
+      }
+
+      if (customModal && !customModal.classList.contains('hidden')) {
+        return;
+      }
+
+      if (!isPracticePage && document.activeElement !== inputEl && !isDrillRunning) {
+        return;
+      }
+
+      // Tab restart
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        generateDrillWords();
+        focusPracticeInput();
+        return;
+      }
+
+      // Forward any printable keystroke or Space/Backspace directly to handleKey
+      if (e.key === ' ' || e.key === 'Backspace' || (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+        e.preventDefault();
+        if (document.activeElement !== inputEl) {
+          focusPracticeInput();
+        }
+        handleKey(e.key);
+      }
+    };
+    window.addEventListener('keydown', onGlobalKey);
+    activeCleanups.push(() => window.removeEventListener('keydown', onGlobalKey));
+
+    // Fallback for virtual keyboards & mobile IME input
+    const onPracticeInputValue = (e: Event) => {
+      soundEngine.initContext();
+      const val = (e.target as HTMLInputElement).value;
+      if (val.length > 0) {
+        for (let i = 0; i < val.length; i++) {
+          handleKey(val[i]);
+        }
+        (e.target as HTMLInputElement).value = '';
+      }
+    };
+    inputEl?.addEventListener('input', onPracticeInputValue);
+    activeCleanups.push(() => inputEl?.removeEventListener('input', onPracticeInputValue));
+
+    // Keyboard Appearance Mode Toggle Handlers
+    modeThemeBtn?.addEventListener('click', () => {
+      keyboardColorMode = 'theme';
+      localStorage.setItem('prac_keyboard_mode', 'theme');
+      modeThemeBtn.classList.add('active');
+      modeThemeBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+      modeThemeBtn.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+      modeThemeBtn.classList.remove('opacity-70');
+      
+      modeQuadBtn?.classList.remove('active');
+      if (modeQuadBtn) {
+        modeQuadBtn.style.backgroundColor = 'transparent';
+        modeQuadBtn.style.color = 'var(--mt-text, #d1d0c5)';
+        modeQuadBtn.classList.add('opacity-70');
+      }
+      renderVirtualKeyboardDOM();
+    });
+
+    modeQuadBtn?.addEventListener('click', () => {
+      keyboardColorMode = 'quadrant';
+      localStorage.setItem('prac_keyboard_mode', 'quadrant');
+      modeQuadBtn.classList.add('active');
+      modeQuadBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+      modeQuadBtn.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+      modeQuadBtn.classList.remove('opacity-70');
+
+      modeThemeBtn?.classList.remove('active');
+      if (modeThemeBtn) {
+        modeThemeBtn.style.backgroundColor = 'transparent';
+        modeThemeBtn.style.color = 'var(--mt-text, #d1d0c5)';
+        modeThemeBtn.classList.add('opacity-70');
+      }
+      renderVirtualKeyboardDOM();
+    });
+
+    // Metronome Menu
+    metroBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      metroMenu?.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!metroMenu?.contains(e.target as Node) && !metroBtn?.contains(e.target as Node)) {
+        metroMenu?.classList.add('hidden');
+      }
+    });
+    const bpmOpts = document.querySelectorAll('.prac-bpm-opt');
+    bpmOpts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const bpm = parseInt(opt.getAttribute('data-bpm') || '0', 10);
+        setMetronomeBPM(bpm);
+        bpmOpts.forEach(o => o.querySelector('.bpm-check')?.classList.add('hidden'));
+        opt.querySelector('.bpm-check')?.classList.remove('hidden');
+        metroMenu?.classList.add('hidden');
+      });
+    });
+
+    // Practice Language Dropdown
+    const onPracLangBtnClick = (e: MouseEvent) => {
+      e.stopPropagation();
+      langMenu?.classList.toggle('hidden');
+    };
+    langBtn?.addEventListener('click', onPracLangBtnClick);
+    activeCleanups.push(() => langBtn?.removeEventListener('click', onPracLangBtnClick));
+
+    const onDocumentPracLangClick = (e: MouseEvent) => {
+      if (!langMenu?.contains(e.target as Node) && !langBtn?.contains(e.target as Node)) {
+        langMenu?.classList.add('hidden');
+      }
+    };
+    document.addEventListener('click', onDocumentPracLangClick);
+    activeCleanups.push(() => document.removeEventListener('click', onDocumentPracLangClick));
+
+    const pracLangOptions = document.querySelectorAll('.prac-lang-opt');
+    pracLangOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const l = opt.getAttribute('data-prac-lang') || 'en';
+        setPracLanguage(l);
+        langMenu?.classList.add('hidden');
+      });
+    });
+
+    function setPracLanguage(langCode: string) {
+      pracLang = langCode;
+      const flags: Record<string, string> = {
+        en: '🇺🇸', hi: '🇮🇳', ja: '🇯🇵', ru: '🇷🇺', ar: '🇸🇦',
+        de: '🇩🇪', es: '🇪🇸', fr: '🇫🇷', bn: '🇧🇩', pt: '🇧🇷',
+        zh: '🇨🇳', ko: '🇰🇷', it: '🇮🇹', tr: '🇹🇷', vi: '🇻🇳', id: '🇮🇩'
+      };
+      const labels: Record<string, string> = {
+        en: 'English (ANSI)', hi: 'हिन्दी (Hindi)', ja: '日本語 (Japanese)',
+        ru: 'Русский (Russian)', ar: 'العربية (Arabic)', de: 'Deutsch (German)',
+        es: 'Español (Spanish)', fr: 'Français (French)', bn: 'বাংলা (Bengali)',
+        pt: 'Português', zh: '简体中文 (Chinese)', ko: '한국어 (Korean)',
+        it: 'Italiano (Italian)', tr: 'Türkçe (Turkish)', vi: 'Tiếng Việt (Vietnamese)',
+        id: 'Bahasa Indonesia'
+      };
+      if (langFlag) langFlag.textContent = flags[langCode] || '🌐';
+      if (langLabel) langLabel.textContent = labels[langCode] || langCode;
+
+      pracLangOptions.forEach(opt => {
+        const l = opt.getAttribute('data-prac-lang');
+        const chk = opt.querySelector('.check');
+        if (chk) {
+          if (l === langCode) {
+            chk.classList.remove('hidden');
+            opt.classList.add('active', 'font-bold');
+          } else {
+            chk.classList.add('hidden');
+            opt.classList.remove('active', 'font-bold');
+          }
+        }
+      });
+
+      if (scriptToggleWrapper) {
+        if (langCode !== 'en' && isNativeScriptSupported(langCode)) {
+          scriptToggleWrapper.classList.remove('hidden');
+          if (phoneticBadge) phoneticBadge.classList.toggle('hidden', scriptMode !== 'native');
+        } else {
+          scriptToggleWrapper.classList.add('hidden');
+          if (phoneticBadge) phoneticBadge.classList.add('hidden');
+        }
+      }
+
+      renderVirtualKeyboardDOM();
+      generateDrillWords();
+      focusPracticeInput();
+    }
+
+    const updatePracScriptUI = () => {
+      if (scriptNativeBtn && scriptLatinBtn) {
+        if (scriptMode === 'native') {
+          scriptNativeBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+          scriptNativeBtn.style.color = 'var(--mt-bg, #323437)';
+          scriptNativeBtn.classList.remove('opacity-70');
+          scriptLatinBtn.style.backgroundColor = 'transparent';
+          scriptLatinBtn.style.color = 'var(--mt-text, #d1d0c5)';
+          scriptLatinBtn.classList.add('opacity-70');
+          if (phoneticBadge) phoneticBadge.classList.remove('hidden');
+        } else {
+          scriptLatinBtn.style.backgroundColor = 'var(--mt-main, #e2b714)';
+          scriptLatinBtn.style.color = 'var(--mt-bg, #323437)';
+          scriptLatinBtn.classList.remove('opacity-70');
+          scriptNativeBtn.style.backgroundColor = 'transparent';
+          scriptNativeBtn.style.color = 'var(--mt-text, #d1d0c5)';
+          scriptNativeBtn.classList.add('opacity-70');
+          if (phoneticBadge) phoneticBadge.classList.add('hidden');
+        }
+      }
+    };
+
+    scriptNativeBtn?.addEventListener('click', () => {
+      scriptMode = 'native';
+      updatePracScriptUI();
+      generateDrillWords();
+      focusPracticeInput();
+    });
+
+    scriptLatinBtn?.addEventListener('click', () => {
+      scriptMode = 'latin';
+      updatePracScriptUI();
+      generateDrillWords();
+      focusPracticeInput();
+    });
+
+    // Function to activate a drill tab button & sync quadrant filter chips
+    function activateDrillButton(drillName: string) {
+      // 1. Update top category bar buttons
+      catBtns.forEach(b => {
+        b.classList.remove('active');
+        (b as HTMLElement).style.backgroundColor = 'transparent';
+        (b as HTMLElement).style.color = 'var(--mt-text, var(--site-ink, #d1d0c5))';
+        b.classList.add('opacity-75');
+      });
+      const matchBtn = root?.querySelector(`[data-drill="${drillName}"]`) as HTMLElement | null;
+      if (matchBtn) {
+        matchBtn.classList.add('active');
+        matchBtn.style.backgroundColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+        matchBtn.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+        matchBtn.classList.remove('opacity-75');
+      }
+
+      // 2. Synchronize the 5 keyboard quadrant filter chips
+      root?.querySelectorAll('.prac-quad-filter').forEach(qf => {
+        const qEl = qf as HTMLElement;
+        const qDrill = qEl.getAttribute('data-filter-quadrant');
+        const isMatch = qDrill === drillName;
+        const dot = qEl.querySelector('.dot-indicator') as HTMLElement | null;
+
+        if (isMatch) {
+          qEl.style.backgroundColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+          qEl.style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+          qEl.style.borderColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+          qEl.style.boxShadow = '0 0 14px 2px var(--mt-main, #e2b714)';
+          if (dot) dot.style.backgroundColor = 'var(--site-on-primary, var(--mt-bg, #323437))';
+        } else {
+          qEl.style.backgroundColor = 'var(--mt-bg, #323437)';
+          qEl.style.color = 'var(--mt-text, #d1d0c5)';
+          qEl.style.borderColor = 'var(--site-hairline)';
+          qEl.style.boxShadow = 'none';
+
+          if (qDrill === 'pinkyDrills') {
+            qEl.style.borderLeft = '3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%)';
+            qEl.style.color = 'color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%)';
+            if (dot) dot.style.backgroundColor = 'color-mix(in srgb, var(--mt-main, #e2b714) 35%, var(--mt-text, #d1d0c5) 65%)';
+          } else if (qDrill === 'ringDrills') {
+            qEl.style.borderLeft = '3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%)';
+            qEl.style.color = 'color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%)';
+            if (dot) dot.style.backgroundColor = 'color-mix(in srgb, var(--mt-main, #e2b714) 55%, var(--mt-sub, #646669) 45%)';
+          } else if (qDrill === 'middleDrills') {
+            qEl.style.borderLeft = '3.5px solid color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%)';
+            qEl.style.color = 'color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%)';
+            if (dot) dot.style.backgroundColor = 'color-mix(in srgb, var(--mt-main, #e2b714) 80%, var(--mt-text, #d1d0c5) 20%)';
+          } else if (qDrill === 'indexDrills') {
+            qEl.style.borderLeft = '3.5px solid var(--mt-main, #e2b714)';
+            qEl.style.color = 'var(--mt-main, #e2b714)';
+            if (dot) dot.style.backgroundColor = 'var(--mt-main, #e2b714)';
+          } else if (qDrill === 'thumbDrills') {
+            qEl.style.borderLeft = '3.5px solid var(--mt-caret, var(--mt-main, #e2b714))';
+            qEl.style.color = 'var(--mt-caret, var(--mt-main, #e2b714))';
+            if (dot) dot.style.backgroundColor = 'var(--mt-caret, var(--mt-main, #e2b714))';
+          }
+        }
+      });
+    }
+
+    // Drill Category Buttons
+    const catBtns = root.querySelectorAll('.prac-cat-btn');
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const drill = btn.getAttribute('data-drill') || 'homeRow';
+        if (drill === 'custom') {
+          customModal?.classList.remove('hidden');
+          if (customTextarea) customTextarea.value = customBuffer;
+          try {
+            customTextarea?.focus({ preventScroll: true });
+          } catch {
+            customTextarea?.focus();
+          }
+          return;
+        }
+
+        currentDrillType = drill;
+        activateDrillButton(drill);
+        generateDrillWords();
+        focusPracticeInput();
+      });
+    });
+
+    // Clickable Quadrant Legend Buttons
+    root.querySelectorAll('.prac-quad-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const quadDrill = btn.getAttribute('data-filter-quadrant');
+        if (quadDrill) {
+          currentDrillType = quadDrill;
+          activateDrillButton(quadDrill);
+          generateDrillWords();
+          focusPracticeInput();
+        }
+      });
+    });
+
+    // Word Count Buttons
+    const countBtns = root.querySelectorAll('.prac-count-btn');
+    countBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        countBtns.forEach(b => {
+          b.classList.remove('active', 'font-bold');
+          (b as HTMLElement).style.backgroundColor = 'transparent';
+          (b as HTMLElement).style.color = 'var(--mt-text, var(--site-ink, #d1d0c5))';
+          b.classList.add('opacity-75');
+        });
+        btn.classList.add('active', 'font-bold');
+        (btn as HTMLElement).style.backgroundColor = 'var(--mt-main, var(--site-primary, #e2b714))';
+        (btn as HTMLElement).style.color = 'var(--site-on-primary, var(--mt-bg, #323437))';
+        btn.classList.remove('opacity-75');
+
+        targetWordCount = parseInt(btn.getAttribute('data-count') || '20', 10);
+        generateDrillWords();
+        focusPracticeInput();
+      });
+    });
+
+    // Custom Modal Handlers
+    customClose?.addEventListener('click', () => customModal?.classList.add('hidden'));
+    customCancel?.addEventListener('click', () => customModal?.classList.add('hidden'));
+    customApply?.addEventListener('click', () => {
+      const text = customTextarea?.value.trim() || '';
+      if (text) {
+        customBuffer = text;
+        currentDrillType = 'custom';
+        activateDrillButton('custom');
+        customModal?.classList.add('hidden');
+        generateDrillWords();
+        focusPracticeInput();
+      }
+    });
+
+    // Action Buttons
+    restartBtn?.addEventListener('click', () => {
+      generateDrillWords();
+      focusPracticeInput();
+    });
+    repeatDrillBtn?.addEventListener('click', () => {
+      generateDrillWords();
+      focusPracticeInput();
+    });
+    nextDrillBtn?.addEventListener('click', () => {
+      const order = ['homeRow', 'topRow', 'bottomRow', 'numberRow', 'symbols', 'pangrams', 'ngrams', 'pinkyDrills', 'ringDrills', 'middleDrills', 'indexDrills', 'thumbDrills'];
+      const nextIdx = (order.indexOf(currentDrillType) + 1) % order.length;
+      const nextType = order[nextIdx];
+      currentDrillType = nextType;
+      activateDrillButton(nextType);
+      generateDrillWords();
+      focusPracticeInput();
+    });
+
+    // Public method on window to load specific drill from page grid chips
+    (window as any).loadPracticeDrill = (type: string, customWords?: string[]) => {
+      if (customWords && customWords.length > 0) {
+        customBuffer = customWords.join(' ');
+        currentDrillType = 'custom';
+        activateDrillButton('custom');
+      } else {
+        currentDrillType = type;
+        activateDrillButton(type);
+      }
+
+      generateDrillWords();
+      root.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      focusPracticeInput();
+    };
+
+    // Live Global Theme Change Event Listener (Syncs keyboard theme dynamically)
+    const onThemeChange = () => {
+      activateDrillButton(currentDrillType);
+      renderVirtualKeyboardDOM();
+      updateInstructorAndKeyboard();
+    };
+    window.addEventListener('monkeytype:theme-change', onThemeChange);
+    activeCleanups.push(() => window.removeEventListener('monkeytype:theme-change', onThemeChange));
+
+    // Initial setup
+    generateDrillWords();
+    if (window.location.pathname.startsWith('/practice')) {
+      focusPracticeInput();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPracticeLab);
+  } else {
+    initPracticeLab();
+  }
+  document.addEventListener('astro:page-load', initPracticeLab);
+  document.addEventListener('astro:before-swap', () => {
+    if (metronomeTimer) {
+      clearInterval(metronomeTimer);
+      metronomeTimer = null;
+    }
+    activeCleanups.forEach(c => c());
+    activeCleanups = [];
+  });
+</script>

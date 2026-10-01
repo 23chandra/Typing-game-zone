@@ -1,0 +1,189 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SpeedTestWidget from '../components/SpeedTestWidget.astro';
+
+const speedTestKeywords = 'fast typing game online, typing master word typing game online, word typing game online, Typing game online, Typing game zone, typing speed test, WPM test online, free typing game online, typing benchmark';
+
+const speedTestStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    {
+      '@type': 'ListItem',
+      'position': 1,
+      'name': 'Home',
+      'item': 'https://typinggamezone.com/'
+    },
+    {
+      '@type': 'ListItem',
+      'position': 2,
+      'name': 'Speed Test',
+      'item': 'https://typinggamezone.com/speed-test'
+    }
+  ]
+};
+---
+
+<Layout
+  title="Fast Typing Speed Test & WPM Benchmark Lab — Typing Game Zone"
+  description="Take the ultimate fast typing speed test at Typing Game Zone! Benchmark your Words Per Minute (WPM), accuracy, and consistency with mechanical switch audio, custom themes, and live charts."
+  keywords={speedTestKeywords}
+  structuredData={speedTestStructuredData}
+>
+  <div class="py-10 sm:py-14 bg-canvas-soft min-h-screen relative overflow-hidden">
+    <!-- Atmospheric subtle ambient mesh lighting -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-15%,rgba(226,183,20,0.07),rgba(0,112,243,0.05),transparent)] pointer-events-none"></div>
+
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <!-- Speed Test Suite Banner -->
+      <div class="text-center max-w-3xl mx-auto mb-8">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-body shadow-level-1 backdrop-blur mb-3">
+          <span class="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span class="text-ink font-semibold">Pro Speed Engine</span>
+          <span class="text-mute">•</span>
+          <span>17 Themes</span>
+          <span class="text-mute">•</span>
+          <span>Zero Latency</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink">
+          <span data-i18n="nav.speedTest">Typing Speed Benchmark</span>
+        </h1>
+        <p class="mt-2 text-sm text-body leading-relaxed max-w-2xl mx-auto" data-i18n="hero.subtitle">
+          Benchmark your Words Per Minute (WPM), typing cadence consistency, and character accuracy in real time with customizable themes, smooth carets, switch audio synthesis, and velocity trajectory curves.
+        </p>
+      </div>
+
+      <!-- Main Speed Test Widget -->
+      <SpeedTestWidget />
+
+      <!-- Keyboard Shortcuts & Power Features Strip -->
+      <div class="mt-12 rounded-2xl border border-hairline bg-canvas p-6 shadow-level-1 max-w-5xl mx-auto font-mono text-xs text-body">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-hairline pb-4 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-base">⌨️</span>
+            <span class="font-bold text-ink uppercase tracking-wider">Speed Test Hotkeys & Shortcuts</span>
+          </div>
+          <span class="text-[11px] text-mute">Press anywhere on page to focus typing</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">tab + enter</kbd>
+            <span class="text-mute">Restart test</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">esc</kbd>
+            <span class="text-mute">Command palette</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">shift + enter</kbd>
+            <span class="text-mute">Finish zen mode</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <kbd class="rounded bg-canvas-soft px-2 py-1 border border-hairline font-bold text-ink shadow-sm">tab</kbd>
+            <span class="text-mute">Repeat test</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speed Tiers & Telemetry Science Grid -->
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto font-sans">
+        
+        <!-- WPM Speed Ranking Scale -->
+        <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xl">📊</span>
+            <h3 class="text-sm font-semibold uppercase font-mono text-ink">Global Speed Tiers</h3>
+          </div>
+          <p class="text-xs text-mute mb-4">Standardized touch-typing distribution:</p>
+          <ul class="flex flex-col gap-2.5 font-mono text-xs text-body">
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span class="flex items-center gap-1.5"><span>🌱</span> <span>Novice</span></span>
+              <span class="text-mute">0 – 35 WPM</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span class="flex items-center gap-1.5"><span>🎯</span> <span>Average Typer</span></span>
+              <span class="text-mute">40 – 55 WPM</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span class="flex items-center gap-1.5"><span>⚡</span> <span>Professional</span></span>
+              <span class="text-body font-semibold">60 – 80 WPM</span>
+            </li>
+            <li class="flex items-center justify-between border-b border-hairline pb-1.5">
+              <span class="flex items-center gap-1.5"><span>🚀</span> <span>Speed Demon</span></span>
+              <span class="text-link font-semibold">85 – 105 WPM</span>
+            </li>
+            <li class="flex items-center justify-between text-warning font-bold">
+              <span class="flex items-center gap-1.5"><span>👑</span> <span>Keyboard Titan</span></span>
+              <span>110+ WPM</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pro Typing Tips -->
+        <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xl">💡</span>
+            <h3 class="text-sm font-semibold uppercase font-mono text-ink">Technique Tips</h3>
+          </div>
+          <p class="text-xs text-mute mb-4">Core habits for breaking past plateaus:</p>
+          <ul class="flex flex-col gap-3 text-xs text-body leading-relaxed">
+            <li class="flex items-start gap-2">
+              <span class="text-success font-bold">✓</span>
+              <span><strong>Wrist Elevation:</strong> Keep wrists floating slightly above your desk to reduce friction and tendon strain.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-success font-bold">✓</span>
+              <span><strong>98% Accuracy Rule:</strong> Slow down slightly to eliminate errors; speed naturally follows clean muscle memory.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-success font-bold">✓</span>
+              <span><strong>Word Buffer Vision:</strong> Train your eyes to read 2 words ahead of the letters your fingers are striking.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- WPM Calculation Standard -->
+        <div class="rounded-2xl border border-hairline bg-canvas p-6 shadow-level-2">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xl">📐</span>
+            <h3 class="text-sm font-semibold uppercase font-mono text-ink">Formula & Telemetry</h3>
+          </div>
+          <p class="text-xs text-mute mb-3">International standard formula:</p>
+          <div class="rounded-xl bg-canvas-soft p-3 border border-hairline font-mono text-[11px] text-body leading-relaxed mb-3">
+            <div class="text-link font-bold">Net WPM:</div>
+            <div>((Correct Chars - Errors) / 5) / Minutes</div>
+          </div>
+          <p class="text-xs text-body leading-relaxed">
+            1 Word = 5 keystrokes including spaces. Errors strictly deduct from gross word velocity to guarantee honest telemetry.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Quick Action Navigation Footer -->
+      <div class="mt-12 rounded-2xl border border-hairline bg-canvas p-8 shadow-level-2 flex flex-col sm:flex-row items-center justify-between gap-6 max-w-5xl mx-auto">
+        <div>
+          <h4 class="text-base font-bold text-ink">Ready to test your speed in combat?</h4>
+          <p class="text-xs text-body mt-1">Challenge yourself with 21 2D arcade, adventure, and fighting typing games.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <a
+            href="/practice"
+            class="rounded-full border border-hairline bg-canvas px-5 py-2.5 text-xs font-semibold text-ink shadow-level-1 hover:bg-canvas-soft transition"
+          >
+            Practice Lab
+          </a>
+          <a
+            href="/arcade"
+            class="rounded-full bg-ink px-6 py-2.5 text-xs font-semibold text-on-primary shadow-level-2 hover:opacity-90 transition active:scale-95"
+          >
+            Play 2D Games 🎮
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Layout>
