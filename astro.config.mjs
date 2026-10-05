@@ -6,17 +6,6 @@ import sitemap, { ChangeFreqEnum } from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://typinggamezone.com',
-<<<<<<< HEAD
-=======
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'hi', 'es', 'fr', 'de', 'ja', 'pt', 'ru', 'ar', 'zh', 'it', 'ko', 'id', 'tr', 'vi', 'bn'],
-    routing: {
-      prefixDefaultLocale: true,
-      redirectToDefaultLocale: false,
-    },
-  },
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   integrations: [
     sitemap({
       filter: (page) =>
@@ -28,11 +17,7 @@ export default defineConfig({
         !page.includes('/privacy-policy') &&
         !page.includes('/terms-and-conditions'),
       serialize(item) {
-<<<<<<< HEAD
         if (item.url === 'https://typinggamezone.com/' || item.url === 'https://typinggamezone.com') {
-=======
-        if (/https:\/\/typinggamezone\.com\/?$/.test(item.url) || /https:\/\/typinggamezone\.com\/[a-z]{2}\/?$/.test(item.url)) {
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
           item.changefreq = ChangeFreqEnum.DAILY;
           item.priority = 1.0;
         } else if (/(\/arcade|\/practice|\/speed-test|\/leaderboards)/.test(item.url)) {
@@ -54,8 +39,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 });
-<<<<<<< HEAD
 
 
-=======
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e

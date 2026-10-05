@@ -142,21 +142,12 @@ export class SpeedTyperProGame extends BaseGame {
     ctx.setLineDash([]);
 
     // Finish Line Checkers (Right side)
-<<<<<<< HEAD
     const finishX = this.width - 80;
     for (let f = 0; f < 10; f++) {
       ctx.fillStyle = f % 2 === 0 ? '#ffffff' : '#000000';
       ctx.fillRect(finishX, startY + f * (trackH / 10), 10, trackH / 10);
       ctx.fillStyle = f % 2 === 0 ? '#000000' : '#ffffff';
       ctx.fillRect(finishX + 10, startY + f * (trackH / 10), 10, trackH / 10);
-=======
-    const finishX = this.width - (this.width < 460 ? 36 : 80);
-    for (let f = 0; f < 10; f++) {
-      ctx.fillStyle = f % 2 === 0 ? '#ffffff' : '#000000';
-      ctx.fillRect(finishX, startY + f * (trackH / 10), 8, trackH / 10);
-      ctx.fillStyle = f % 2 === 0 ? '#000000' : '#ffffff';
-      ctx.fillRect(finishX + 8, startY + f * (trackH / 10), 8, trackH / 10);
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     }
 
     // 2. Render Player Formula Car (Lane 0)
@@ -176,14 +167,8 @@ export class SpeedTyperProGame extends BaseGame {
 
   private renderFormulaCar(ctx: CanvasRenderingContext2D, progress: number, laneIndex: number, color: string, label: string): void {
     const cy = this.getLaneY(laneIndex);
-<<<<<<< HEAD
     const trackW = this.width - 180;
     const cx = 60 + Math.min(trackW, (progress / this.trackLength) * trackW);
-=======
-    const startX = this.width < 460 ? 30 : 60;
-    const trackW = this.width - startX - (this.width < 460 ? 55 : 120);
-    const cx = startX + Math.min(trackW, (progress / this.trackLength) * trackW);
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     ctx.save();
     ctx.translate(cx, cy);

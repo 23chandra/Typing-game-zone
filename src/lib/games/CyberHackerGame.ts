@@ -70,29 +70,9 @@ export class CyberHackerGame extends BaseGame {
   private spawnNode(): void {
     if (this.breachedCount + this.nodes.length >= this.breachGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'cyber' : 'hard';
-<<<<<<< HEAD
     const word = getRandomWord(cat, this.lang);
-=======
-    const word = getRandomWord(cat);
-<<<<<<< HEAD
->>>>>>> 89673b989cb3248af3a02f625713e2bb0060b3e7
     const x = Math.random() * (this.width - 240) + 120;
     const y = Math.random() * (this.height - 200) + 80;
-=======
-    
-    const minMarginX = this.width < 460 ? 45 : 80;
-    const maxMarginX = Math.max(minMarginX + 40, this.width - minMarginX);
-    let x = Math.random() * (maxMarginX - minMarginX) + minMarginX;
-    let y = Math.random() * (this.height - 180) + 75;
-
-    let attempts = 0;
-    while (attempts < 12 && this.nodes.some(n => Math.hypot(n.x - x, n.y - y) < 65)) {
-      x = Math.random() * (maxMarginX - minMarginX) + minMarginX;
-      y = Math.random() * (this.height - 180) + 75;
-      attempts++;
-    }
-
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     const limit = Math.max(4.0, 9.0 - this.currentLevel * 0.85);
 
     this.nodes.push({

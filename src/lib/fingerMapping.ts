@@ -288,15 +288,7 @@ export const KEY_LABEL_OVERRIDES: Record<string, Record<string, { display: strin
     ';': { display: 'च', s: 'छ' }, "'": { display: 'ट', s: 'ठ' },
     'z': { display: 'ं', s: 'ँ' }, 'x': { display: 'म', s: 'ण' }, 'c': { display: 'न', s: 'ऩ' },
     'v': { display: 'व', s: 'ऒ' }, 'b': { display: 'ल', s: 'ळ' }, 'n': { display: 'स', s: 'ष' },
-<<<<<<< HEAD
     'm': { display: 'य', s: 'श' }, ',': { display: 'श', s: 'ष' }, '.': { display: 'ष', s: '।' },
-=======
-<<<<<<< HEAD
-    'm': { display: 'य', s: 'श' }, ',': { display: 'श', s: 'ष' }, '.': { display: 'ष', s: '। ' },
-=======
-    'm': { display: 'य', s: 'श' }, ',': { display: 'श', s: 'ष' }, '.': { display: 'ष', s: '।' },
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
->>>>>>> 89673b989cb3248af3a02f625713e2bb0060b3e7
     '/': { display: 'ध', s: '?' }, '`': { display: 'ृ', s: 'ऋ' },
     '1': { display: '१', s: '!' }, '2': { display: '२', s: '@' }, '3': { display: '३', s: '#' },
     '4': { display: '४', s: '$' }, '5': { display: '५', s: '%' }, '6': { display: '६', s: '^' },
@@ -365,11 +357,7 @@ export const KEY_LABEL_OVERRIDES: Record<string, Record<string, { display: strin
     'a': { display: 'ো', s: 'ও' }, 's': { display: 'ে', s: 'এ' }, 'd': { display: '্', s: 'অ' },
     'f': { display: 'ি', s: 'ই' }, 'g': { display: 'ু', s: 'উ' }, 'h': { display: 'প', s: 'ফ' },
     'j': { display: 'র', s: 'ড়' }, 'k': { display: 'ক', s: 'খ' }, 'l': { display: 'ত', s: 'থ' },
-<<<<<<< HEAD
     ';': { display: 'চ', s: 'ছ' }, "'": { display: 'ট', s: 'ঠ' },
-=======
-    ';': { display: 'চ', s: 'छ' }, "'": { display: 'ট', s: 'ঠ' },
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     'z': { display: 'ং', s: 'ঁ' }, 'x': { display: 'ম', s: 'ণ' }, 'c': { display: 'ন', s: 'য' },
     'v': { display: 'ভ', s: 'র' }, 'b': { display: 'ল', s: 'ল' }, 'n': { display: 'স', s: 'ষ' },
     'm': { display: 'য', s: 'শ' }, ',': { display: 'শ', s: 'ষ' }, '.': { display: 'ষ', s: '।' },
@@ -440,21 +428,6 @@ Object.entries(KEY_LABEL_OVERRIDES).forEach(([_lang, map]) => {
 
 // Explicit Diacritics & Accents Mappings for Instant Lookups
 const EXTRA_ACCENT_KEY_MAP: Record<string, { baseKey: string; shiftKey?: string }> = {
-<<<<<<< HEAD
-=======
-  // Hindi & Indic
-  '।': { baseKey: '.', shiftKey: '।' },
-  '॥': { baseKey: '.', shiftKey: '॥' },
-  '₹': { baseKey: '4', shiftKey: '₹' },
-  'ः': { baseKey: '-', shiftKey: 'ः' },
-  'ॅ': { baseKey: 'w', shiftKey: 'ॅ' },
-  'ॉ': { baseKey: 'a', shiftKey: 'ॉ' },
-  'ॐ': { baseKey: 'x', shiftKey: 'ॐ' },
-  'ज्ञ': { baseKey: 'j' },
-  'क्ष': { baseKey: 'k' },
-  'त्र': { baseKey: 'l' },
-  'श्र': { baseKey: 'm' },
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   // German
   'ä': { baseKey: "'" }, 'Ä': { baseKey: "'", shiftKey: 'Ä' },
   'ö': { baseKey: ';' }, 'Ö': { baseKey: ';', shiftKey: 'Ö' },
@@ -547,13 +520,6 @@ const CHINESE_PINYIN_INITIAL: Record<string, string> = {
 };
 
 const HANGUL_CHOSEONG = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-const HANGUL_JUNGSEONG = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'];
-=======
->>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
->>>>>>> 89673b989cb3248af3a02f625713e2bb0060b3e7
 
 const FINGER_NAMES: Record<FingerId, string> = {
   lp: 'Left Pinky',
