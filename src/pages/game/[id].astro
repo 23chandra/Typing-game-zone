@@ -71,15 +71,15 @@ const gameStructuredData = [
     <!-- Top Breadcrumb & Tag -->
     <div class="mb-4 flex items-center justify-between">
       <nav class="flex items-center gap-2 text-xs font-mono text-mute">
-        <a href="/" class="hover:text-ink transition">Home</a>
+        <a href="/" class="hover:text-ink transition" data-i18n="nav.home">Home</a>
         <span>/</span>
-        <a href={`/?cat=${game.category}`} class="hover:text-ink transition uppercase">{game.categoryName}</a>
+        <a href={`/?cat=${game.category}`} class="hover:text-ink transition uppercase" data-i18n={`cat.${game.category}`}>{game.categoryName}</a>
         <span>/</span>
-        <span class="text-ink font-semibold">{game.title}</span>
+        <span class="text-ink font-semibold" data-i18n={`game.${game.id}.title`}>{game.title}</span>
       </nav>
 
       <span class="rounded-full bg-canvas border border-hairline px-3 py-1 text-xs font-mono text-body shadow-level-1">
-        {game.difficulty} • 5 Levels
+        <span data-i18n={`diff.${game.difficulty.toLowerCase()}`}>{game.difficulty}</span> • 5 Levels
       </span>
     </div>
 
@@ -124,7 +124,7 @@ const gameStructuredData = [
         <h3 class="text-base font-semibold text-ink flex items-center gap-2">
           <span>📖</span> <span data-i18n="game.howToPlay">How to Play & Controls</span>
         </h3>
-        <p class="mt-2 text-xs text-body leading-relaxed" data-i18n="game.typeToShoot">
+        <p class="mt-2 text-xs text-body leading-relaxed" data-i18n={`game.${game.id}.desc`}>
           {game.description}
         </p>
 
@@ -181,6 +181,7 @@ const gameStructuredData = [
   import { GAME_REGISTRY } from '../../lib/games/gameRegistry';
   import { storage } from '../../lib/storage';
   import { soundEngine } from '../../lib/soundEngine';
+  import { getCurrentLanguage } from '../../lib/i18n';
   import type { BaseGame, GameStats, GameState } from '../../lib/games/GameEngine';
   import confetti from 'canvas-confetti';
 
@@ -210,6 +211,7 @@ const gameStructuredData = [
 
     // Instantiate game from factory
     const gameInstance = gameMeta.factory(canvas);
+    gameInstance.lang = getCurrentLanguage();
     activeGameInstance = gameInstance;
 
     // Elements
@@ -245,6 +247,8 @@ const gameStructuredData = [
     const modalXpText = document.getElementById('modal-xp-text');
     const modalNextBtn = document.getElementById('modal-next-btn');
     const modalRetryBtn = document.getElementById('modal-retry-btn');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalDismissBtn = document.getElementById('modal-dismiss-btn');
 
     let currentLvl = 1;
 
@@ -399,6 +403,29 @@ const gameStructuredData = [
       try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
+    modalCloseBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    modalDismissBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    // Close modal when clicking backdrop outside modal card
+    gameModal?.addEventListener('click', (e) => {
+      if (e.target === gameModal) {
+        gameModal.classList.add('hidden');
+      }
+    });
+
+    // Close modal on Escape key press
+    const onModalEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && gameModal && !gameModal.classList.contains('hidden')) {
+        gameModal.classList.add('hidden');
+      }
+    };
+    window.addEventListener('keydown', onModalEsc);
+
     function updateLvlBtnUI() {
       lvlBtns.forEach(btn => {
         const lvl = parseInt(btn.getAttribute('data-lvl-btn') || '1', 10);
@@ -518,24 +545,20 @@ const gameStructuredData = [
 
     window.addEventListener('keydown', onKeyDown);
 
-    // On-screen Virtual Keyboard buttons click handlers
-    const virtualKeys = document.querySelectorAll('.virtual-key-btn');
-    virtualKeys.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        soundEngine.initContext();
-        if (gameInstance.state !== 'PLAYING') return;
+    // Listen to synthesized events from Virtual Keyboard (prevents duplicate input)
+    const onVirtualKey = (e: any) => {
+      const key = e.detail?.key;
+      if (!key) return;
+      soundEngine.initContext();
+      if (gameInstance.state !== 'PLAYING') return;
 
-        const key = btn.getAttribute('data-virtual-key');
-        if (!key) return;
-
-        if (key === 'backspace') {
-          gameInstance.handleBackspaceKey();
-        } else {
-          gameInstance.handleInputChar(key);
-        }
-      });
-    });
+      if (key === 'Backspace' || key === 'backspace') {
+        gameInstance.handleBackspaceKey();
+      } else {
+        gameInstance.handleInputChar(key);
+      }
+    };
+    window.addEventListener('typing:virtual-key', onVirtualKey);
 
     // Mobile Virtual Input binding
     mobileInput?.addEventListener('input', (e) => {
@@ -543,8 +566,9 @@ const gameStructuredData = [
       if (val.length > 0) {
         soundEngine.initContext();
         if (gameInstance.state === 'PLAYING') {
-          const lastChar = val[val.length - 1];
-          gameInstance.handleInputChar(lastChar);
+          for (const char of val) {
+            gameInstance.handleInputChar(char);
+          }
         }
         (e.target as HTMLInputElement).value = '';
       }
@@ -565,9 +589,24 @@ const gameStructuredData = [
       soundEngine.initContext();
     });
 
+    // Dynamic language sync listener
+    const onLanguageChange = (e: any) => {
+      const newLang = e.detail?.lang || e.detail?.language || getCurrentLanguage();
+      if (gameInstance) {
+        gameInstance.lang = newLang;
+        if (gameInstance.state === 'PLAYING' || gameInstance.state === 'INTRO') {
+          gameInstance.initLevel(currentLvl);
+        }
+      }
+    };
+    window.addEventListener('typing:language-change', onLanguageChange);
+
     activeCleanup = () => {
       window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keydown', onModalEsc);
       window.removeEventListener('typing:sound-change', updateSoundToggleUI);
+      window.removeEventListener('typing:virtual-key', onVirtualKey);
+      window.removeEventListener('typing:language-change', onLanguageChange);
     };
 
     // Auto start level 1 and focus

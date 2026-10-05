@@ -2,6 +2,9 @@
 // Provides physics, particle systems, floating combat text, camera shakes, DPR scaling, and telemetry
 
 import { soundEngine } from '../soundEngine';
+import { getCurrentLanguage } from '../i18n';
+import { KEY_LABEL_OVERRIDES } from '../fingerMapping';
+import { applySmartAccents } from '../transliterationEngine';
 
 export interface GameLevelDef {
   level: number;
@@ -158,10 +161,51 @@ export abstract class BaseGame {
   public abstract handleInputChar(char: string): void;
   public abstract handleBackspaceKey(): void;
 
+  public lang: string = 'en';
+
+  public matchesChar(inputChar: string, targetChar: string): boolean {
+    if (!inputChar || !targetChar) return false;
+    if (inputChar === targetChar) return true;
+    if (inputChar.toLowerCase() === targetChar.toLowerCase()) return true;
+
+    // Accented character fallback (e.g. typing 'e' for 'é', 'a' for 'á', 'n' for 'ñ', 'u' for 'ü', 's' for 'ß')
+    const normIn = inputChar.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const normTarget = targetChar.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    if (normIn && normIn === normTarget) return true;
+
+    if (targetChar === 'ß' && (inputChar === 's' || inputChar === 'b')) return true;
+    if (targetChar === '¿' && inputChar === '?') return true;
+    if (targetChar === '¡' && inputChar === '!') return true;
+
+    // Layout overrides check (e.g. typing QWERTY key for InScript, Cyrillic, Arabic)
+    const curLang = this.lang || getCurrentLanguage();
+    const overrides = KEY_LABEL_OVERRIDES[curLang] || KEY_LABEL_OVERRIDES[curLang.slice(0, 2)];
+    if (overrides) {
+      const mapped = overrides[inputChar.toLowerCase()]?.display;
+      if (mapped && (mapped === targetChar || mapped.toLowerCase() === targetChar.toLowerCase())) {
+        return true;
+      }
+    }
+
+    // Smart accents check
+    const smartAcc = applySmartAccents(inputChar, curLang);
+    if (smartAcc === targetChar || smartAcc.toLowerCase() === targetChar.toLowerCase()) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public matchesFirstChar(word: string, inputChar: string): boolean {
+    if (!word || !inputChar) return false;
+    return this.matchesChar(inputChar, word[0]);
+  }
+
   public totalPausedDuration: number = 0;
   public pauseStartTime: number = 0;
 
   public start(level: number = 1): void {
+    this.lang = getCurrentLanguage();
     this.currentLevel = level;
     this.score = 0;
     this.streak = 0;

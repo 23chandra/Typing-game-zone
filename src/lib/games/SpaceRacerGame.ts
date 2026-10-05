@@ -54,7 +54,7 @@ export class SpaceRacerGame extends BaseGame {
   private spawnGate(): void {
     if (this.gatesClearedCount + this.gates.length >= this.gatesGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'space' : 'hard';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const lanes = [-1, 0, 1];
     const lane = lanes[Math.floor(Math.random() * lanes.length)];
 
@@ -73,8 +73,8 @@ export class SpaceRacerGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.playerLane = this.currentTarget.lane;
@@ -90,7 +90,7 @@ export class SpaceRacerGame extends BaseGame {
     }
 
     const match = this.gates
-      .filter(g => !g.cleared && g.word[0].toLowerCase() === char.toLowerCase())
+      .filter(g => !g.cleared && this.matchesFirstChar(g.word, char))
       .sort((a, b) => a.z - b.z)[0];
 
     if (match) {

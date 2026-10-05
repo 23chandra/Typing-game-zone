@@ -51,7 +51,7 @@ export class SkyClimberGame extends BaseGame {
     // Spawn initial stack of clouds
     for (let i = 0; i < 4; i++) {
       const cat = levelNumber === 1 ? 'easy' : levelNumber <= 3 ? 'medium' : 'space';
-      const word = getRandomWord(cat);
+      const word = getRandomWord(cat, this.lang);
       const cx = (i % 2 === 0 ? 0.32 : 0.68) * this.width + (Math.random() - 0.5) * 80;
       this.clouds.push({
         id: this.nextId++,
@@ -70,8 +70,8 @@ export class SkyClimberGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y - this.cameraY, '#50e3c2', 4);
@@ -87,7 +87,7 @@ export class SkyClimberGame extends BaseGame {
     }
 
     const match = this.clouds
-      .filter(c => !c.cleared && c.word[0].toLowerCase() === char.toLowerCase())
+      .filter(c => !c.cleared && this.matchesFirstChar(c.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {
@@ -132,7 +132,7 @@ export class SkyClimberGame extends BaseGame {
         id: this.nextId++,
         x: Math.random() * (this.width - 240) + 120,
         y: highestY - 115,
-        word: getRandomWord(cat),
+        word: getRandomWord(cat, this.lang),
         typedIndex: 0,
         cleared: false,
         type: Math.random() < 0.25 ? 'star' : 'normal',

@@ -135,8 +135,8 @@ export class TypeDefenderGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const expected = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === expected) {
+      const expected = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (this.matchesChar(char, expected)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.fireLaser(this.currentTarget.x, this.currentTarget.y);
@@ -152,7 +152,7 @@ export class TypeDefenderGame extends BaseGame {
     }
 
     const match = this.enemies
-      .filter(e => e.word[0].toLowerCase() === char.toLowerCase())
+      .filter(e => this.matchesFirstChar(e.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {

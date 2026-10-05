@@ -23,12 +23,12 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
   <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-hairline">
     <div>
       <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-3.5 py-1 text-xs font-mono text-link shadow-level-1 mb-3">
-        <span>💡 KNOWLEDGE BASE & FAQ</span>
+        <span data-i18n="faq.badge">💡 KNOWLEDGE BASE & FAQ</span>
       </div>
-      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-ink leading-tight">
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-ink leading-tight" data-i18n="faq.title">
         {title}
       </h2>
-      <p class="text-xs sm:text-sm text-body mt-2 max-w-2xl leading-relaxed">
+      <p class="text-xs sm:text-sm text-body mt-2 max-w-2xl leading-relaxed" data-i18n="faq.subtitle">
         {subtitle}
       </p>
     </div>
@@ -40,6 +40,8 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
           type="text"
           id="faq-search-input"
           placeholder="Search 37 questions..."
+          data-i18n-placeholder="faq.searchPlaceholder"
+          data-i18n-aria="faq.searchPlaceholder"
           class="w-full rounded-full border border-hairline bg-canvas-soft px-4 py-2.5 pl-9 text-xs font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20"
           aria-label="Search frequently asked questions"
         />
@@ -54,7 +56,7 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         class="inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline bg-canvas-soft px-4 py-2.5 text-xs font-mono font-medium text-body hover:text-ink hover:bg-canvas shadow-level-1 transition active:scale-95 whitespace-nowrap cursor-pointer"
       >
         <span id="faq-toggle-icon">🔽</span>
-        <span id="faq-toggle-text">Expand All</span>
+        <span id="faq-toggle-text" data-i18n="faq.expandAll">Expand All</span>
       </button>
     </div>
   </div>
@@ -73,7 +75,7 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         style={(cat.id === initialCategory || (initialCategory === 'all' && idx === 0)) ? 'background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);' : ''}
       >
         <span>{cat.icon}</span>
-        <span>{cat.label}</span>
+        <span data-i18n={`faq.cat.${cat.id}`}>{cat.label}</span>
         <span class="rounded-full bg-black/10 dark:bg-white/10 px-1.5 py-0.2 text-[10px] font-mono opacity-80">{cat.count}</span>
       </button>
     ))}
@@ -82,10 +84,10 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
   <!-- Result Counter -->
   <div class="py-4 flex items-center justify-between text-xs font-mono text-mute">
     <div>
-      Showing <span id="faq-visible-count" class="font-bold text-ink">{FAQ_DATA.length}</span> of {FAQ_DATA.length} questions
+      <span data-i18n="faq.showing">Showing</span> <span id="faq-visible-count" class="font-bold text-ink">{FAQ_DATA.length}</span> <span data-i18n="faq.of">of</span> {FAQ_DATA.length} <span data-i18n="faq.questions">questions</span>
     </div>
     <div id="faq-active-filter-label" class="hidden sm:block text-[11px]">
-      Category: <span class="text-ink font-semibold">All Questions</span>
+      <span data-i18n="faq.categoryLabel">Category:</span> <span id="faq-current-cat-display" class="text-ink font-semibold" data-i18n="faq.cat.all">All Questions</span>
     </div>
   </div>
 
@@ -106,13 +108,13 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
             <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-canvas text-xs font-mono font-bold text-mute border border-hairline group-open:text-ink group-open:border-[var(--site-primary)]">
               {index + 1}
             </span>
-            <span class="text-ink capitalize-first leading-snug">
+            <span class="text-ink capitalize-first leading-snug" data-faq-q={item.id}>
               {item.question}
             </span>
           </div>
           
           <div class="flex items-center gap-2 shrink-0">
-            <span class="hidden md:inline-block rounded-full bg-canvas border border-hairline px-2.5 py-0.5 text-[10px] font-mono text-mute">
+            <span class="hidden md:inline-block rounded-full bg-canvas border border-hairline px-2.5 py-0.5 text-[10px] font-mono text-mute" data-faq-cat={item.category} data-i18n={`faq.cat.${item.category}`}>
               {item.categoryLabel}
             </span>
             <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-canvas text-xs font-mono text-mute transition-transform duration-200 group-open:rotate-180 border border-hairline">
@@ -122,10 +124,10 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         </summary>
 
         <div class="mt-3.5 text-xs sm:text-sm text-body leading-relaxed border-t border-hairline pt-3.5 pl-1 sm:pl-8 space-y-2">
-          <div set:html={item.answerHtml} />
+          <div data-faq-a={item.id} set:html={item.answerHtml} />
           
           <div class="mt-3 pt-2 flex flex-wrap items-center gap-1.5 font-mono text-[10px] text-mute border-t border-hairline/40">
-            <span class="font-semibold uppercase text-mute">Related:</span>
+            <span class="font-semibold uppercase text-mute" data-i18n="faq.related">Related:</span>
             {item.keywords.map(kw => (
               <span class="rounded bg-canvas px-1.5 py-0.5 border border-hairline/60">#{kw}</span>
             ))}
@@ -138,29 +140,32 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
   <!-- Zero Results Fallback -->
   <div id="faq-no-results" class="hidden py-16 text-center">
     <div class="text-4xl mb-2">🔍</div>
-    <h3 class="text-base font-semibold text-ink">No matching questions found</h3>
-    <p class="text-xs text-mute mt-1">Try changing your search query or clicking "All Questions".</p>
+    <h3 class="text-base font-semibold text-ink" data-i18n="faq.noResultsTitle">No matching questions found</h3>
+    <p class="text-xs text-mute mt-1" data-i18n="faq.noResultsDesc">Try changing your search query or clicking "All Questions".</p>
     <button
       type="button"
       id="faq-reset-search-btn"
       class="mt-4 inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-medium text-ink shadow-level-1 transition hover:bg-canvas-soft cursor-pointer"
     >
-      <span>Reset Filters</span>
+      <span data-i18n="faq.resetFilters">Reset Filters</span>
     </button>
   </div>
 </section>
 
 {includeSchema && (
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
 )}
 
 <script>
+  import { getLocalizedFAQ } from '../lib/faqData';
+  import { getCurrentLanguage, t, applyTranslationsToDOM } from '../lib/i18n';
+
   function initFAQSection() {
     const searchInput = document.getElementById('faq-search-input') as HTMLInputElement | null;
     const catBtns = document.querySelectorAll('.faq-cat-btn');
     const items = document.querySelectorAll('.faq-item') as NodeListOf<HTMLDetailsElement>;
     const visibleCountEl = document.getElementById('faq-visible-count');
-    const filterLabelEl = document.querySelector('#faq-active-filter-label span');
+    const filterLabelEl = document.getElementById('faq-current-cat-display');
     const noResultsEl = document.getElementById('faq-no-results');
     const resetBtn = document.getElementById('faq-reset-search-btn');
     const toggleAllBtn = document.getElementById('faq-toggle-all-btn');
@@ -170,6 +175,27 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
     let currentCategory = 'all';
     let searchQuery = '';
     let isAllExpanded = false;
+
+    function updateFAQTranslations(lang?: string) {
+      const curLang = lang || getCurrentLanguage();
+      const localized = getLocalizedFAQ(curLang);
+      localized.forEach(item => {
+        const qEl = document.querySelector(`[data-faq-q="${item.id}"]`);
+        const aEl = document.querySelector(`[data-faq-a="${item.id}"]`);
+        if (qEl) qEl.textContent = item.question;
+        if (aEl) aEl.innerHTML = item.answerHtml;
+        const details = qEl?.closest('details');
+        if (details) {
+          details.setAttribute('data-question', item.question.toLowerCase());
+          details.setAttribute('data-text', item.shortAnswer.toLowerCase());
+        }
+      });
+
+      if (toggleText) {
+        toggleText.textContent = isAllExpanded ? t('faq.collapseAll', curLang) : t('faq.expandAll', curLang);
+      }
+      applyTranslationsToDOM(curLang);
+    }
 
     function applyFilter() {
       let count = 0;
@@ -231,7 +257,10 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         }
       });
 
-      if (filterLabelEl) filterLabelEl.textContent = 'All Questions';
+      if (filterLabelEl) {
+        filterLabelEl.setAttribute('data-i18n', 'faq.cat.all');
+        filterLabelEl.textContent = t('faq.cat.all');
+      }
       applyFilter();
     });
 
@@ -249,8 +278,11 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
         (btn as HTMLElement).style.color = 'var(--site-on-primary, #323437)';
 
         currentCategory = btn.getAttribute('data-faq-category') || 'all';
-        const label = btn.querySelector('span:nth-child(2)')?.textContent || 'All Questions';
-        if (filterLabelEl) filterLabelEl.textContent = label;
+        const labelKey = `faq.cat.${currentCategory}`;
+        if (filterLabelEl) {
+          filterLabelEl.setAttribute('data-i18n', labelKey);
+          filterLabelEl.textContent = t(labelKey);
+        }
 
         applyFilter();
       });
@@ -266,8 +298,17 @@ const faqSchema = generateFAQSchema(FAQ_DATA);
       });
 
       if (toggleIcon) toggleIcon.textContent = isAllExpanded ? '🔼' : '🔽';
-      if (toggleText) toggleText.textContent = isAllExpanded ? 'Collapse All' : 'Expand All';
+      if (toggleText) {
+        toggleText.setAttribute('data-i18n', isAllExpanded ? 'faq.collapseAll' : 'faq.expandAll');
+        toggleText.textContent = isAllExpanded ? t('faq.collapseAll') : t('faq.expandAll');
+      }
     });
+
+    window.addEventListener('typing:language-change', (e: any) => {
+      updateFAQTranslations(e.detail?.lang);
+    });
+
+    updateFAQTranslations();
   }
 
   if (document.readyState === 'loading') {

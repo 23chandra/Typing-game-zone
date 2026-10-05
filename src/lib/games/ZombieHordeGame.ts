@@ -63,7 +63,7 @@ export class ZombieHordeGame extends BaseGame {
       x: this.width + 40,
       y: this.height - 130,
       speed: 24,
-      word: getRandomWord('hard'),
+      word: getRandomWord('hard', this.lang),
       typedIndex: 0,
       type: 'abomination',
       hp: 8,
@@ -76,7 +76,7 @@ export class ZombieHordeGame extends BaseGame {
   private spawnZombie(): void {
     if (this.zombiesKilled + this.zombies.length >= this.zombiesGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'combat' : 'hard';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const isBrute = this.currentLevel >= 3 && Math.random() < 0.28;
     const isRunner = !isBrute && this.currentLevel >= 2 && Math.random() < 0.38;
 
@@ -102,8 +102,8 @@ export class ZombieHordeGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         soundEngine.playHit();
@@ -119,7 +119,7 @@ export class ZombieHordeGame extends BaseGame {
     }
 
     const match = this.zombies
-      .filter(z => z.word[0].toLowerCase() === char.toLowerCase())
+      .filter(z => this.matchesFirstChar(z.word, char))
       .sort((a, b) => a.x - b.x)[0];
 
     if (match) {
@@ -159,7 +159,7 @@ export class ZombieHordeGame extends BaseGame {
   private hitZombie(zombie: ZombieEnemy): void {
     zombie.hp--;
     if (zombie.hp > 0) {
-      zombie.word = getRandomWord('medium');
+      zombie.word = getRandomWord('medium', this.lang);
       zombie.typedIndex = 0;
       this.spawnExplosion(zombie.x, zombie.y, '#ff4d4d', 20);
       this.triggerScreenShake(0.18, 7);

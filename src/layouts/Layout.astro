@@ -125,7 +125,7 @@ const allStructuredData = structuredData
     <meta name="twitter:image:alt" content={title} />
 
     <!-- Schema.org JSON-LD Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(allStructuredData)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(allStructuredData)} />
 
     <!-- International SEO hreflang tags -->
     <link rel="alternate" hreflang="x-default" href="https://typinggamezone.com" />
@@ -158,9 +158,15 @@ const allStructuredData = structuredData
           // Instant Zero-FOUC Language & RTL Detection
           const rtlLangs = ['ar', 'fa', 'he', 'ur'];
           const supportedLangs = ['en', 'hi', 'es', 'fr', 'de', 'ja', 'pt', 'ru', 'ar', 'zh', 'it', 'ko', 'id', 'tr', 'vi', 'bn'];
-          let curLang = localStorage.getItem('typing_game_zone_lang');
+          const urlParams = new URLSearchParams(window.location.search);
+          const urlLang = urlParams.get('lang');
+          let curLang = (urlLang && supportedLangs.includes(urlLang.toLowerCase())) 
+            ? urlLang.toLowerCase() 
+            : localStorage.getItem('typing_game_zone_lang');
 
-          if (!curLang && navigator && navigator.languages) {
+          if (urlLang && supportedLangs.includes(urlLang.toLowerCase())) {
+            try { localStorage.setItem('typing_game_zone_lang', curLang); } catch {}
+          } else if (!curLang && navigator && navigator.languages) {
             for (const l of navigator.languages) {
               const code = l.toLowerCase().split('-')[0];
               if (supportedLangs.includes(code)) {

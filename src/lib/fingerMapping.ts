@@ -288,7 +288,7 @@ export const KEY_LABEL_OVERRIDES: Record<string, Record<string, { display: strin
     ';': { display: 'च', s: 'छ' }, "'": { display: 'ट', s: 'ठ' },
     'z': { display: 'ं', s: 'ँ' }, 'x': { display: 'म', s: 'ण' }, 'c': { display: 'न', s: 'ऩ' },
     'v': { display: 'व', s: 'ऒ' }, 'b': { display: 'ल', s: 'ळ' }, 'n': { display: 'स', s: 'ष' },
-    'm': { display: 'य', s: 'श' }, ',': { display: 'श', s: 'ष' }, '.': { display: 'ष', s: '। ' },
+    'm': { display: 'य', s: 'श' }, ',': { display: 'श', s: 'ष' }, '.': { display: 'ष', s: '।' },
     '/': { display: 'ध', s: '?' }, '`': { display: 'ृ', s: 'ऋ' },
     '1': { display: '१', s: '!' }, '2': { display: '२', s: '@' }, '3': { display: '३', s: '#' },
     '4': { display: '४', s: '$' }, '5': { display: '५', s: '%' }, '6': { display: '६', s: '^' },
@@ -484,7 +484,12 @@ const EXTRA_ACCENT_KEY_MAP: Record<string, { baseKey: string; shiftKey?: string 
   'っ': { baseKey: 'z', shiftKey: 'っ' }, 'ゃ': { baseKey: '7', shiftKey: 'ゃ' },
   'ゅ': { baseKey: '8', shiftKey: 'ゅ' }, 'ょ': { baseKey: '9', shiftKey: 'ょ' },
   'ぁ': { baseKey: '3', shiftKey: 'ぁ' }, 'ぃ': { baseKey: 'e', shiftKey: 'ぃ' },
-  'ぅ': { baseKey: '4', shiftKey: 'ぅ' }, 'ぇ': { baseKey: '5', shiftKey: 'ぇ' }, 'ぉ': { baseKey: '6', shiftKey: 'ぉ' }
+  'ぅ': { baseKey: '4', shiftKey: 'ぅ' }, 'ぇ': { baseKey: '5', shiftKey: 'ぇ' }, 'ぉ': { baseKey: '6', shiftKey: 'ぉ' },
+  // Indic punctuation & conjuncts
+  '।': { baseKey: '.' }, '॥': { baseKey: '.' }, '₹': { baseKey: '4' },
+  'ः': { baseKey: '-' }, 'ॅ': { baseKey: '`' }, 'ॉ': { baseKey: '\\' },
+  'ॐ': { baseKey: 'x' }, 'ज्ञ': { baseKey: 'k' }, 'क्ष': { baseKey: 'k' },
+  'त्र': { baseKey: 't' }, 'श्र': { baseKey: 's' }
 };
 
 Object.entries(EXTRA_ACCENT_KEY_MAP).forEach(([char, def]) => {
@@ -515,7 +520,6 @@ const CHINESE_PINYIN_INITIAL: Record<string, string> = {
 };
 
 const HANGUL_CHOSEONG = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
-const HANGUL_JUNGSEONG = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'];
 
 const FINGER_NAMES: Record<FingerId, string> = {
   lp: 'Left Pinky',

@@ -53,7 +53,7 @@ export class GhostBusterGame extends BaseGame {
   private spawnGhost(): void {
     if (this.capturedCount + this.ghosts.length >= this.captureGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'fantasy';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const types: ('poltergeist' | 'specter' | 'banshee' | 'slimer')[] = ['poltergeist', 'specter', 'banshee', 'slimer'];
     const type = types[Math.floor(Math.random() * types.length)];
     const speed = (25 + this.currentLevel * 7) * (Math.random() * 0.3 + 0.85);
@@ -79,8 +79,8 @@ export class GhostBusterGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         soundEngine.playLaser();
@@ -97,7 +97,7 @@ export class GhostBusterGame extends BaseGame {
     }
 
     const match = this.ghosts
-      .filter(g => !g.isTrapped && g.word[0].toLowerCase() === char.toLowerCase())
+      .filter(g => !g.isTrapped && this.matchesFirstChar(g.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {

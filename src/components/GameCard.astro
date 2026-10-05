@@ -22,7 +22,7 @@ const { game } = Astro.props;
         {game.icon}
       </div>
       <div class="flex items-center gap-1.5">
-        <span class="rounded-full bg-canvas-soft px-2.5 py-1 text-[11px] font-mono font-medium text-body border border-hairline">
+        <span class="rounded-full bg-canvas-soft px-2.5 py-1 text-[11px] font-mono font-medium text-body border border-hairline" data-i18n={`cat.${game.category}`}>
           {game.categoryName}
         </span>
         <span class={`rounded-full px-2.5 py-1 text-[11px] font-mono font-medium border ${
@@ -30,17 +30,17 @@ const { game } = Astro.props;
           game.difficulty === 'Intermediate' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
           game.difficulty === 'Advanced' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' :
           'bg-rose-500/10 text-rose-400 border-rose-500/30'
-        }`}>
+        }`} data-i18n={`diff.${game.difficulty.toLowerCase()}`}>
           {game.difficulty}
         </span>
       </div>
     </div>
 
     <!-- Title & Description -->
-    <h3 class="text-lg font-semibold tracking-tight text-ink group-hover:text-link transition-colors">
+    <h3 class="text-lg font-semibold tracking-tight text-ink group-hover:text-link transition-colors" data-i18n={`game.${game.id}.title`}>
       {game.title}
     </h3>
-    <p class="mt-2 text-xs text-body line-clamp-2 leading-relaxed">
+    <p class="mt-2 text-xs text-body line-clamp-2 leading-relaxed" data-i18n={`game.${game.id}.desc`}>
       {game.description}
     </p>
 
@@ -58,7 +58,7 @@ const { game } = Astro.props;
   <div class="mt-6 flex items-center justify-between border-t border-hairline pt-4">
     <!-- 5 Levels Indicator -->
     <div class="flex items-center gap-1" title="5 Progressive Levels">
-      <span class="text-[10px] font-mono text-mute uppercase mr-1">LVL</span>
+      <span class="text-[10px] font-mono text-mute uppercase mr-1" data-i18n="card.lvl">LVL</span>
       <div class="flex gap-1">
         {[1, 2, 3, 4, 5].map(lvl => (
           <span class="flex h-4 w-4 items-center justify-center rounded-sm bg-canvas-soft text-[9px] font-mono font-bold text-body border border-hairline">
@@ -73,7 +73,7 @@ const { game } = Astro.props;
       href={`/game/${game.id}`}
       class="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-medium text-on-primary shadow-level-1 transition hover:opacity-90 active:scale-95"
     >
-      <span>Play</span>
+      <span data-i18n="card.play">Play</span>
       <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
       </svg>

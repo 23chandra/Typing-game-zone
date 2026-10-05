@@ -71,7 +71,7 @@ export class RoboRampageGame extends BaseGame {
       id: this.nextId++,
       x: this.width + 40,
       y: this.height - 130,
-      word: getRandomWord('hard'),
+      word: getRandomWord('hard', this.lang),
       typedIndex: 0,
       type: 'titan',
       speed: 20,
@@ -86,7 +86,7 @@ export class RoboRampageGame extends BaseGame {
   private spawnRogueMech(): void {
     if (this.destroyedCount + this.mechs.length >= this.destroyGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'combat' : 'hard';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const isWalker = this.currentLevel >= 3 && Math.random() < 0.35;
     const isDrone = !isWalker && Math.random() < 0.45;
     const type: 'drone' | 'walker' | 'turret' = isDrone ? 'drone' : isWalker ? 'walker' : 'turret';
@@ -114,8 +114,8 @@ export class RoboRampageGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.fireMechSalvo(this.currentTarget.x, this.currentTarget.y);
@@ -131,7 +131,7 @@ export class RoboRampageGame extends BaseGame {
     }
 
     const match = this.mechs
-      .filter(m => m.word[0].toLowerCase() === char.toLowerCase())
+      .filter(m => this.matchesFirstChar(m.word, char))
       .sort((a, b) => a.x - b.x)[0];
 
     if (match) {
@@ -173,7 +173,7 @@ export class RoboRampageGame extends BaseGame {
   private destroyMech(mech: RogueMech): void {
     if (mech.hp > 1) {
       mech.hp--;
-      mech.word = getRandomWord('medium');
+      mech.word = getRandomWord('medium', this.lang);
       mech.typedIndex = 0;
       this.spawnExplosion(mech.x, mech.y, '#ff4d4d', 25);
       this.triggerScreenShake(0.2, 8);

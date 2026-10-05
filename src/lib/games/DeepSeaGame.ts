@@ -67,7 +67,7 @@ export class DeepSeaGame extends BaseGame {
   private spawnCreature(): void {
     if (this.creaturesCataloged + this.creatures.length >= this.creatureGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const isBoss = this.currentLevel === 5 && this.creatures.length === 0 && this.creaturesCataloged === 0;
     const type: 'jellyfish' | 'anglerfish' | 'manta' | 'kraken' = isBoss
       ? 'kraken'
@@ -98,8 +98,8 @@ export class DeepSeaGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         soundEngine.playSonar();
@@ -117,7 +117,7 @@ export class DeepSeaGame extends BaseGame {
     }
 
     const match = this.creatures
-      .filter(c => c.word[0].toLowerCase() === char.toLowerCase())
+      .filter(c => this.matchesFirstChar(c.word, char))
       .sort((a, b) => a.x - b.x)[0];
 
     if (match) {

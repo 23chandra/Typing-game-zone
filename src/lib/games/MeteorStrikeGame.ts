@@ -90,8 +90,8 @@ export class MeteorStrikeGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 5);
@@ -107,7 +107,7 @@ export class MeteorStrikeGame extends BaseGame {
     }
 
     const match = this.meteors
-      .filter(m => m.word[0].toLowerCase() === char.toLowerCase())
+      .filter(m => this.matchesFirstChar(m.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {

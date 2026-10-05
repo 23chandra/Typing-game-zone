@@ -169,7 +169,7 @@ export class KeyMasterGame extends BaseGame {
       });
     }
 
-    const isMatch = (expected && char === expected) || (expected && char.toLowerCase() === expected.toLowerCase());
+    const isMatch = !!expected && this.matchesChar(char, expected);
 
     if (isMatch) {
       if (cap) cap.hitCount++;

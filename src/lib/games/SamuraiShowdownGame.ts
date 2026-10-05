@@ -82,8 +82,8 @@ export class SamuraiShowdownGame extends BaseGame {
 
     if (this.phase === 'DRAW_SIGNAL') {
       soundEngine.playKey();
-      const expected = this.drawWord[this.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === expected) {
+      const expected = this.drawWord[this.typedIndex];
+      if (expected && this.matchesChar(char, expected)) {
         this.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.width / 2, this.height * 0.44, '#50e3c2', 5);
@@ -152,7 +152,7 @@ export class SamuraiShowdownGame extends BaseGame {
         // Trigger DRAW SIGNAL
         this.phase = 'DRAW_SIGNAL';
         const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'combat' : 'hard';
-        this.drawWord = getRandomWord(cat);
+        this.drawWord = getRandomWord(cat, this.lang);
         this.typedIndex = 0;
         this.reactionStartTime = Date.now();
         soundEngine.playLaser();

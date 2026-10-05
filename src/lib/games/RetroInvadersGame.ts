@@ -76,8 +76,8 @@ export class RetroInvadersGame extends BaseGame {
 
     // Check UFO priority if targeted
     if (this.ufo && this.ufo.active && this.currentTarget?.id === -99) {
-      const next = this.ufo.word[this.ufo.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.ufo.word[this.ufo.typedIndex];
+      if (this.matchesChar(char, next)) {
         this.ufo.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.ufo.x, this.ufo.y, '#f9cb28', 6);
@@ -92,8 +92,8 @@ export class RetroInvadersGame extends BaseGame {
     }
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 4);
@@ -109,7 +109,7 @@ export class RetroInvadersGame extends BaseGame {
     }
 
     // Match UFO first if first letter matches
-    if (this.ufo && this.ufo.active && this.ufo.word[0].toLowerCase() === char.toLowerCase()) {
+    if (this.ufo && this.ufo.active && this.matchesFirstChar(this.ufo.word, char)) {
       this.ufo.typedIndex = 1;
       this.currentTarget = {
         id: -99,
@@ -128,7 +128,7 @@ export class RetroInvadersGame extends BaseGame {
     }
 
     const match = this.invaders
-      .filter(i => i.word[0].toLowerCase() === char.toLowerCase())
+      .filter(i => this.matchesFirstChar(i.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {

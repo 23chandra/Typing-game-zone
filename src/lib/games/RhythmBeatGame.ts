@@ -51,7 +51,7 @@ export class RhythmBeatGame extends BaseGame {
   private spawnNote(): void {
     if (this.notesHitCount + this.notes.length >= this.notesGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const lane = Math.floor(Math.random() * 4);
     const speed = (this.bpm / 60) * (this.currentLevel >= 4 ? 48 : 40);
 
@@ -70,8 +70,8 @@ export class RhythmBeatGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         const nx = this.getLaneX(this.currentTarget.lane);
@@ -88,7 +88,7 @@ export class RhythmBeatGame extends BaseGame {
     }
 
     const match = this.notes
-      .filter(n => n.word[0].toLowerCase() === char.toLowerCase())
+      .filter(n => this.matchesFirstChar(n.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {

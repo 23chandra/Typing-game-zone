@@ -53,7 +53,7 @@ export class GladiatorArenaGame extends BaseGame {
   private spawnFoe(): void {
     if (this.defeatedCount + this.foes.length >= this.defeatGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'combat' : 'hard';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const isBoss = this.currentLevel === 5 && this.foes.length === 0 && this.defeatedCount === 0;
     const isChariot = !isBoss && this.currentLevel >= 4 && Math.random() < 0.35;
     const isBeast = !isBoss && !isChariot && this.currentLevel <= 2 && Math.random() < 0.5;
@@ -79,8 +79,8 @@ export class GladiatorArenaGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         soundEngine.playHit();
@@ -98,7 +98,7 @@ export class GladiatorArenaGame extends BaseGame {
     }
 
     const match = this.foes
-      .filter(f => f.word[0].toLowerCase() === char.toLowerCase())
+      .filter(f => this.matchesFirstChar(f.word, char))
       .sort((a, b) => a.x - b.x)[0];
 
     if (match) {
@@ -128,7 +128,7 @@ export class GladiatorArenaGame extends BaseGame {
   private defeatFoe(foe: ArenaFoe): void {
     if (foe.hp > 1) {
       foe.hp--;
-      foe.word = getRandomWord('medium');
+      foe.word = getRandomWord('medium', this.lang);
       foe.typedIndex = 0;
       this.spawnExplosion(foe.x, foe.y, '#ff0080', 25);
       this.triggerScreenShake(0.2, 8);

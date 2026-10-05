@@ -20,21 +20,21 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
     <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
       <!-- Breadcrumb -->
       <nav class="flex items-center gap-2 text-xs font-mono text-mute mb-6" aria-label="Breadcrumb">
-        <a href="/" class="hover:text-ink transition">Home</a>
+        <a href="/" class="hover:text-ink transition" data-i18n="nav.home">Home</a>
         <span>/</span>
-        <span class="text-ink font-semibold">FAQ & Knowledge Base</span>
+        <span class="text-ink font-semibold" data-i18n="faq.breadcrumb">FAQ & Knowledge Base</span>
       </nav>
 
       <!-- Page Title -->
       <div class="text-left">
         <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas px-3.5 py-1 text-xs font-mono text-link shadow-level-1 backdrop-blur mb-4">
           <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>37 VERIFIED TYPING ANSWERS</span>
+          <span data-i18n="faq.verifiedAnswers">37 VERIFIED TYPING ANSWERS</span>
         </div>
-        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight">
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight" data-i18n="faq.pageTitle">
           Keyboard Knowledge Base & FAQ
         </h1>
-        <p class="mt-4 text-sm sm:text-base text-body max-w-3xl leading-relaxed">
+        <p class="mt-4 text-sm sm:text-base text-body max-w-3xl leading-relaxed" data-i18n="faq.pageSubtitle">
           Comprehensive answers to the most frequently asked questions about touch-typing technique, speed benchmarks, 10-key skills, keyboard history, finger placement charts, and free 2D online typing games.
         </p>
       </div>
@@ -43,23 +43,23 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
       <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
         <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
           <span class="text-lg block mb-1">🎮</span>
-          <span class="font-bold text-ink group-hover:text-link">Typing Games</span>
-          <span class="block text-[11px] text-mute mt-0.5">21 Free Titles</span>
+          <span class="font-bold text-ink group-hover:text-link" data-i18n="faq.scGames">Typing Games</span>
+          <span class="block text-[11px] text-mute mt-0.5" data-i18n="faq.scGamesDesc">21 Free Titles</span>
         </a>
         <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
           <span class="text-lg block mb-1">⚡</span>
-          <span class="font-bold text-ink group-hover:text-link">WPM Speeds</span>
-          <span class="block text-[11px] text-mute mt-0.5">Benchmarks by Age</span>
+          <span class="font-bold text-ink group-hover:text-link" data-i18n="faq.scSpeeds">WPM Speeds</span>
+          <span class="block text-[11px] text-mute mt-0.5" data-i18n="faq.scSpeedsDesc">Benchmarks by Age</span>
         </a>
         <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
           <span class="text-lg block mb-1">🖐️</span>
-          <span class="font-bold text-ink group-hover:text-link">Fingers & Form</span>
-          <span class="block text-[11px] text-mute mt-0.5">Home Row Rules</span>
+          <span class="font-bold text-ink group-hover:text-link" data-i18n="faq.scFingers">Fingers & Form</span>
+          <span class="block text-[11px] text-mute mt-0.5" data-i18n="faq.scFingersDesc">Home Row Rules</span>
         </a>
         <a href="#faq-section" class="rounded-xl border border-hairline bg-canvas p-3 shadow-level-1 hover:border-link transition text-left group">
           <span class="text-lg block mb-1">⌨️</span>
-          <span class="font-bold text-ink group-hover:text-link">QWERTY History</span>
-          <span class="block text-[11px] text-mute mt-0.5">Keyboards & Layouts</span>
+          <span class="font-bold text-ink group-hover:text-link" data-i18n="faq.scHistory">QWERTY History</span>
+          <span class="block text-[11px] text-mute mt-0.5" data-i18n="faq.scHistoryDesc">Keyboards & Layouts</span>
         </a>
       </div>
     </div>
@@ -78,8 +78,8 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
         <div class="rounded-2xl border border-hairline bg-canvas-soft p-6 shadow-level-1 flex flex-col justify-between">
           <div>
             <div class="text-2xl mb-2">⚡</div>
-            <h3 class="text-base font-bold text-ink">Test Your WPM Speed</h3>
-            <p class="text-xs text-body mt-2 leading-relaxed">
+            <h3 class="text-base font-bold text-ink" data-i18n="faq.promoTestTitle">Test Your WPM Speed</h3>
+            <p class="text-xs text-body mt-2 leading-relaxed" data-i18n="faq.promoTestDesc">
               Measure your words per minute, keystroke accuracy, and consistency with live telemetry.
             </p>
           </div>
@@ -88,7 +88,7 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
             class="mt-6 inline-flex items-center justify-center gap-1.5 rounded-full bg-ink px-4 py-2 text-xs font-bold text-on-primary shadow-level-1 transition hover:opacity-90"
             style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
           >
-            <span>Start Speed Test</span>
+            <span data-i18n="hero.startTest">Start Speed Test</span>
             <span>→</span>
           </a>
         </div>
@@ -96,8 +96,8 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
         <div class="rounded-2xl border border-hairline bg-canvas-soft p-6 shadow-level-1 flex flex-col justify-between">
           <div>
             <div class="text-2xl mb-2">⌨️</div>
-            <h3 class="text-base font-bold text-ink">Touch Typing Practice Lab</h3>
-            <p class="text-xs text-body mt-2 leading-relaxed">
+            <h3 class="text-base font-bold text-ink" data-i18n="faq.promoLabTitle">Touch Typing Practice Lab</h3>
+            <p class="text-xs text-body mt-2 leading-relaxed" data-i18n="faq.promoLabDesc">
               Interactive ANSI QWERTY keyboard map with color-coded finger quadrants and targeted drills.
             </p>
           </div>
@@ -105,7 +105,7 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
             href="/practice"
             class="mt-6 inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft-2"
           >
-            <span>Open Practice Lab</span>
+            <span data-i18n="faq.openPracticeLab">Open Practice Lab</span>
             <span>→</span>
           </a>
         </div>
@@ -113,8 +113,8 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
         <div class="rounded-2xl border border-hairline bg-canvas-soft p-6 shadow-level-1 flex flex-col justify-between">
           <div>
             <div class="text-2xl mb-2">🎮</div>
-            <h3 class="text-base font-bold text-ink">Play 21 2D Arcade Games</h3>
-            <p class="text-xs text-body mt-2 leading-relaxed">
+            <h3 class="text-base font-bold text-ink" data-i18n="faq.promoGamesTitle">Play 21 2D Arcade Games</h3>
+            <p class="text-xs text-body mt-2 leading-relaxed" data-i18n="faq.promoGamesDesc">
               Battle zombie swarms, hack mainframes, slice neon words, and dodge meteors at 60 FPS.
             </p>
           </div>
@@ -122,7 +122,7 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
             href="/#games-section"
             class="mt-6 inline-flex items-center justify-center gap-1.5 rounded-full border border-hairline bg-canvas px-4 py-2 text-xs font-bold text-ink shadow-level-1 transition hover:bg-canvas-soft-2"
           >
-            <span>Browse Games Catalog</span>
+            <span data-i18n="faq.browseCatalog">Browse Games Catalog</span>
             <span>→</span>
           </a>
         </div>

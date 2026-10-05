@@ -56,7 +56,7 @@ export class NeonNinjaGame extends BaseGame {
   private spawnTarget(): void {
     if (this.slicedCount + this.targets.length >= this.sliceGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'fantasy' : 'combat';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const fromLeft = Math.random() < 0.5;
     const startX = fromLeft ? -20 : this.width + 20;
     const startY = Math.random() * (this.height - 220) + 100;
@@ -86,8 +86,8 @@ export class NeonNinjaGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         soundEngine.playSlice();
@@ -104,7 +104,7 @@ export class NeonNinjaGame extends BaseGame {
     }
 
     const match = this.targets
-      .filter(t => t.word[0].toLowerCase() === char.toLowerCase())
+      .filter(t => this.matchesFirstChar(t.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {

@@ -50,7 +50,7 @@ export class WordTetrisGame extends BaseGame {
   private spawnBlock(): void {
     if (this.clearedCount + this.blocks.length >= this.clearGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'hard';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const col = Math.floor(Math.random() * this.colCount);
     const colWidth = (this.width - 120) / this.colCount;
     const x = 60 + col * colWidth + colWidth / 2;
@@ -75,8 +75,8 @@ export class WordTetrisGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 5);
@@ -92,7 +92,7 @@ export class WordTetrisGame extends BaseGame {
     }
 
     const match = this.blocks
-      .filter(b => !b.isLanded && b.word[0].toLowerCase() === char.toLowerCase())
+      .filter(b => !b.isLanded && this.matchesFirstChar(b.word, char))
       .sort((a, b) => b.y - a.y)[0];
 
     if (match) {

@@ -5,8 +5,8 @@ import { SUPPORTED_LANGUAGES } from '../lib/i18n';
 import SiteLogo from './SiteLogo.astro';
 ---
 
-<header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none">
-  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8">
+<header class="sticky top-0 z-50 w-full border-b border-hairline bg-canvas/95 backdrop-blur-md shadow-level-1 transition-all select-none pt-[env(safe-area-inset-top,0px)]">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 sm:gap-4 px-3 sm:px-6 lg:px-8">
     <!-- Brand Logo -->
     <a href="/" class="group flex items-center gap-2 sm:gap-3 flex-shrink-0">
       <SiteLogo class="h-8 w-8 sm:h-9 sm:w-9 rounded-xl shadow-level-2 transition-transform duration-200 group-hover:scale-105 border border-hairline flex-shrink-0" />
@@ -47,7 +47,7 @@ import SiteLogo from './SiteLogo.astro';
         <!-- Dropdown Menu -->
         <div
           id="nav-lang-menu"
-          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs flex flex-col max-h-[75vh]"
+          class="max-sm:fixed max-sm:left-3 max-sm:right-3 max-sm:top-16 max-sm:w-auto sm:absolute sm:right-0 sm:w-72 mt-2 hidden rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-5 z-50 font-mono text-xs flex flex-col max-h-[75vh]"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1 text-[11px] text-mute uppercase font-bold">
@@ -60,6 +60,8 @@ import SiteLogo from './SiteLogo.astro';
             type="text"
             id="nav-lang-search"
             placeholder="Search language..."
+            data-i18n-placeholder="nav.searchLang"
+            data-i18n-aria="nav.searchLang"
             class="w-full rounded-xl px-3 py-1.5 text-xs border mb-2 focus:outline-none"
             style="background-color: var(--site-canvas-soft, #323437); border-color: var(--site-hairline); color: var(--site-ink);"
           />
@@ -108,7 +110,7 @@ import SiteLogo from './SiteLogo.astro';
         <!-- Dropdown Menu -->
         <div
           id="nav-theme-menu"
-          class="absolute right-0 mt-2 hidden w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-4 z-50 font-mono text-xs max-h-[75vh] flex flex-col"
+          class="max-sm:fixed max-sm:left-3 max-sm:right-3 max-sm:top-16 max-sm:w-auto sm:absolute sm:right-0 sm:w-72 mt-2 hidden rounded-2xl border border-hairline bg-canvas p-2.5 shadow-level-5 z-50 font-mono text-xs max-h-[75vh] flex flex-col"
           style="background-color: var(--site-canvas, #2c2e31);"
         >
           <div class="flex items-center justify-between pb-2 mb-2 border-b border-hairline px-1">
@@ -121,6 +123,8 @@ import SiteLogo from './SiteLogo.astro';
             type="text"
             id="nav-theme-search"
             placeholder="Search themes..."
+            data-i18n-placeholder="nav.searchTheme"
+            data-i18n-aria="nav.searchTheme"
             class="w-full rounded-xl px-3 py-1.5 text-xs border mb-2 focus:outline-none"
             style="background-color: var(--site-canvas-soft, #323437); border-color: var(--site-hairline); color: var(--site-ink);"
           />
@@ -240,12 +244,12 @@ import SiteLogo from './SiteLogo.astro';
       <!-- Quick Play Primary CTA -->
       <a
         href="/game/type-defender"
-        class="inline-flex items-center gap-1.5 rounded-full px-3.5 sm:px-4 py-1.5 text-xs font-bold shadow-level-2 transition-all hover:opacity-95 hover:scale-105 active:scale-95 whitespace-nowrap cursor-pointer flex-shrink-0"
+        class="inline-flex items-center gap-1.5 rounded-full px-2.5 xs:px-3.5 sm:px-4 py-1.5 text-xs font-bold shadow-level-2 transition-all hover:opacity-95 hover:scale-105 active:scale-95 whitespace-nowrap cursor-pointer flex-shrink-0"
         style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
         title="Play 21 Free Arcade Typing Games"
       >
         <span class="text-xs">🎮</span>
-        <span data-i18n="nav.play">Play</span>
+        <span data-i18n="nav.play" class="hidden xs:inline">Play</span>
         <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
@@ -284,13 +288,13 @@ import SiteLogo from './SiteLogo.astro';
         <span class="text-base">🏆</span> <span data-i18n="nav.leaderboards">Leaderboards</span>
       </a>
       <a href="/faq" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">❓</span> <span>Typing FAQ (37 Q&A)</span>
+        <span class="text-base">❓</span> <span data-i18n="nav.faq">Typing FAQ (37 Q&A)</span>
       </a>
       <a href="/about" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">ℹ️</span> <span>About Us</span>
+        <span class="text-base">ℹ️</span> <span data-i18n="nav.about">About Us</span>
       </a>
       <a href="/contact" class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-body hover:bg-canvas-soft hover:text-ink transition min-h-[44px]">
-        <span class="text-base">📬</span> <span>Contact Us</span>
+        <span class="text-base">📬</span> <span data-i18n="nav.contact">Contact Us</span>
       </a>
     </div>
 
@@ -298,14 +302,14 @@ import SiteLogo from './SiteLogo.astro';
     <div class="py-2.5 px-3 mb-3 rounded-xl bg-canvas-soft border border-hairline flex items-center justify-between">
       <span class="text-[11px] text-mute flex items-center gap-1.5">
         <span id="mobile-sound-icon">🔊</span>
-        <span>Sound: <strong id="mobile-sound-label" class="text-ink">Clicky</strong></span>
+        <span><span data-i18n="nav.soundLabel">Sound:</span> <strong id="mobile-sound-label" class="text-ink">Clicky</strong></span>
       </span>
       <button
         type="button"
         id="mobile-sound-cycle-btn"
         class="rounded-lg px-2.5 py-1 text-[10px] font-bold border border-hairline bg-canvas text-body hover:text-ink cursor-pointer"
       >
-        Cycle Sound ↻
+        <span data-i18n="nav.cycleSound">Cycle Sound ↻</span>
       </button>
     </div>
 

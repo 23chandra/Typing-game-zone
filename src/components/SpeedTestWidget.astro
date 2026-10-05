@@ -739,7 +739,28 @@
   import { storage } from '../lib/storage';
   import { transliterateInput, isNativeScriptSupported, applySmartAccents } from '../lib/transliterationEngine';
   import { KEY_LABEL_OVERRIDES } from '../lib/fingerMapping';
+  import { getCurrentLanguage } from '../lib/i18n';
   import confetti from 'canvas-confetti';
+
+  function normalizeDiacritic(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function isFuzzyMatch(key: string, expected: string, _langOrPool: string): boolean {
+    if (key === expected) return true;
+    if (!expected) return false;
+    if (key.toLowerCase() === expected.toLowerCase()) return true;
+
+    const normKey = normalizeDiacritic(key).toLowerCase();
+    const normExp = normalizeDiacritic(expected).toLowerCase();
+    if (normKey && normKey === normExp) return true;
+
+    if (expected === 'ß' && (key === 's' || key === 'b')) return true;
+    if (expected === '¿' && key === '?') return true;
+    if (expected === '¡' && key === '!') return true;
+
+    return false;
+  }
 
   interface KeystrokeEvent {
     char: string;
@@ -1688,14 +1709,14 @@
         totalKeystrokes++;
         currentLatinBuffer += key;
         const expected = currentWord[currentCharIndex];
-        let isMatch = key === expected;
+        let isMatch = isFuzzyMatch(key, expected, wordPool);
 
         if (!isMatch && scriptMode === 'native' && wordPool !== 'english' && wordPool !== 'english1k' && wordPool !== 'code') {
           // 1. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
           const langOverrides = KEY_LABEL_OVERRIDES[wordPool] || KEY_LABEL_OVERRIDES[wordPool.slice(0, 2)];
           if (langOverrides) {
             const mapped = langOverrides[key.toLowerCase()]?.display;
-            if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
+            if (mapped && isFuzzyMatch(mapped, expected, wordPool)) {
               isMatch = true;
             }
           }
@@ -1712,7 +1733,7 @@
           // 3. Smart Accents check
           if (!isMatch) {
             const smartAcc = applySmartAccents(key, wordPool);
-            if (smartAcc === expected || smartAcc.toLowerCase() === (expected || '').toLowerCase()) {
+            if (isFuzzyMatch(smartAcc, expected, wordPool)) {
               isMatch = true;
             }
           }
@@ -2601,9 +2622,23 @@
     window.addEventListener('typing:language-change', onLangChange);
     activeCleanups.push(() => window.removeEventListener('typing:language-change', onLangChange));
 
-    // Initial setup
+    // Initial setup: sync wordPool with currently active language
     bindSubOptionButtons();
-    generateWords();
+    const currentLang = getCurrentLanguage();
+    if (currentLang && currentLang !== 'en') {
+      const langMap: Record<string, string> = {
+        en: 'english', hi: 'hindi', es: 'spanish', fr: 'french', de: 'german',
+        ja: 'japanese', pt: 'portuguese', ru: 'russian', ar: 'arabic', zh: 'chinese',
+        it: 'italian', ko: 'korean', id: 'indonesian', tr: 'turkish', vi: 'vietnamese', bn: 'bengali'
+      };
+      if (langMap[currentLang]) {
+        setWordPool(langMap[currentLang]);
+      } else {
+        generateWords();
+      }
+    } else {
+      generateWords();
+    }
     if (window.location.pathname.startsWith('/speed-test')) {
       focusInputSafely();
     }

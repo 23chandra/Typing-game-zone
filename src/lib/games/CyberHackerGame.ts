@@ -70,7 +70,7 @@ export class CyberHackerGame extends BaseGame {
   private spawnNode(): void {
     if (this.breachedCount + this.nodes.length >= this.breachGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'cyber' : 'hard';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const x = Math.random() * (this.width - 240) + 120;
     const y = Math.random() * (this.height - 200) + 80;
     const limit = Math.max(4.0, 9.0 - this.currentLevel * 0.85);
@@ -93,8 +93,8 @@ export class CyberHackerGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 4);
@@ -110,7 +110,7 @@ export class CyberHackerGame extends BaseGame {
     }
 
     const match = this.nodes
-      .filter(n => n.word[0].toLowerCase() === char.toLowerCase())
+      .filter(n => this.matchesFirstChar(n.word, char))
       .sort((a, b) => a.timeRemaining - b.timeRemaining)[0];
 
     if (match) {

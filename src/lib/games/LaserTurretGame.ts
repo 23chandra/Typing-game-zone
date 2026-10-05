@@ -53,7 +53,7 @@ export class LaserTurretGame extends BaseGame {
   private spawnDrone(): void {
     if (this.wordsKilled + this.drones.length >= this.wordsGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const angle = Math.random() * Math.PI * 2;
     const spawnDist = Math.hypot(this.width / 2, this.height / 2) + 25;
     const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.3 + 0.85);
@@ -74,8 +74,8 @@ export class LaserTurretGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.aimAndFire(this.currentTarget);
@@ -91,7 +91,7 @@ export class LaserTurretGame extends BaseGame {
     }
 
     const match = this.drones
-      .filter(d => d.word[0].toLowerCase() === char.toLowerCase())
+      .filter(d => this.matchesFirstChar(d.word, char))
       .sort((a, b) => a.distance - b.distance)[0];
 
     if (match) {

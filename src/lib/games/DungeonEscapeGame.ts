@@ -55,7 +55,7 @@ export class DungeonEscapeGame extends BaseGame {
   private spawnTrap(): void {
     if (this.trapsClearedCount + this.traps.length >= this.trapsGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'fantasy' : 'hard';
-    const word = getRandomWord(cat);
+    const word = getRandomWord(cat, this.lang);
     const types: ('spike' | 'blade' | 'lava' | 'wall')[] = ['spike', 'blade', 'lava', 'wall'];
     const type = types[Math.floor(Math.random() * types.length)];
 
@@ -74,8 +74,8 @@ export class DungeonEscapeGame extends BaseGame {
     soundEngine.playKey();
 
     if (this.currentTarget) {
-      const next = this.currentTarget.word[this.currentTarget.typedIndex]?.toLowerCase();
-      if (char.toLowerCase() === next) {
+      const next = this.currentTarget.word[this.currentTarget.typedIndex];
+      if (next && this.matchesChar(char, next)) {
         this.currentTarget.typedIndex++;
         this.recordKeystroke(true);
         this.spawnSparks(this.currentTarget.x, this.height - 90, '#50e3c2', 4);
@@ -91,7 +91,7 @@ export class DungeonEscapeGame extends BaseGame {
     }
 
     const match = this.traps
-      .filter(t => !t.cleared && t.word[0].toLowerCase() === char.toLowerCase())
+      .filter(t => !t.cleared && this.matchesFirstChar(t.word, char))
       .sort((a, b) => a.x - b.x)[0];
 
     if (match) {

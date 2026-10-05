@@ -432,7 +432,7 @@
     </div>
 
     <!-- Keycaps Matrix Wrapper (Centered & Perfectly Proportioned 15.0u System) -->
-    <div class="flex justify-center w-full min-w-0">
+    <div class="flex justify-center w-full min-w-0 overflow-x-auto no-scrollbar pb-2">
       <div id="prac-keyboard-matrix" class="flex flex-col gap-1 sm:gap-1.5 text-xs font-mono select-none w-full max-w-[760px] items-center">
         <!-- Injected dynamically via JavaScript with exact mathematical 15.0u grid -->
       </div>
@@ -560,15 +560,36 @@
 </style>
 
 <script>
-  import { WORD_LISTS, generateWeakKeysDrill, getWordPoolForLanguage, getPracticeDrillWords } from '../lib/wordLists';
+  import { generateWeakKeysDrill, getPracticeDrillWords } from '../lib/wordLists';
   import { transliterateInput, isNativeScriptSupported, applySmartAccents } from '../lib/transliterationEngine';
   import { soundEngine } from '../lib/soundEngine';
   import { storage } from '../lib/storage';
-  import { PHYSICAL_KEYBOARD_LAYOUT, getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import { getPhysicalKeyboardLayout, getFingerQuadrantData, KEY_LABEL_OVERRIDES, type PhysicalKeyDef } from '../lib/fingerMapping';
+  import { getCurrentLanguage } from '../lib/i18n';
   import confetti from 'canvas-confetti';
 
   let metronomeTimer: number | null = null;
   let activeCleanups: (() => void)[] = [];
+
+  function normalizeDiacritic(str: string): string {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function isFuzzyMatch(key: string, expected: string, _lang: string): boolean {
+    if (key === expected) return true;
+    if (!expected) return false;
+    if (key.toLowerCase() === expected.toLowerCase()) return true;
+
+    const normKey = normalizeDiacritic(key).toLowerCase();
+    const normExp = normalizeDiacritic(expected).toLowerCase();
+    if (normKey && normKey === normExp) return true;
+
+    if (expected === 'ß' && (key === 's' || key === 'b')) return true;
+    if (expected === '¿' && key === '?') return true;
+    if (expected === '¡' && key === '!') return true;
+
+    return false;
+  }
 
   function initPracticeLab() {
     // Clean old listeners & timers
@@ -1049,14 +1070,14 @@
         totalKeystrokes++;
         currentLatinBuffer += key;
         const expected = currentWord[currentCharIndex];
-        let isMatch = key === expected;
+        let isMatch = isFuzzyMatch(key, expected, pracLang);
 
         if (!isMatch && scriptMode === 'native' && pracLang !== 'en') {
           // 1. Direct keyboard layout mapping check (e.g. InScript, Cyrillic, Arabic layout)
           const langOverrides = KEY_LABEL_OVERRIDES[pracLang] || KEY_LABEL_OVERRIDES[pracLang.slice(0, 2)];
           if (langOverrides) {
             const mapped = langOverrides[key.toLowerCase()]?.display;
-            if (mapped && (mapped === expected || mapped.toLowerCase() === (expected || '').toLowerCase())) {
+            if (mapped && isFuzzyMatch(mapped, expected, pracLang)) {
               isMatch = true;
             }
           }
@@ -1073,7 +1094,7 @@
           // 3. Smart Accents check
           if (!isMatch) {
             const smartAcc = applySmartAccents(key, pracLang);
-            if (smartAcc === expected || smartAcc.toLowerCase() === (expected || '').toLowerCase()) {
+            if (isFuzzyMatch(smartAcc, expected, pracLang)) {
               isMatch = true;
             }
           }
@@ -1625,8 +1646,23 @@
     window.addEventListener('monkeytype:theme-change', onThemeChange);
     activeCleanups.push(() => window.removeEventListener('monkeytype:theme-change', onThemeChange));
 
-    // Initial setup
-    generateDrillWords();
+    // Global Language Change Event Listener
+    const onLangChange = (e: any) => {
+      const lang = e.detail?.lang;
+      if (lang && lang !== pracLang) {
+        setPracLanguage(lang);
+      }
+    };
+    window.addEventListener('typing:language-change', onLangChange);
+    activeCleanups.push(() => window.removeEventListener('typing:language-change', onLangChange));
+
+    // Initial setup: initialize with site language
+    const initialLang = getCurrentLanguage();
+    if (initialLang && initialLang !== 'en') {
+      setPracLanguage(initialLang);
+    } else {
+      generateDrillWords();
+    }
     if (window.location.pathname.startsWith('/practice')) {
       focusPracticeInput();
     }

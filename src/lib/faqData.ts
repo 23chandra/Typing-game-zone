@@ -362,6 +362,28 @@ export const FAQ_DATA: FAQItem[] = [
   }
 ];
 
+import { LOCALIZED_FAQS } from './faqTranslations';
+import { getCurrentLanguage } from './i18n';
+
+/**
+ * Get localized FAQ items based on selected language
+ */
+export function getLocalizedFAQ(lang?: string): FAQItem[] {
+  const curLang = lang || getCurrentLanguage();
+  const overrides = LOCALIZED_FAQS[curLang] || {};
+
+  return FAQ_DATA.map(item => {
+    const override = overrides[item.id];
+    if (!override) return item;
+    return {
+      ...item,
+      question: override.question || item.question,
+      shortAnswer: override.shortAnswer || item.shortAnswer,
+      answerHtml: override.answerHtml || item.answerHtml
+    };
+  });
+}
+
 /**
  * Generate Schema.org FAQPage JSON-LD Structured Data
  */

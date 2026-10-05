@@ -50,15 +50,15 @@ export class SpeedTyperProGame extends BaseGame {
 
   private nextWord(): void {
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'hard';
-    this.currentWord = getRandomWord(cat);
+    this.currentWord = getRandomWord(cat, this.lang);
     this.typedIndex = 0;
   }
 
   public handleInputChar(char: string): void {
     soundEngine.playKey();
 
-    const expected = this.currentWord[this.typedIndex]?.toLowerCase();
-    if (char.toLowerCase() === expected) {
+    const expected = this.currentWord[this.typedIndex];
+    if (expected && this.matchesChar(char, expected)) {
       this.typedIndex++;
       this.recordKeystroke(true);
 

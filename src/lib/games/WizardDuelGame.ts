@@ -75,7 +75,7 @@ export class WizardDuelGame extends BaseGame {
 
   private nextIncantation(): void {
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'fantasy' : 'hard';
-    this.currentIncantation = getRandomWord(cat);
+    this.currentIncantation = getRandomWord(cat, this.lang);
     this.typedIndex = 0;
     const types: ('fire' | 'frost' | 'lightning')[] = ['fire', 'frost', 'lightning'];
     this.spellType = types[Math.floor(Math.random() * types.length)];
@@ -84,8 +84,8 @@ export class WizardDuelGame extends BaseGame {
   public handleInputChar(char: string): void {
     soundEngine.playKey();
 
-    const expected = this.currentIncantation[this.typedIndex]?.toLowerCase();
-    if (char.toLowerCase() === expected) {
+    const expected = this.currentIncantation[this.typedIndex];
+    if (expected && this.matchesChar(char, expected)) {
       this.typedIndex++;
       this.recordKeystroke(true);
       soundEngine.playMagic();

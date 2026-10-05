@@ -460,49 +460,139 @@ export const LOCALIZED_GAME_WORDS: Record<string, Partial<GameWordCollections>> 
     ]
   },
   hi: {
-    easy: ['aag', 'din', 'man', 'ghar', 'sach', 'nam', 'kam', 'hawa', 'jeet', 'haar'],
-    medium: ['koshish', 'himmat', 'suraj', 'chand', 'tara', 'pyaar', 'duniya', 'raasta', 'shanti', 'sundar'],
-    hard: ['antariksh', 'yuddhakshetra', 'vijayashree', 'sarvashreshtha', 'atma-vishwas', 'parivartan'],
-    space: ['antariksh', 'grah', 'sitara', 'suraj', 'chandrama', 'chhayapatha', 'gurutva', 'brahmand'],
-    cyber: ['suchna', 'yantra', 'tarang', 'suraksha', 'kalanidhi', 'sangnak', 'shikhar'],
-    fantasy: ['talwar', 'mayavi', 'yoddha', 'jadugar', 'mandir', 'mantra', 'samrat', 'rakshak'],
-    combat: ['aakraman', 'raksha', 'mukka', 'prahar', 'veer', 'sangharsh', 'chauthi', 'vijay']
+    easy: ['आग', 'दिन', 'मन', 'घर', 'सच', 'नाम', 'काम', 'हवा', 'जीत', 'हार', 'सब', 'हम', 'आप', 'वह', 'यह', 'भी', 'तो', 'जब', 'है', 'था'],
+    medium: ['सूरज', 'चाँद', 'तारा', 'प्यार', 'दुनिया', 'रास्ता', 'शांति', 'सुंदर', 'भारत', 'सत्य', 'समय', 'लोग', 'पहला', 'सपना', 'किताब', 'दोस्त', 'पानी', 'जीवन', 'कोशिश', 'हिम्मत'],
+    hard: ['सफलता', 'विश्वास', 'नमस्ते', 'ज्ञान', 'मेहनत', 'अंतरिक्ष', 'युद्धक्षेत्र', 'विजयश्री', 'सर्वश्रेष्ठ', 'परिवर्तन', 'शक्ति'],
+    space: ['अंतरिक्ष', 'ग्रह', 'सितारा', 'सूरज', 'चंद्रमा', 'छायापथ', 'गुरुत्व', 'ब्रह्मांड', 'उल्का', 'आकाश', 'धूमकेतु', 'कक्षा'],
+    cyber: ['सूचना', 'यंत्र', 'तरंग', 'सुरक्षा', 'संगणक', 'जाल', 'कुंजी', 'संकेत', 'प्रणाली', 'डेटा', 'प्रक्रिया', 'कोड'],
+    fantasy: ['तलवार', 'मायावी', 'योद्धा', 'जादूगर', 'मंदिर', 'मंत्र', 'सम्राट', 'रक्षक', 'दानव', 'किरण', 'अमृत', 'शक्ति'],
+    combat: ['आक्रमण', 'रक्षा', 'मुक्का', 'प्रहार', 'वीर', 'संघर्ष', 'विजय', 'लड़ाई', 'शत्रु', 'ढाल', 'तीर', 'कवच']
   },
   es: {
-    easy: ['luz', 'sol', 'mar', 'paz', 'ojo', 'vida', 'cielo', 'mano', 'fuego', 'aire'],
-    medium: ['tiempo', 'camino', 'fuerza', 'cabeza', 'palabra', 'destino', 'sombra', 'estrella', 'espacio'],
-    hard: ['extraordinario', 'revolucionario', 'transformacion', 'resurreccion', 'intergalactico'],
-    space: ['galaxia', 'cometa', 'asteroide', 'orbita', 'gravedad', 'planeta', 'estrella', 'cosmos'],
-    cyber: ['codigo', 'red', 'servidor', 'algoritmo', 'binario', 'archivo', 'memoria', 'sistema'],
-    fantasy: ['dragon', 'espada', 'magia', 'hechizo', 'castillo', 'reino', 'oraculo', 'pocion'],
-    combat: ['ataque', 'defensa', 'guerrero', 'escudo', 'victoria', 'combate', 'furia', 'golpe']
+    easy: ['luz', 'sol', 'mar', 'paz', 'ojo', 'vida', 'cielo', 'mano', 'fuego', 'aire', 'día', 'año', 'más', 'bien', 'uno', 'casa'],
+    medium: ['tiempo', 'camino', 'fuerza', 'cabeza', 'palabra', 'destino', 'sombra', 'estrella', 'espacio', 'éxito', 'sueño', 'árbol', 'música', 'esperanza', 'alegría', 'pasión', 'corazón', 'ciudad', 'mañana'],
+    hard: ['extraordinario', 'revolucionario', 'transformación', 'resurrección', 'intergaláctico', 'incomparable', 'maravilloso', 'indestructible'],
+    space: ['galaxia', 'cometa', 'asteroide', 'órbita', 'gravedad', 'planeta', 'estrella', 'cosmos', 'universo', 'nebulosa', 'satélite'],
+    cyber: ['código', 'red', 'servidor', 'algoritmo', 'binario', 'archivo', 'memoria', 'sistema', 'seguridad', 'enlace', 'pantalla'],
+    fantasy: ['dragón', 'espada', 'magia', 'hechizo', 'castillo', 'reino', 'oráculo', 'poción', 'leyenda', 'místico', 'caballero'],
+    combat: ['ataque', 'defensa', 'guerrero', 'escudo', 'victoria', 'combate', 'furia', 'golpe', 'batalla', 'triunfo', 'armadura']
   },
   fr: {
-    easy: ['feu', 'eau', 'ciel', 'jour', 'nuit', 'main', 'yeux', 'vent', 'ame', 'paix'],
-    medium: ['etoile', 'chemin', 'soleil', 'espace', 'ombre', 'monde', 'lumiere', 'destin', 'victoire'],
-    hard: ['extraordinaire', 'incommensurable', 'desintegration', 'metamorphose', 'ininterrompu'],
-    space: ['galaxie', 'orbite', 'etoile', 'comete', 'planete', 'univers', 'pesanteur', 'vortex'],
-    cyber: ['reseau', 'serveur', 'donnees', 'fichier', 'memoire', 'systeme', 'algorithme', 'code'],
-    fantasy: ['dragon', 'epee', 'magie', 'chateau', 'sorcier', 'royaume', 'potion', 'grimoire'],
-    combat: ['attaque', 'defense', 'guerrier', 'bouclier', 'victoire', 'combat', 'fureur', 'frappe']
+    easy: ['feu', 'eau', 'ciel', 'jour', 'nuit', 'main', 'yeux', 'vent', 'âme', 'paix', 'mot', 'vie', 'voie', 'deux', 'temps'],
+    medium: ['étoile', 'chemin', 'soleil', 'espace', 'ombre', 'monde', 'lumière', 'destin', 'victoire', 'cœur', 'rêve', 'liberté', 'vérité', 'espoir', 'succès', 'enfant', 'maison'],
+    hard: ['extraordinaire', 'incommensurable', 'désintégration', 'métamorphose', 'ininterrompu', 'reconnaissance', 'transformation', 'indestructible'],
+    space: ['galaxie', 'orbite', 'étoile', 'comète', 'planète', 'univers', 'pesanteur', 'vortex', 'cosmos', 'nébuleuse', 'astéroïde'],
+    cyber: ['réseau', 'serveur', 'données', 'fichier', 'mémoire', 'système', 'algorithme', 'code', 'sécurité', 'flux', 'programme'],
+    fantasy: ['dragon', 'épée', 'magie', 'château', 'sorcier', 'royaume', 'potion', 'grimoire', 'légende', 'mystique', 'chevalier'],
+    combat: ['attaque', 'défense', 'guerrier', 'bouclier', 'victoire', 'combat', 'fureur', 'frappe', 'bataille', 'assaut', 'armure']
   },
   de: {
-    easy: ['tag', 'mut', 'weg', 'arm', 'see', 'hut', 'gut', 'neu', 'alt', 'rot'],
-    medium: ['sonne', 'mond', 'stern', 'feuer', 'wasser', 'erde', 'licht', 'kraft', 'schatten'],
-    hard: ['geschicklichkeit', 'geschwindigkeitsrausch', 'unbesiegbarkeit', 'weltraumabenteuer'],
-    space: ['galaxie', 'kosmos', 'schwerkraft', 'asteroid', 'komet', 'planet', 'sternenstaub'],
-    cyber: ['speicher', 'rechner', 'datenstrom', 'algorithmus', 'prozessor', 'netzwerk', 'code'],
-    fantasy: ['drache', 'schwert', 'zauberer', 'schloss', 'legende', 'ritter', 'magie'],
-    combat: ['angriff', 'deckung', 'krieger', 'schild', 'triumph', 'kaempfer', 'faust']
+    easy: ['tag', 'mut', 'weg', 'arm', 'see', 'hut', 'gut', 'neu', 'alt', 'rot', 'zeit', 'raum', 'kraft', 'lied', 'mond', 'erde'],
+    medium: ['sonne', 'stern', 'feuer', 'wasser', 'licht', 'schatten', 'schön', 'groß', 'käfer', 'glücklich', 'könig', 'wahrheit', 'freiheit', 'zukunft', 'leben', 'traum'],
+    hard: ['geschicklichkeit', 'geschwindigkeitsrausch', 'unbesiegbarkeit', 'weltraumabenteuer', 'übermenschlich', 'herausforderung', 'unerschütterlich'],
+    space: ['galaxie', 'kosmos', 'schwerkraft', 'asteroid', 'komet', 'planet', 'sternenstaub', 'raumschiff', 'orbit', 'schwarzloch', 'sonnensystem'],
+    cyber: ['speicher', 'rechner', 'datenstrom', 'algorithmus', 'prozessor', 'netzwerk', 'code', 'sicherheit', 'datei', 'schnittstelle', 'system'],
+    fantasy: ['drache', 'schwert', 'zauberer', 'schloss', 'legende', 'ritter', 'magie', 'elixier', 'zauberspruch', 'kristall', 'abenteuer'],
+    combat: ['angriff', 'deckung', 'krieger', 'schild', 'triumph', 'kämpfer', 'faust', 'schlacht', 'schlag', 'verteidigung', 'rüstung']
+  },
+  ru: {
+    easy: ['мир', 'дом', 'свет', 'ночь', 'день', 'рука', 'небо', 'вода', 'друг', 'дело', 'сила', 'глаз', 'ветер', 'песня', 'год'],
+    medium: ['город', 'земля', 'солнце', 'время', 'человек', 'жизнь', 'слово', 'место', 'привет', 'спасибо', 'радость', 'успех', 'любовь', 'дорога', 'голос', 'правда'],
+    hard: ['путешествие', 'великолепный', 'непобедимый', 'освобождение', 'стремительный', 'бесконечность', 'пространство', 'преображение'],
+    space: ['космос', 'галактика', 'орбита', 'звезда', 'планета', 'комета', 'астероид', 'вселенная', 'ракета', 'спутник', 'невесомость'],
+    cyber: ['код', 'данные', 'сервер', 'сеть', 'память', 'система', 'файл', 'поток', 'алгоритм', 'защита', 'программа', 'интернет'],
+    fantasy: ['дракон', 'меч', 'магия', 'замок', 'рыцарь', 'легенда', 'колдун', 'кристалл', 'заклинание', 'зелье', 'королевство'],
+    combat: ['атака', 'защита', 'воин', 'щит', 'победа', 'битва', 'удар', 'ярость', 'сражение', 'крепость', 'доспехи']
+  },
+  ar: {
+    easy: ['سلام', 'بيت', 'باب', 'شمس', 'نور', 'يوم', 'قمر', 'أمل', 'ماء', 'أرض', 'روح', 'حب', 'علم', 'خير', 'عين', 'يد'],
+    medium: ['طريق', 'كلمة', 'صديق', 'كتاب', 'مدينة', 'حياة', 'قوة', 'جمال', 'زمان', 'عمل', 'نجاح', 'مرحبا', 'شكرا', 'فجر', 'صوت', 'سماء'],
+    hard: ['المستقبل', 'الانتصار', 'الشجاعة', 'المغامرة', 'التحدي', 'اللانهاية', 'الإبداع', 'المعرفة'],
+    space: ['فضاء', 'مجرة', 'مدار', 'كوكب', 'نجم', 'نيزك', 'سماء', 'كون', 'قمر', 'صاروخ', 'مذنبات'],
+    cyber: ['بيانات', 'خادم', 'شبكة', 'ملف', 'ذاكرة', 'نظام', 'شفرة', 'أمان', 'حاسوب', 'معلومات', 'برمجة'],
+    fantasy: ['تنين', 'سيف', 'سحر', 'قلعة', 'فارس', 'أسطورة', 'بلورة', 'تعويذة', 'مملكة', 'عجائب', 'تاج'],
+    combat: ['هجوم', 'دفاع', 'محارب', 'درع', 'نصر', 'معركة', 'ضربة', 'شجاعة', 'غضب', 'صمود', 'فرسان']
   },
   ja: {
-    easy: ['hi', 'ki', 'te', 'me', 'hana', 'kaze', 'ame', 'sora', 'umi', 'yama'],
-    medium: ['hikari', 'kokoro', 'tsurugi', 'katana', 'senshi', 'mahou', 'sekai', 'chkara', 'sakura'],
-    hard: ['shinkansen', 'mugenjou', 'fujisan', 'hyakurenjitoku', 'isshinfuran', 'tenkafubu'],
-    space: ['ginga', 'wakusei', 'uchuu', 'ryuusei', 'kousei', 'taiyou', 'tsuki', 'juuryoku'],
-    cyber: ['denshi', 'deta', 'koudo', 'kairo', 'keisan', 'kioku', 'toushin', 'moukei'],
-    fantasy: ['doragon', 'katana', 'ninja', 'samurai', 'youkai', 'mahoutsukai', 'kamisama'],
-    combat: ['kougeki', 'bougyo', 'shousha', 'tatakai', 'hadouken', 'senshi', 'gekitotsu']
+    easy: ['ひ', 'き', 'て', 'め', 'はな', 'かぜ', 'あめ', 'そら', 'うみ', 'やま', 'みず', 'おと', 'ゆめ', 'あい', 'くに', 'いえ'],
+    medium: ['ひかり', 'こころ', 'つるぎ', 'かたな', 'せんし', 'まほう', 'せかい', 'ちから', 'さくら', 'みらい', 'へいわ', 'しあわせ', 'ゆうき', 'ともだち', 'じかん'],
+    hard: ['とうきょう', 'しんかんせん', 'ふじさん', 'むげんじょう', 'きぼう', 'ありがとう', 'しょうり', 'だいぼうけん'],
+    space: ['ぎんが', 'わくせい', 'うちゅう', 'りゅうせい', 'こうせい', 'たいよう', 'つき', 'じゅうりょく', 'ほし', 'ロケット'],
+    cyber: ['でんし', 'データ', 'コード', 'かいろ', 'けいさん', 'きおく', 'ネット', 'システム', 'プログラム'],
+    fantasy: ['ドラゴン', 'かたな', 'ニンジャ', 'サムライ', 'まほうつかい', 'ゆうしゃ', 'でんせつ', 'クリスタル'],
+    combat: ['こうげき', 'ぼうぎょ', 'しょうしゃ', 'たたかい', 'せんし', 'げきとつ', 'しょうり', 'いあいぎり']
+  },
+  bn: {
+    easy: ['কথা', 'বই', 'কাজ', 'রাত', 'পথ', 'গান', 'বাড়ি', 'দিন', 'ঘর', 'আলো', 'জল', 'মাটি', 'ফুল', 'মন', 'হাত'],
+    medium: ['জীবন', 'দেশ', 'নদী', 'সকাল', 'মেঘ', 'বায়ু', 'ছবি', 'খবর', 'বন্ধু', 'আকাশ', 'চাঁদ', 'সূর্য', 'শক্তি', 'গতি', 'ভালোবাসা'],
+    hard: ['স্বাধীনতা', 'মাতৃভাষা', 'ঐতিহাসিক', 'শক্তিশালী', 'প্রজাপতি', 'আলোকিত', 'সাহসী'],
+    space: ['মহাকাশ', 'গ্রহ', 'নক্ষত্র', 'ছায়াপথ', 'সূর্য', 'চাঁদ', 'মহাবিশ্ব', 'ধূমকেতু', 'কক্ষপথ', 'রকেট'],
+    cyber: ['তথ্য', 'যন্ত্র', 'নেটওয়ার্ক', 'সুরক্ষা', 'স্মৃতি', 'কম্পিউটার', 'ফাইল', 'সংকেত', 'প্রোগ্রাম'],
+    fantasy: ['তলোয়ার', 'যোদ্ধা', 'জাদুকর', 'রাজপ্রাসাদ', 'মন্ত্র', 'সম্রাট', 'ড্রাগন', 'মায়া', 'রত্ন'],
+    combat: ['আক্রমণ', 'সুরক্ষা', 'মুষ্টি', 'প্রহার', 'বীর', 'সংগ্রাম', 'জয়', 'লড়াই', 'ঢাল', 'তীর']
+  },
+  ko: {
+    easy: ['사람', '마음', '나라', '하늘', '소리', '아이', '하루', '사랑', '바다', '시간', '태양', '달', '별', '물', '빛', '바람'],
+    medium: ['인생', '희망', '생각', '세상', '미래', '우정', '열정', '성공', '기쁨', '음악', '한국', '친구', '행복', '가족', '자유', '평화'],
+    hard: ['안녕하세요', '감사합니다', '대한민국', '아름다운', '도전정신', '무한도전', '승리자'],
+    space: ['우주', '은하', '행성', '궤도', '별빛', '혜성', '태양계', '위성', '로켓', '성운'],
+    cyber: ['데이터', '서버', '네트워크', '시스템', '파일', '메모리', '보안', '코드', '알고리즘'],
+    fantasy: ['드래곤', '검객', '마법', '성채', '기사', '전설', '마법사', '물약', '크리스탈'],
+    combat: ['공격', '방어', '전사', '방패', '승리', '전투', '타격', '용기', '결투']
+  },
+  zh: {
+    easy: ['我的', '我们', '中文', '天地', '世界', '朋友', '太阳', '月亮', '星星', '水火', '风云', '大地', '光明', '和平', '今天'],
+    medium: ['快乐', '希望', '梦想', '成功', '美好', '勇敢', '热情', '力量', '飞翔', '未来', '中国', '自然', '音乐', '生活', '星空'],
+    hard: ['不可思议', '无坚不摧', '超越自我', '欢聚一堂', '全力以赴', '自强不息'],
+    space: ['宇宙', '银河', '行星', '轨道', '卫星', '流星', '星云', '引力', '飞船', '恒星'],
+    cyber: ['数据', '网络', '系统', '代码', '程序', '算法', '内存', '芯片', '安全', '信息'],
+    fantasy: ['巨龙', '宝剑', '魔法', '城堡', '骑士', '传奇', '法师', '秘境', '神话'],
+    combat: ['进攻', '防御', '勇士', '盾牌', '胜利', '战斗', '冲锋', '荣耀', '决斗']
+  },
+  pt: {
+    easy: ['luz', 'mar', 'paz', 'vida', 'céu', 'mão', 'fogo', 'vento', 'dia', 'noite', 'amor', 'sol', 'terra', 'água'],
+    medium: ['tempo', 'caminho', 'força', 'palavra', 'destino', 'sombra', 'estrela', 'espaço', 'coração', 'alegria', 'paixão', 'mundo', 'amigo', 'cidade', 'vitória', 'sonho'],
+    hard: ['extraordinário', 'revolucionário', 'transformação', 'desenvolvimento', 'maravilhoso', 'indestrutível'],
+    space: ['galáxia', 'cometa', 'asteroide', 'órbita', 'gravidade', 'planeta', 'estrela', 'universo', 'cosmos', 'satélite'],
+    cyber: ['código', 'rede', 'servidor', 'algoritmo', 'arquivo', 'memória', 'sistema', 'segurança', 'computador'],
+    fantasy: ['dragão', 'espada', 'magia', 'feitiço', 'castelo', 'reino', 'poção', 'lenda', 'cavaleiro'],
+    combat: ['ataque', 'defesa', 'guerreiro', 'escudo', 'vitória', 'combate', 'fúria', 'batalha', 'golpe']
+  },
+  it: {
+    easy: ['luce', 'sole', 'mare', 'pace', 'vita', 'cielo', 'mano', 'fuoco', 'aria', 'notte', 'cuore', 'casa', 'tempo'],
+    medium: ['cammino', 'forza', 'parola', 'destino', 'ombra', 'stella', 'spazio', 'mondo', 'sogno', 'amico', 'città', 'verità', 'libertà', 'vittoria', 'musica'],
+    hard: ['straordinario', 'rivoluzionario', 'trasformazione', 'intergalattico', 'indistruttibile', 'meraviglioso'],
+    space: ['galassia', 'cometa', 'asteroide', 'orbita', 'gravità', 'pianeta', 'universo', 'stella', 'cosmo'],
+    cyber: ['codice', 'rete', 'server', 'algoritmo', 'file', 'memoria', 'sistema', 'sicurezza', 'dati'],
+    fantasy: ['drago', 'spada', 'magia', 'castello', 'cavaliere', 'leggenda', 'pozione', 'regno', 'mago'],
+    combat: ['attacco', 'difesa', 'guerriero', 'scudo', 'vittoria', 'combattimento', 'furia', 'colpo', 'battaglia']
+  },
+  tr: {
+    easy: ['su', 'gök', 'ay', 'yol', 'el', 'göz', 'ses', 'gün', 'can', 'aşk', 'ışık', 'kuş', 'dağ', 'ev'],
+    medium: ['zaman', 'yıldız', 'dünya', 'kuvvet', 'hayat', 'barış', 'rüya', 'kitap', 'deniz', 'güneş', 'yürek', 'dost', 'özgürlük', 'başarı', 'umut'],
+    hard: ['olağanüstü', 'özgürleştiren', 'dayanıklılık', 'hızlıyazma', 'yenilmezlik', 'kahramanlık'],
+    space: ['galaksi', 'kuyrukluyıldız', 'yörünge', 'yerçekimi', 'gezegen', 'evren', 'yıldız', 'roket', 'uzay'],
+    cyber: ['kod', 'ağ', 'sunucu', 'algoritma', 'dosya', 'hafıza', 'sistem', 'güvenlik', 'bilgisayar'],
+    fantasy: ['ejderha', 'kılıç', 'büyü', 'kale', 'şövalye', 'efsane', 'iksir', 'krallık', 'sihirbaz'],
+    combat: ['saldırı', 'savunma', 'savaşçı', 'kalkan', 'zafer', 'dövüş', 'öfke', 'vuruş', 'meydan']
+  },
+  vi: {
+    easy: ['nước', 'trời', 'mây', 'gió', 'lửa', 'đất', 'ngày', 'đêm', 'người', 'bạn', 'hoa', 'sao', 'mắt', 'tim', 'sáng'],
+    medium: ['thời gian', 'sáng ngời', 'cuộc đời', 'vui vẻ', 'yêu thương', 'biển cả', 'tâm hồn', 'ánh sáng', 'hạnh phúc', 'tự do', 'hòa bình', 'thành công'],
+    hard: ['phi thường', 'cách mạng', 'chuyển hóa', 'bất khả chiến bại', 'tuyệt vời', 'dũng cảm'],
+    space: ['thiên hà', 'sao chổi', 'tiểu hành tinh', 'quỹ đạo', 'trọng lực', 'hành tinh', 'vũ trụ', 'phi thuyền'],
+    cyber: ['mã hóa', 'mạng', 'máy chủ', 'thuật toán', 'tập tin', 'bộ nhớ', 'hệ thống', 'bảo mật', 'dữ liệu'],
+    fantasy: ['rồng thần', 'thanh kiếm', 'phép thuật', 'lâu đài', 'hiệp sĩ', 'huyền thoại', 'tiên dược', 'vương quốc'],
+    combat: ['tấn công', 'phòng thủ', 'chiến binh', 'khiên', 'chiến thắng', 'giao chiến', 'nộ khí', 'quyết đấu']
+  },
+  id: {
+    easy: ['air', 'api', 'angin', 'bumi', 'hari', 'malam', 'mata', 'tangan', 'jiwa', 'damai', 'laut', 'buku', 'hati'],
+    medium: ['waktu', 'jalan', 'kekuatan', 'bintang', 'dunia', 'cahaya', 'hidup', 'mimpi', 'sahabat', 'semangat', 'senang', 'berani', 'negeri'],
+    hard: ['luarbiasa', 'pemberdayaan', 'transformasi', 'kegigihan', 'petualangan', 'kemenangan'],
+    space: ['galaksi', 'komet', 'asteroid', 'orbit', 'gravitasi', 'planet', 'alamsemesta', 'bintang', 'roket'],
+    cyber: ['kode', 'jaringan', 'server', 'algoritma', 'berkas', 'memori', 'sistem', 'keamanan', 'program'],
+    fantasy: ['naga', 'pedang', 'sihir', 'istana', 'ksatria', 'legenda', 'ramuan', 'kerajaan', 'penyihir'],
+    combat: ['serangan', 'bertahan', 'pendekar', 'perisai', 'kejayaan', 'pertempuran', 'kemarahan', 'juara']
   }
 };
 
@@ -837,9 +927,10 @@ export function getRandomWord(
   category: 'easy' | 'medium' | 'hard' | 'space' | 'cyber' | 'fantasy' | 'combat' = 'medium',
   lang?: string
 ): string {
-  const currentLang = lang || getCurrentLanguage();
+  const rawLang = (lang || getCurrentLanguage() || 'en').toLowerCase().trim();
+  const currentLang = LOCALIZED_GAME_WORDS[rawLang] ? rawLang : rawLang.slice(0, 2);
   const langWords = LOCALIZED_GAME_WORDS[currentLang] || LOCALIZED_GAME_WORDS.en;
-  const list = langWords[category] || LOCALIZED_GAME_WORDS.en[category] || LOCALIZED_GAME_WORDS.en.medium!;
+  const list = langWords[category] || langWords.medium || langWords.easy || langWords.combat || langWords.space || LOCALIZED_GAME_WORDS.en[category] || LOCALIZED_GAME_WORDS.en.medium!;
   const index = Math.floor(Math.random() * list.length);
   return list[index];
 }
@@ -849,9 +940,10 @@ export function getRandomWords(
   category: 'easy' | 'medium' | 'hard' | 'space' | 'cyber' | 'fantasy' | 'combat' = 'medium',
   lang?: string
 ): string[] {
-  const currentLang = lang || getCurrentLanguage();
+  const rawLang = (lang || getCurrentLanguage() || 'en').toLowerCase().trim();
+  const currentLang = LOCALIZED_GAME_WORDS[rawLang] ? rawLang : rawLang.slice(0, 2);
   const langWords = LOCALIZED_GAME_WORDS[currentLang] || LOCALIZED_GAME_WORDS.en;
-  const pool = [...(langWords[category] || LOCALIZED_GAME_WORDS.en[category] || LOCALIZED_GAME_WORDS.en.medium!)];
+  const pool = [...(langWords[category] || langWords.medium || langWords.easy || langWords.combat || LOCALIZED_GAME_WORDS.en[category] || LOCALIZED_GAME_WORDS.en.medium!)];
   const result: string[] = [];
   for (let i = 0; i < count; i++) {
     const index = Math.floor(Math.random() * pool.length);
