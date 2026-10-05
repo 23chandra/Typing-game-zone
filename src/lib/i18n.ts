@@ -1,5 +1,28 @@
+<<<<<<< HEAD
 // Multi-Language Internationalization (i18n) Engine for Typing Game Zone
 // Supports 16 global languages: English (en), Hindi (hi), Spanish (es), French (fr), German (de), Japanese (ja), Portuguese (pt), Russian (ru), Arabic (ar), Chinese (zh), Italian (it), Korean (ko), Indonesian (id), Turkish (tr), Vietnamese (vi), Bengali (bn)
+=======
+// Internationalization (i18n) Engine Adapter for Typing Game Zone
+// Powered by modular dictionaries in src/i18n/
+
+import {
+  SUPPORTED_LOCALES,
+  DEFAULT_LOCALE,
+  LANGUAGES,
+  LANGUAGE_LIST,
+  getLanguageConfig,
+  isRTL as checkIsRTL,
+  type SupportedLocale
+} from '../i18n/config';
+import {
+  t as translateHelper,
+  formatNumber as formatNumHelper,
+  formatDate as formatDateHelper,
+  getLocaleUrl,
+  getLocaleFromPath
+} from '../i18n/utils';
+import { detectLanguage, saveLanguagePreference } from '../i18n/detector';
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
 export interface LanguageDef {
   code: string;
@@ -10,6 +33,7 @@ export interface LanguageDef {
   region?: string;
 }
 
+<<<<<<< HEAD
 export const SUPPORTED_LANGUAGES: LanguageDef[] = [
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸', region: 'Global' },
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', region: 'India' },
@@ -2400,10 +2424,32 @@ export function getCurrentLanguage(): string {
 
 export function getLanguageDef(code: string): LanguageDef {
   return SUPPORTED_LANGUAGES.find(l => l.code === code) || SUPPORTED_LANGUAGES[0];
+=======
+export const SUPPORTED_LANGUAGES: LanguageDef[] = LANGUAGE_LIST.map(lang => ({
+  code: lang.code,
+  name: lang.name,
+  nativeName: lang.nativeName,
+  flag: lang.flag,
+  isRTL: lang.isRTL,
+  region: lang.region
+}));
+
+export function getLanguageDef(code: string): LanguageDef {
+  const conf = getLanguageConfig(code);
+  return {
+    code: conf.code,
+    name: conf.name,
+    nativeName: conf.nativeName,
+    flag: conf.flag,
+    isRTL: conf.isRTL,
+    region: conf.region
+  };
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 }
 
 export function isRTLLanguage(code?: string): boolean {
   const langCode = code || getCurrentLanguage();
+<<<<<<< HEAD
   const def = getLanguageDef(langCode);
   return !!def.isRTL;
 }
@@ -2412,19 +2458,32 @@ export function t(key: string, lang?: string): string {
   const targetLang = lang || getCurrentLanguage();
   const dict = TRANSLATIONS[targetLang] || TRANSLATIONS['en'];
   return dict[key] || TRANSLATIONS['en'][key] || key;
+=======
+  return checkIsRTL(langCode);
+}
+
+export function t(key: string, lang?: string): string {
+  const curLang = lang || getCurrentLanguage();
+  return translateHelper(key, curLang);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 }
 
 export function formatNumber(num: number, lang?: string): string {
   const targetLang = lang || getCurrentLanguage();
+<<<<<<< HEAD
   try {
     return new Intl.NumberFormat(targetLang).format(num);
   } catch {
     return num.toLocaleString();
   }
+=======
+  return formatNumHelper(num, targetLang);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 }
 
 export function formatDate(date: Date | string | number, lang?: string, options?: Intl.DateTimeFormatOptions): string {
   const targetLang = lang || getCurrentLanguage();
+<<<<<<< HEAD
   const d = typeof date === 'object' ? date : new Date(date);
   try {
     return new Intl.DateTimeFormat(targetLang, options || { month: 'short', day: 'numeric', year: 'numeric' }).format(d);
@@ -2454,6 +2513,46 @@ export function setLanguage(langCode: string): void {
   window.dispatchEvent(new CustomEvent('typing:language-change', {
     detail: { lang: langCode, def }
   }));
+=======
+  return formatDateHelper(date, targetLang, options);
+}
+
+export function detectBrowserLanguage(): string {
+  return detectLanguage();
+}
+
+export function getCurrentLanguage(): string {
+  if (typeof window === 'undefined') return DEFAULT_LOCALE;
+  return detectLanguage(window.location.pathname);
+}
+
+export function setLanguage(langCode: string, navigate: boolean = true): void {
+  const code = (langCode || DEFAULT_LOCALE).toLowerCase().split('-')[0] as SupportedLocale;
+  const def = getLanguageDef(code);
+
+  saveLanguagePreference(code);
+
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('lang', code);
+    document.documentElement.setAttribute('dir', def.isRTL ? 'rtl' : 'ltr');
+  }
+
+  applyTranslationsToDOM(code);
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('typing:language-change', {
+      detail: { lang: code, def }
+    }));
+
+    if (navigate) {
+      const currentPath = window.location.pathname;
+      const targetUrl = getLocaleUrl(currentPath, code);
+      if (window.location.pathname !== targetUrl) {
+        window.location.href = targetUrl;
+      }
+    }
+  }
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 }
 
 export function applyTranslationsToDOM(lang?: string): void {
@@ -2461,11 +2560,16 @@ export function applyTranslationsToDOM(lang?: string): void {
   const curLang = lang || getCurrentLanguage();
   const def = getLanguageDef(curLang);
 
+<<<<<<< HEAD
   if (def.isRTL) {
     document.documentElement.setAttribute('dir', 'rtl');
   } else {
     document.documentElement.setAttribute('dir', 'ltr');
   }
+=======
+  document.documentElement.setAttribute('lang', curLang);
+  document.documentElement.setAttribute('dir', def.isRTL ? 'rtl' : 'ltr');
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -2492,6 +2596,7 @@ export function initI18n(): void {
   if (typeof document !== 'undefined') {
     const def = getLanguageDef(curLang);
     document.documentElement.setAttribute('lang', curLang);
+<<<<<<< HEAD
     if (def.isRTL) {
       document.documentElement.setAttribute('dir', 'rtl');
     } else {
@@ -2500,3 +2605,11 @@ export function initI18n(): void {
     applyTranslationsToDOM(curLang);
   }
 }
+=======
+    document.documentElement.setAttribute('dir', def.isRTL ? 'rtl' : 'ltr');
+    applyTranslationsToDOM(curLang);
+  }
+}
+
+export { SUPPORTED_LOCALES, DEFAULT_LOCALE, LANGUAGES, getLocaleUrl, getLocaleFromPath };
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e

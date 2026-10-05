@@ -48,11 +48,38 @@ export class RhythmBeatGame extends BaseGame {
     this.idleTime = 0;
   }
 
+<<<<<<< HEAD
+=======
+  private getMarginX(): number {
+    return this.width < 460 ? 20 : 70;
+  }
+
+  private getLaneW(): number {
+    return (this.width - this.getMarginX() * 2) / 4;
+  }
+
+  private getLaneX(lane: number): number {
+    const marginX = this.getMarginX();
+    const laneW = this.getLaneW();
+    return marginX + lane * laneW + laneW / 2;
+  }
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   private spawnNote(): void {
     if (this.notesHitCount + this.notes.length >= this.notesGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
     const word = getRandomWord(cat);
+<<<<<<< HEAD
     const lane = Math.floor(Math.random() * 4);
+=======
+
+    // Prefer a lane that doesn't have a note near the top to prevent overlap
+    const validLanes = [0, 1, 2, 3].filter(l => !this.notes.some(n => n.lane === l && n.y < 100));
+    const lane = validLanes.length > 0
+      ? validLanes[Math.floor(Math.random() * validLanes.length)]
+      : Math.floor(Math.random() * 4);
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     const speed = (this.bpm / 60) * (this.currentLevel >= 4 ? 48 : 40);
 
     this.notes.push({
@@ -114,11 +141,14 @@ export class RhythmBeatGame extends BaseGame {
     }
   }
 
+<<<<<<< HEAD
   private getLaneX(lane: number): number {
     const laneW = (this.width - 160) / 4;
     return 80 + lane * laneW + laneW / 2;
   }
 
+=======
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   private hitNote(note: BeatNote): void {
     const strikeY = this.height - 75;
     const accuracyDelta = Math.abs(note.y - strikeY);
@@ -195,13 +225,23 @@ export class RhythmBeatGame extends BaseGame {
     }
 
     // 2. 4-Lane 3D Perspective Highway
+<<<<<<< HEAD
     const laneW = (this.width - 160) / 4;
     const startX = 80;
+=======
+    const laneW = this.getLaneW();
+    const startX = this.getMarginX();
+    const highwayW = this.width - startX * 2;
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     const strikeY = this.height - 75;
 
     // Highway surface
     ctx.fillStyle = '#0f051d';
+<<<<<<< HEAD
     ctx.fillRect(startX, 0, this.width - 160, this.height);
+=======
+    ctx.fillRect(startX, 0, highwayW, this.height);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     // Lane Dividers
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
@@ -217,16 +257,27 @@ export class RhythmBeatGame extends BaseGame {
     ctx.fillStyle = '#50e3c2';
     ctx.shadowColor = '#50e3c2';
     ctx.shadowBlur = 15;
+<<<<<<< HEAD
     ctx.fillRect(startX, strikeY - 2, this.width - 160, 4);
+=======
+    ctx.fillRect(startX, strikeY - 2, highwayW, 4);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     ctx.shadowBlur = 0;
 
     // HUD Counter
     ctx.font = 'bold 12px "Geist Mono", monospace';
     ctx.fillStyle = '#f9cb28';
+<<<<<<< HEAD
     ctx.fillText(`BEAT NOTES HIT: ${this.notesHitCount} / ${this.notesGoal}`, 30, 25);
     ctx.fillStyle = '#00dfd8';
     ctx.textAlign = 'right';
     ctx.fillText(`TEMPO: ${this.bpm} BPM [4-LANE SYNTH]`, this.width - 30, 25);
+=======
+    ctx.fillText(`BEAT NOTES HIT: ${this.notesHitCount} / ${this.notesGoal}`, 20, 25);
+    ctx.fillStyle = '#00dfd8';
+    ctx.textAlign = 'right';
+    ctx.fillText(`TEMPO: ${this.bpm} BPM`, this.width - 20, 25);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     ctx.textAlign = 'left';
 
     // 3. Render Falling Neon Beat Notes

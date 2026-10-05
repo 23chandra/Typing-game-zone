@@ -114,25 +114,43 @@ export class WizardDuelGame extends BaseGame {
     soundEngine.playMagic();
     const color = this.getSpellColor();
     const damage = 35;
+<<<<<<< HEAD
 
     this.spellBeams.push({
       x: 195,
       y: this.height - 145,
       tx: this.width - 195,
+=======
+    const playerX = Math.max(60, Math.min(180, this.width * 0.22));
+    const oppX = Math.max(playerX + 110, Math.min(this.width - 60, this.width * 0.78));
+
+    this.spellBeams.push({
+      x: playerX + 15,
+      y: this.height - 145,
+      tx: oppX - 15,
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
       ty: this.height - 145,
       color,
       life: 0.38,
       maxLife: 0.38
     });
 
+<<<<<<< HEAD
     this.spawnExplosion(this.width - 195, this.height - 145, color, 30);
+=======
+    this.spawnExplosion(oppX, this.height - 145, color, 30);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     this.triggerScreenShake(0.22, 9);
     this.triggerFlash(0.12, color);
     this.wizardHp -= damage;
 
     this.wordsCompletedInLevel++;
     this.score += 70;
+<<<<<<< HEAD
     this.addFloatingText(this.width - 195, this.height - 190, `✨ ${this.spellType.toUpperCase()} BURST! -${damage} HP`, color, 22);
+=======
+    this.addFloatingText(oppX, this.height - 190, `✨ ${this.spellType.toUpperCase()} BURST! -${damage} HP`, color, 22);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     if (this.wizardHp <= 0) {
       this.wizardHp = 0;
@@ -148,6 +166,11 @@ export class WizardDuelGame extends BaseGame {
   public updateGame(dt: number): void {
     this.idleTime += dt;
     this.runicCircleAngle += dt * 1.5;
+<<<<<<< HEAD
+=======
+    const playerX = Math.max(60, Math.min(180, this.width * 0.22));
+    const oppX = Math.max(playerX + 110, Math.min(this.width - 60, this.width * 0.78));
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     // Smooth Health Lag Bars
     if (this.wizardLagHp > this.wizardHp) {
@@ -178,16 +201,27 @@ export class WizardDuelGame extends BaseGame {
         this.takeDamage(25);
         const opp = this.duelOpponents[this.currentLevel - 1] || this.duelOpponents[0];
         this.spellBeams.push({
+<<<<<<< HEAD
           x: this.width - 195,
           y: this.height - 145,
           tx: 195,
+=======
+          x: oppX - 15,
+          y: this.height - 145,
+          tx: playerX + 15,
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
           ty: this.height - 145,
           color: opp.staffColor,
           life: 0.38,
           maxLife: 0.38
         });
+<<<<<<< HEAD
         this.spawnExplosion(195, this.height - 145, opp.staffColor, 25);
         this.addFloatingText(195, this.height - 190, `CURSE STRIKE! -25 HP`, '#ee0000', 20);
+=======
+        this.spawnExplosion(playerX, this.height - 145, opp.staffColor, 25);
+        this.addFloatingText(playerX, this.height - 190, `CURSE STRIKE! -25 HP`, '#ee0000', 20);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
       }
     }
   }
@@ -243,9 +277,18 @@ export class WizardDuelGame extends BaseGame {
     ctx.fillStyle = '#7928ca';
     ctx.fillRect(0, floorY, this.width, 3);
 
+<<<<<<< HEAD
     // Glowing Runic Circles on Floor (Player & Opponent)
     this.drawRunicCircle(ctx, 180, floorY, '#50e3c2', this.runicCircleAngle);
     this.drawRunicCircle(ctx, this.width - 180, floorY, opp.staffColor, -this.runicCircleAngle);
+=======
+    const playerX = Math.max(60, Math.min(180, this.width * 0.22));
+    const oppX = Math.max(playerX + 110, Math.min(this.width - 60, this.width * 0.78));
+
+    // Glowing Runic Circles on Floor (Player & Opponent)
+    this.drawRunicCircle(ctx, playerX, floorY, '#50e3c2', this.runicCircleAngle);
+    this.drawRunicCircle(ctx, oppX, floorY, opp.staffColor, -this.runicCircleAngle);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     // 2. Health & Telemetry Bars UI
     const barWidth = Math.min(260, (this.width - 120) / 2);
@@ -288,11 +331,19 @@ export class WizardDuelGame extends BaseGame {
     ctx.fillStyle = castPct < 0.35 ? '#ff0080' : '#f9cb28';
     ctx.fillRect(oppLeftX, topY + barH + 4, barWidth * castPct, 4);
 
+<<<<<<< HEAD
     // 3. Render Player Wizard (Left: x ~ 180)
     this.renderPlayerMage(ctx, 180, floorY);
 
     // 4. Render Opponent Wizard (Right: x ~ width - 180)
     this.renderOpponentMage(ctx, this.width - 180, floorY, opp);
+=======
+    // 3. Render Player Wizard (Left)
+    this.renderPlayerMage(ctx, playerX, floorY);
+
+    // 4. Render Opponent Wizard (Right)
+    this.renderOpponentMage(ctx, oppX, floorY, opp);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     // 5. Render Spell Beams & Clashing Lightning
     for (const beam of this.spellBeams) {

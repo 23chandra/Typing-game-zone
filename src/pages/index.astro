@@ -14,13 +14,87 @@ const seoDescription = 'Play 21 free 2D typing games online at Typing Game Zone!
 const seoKeywords = 'Typing game zone, Typing game online, Typing online, Typing lessons, Typing, free typing game online, fast typing game online, typing game online free, word typing game online, typing game online for kids, typing master word typing game online, kids typing game online, keyboard typing game online, zombie typing game online, 2d typing game online, 2d typing game online free, 2d typing game, typing game zone guess who i am, free typing game zone, typing game zone snake, typing faq';
 
 const faqStructuredData = generateFAQSchema(FAQ_DATA);
+<<<<<<< HEAD
+=======
+
+const gameCatalogStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': '21 Free 2D Typing Games Online',
+  'description': 'Complete collection of free 2D typing games online on Typing Game Zone',
+  'numberOfItems': ALL_GAMES.length,
+  'itemListElement': ALL_GAMES.map((game, index) => ({
+    '@type': 'ListItem',
+    'position': index + 1,
+    'item': {
+      '@type': 'VideoGame',
+      'name': game.title,
+      'description': game.description,
+      'genre': [game.categoryName, 'Typing Game', 'Arcade', 'Educational'],
+      'gamePlatform': 'Web Browser',
+      'applicationCategory': 'GameApplication',
+      'playMode': 'SinglePlayer',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      },
+      'url': `https://typinggamezone.com/game/${game.id}`
+    }
+  }))
+};
+
+const navigationStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': 'Typing Game Zone Main Navigation',
+  'itemListElement': [
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 1,
+      'name': 'Arcade Lounge',
+      'url': 'https://typinggamezone.com/arcade'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 2,
+      'name': 'Speed Test Bench',
+      'url': 'https://typinggamezone.com/speed-test'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 3,
+      'name': 'Touch Typing Practice Lab',
+      'url': 'https://typinggamezone.com/practice'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 4,
+      'name': 'Career Hub & Leaderboards',
+      'url': 'https://typinggamezone.com/leaderboards'
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      'position': 5,
+      'name': 'Typing FAQ & Knowledge Base',
+      'url': 'https://typinggamezone.com/faq'
+    }
+  ]
+};
+
+const pageStructuredData = [faqStructuredData, gameCatalogStructuredData, navigationStructuredData];
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 ---
 
 <Layout
   title={seoTitle}
   description={seoDescription}
   keywords={seoKeywords}
+<<<<<<< HEAD
   structuredData={faqStructuredData}
+=======
+  structuredData={pageStructuredData}
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 >
   <!-- 1. Hero Band with Atmospheric Mesh Gradient Backdrop -->
   <section class="relative overflow-hidden border-b border-hairline bg-canvas py-16 sm:py-24 mesh-gradient-hero">
@@ -95,6 +169,7 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
   </section>
 
   <!-- 2. Interactive Game Hub & Catalog Section -->
+<<<<<<< HEAD
   <section class="py-12 sm:py-20 bg-canvas-soft scroll-mt-16" id="games-section">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       
@@ -106,6 +181,19 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
             Choose Your Arena ({totalGames} Games)
           </h2>
           <p class="text-sm text-body mt-1" data-i18n="lead.gameRecordsDesc">
+=======
+  <section class="py-10 sm:py-20 bg-canvas-soft scroll-mt-16" id="games-section">
+    <div class="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 pb-5 sm:pb-8 border-b border-hairline">
+        <div>
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link" data-i18n="lead.gameRecords">Game Library</span>
+          <h2 id="games-count-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-ink mt-1">
+            Choose Your Arena ({totalGames} Games)
+          </h2>
+          <p class="text-xs sm:text-sm text-body mt-1" data-i18n="lead.gameRecordsDesc">
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
             Each game features unique 2D canvas physics, visual animations, and 5 level tiers.
           </p>
         </div>
@@ -116,6 +204,7 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
             type="text"
             id="game-search-input"
             placeholder="Search games, tags, genres..."
+<<<<<<< HEAD
             class="w-full rounded-full border border-hairline bg-canvas px-4 py-2.5 pl-10 text-xs font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20"
           />
           <svg class="absolute left-3.5 top-3 h-4 w-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -145,12 +234,55 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
           Puzzle (3)
         </button>
         <button data-filter="practice" data-i18n="cat.practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 text-xs font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0">
+=======
+            class="w-full rounded-full border border-hairline bg-canvas px-4 py-2.5 pl-10 pr-9 text-base sm:text-xs font-mono text-ink shadow-level-1 focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20"
+          />
+          <svg class="absolute left-3.5 top-3 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <button
+            type="button"
+            id="game-search-clear"
+            class="absolute right-3 top-2.5 h-5 w-5 rounded-full bg-canvas-soft text-mute hover:text-ink text-xs hidden items-center justify-center cursor-pointer active:scale-95"
+            title="Clear search"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Tabs Row (Smooth scrollable on mobile touchscreens) -->
+      <div class="flex items-center gap-2 overflow-x-auto smooth-scroll-x overscroll-contain max-w-full pb-2 pt-4 sm:pt-6 mb-2 text-xs">
+        <button type="button" data-filter="all" data-i18n="cat.all" class="cat-filter-btn active rounded-full bg-ink px-4 py-1.5 font-medium text-on-primary shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          All Games ({totalGames})
+        </button>
+        <button type="button" data-filter="arcade" data-i18n="cat.arcade" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          Arcade (4)
+        </button>
+        <button type="button" data-filter="action" data-i18n="cat.action" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          Action (5)
+        </button>
+        <button type="button" data-filter="adventure" data-i18n="cat.adventure" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          Adventure (4)
+        </button>
+        <button type="button" data-filter="fighting" data-i18n="cat.fighting" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          Fighting (4)
+        </button>
+        <button type="button" data-filter="puzzle" data-i18n="cat.puzzle" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+          Puzzle (3)
+        </button>
+        <button type="button" data-filter="practice" data-i18n="cat.practice" class="cat-filter-btn rounded-full border border-hairline bg-canvas px-4 py-1.5 font-medium text-body hover:text-ink shadow-level-1 transition whitespace-nowrap flex-shrink-0 cursor-pointer active:scale-95">
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
           Practice (1)
         </button>
       </div>
 
       <!-- 21 Games Responsive Grid -->
+<<<<<<< HEAD
       <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+=======
+      <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mt-4">
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
         {ALL_GAMES.map(game => (
           <GameCard game={game} />
         ))}
@@ -161,6 +293,16 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
         <div class="text-4xl mb-2">🔍</div>
         <h3 class="text-base font-semibold text-ink">No matching games found</h3>
         <p class="text-xs text-mute mt-1">Try clearing your search query or filter category.</p>
+<<<<<<< HEAD
+=======
+        <button
+          type="button"
+          id="reset-filter-btn"
+          class="mt-4 rounded-full bg-ink px-4 py-2 text-xs font-medium text-on-primary shadow-level-1 transition hover:opacity-90 active:scale-95"
+        >
+          Reset All Filters
+        </button>
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
       </div>
 
     </div>
@@ -388,10 +530,20 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
 
 <script>
   function initCatalogFilter() {
+<<<<<<< HEAD
     const searchInput = document.getElementById('game-search-input') as HTMLInputElement;
     const filterBtns = document.querySelectorAll('.cat-filter-btn');
     const cards = document.querySelectorAll('#games-grid > div');
     const noResults = document.getElementById('no-results');
+=======
+    const searchInput = document.getElementById('game-search-input') as HTMLInputElement | null;
+    const searchClearBtn = document.getElementById('game-search-clear');
+    const filterBtns = document.querySelectorAll('.cat-filter-btn');
+    const cards = document.querySelectorAll('#games-grid > div');
+    const noResults = document.getElementById('no-results');
+    const resetFilterBtn = document.getElementById('reset-filter-btn');
+    const countHeading = document.getElementById('games-count-heading');
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     let currentCat = 'all';
     let searchQuery = '';
@@ -420,6 +572,23 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
         }
       });
 
+<<<<<<< HEAD
+=======
+      if (countHeading) {
+        countHeading.textContent = `Choose Your Arena (${visibleCount} Games)`;
+      }
+
+      if (searchClearBtn) {
+        if (searchQuery.length > 0) {
+          searchClearBtn.classList.remove('hidden');
+          searchClearBtn.classList.add('flex');
+        } else {
+          searchClearBtn.classList.add('hidden');
+          searchClearBtn.classList.remove('flex');
+        }
+      }
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
       if (noResults) {
         if (visibleCount === 0) noResults.classList.remove('hidden');
         else noResults.classList.add('hidden');
@@ -431,6 +600,7 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
       filterCards();
     });
 
+<<<<<<< HEAD
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         filterBtns.forEach(b => {
@@ -445,10 +615,50 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
       });
     });
 
+=======
+    searchClearBtn?.addEventListener('click', () => {
+      if (searchInput) {
+        searchInput.value = '';
+        searchQuery = '';
+        filterCards();
+        searchInput.focus();
+      }
+    });
+
+    function setActiveCategory(cat: string) {
+      currentCat = cat;
+      filterBtns.forEach(btn => {
+        const f = btn.getAttribute('data-filter');
+        if (f === cat) {
+          btn.classList.add('bg-ink', 'text-on-primary', 'active');
+          btn.classList.remove('bg-canvas', 'text-body', 'border');
+        } else {
+          btn.classList.remove('bg-ink', 'text-on-primary', 'active');
+          btn.classList.add('bg-canvas', 'text-body', 'border');
+        }
+      });
+      filterCards();
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-filter') || 'all';
+        setActiveCategory(cat);
+      });
+    });
+
+    resetFilterBtn?.addEventListener('click', () => {
+      if (searchInput) searchInput.value = '';
+      searchQuery = '';
+      setActiveCategory('all');
+    });
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     // Read URL query parameter for category if present
     const urlParams = new URLSearchParams(window.location.search);
     const catParam = urlParams.get('cat');
     if (catParam) {
+<<<<<<< HEAD
       const matchBtn = Array.from(filterBtns).find(b => b.getAttribute('data-filter') === catParam);
       if (matchBtn) {
         filterBtns.forEach(b => {
@@ -460,6 +670,9 @@ const faqStructuredData = generateFAQSchema(FAQ_DATA);
         currentCat = catParam;
         filterCards();
       }
+=======
+      setActiveCategory(catParam);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     }
   }
 

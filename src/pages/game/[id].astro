@@ -13,8 +13,14 @@ export function getStaticPaths() {
 }
 
 const { game } = Astro.props;
+<<<<<<< HEAD
 
 const gameKeywords = `${game.title}, ${game.title} typing game, Typing game zone, free typing game online, 2d typing game online, typing game online free, 2d typing game, ${game.tags.join(', ')}, fast typing game online, keyboard typing game online, word typing game online`;
+=======
+const relatedGames = ALL_GAMES.filter(g => g.id !== game.id && (g.category === game.category || g.difficulty === game.difficulty)).slice(0, 3);
+
+const gameKeywords = `${game.title}, ${game.title} typing game, Typing game zone, free typing game online, 2d typing game online, typing game online free, 2d typing game, ${game.tags.join(', ')}, fast typing game online, keyboard typing game online, word typing game online, play ${game.title.toLowerCase()} free, ${game.categoryName.toLowerCase()} typing game, browser typing game 60fps, mechanical keyboard typing`;
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
 const gameStructuredData = [
   {
@@ -26,6 +32,23 @@ const gameStructuredData = [
     'gamePlatform': 'Web Browser',
     'applicationCategory': 'GameApplication',
     'playMode': 'SinglePlayer',
+<<<<<<< HEAD
+=======
+    'operatingSystem': 'Any (Web Browser)',
+    'author': {
+      '@type': 'Organization',
+      'name': 'Typing Game Zone',
+      'url': 'https://typinggamezone.com'
+    },
+    'image': 'https://typinggamezone.com/og-image.svg',
+    'aggregateRating': {
+      '@type': 'AggregateRating',
+      'ratingValue': '4.9',
+      'ratingCount': '1420',
+      'bestRating': '5',
+      'worstRating': '1'
+    },
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     'offers': {
       '@type': 'Offer',
       'price': '0',
@@ -93,7 +116,11 @@ const gameStructuredData = [
       <canvas
         id="game-canvas"
         data-game-id={game.id}
+<<<<<<< HEAD
         class="w-full h-[260px] xs:h-[300px] sm:h-[420px] lg:h-[500px] block cursor-crosshair focus:outline-none"
+=======
+        class="w-full h-[280px] xs:h-[340px] sm:h-[440px] lg:h-[500px] block cursor-crosshair focus:outline-none touch-none select-none"
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
         tabindex="0"
       ></canvas>
 
@@ -104,7 +131,12 @@ const gameStructuredData = [
         <p class="text-xs text-neutral-400 mt-1">Press Space, Enter, or Click Resume</p>
         <button
           id="resume-btn"
+<<<<<<< HEAD
           class="mt-4 rounded-full bg-cyan px-6 py-2 text-xs font-bold text-ink hover:opacity-90 transition cursor-pointer"
+=======
+          type="button"
+          class="mt-4 rounded-full bg-cyan px-6 py-2.5 text-xs font-bold text-ink hover:opacity-90 active:scale-95 transition cursor-pointer min-h-[40px]"
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
         >
           <span data-i18n="game.resume">Resume Game</span>
         </button>
@@ -174,6 +206,43 @@ const gameStructuredData = [
       </div>
     </div>
 
+<<<<<<< HEAD
+=======
+    <!-- Related 2D Typing Games Recommendation Grid -->
+    <div class="mt-12 rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 shadow-level-1">
+      <div class="flex items-center justify-between border-b border-hairline pb-4 mb-6">
+        <div>
+          <h3 class="text-base font-bold text-ink flex items-center gap-2">
+            <span>🎮</span> Recommended Free 2D Typing Games
+          </h3>
+          <p class="text-xs text-mute mt-0.5">Explore more action-packed typing games to level up your WPM.</p>
+        </div>
+        <a href="/arcade" class="text-xs font-mono font-bold text-link hover:underline hidden sm:inline">
+          View All Games →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono text-xs">
+        {relatedGames.map(rel => (
+          <a
+            href={`/game/${rel.id}`}
+            class="rounded-xl border border-hairline bg-canvas-soft p-4 shadow-sm hover:border-link hover:scale-[1.02] transition flex flex-col justify-between group"
+          >
+            <div>
+              <div class="text-2xl mb-1.5">{rel.icon}</div>
+              <h4 class="font-bold text-ink group-hover:text-link text-sm font-sans">{rel.title}</h4>
+              <p class="text-[11px] text-body mt-1 font-sans line-clamp-2">{rel.description}</p>
+            </div>
+            <div class="mt-3 flex items-center justify-between pt-2 border-t border-hairline/60 text-[10px] text-mute">
+              <span class="uppercase">{rel.categoryName}</span>
+              <span class="text-link font-bold">Play Free →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   </div>
 </Layout>
 
@@ -245,6 +314,11 @@ const gameStructuredData = [
     const modalXpText = document.getElementById('modal-xp-text');
     const modalNextBtn = document.getElementById('modal-next-btn');
     const modalRetryBtn = document.getElementById('modal-retry-btn');
+<<<<<<< HEAD
+=======
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalDismissBtn = document.getElementById('modal-dismiss-btn');
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     let currentLvl = 1;
 
@@ -399,6 +473,31 @@ const gameStructuredData = [
       try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
+<<<<<<< HEAD
+=======
+    modalCloseBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    modalDismissBtn?.addEventListener('click', () => {
+      gameModal?.classList.add('hidden');
+    });
+
+    // Close modal when clicking backdrop outside modal card
+    gameModal?.addEventListener('click', (e) => {
+      if (e.target === gameModal) {
+        gameModal.classList.add('hidden');
+      }
+    });
+
+    // Close modal on Escape key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && gameModal && !gameModal.classList.contains('hidden')) {
+        gameModal.classList.add('hidden');
+      }
+    });
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     function updateLvlBtnUI() {
       lvlBtns.forEach(btn => {
         const lvl = parseInt(btn.getAttribute('data-lvl-btn') || '1', 10);
@@ -471,15 +570,27 @@ const gameStructuredData = [
       try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
     });
 
+<<<<<<< HEAD
     // Click canvas to focus and resume audio (and trigger mobile soft keyboard if on mobile)
     canvas.addEventListener('click', () => {
+=======
+    // Focus canvas or mobile input on pointerdown / tap
+    const onCanvasTap = () => {
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
       soundEngine.initContext();
       if (window.innerWidth < 640 && mobileInput) {
         try { mobileInput.focus({ preventScroll: true }); } catch { mobileInput.focus(); }
       } else {
         try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
       }
+<<<<<<< HEAD
     });
+=======
+    };
+
+    canvas.addEventListener('pointerdown', onCanvasTap, { passive: true });
+    canvas.addEventListener('click', onCanvasTap);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     // Keyboard inputs to Canvas
     const onKeyDown = (e: KeyboardEvent) => {
@@ -518,10 +629,17 @@ const gameStructuredData = [
 
     window.addEventListener('keydown', onKeyDown);
 
+<<<<<<< HEAD
     // On-screen Virtual Keyboard buttons click handlers
     const virtualKeys = document.querySelectorAll('.virtual-key-btn');
     virtualKeys.forEach(btn => {
       btn.addEventListener('click', (e) => {
+=======
+    // On-screen Virtual Keyboard buttons click handlers (pointerdown for 0ms latency)
+    const virtualKeys = document.querySelectorAll('.virtual-key-btn');
+    virtualKeys.forEach(btn => {
+      btn.addEventListener('pointerdown', (e) => {
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
         e.preventDefault();
         soundEngine.initContext();
         if (gameInstance.state !== 'PLAYING') return;
@@ -537,14 +655,24 @@ const gameStructuredData = [
       });
     });
 
+<<<<<<< HEAD
     // Mobile Virtual Input binding
+=======
+    // Mobile Virtual Input binding (handles typing, swipe keyboards, GBoard suggestions, multiple chars)
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     mobileInput?.addEventListener('input', (e) => {
       const val = (e.target as HTMLInputElement).value;
       if (val.length > 0) {
         soundEngine.initContext();
         if (gameInstance.state === 'PLAYING') {
+<<<<<<< HEAD
           const lastChar = val[val.length - 1];
           gameInstance.handleInputChar(lastChar);
+=======
+          for (let i = 0; i < val.length; i++) {
+            gameInstance.handleInputChar(val[i]);
+          }
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
         }
         (e.target as HTMLInputElement).value = '';
       }

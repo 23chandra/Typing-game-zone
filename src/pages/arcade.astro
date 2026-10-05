@@ -6,6 +6,7 @@ import { ALL_GAMES } from '../lib/games/gameRegistry';
 // Filter Arcade, Action, and Fighting games
 const arcadeGames = ALL_GAMES.filter(g => ['arcade', 'action', 'fighting'].includes(g.category));
 
+<<<<<<< HEAD
 const arcadeKeywords = 'Typing game zone, 2d typing game online free, free typing game online, typing game online, 2d typing game, fast typing game online, arcade typing game, retro typing game, zombie typing game online';
 
 const arcadeStructuredData = {
@@ -26,6 +27,53 @@ const arcadeStructuredData = {
     }
   ]
 };
+=======
+const arcadeKeywords = 'Typing game zone, 2d typing game online free, free typing game online, typing game online, 2d typing game, fast typing game online, arcade typing game, retro typing game, zombie typing game online, retro arcade typing games, typing games for pc, 2d browser typing games, keyboard shooting games, fighting typing game online, action typing game free, typing combat simulator, arcade typing lessons, free retro games online';
+
+const arcadeStructuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    'itemListElement': [
+      {
+        '@type': 'ListItem',
+        'position': 1,
+        'name': 'Home',
+        'item': 'https://typinggamezone.com/'
+      },
+      {
+        '@type': 'ListItem',
+        'position': 2,
+        'name': 'Arcade Lounge',
+        'item': 'https://typinggamezone.com/arcade'
+      }
+    ]
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    'name': 'Retro Arcade Lounge — Play 2D Typing Games Online Free',
+    'description': 'Play free 2D arcade typing games online including retro space invaders, zombie defense, katana slicing, and martial arts combat.',
+    'url': 'https://typinggamezone.com/arcade',
+    'mainEntity': {
+      '@type': 'ItemList',
+      'numberOfItems': arcadeGames.length,
+      'itemListElement': arcadeGames.map((game, idx) => ({
+        '@type': 'ListItem',
+        'position': idx + 1,
+        'item': {
+          '@type': 'VideoGame',
+          'name': game.title,
+          'description': game.description,
+          'genre': [game.categoryName, 'Typing Game', 'Arcade'],
+          'gamePlatform': 'Web Browser',
+          'url': `https://typinggamezone.com/game/${game.id}`
+        }
+      }))
+    }
+  }
+];
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 ---
 
 <Layout
@@ -34,6 +82,7 @@ const arcadeStructuredData = {
   keywords={arcadeKeywords}
   structuredData={arcadeStructuredData}
 >
+<<<<<<< HEAD
   <div class="bg-canvas-soft text-ink min-h-screen py-12 sm:py-16">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       
@@ -55,6 +104,29 @@ const arcadeStructuredData = {
             <a
               href="/game/retro-invaders"
               class="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95"
+=======
+  <div class="bg-canvas-soft text-ink min-h-screen py-8 sm:py-16">
+    <div class="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8">
+      
+      <!-- Retro Arcade Header Banner -->
+      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-hairline bg-canvas p-5 xs:p-6 sm:p-12 mb-8 sm:mb-12 shadow-level-4 scanline-effect">
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 rounded-full bg-canvas-soft border border-hairline px-3 py-1 text-xs font-mono text-link mb-3 sm:mb-4 shadow-sm">
+            <span class="animate-ping h-2 w-2 rounded-full inline-block" style="background-color: var(--site-primary, #e2b714);"></span>
+            <span>COIN-OP READY • INSERT 100 WPM TO PLAY</span>
+          </div>
+          <h1 class="text-2xl xs:text-3xl sm:text-5xl font-bold tracking-tight text-ink leading-tight">
+            <span data-i18n="nav.arcade">The Retro Arcade Lounge</span>
+          </h1>
+          <p class="mt-2.5 sm:mt-4 text-xs sm:text-base text-body leading-relaxed" data-i18n="hero.subtitle">
+            Classic 8-bit space invaders, planetary orbital defenses, neon ninja blades, and Hadoken brawlers. Grab your keyboard and dominate the arcade high-score table.
+          </p>
+
+          <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3">
+            <a
+              href="/game/retro-invaders"
+              class="inline-flex items-center justify-center gap-2 rounded-full px-5 sm:px-6 py-2.5 text-xs font-bold shadow-level-2 transition hover:opacity-90 active:scale-95 min-h-[42px]"
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
               style="background-color: var(--site-primary, #e2b714); color: var(--site-on-primary, #323437);"
             >
               <span>Launch Retro Invaders</span>
@@ -64,7 +136,11 @@ const arcadeStructuredData = {
             </a>
             <a
               href="/game/street-fighter"
+<<<<<<< HEAD
               class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas-soft px-5 py-2.5 text-xs font-bold text-ink transition hover:bg-canvas active:scale-95"
+=======
+              class="inline-flex items-center justify-center gap-2 rounded-full border border-hairline bg-canvas-soft px-4 sm:px-5 py-2.5 text-xs font-bold text-ink transition hover:bg-canvas active:scale-95 min-h-[42px]"
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
             >
               <span>Street Fighter Typer 🥊</span>
             </a>
@@ -73,19 +149,80 @@ const arcadeStructuredData = {
       </div>
 
       <!-- Arcade Games Grid -->
+<<<<<<< HEAD
       <div class="mb-8 flex items-center justify-between border-b border-hairline pb-4">
         <div>
           <h2 class="text-xl font-bold text-ink">Arcade, Combat & Defense Titles ({arcadeGames.length})</h2>
+=======
+      <div class="mb-6 sm:mb-8 flex items-center justify-between border-b border-hairline pb-4">
+        <div>
+          <h2 class="text-lg sm:text-xl font-bold text-ink">Arcade, Combat & Defense Titles ({arcadeGames.length})</h2>
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
           <p class="text-xs text-mute mt-0.5">High intensity typing games with multi-phase bosses.</p>
         </div>
       </div>
 
+<<<<<<< HEAD
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-ink">
+=======
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 text-ink">
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
         {arcadeGames.map(game => (
           <GameCard game={game} />
         ))}
       </div>
 
+<<<<<<< HEAD
+=======
+      <!-- Comprehensive Arcade SEO Editorial & Strategy Guide -->
+      <article class="mt-16 sm:mt-24 rounded-3xl border border-hairline bg-canvas p-6 sm:p-10 shadow-level-2 text-body">
+        <header class="max-w-3xl mb-8">
+          <span class="text-xs font-mono font-bold uppercase tracking-wider text-link">ARCADE MASTERY GUIDE</span>
+          <h2 class="text-2xl sm:text-4xl font-bold text-ink mt-2 tracking-tight">
+            Mastering 2D Arcade Typing Games: Reflexes, Rhythm & Combat Velocity
+          </h2>
+          <p class="text-sm text-body mt-2 leading-relaxed">
+            Learn how arcade gamification transforms computer keyboard practice into an instinctive, high-speed neuromuscular reflex.
+          </p>
+        </header>
+
+        <div class="space-y-6 text-xs sm:text-sm leading-relaxed">
+          <p>
+            Traditional typing drills focus purely on copying text from a static prompt. In contrast, <strong>arcade typing games</strong> introduce high-stakes real-time pressure: enemy ships descend from the top of the canvas, mutant hordes breach barricades, and boss monsters execute lethal charge attacks unless countered by rapid, accurate keystrokes. This gamified stress mimics competitive gaming and fast-paced workplace communication, forcing your brain to automate touch typing without second-guessing finger positions.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+            <div class="rounded-2xl border border-hairline bg-canvas-soft p-5">
+              <span class="text-xl mb-2 block">🎯 Target Prioritization</span>
+              <h3 class="text-sm font-bold text-ink mb-1">Combat Word Recognition</h3>
+              <p class="text-mute text-xs">Train your peripheral vision to identify high-threat target words first, locking onto enemies before they reach your defensive perimeter.</p>
+            </div>
+
+            <div class="rounded-2xl border border-hairline bg-canvas-soft p-5">
+              <span class="text-xl mb-2 block">⚡ Combo Multipliers</span>
+              <h3 class="text-sm font-bold text-ink mb-1">Cadence Consistency</h3>
+              <p class="text-mute text-xs">Maintain steady rhythmic keystrokes without stopping. Consecutive typo-free words boost your score multipliers and unleash devastating screen-clearing super moves.</p>
+            </div>
+
+            <div class="rounded-2xl border border-hairline bg-canvas-soft p-5">
+              <span class="text-xl mb-2 block">🔊 Acoustic Feedback</span>
+              <h3 class="text-sm font-bold text-ink mb-1">Procedural Switch Audio</h3>
+              <p class="text-mute text-xs">Every keystroke triggers responsive mechanical switch acoustics, reinforcing accurate keystroke confirmation through authentic auditory cues.</p>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-hairline flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+            <span class="text-mute">Want to benchmark your raw words per minute before combat?</span>
+            <div class="flex items-center gap-2">
+              <a href="/speed-test" class="text-link hover:underline font-bold">Try Speed Test Bench →</a>
+              <span class="text-mute">•</span>
+              <a href="/practice" class="text-link hover:underline font-bold">Practice Home Row Drills →</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     </div>
   </div>
 </Layout>

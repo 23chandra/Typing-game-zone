@@ -23,7 +23,10 @@ export class WordTetrisGame extends BaseGame {
   private nextId: number = 1;
   private clearedCount: number = 0;
   private clearGoal: number = 12;
+<<<<<<< HEAD
   private colCount: number = 5;
+=======
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   private idleTime: number = 0;
 
   public getLevels(): GameLevelDef[] {
@@ -47,14 +50,46 @@ export class WordTetrisGame extends BaseGame {
     this.idleTime = 0;
   }
 
+<<<<<<< HEAD
+=======
+  private getColCount(): number {
+    return this.width < 460 ? 3 : this.width < 640 ? 4 : 5;
+  }
+
+  private getMarginX(): number {
+    return this.width < 460 ? 20 : 60;
+  }
+
+  private getColWidth(): number {
+    return (this.width - this.getMarginX() * 2) / this.getColCount();
+  }
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   private spawnBlock(): void {
     if (this.clearedCount + this.blocks.length >= this.clearGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'hard';
     const word = getRandomWord(cat);
+<<<<<<< HEAD
     const col = Math.floor(Math.random() * this.colCount);
     const colWidth = (this.width - 120) / this.colCount;
     const x = 60 + col * colWidth + colWidth / 2;
     const speed = (30 + this.currentLevel * 9) * (Math.random() * 0.25 + 0.9);
+=======
+    const colCount = this.getColCount();
+    const colWidth = this.getColWidth();
+    const marginX = this.getMarginX();
+
+    // Prefer columns that don't already have a block near the top to prevent overlap
+    const validCols = Array.from({ length: colCount }, (_, i) => i).filter(
+      c => !this.blocks.some(b => b.col === c && b.y < 110)
+    );
+    const col = validCols.length > 0
+      ? validCols[Math.floor(Math.random() * validCols.length)]
+      : Math.floor(Math.random() * colCount);
+
+    const x = marginX + col * colWidth + colWidth / 2;
+    const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.25 + 0.9);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     const colors = ['#00dfd8', '#ff0080', '#f9cb28', '#7928ca', '#0070f3'];
 
@@ -165,14 +200,24 @@ export class WordTetrisGame extends BaseGame {
     ctx.fillStyle = '#080612';
     ctx.fillRect(0, 0, this.width, this.height);
 
+<<<<<<< HEAD
     const colWidth = (this.width - 120) / this.colCount;
     const startX = 60;
+=======
+    const colCount = this.getColCount();
+    const colWidth = this.getColWidth();
+    const startX = this.getMarginX();
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     const groundY = this.height - 65;
 
     // Neon Column Grids
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1.2;
+<<<<<<< HEAD
     for (let c = 0; c <= this.colCount; c++) {
+=======
+    for (let c = 0; c <= colCount; c++) {
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
       const gx = startX + c * colWidth;
       ctx.beginPath();
       ctx.moveTo(gx, 35);
@@ -184,7 +229,11 @@ export class WordTetrisGame extends BaseGame {
     ctx.fillStyle = '#ff0080';
     ctx.shadowColor = '#ff0080';
     ctx.shadowBlur = 12;
+<<<<<<< HEAD
     ctx.fillRect(startX, groundY, this.width - 120, 4);
+=======
+    ctx.fillRect(startX, groundY, this.width - startX * 2, 4);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     ctx.shadowBlur = 0;
 
     // HUD Counter
