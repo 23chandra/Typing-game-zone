@@ -1,6 +1,19 @@
 {
+<<<<<<< HEAD
   "name": "TypingGameZone",
   "short_name": "TypingGame",
+=======
+  "name": "Typing Game Zone — Free 2D Typing Games Online & Speed Tests",
+  "short_name": "TypingGameZone",
+  "description": "Play 21 free 2D typing games online, benchmark typing speed in WPM, practice touch typing, and train keyboard reflexes.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#323437",
+  "theme_color": "#e2b714",
+  "categories": ["games", "education", "utilities"],
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -14,8 +27,12 @@
       "type": "image/png",
       "purpose": "maskable"
     }
+<<<<<<< HEAD
   ],
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "display": "standalone"
+=======
+  ]
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 }

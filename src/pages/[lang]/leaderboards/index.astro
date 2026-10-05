@@ -1,0 +1,16 @@
+---
+import LeaderboardsContent from '../../leaderboards.astro';
+import { SUPPORTED_LOCALES, type SupportedLocale } from '../../../i18n/config';
+
+export function getStaticPaths() {
+  return SUPPORTED_LOCALES.map(lang => ({
+    params: { lang },
+    props: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: SupportedLocale };
+const currentLocale = lang || 'en';
+---
+
+<LeaderboardsContent locale={currentLocale} />

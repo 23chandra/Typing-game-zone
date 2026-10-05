@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export interface FAQItem {
   id: string;
   question: string;
@@ -401,3 +402,10 @@ export function generateFAQSchema(items: FAQItem[] = FAQ_DATA) {
     }))
   };
 }
+=======
+/**
+ * Backward compatibility re-export
+ * All FAQ data, categories, and utilities are now modularly managed under `src/lib/faq/`
+ */
+export * from './faq';
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e

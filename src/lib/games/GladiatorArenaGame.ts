@@ -163,14 +163,26 @@ export class GladiatorArenaGame extends BaseGame {
       this.spawnTimer = this.spawnInterval;
     }
 
+<<<<<<< HEAD
+=======
+    const playerX = Math.max(50, Math.min(140, this.width * 0.16));
+
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
     for (let i = this.foes.length - 1; i >= 0; i--) {
       const f = this.foes[i];
       f.x -= f.speed * dt;
 
+<<<<<<< HEAD
       if (f.x <= 160) {
         this.takeDamage(20);
         this.spawnExplosion(f.x, f.y, '#ee0000', 25);
         this.addFloatingText(160, this.height - 180, 'ARENA BREACH! -20 HP', '#ee0000', 20);
+=======
+      if (f.x <= playerX + 25) {
+        this.takeDamage(20);
+        this.spawnExplosion(f.x, f.y, '#ee0000', 25);
+        this.addFloatingText(playerX, this.height - 180, 'ARENA BREACH! -20 HP', '#ee0000', 20);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
         if (this.currentTarget === f) this.currentTarget = null;
         this.foes.splice(i, 1);
       }
@@ -225,8 +237,14 @@ export class GladiatorArenaGame extends BaseGame {
     ctx.fillStyle = '#ffffff';
     ctx.fillText(`FOES VANQUISHED: ${this.defeatedCount} / ${this.defeatGoal}`, 30, 25);
 
+<<<<<<< HEAD
     // 2. Render Player Roman Gladiator (Left: x = 140)
     this.renderPlayerGladiator(ctx, 140, floorY);
+=======
+    // 2. Render Player Roman Gladiator (Left)
+    const playerX = Math.max(50, Math.min(140, this.width * 0.16));
+    this.renderPlayerGladiator(ctx, playerX, floorY);
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 
     // 3. Render Foes
     for (const foe of this.foes) {

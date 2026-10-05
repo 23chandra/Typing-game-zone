@@ -1,6 +1,16 @@
 # Robots.txt for Typing Game Zone (https://typinggamezone.com)
 User-agent: *
 Allow: /
+<<<<<<< HEAD
 
 # Sitemaps
+=======
+Disallow: /500
+Disallow: /505
+Disallow: /*/500
+Disallow: /*/505
+
+# Host & Sitemaps
+Host: https://typinggamezone.com
+>>>>>>> b518fd16ad909e014560532f5e3a8c72f63be92e
 Sitemap: https://typinggamezone.com/sitemap-index.xml
