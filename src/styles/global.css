@@ -251,12 +251,21 @@
   background: var(--site-primary, #e2b714);
 }
 
-/* Zero Horizontal Overflow Enforcer (Compatible with position: sticky) */
+/* Zero Horizontal Overflow Enforcer & Antialiased Fluid Rendering */
 html, body {
   overflow-x: clip;
   max-width: 100%;
   width: 100%;
   -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* High-Performance GPU Compositing for Canvases */
+canvas {
+  image-rendering: auto;
+  -webkit-touch-callout: none;
 }
 
 /* Touch & Mobile UX Optimizations */

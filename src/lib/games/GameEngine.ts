@@ -112,8 +112,15 @@ export abstract class BaseGame {
   protected floatingTexts: FloatingText[] = [];
   protected shakeDuration: number = 0;
   protected shakeIntensity: number = 0;
+  protected shakeTime: number = 0;
   protected flashDuration: number = 0;
   protected flashColor: string = 'rgba(255, 255, 255, 0.5)';
+
+  // Performance & Pacing Smoothing
+  protected smoothedDt: number = 0.016;
+  protected currentFont: string = '';
+  protected maxParticles: number = 160;
+  protected maxFloatingTexts: number = 16;
 
   // Viewport & Responsiveness
   public width: number = 800;
@@ -310,10 +317,22 @@ export abstract class BaseGame {
     });
   }
 
+  public setFont(fontStr: string): void {
+    if (this.currentFont !== fontStr) {
+      this.ctx.font = fontStr;
+      this.currentFont = fontStr;
+    }
+  }
+
   // Loop & Math
   private loop = (timestamp: number) => {
-    const dt = Math.min(0.1, (timestamp - this.lastTimestamp) / 1000);
+    // Clamp rawDt to between 1ms (1000fps) and 45ms (22fps floor) to prevent physics jumps
+    const rawDt = Math.max(0.001, Math.min(0.045, (timestamp - this.lastTimestamp) / 1000));
     this.lastTimestamp = timestamp;
+
+    // Smooth delta-time using an exponential moving average (EMA) to eliminate frame pacing micro-stutter
+    this.smoothedDt = this.smoothedDt * 0.78 + rawDt * 0.22;
+    const dt = this.smoothedDt;
 
     if (this.state === 'PLAYING') {
       this.update(dt);
@@ -336,7 +355,10 @@ export abstract class BaseGame {
       this.flashDuration -= dt;
     }
 
-    // Particles update
+    // Particles update & memory cap
+    if (this.particles.length > this.maxParticles) {
+      this.particles.splice(0, this.particles.length - this.maxParticles);
+    }
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
       p.x += p.vx * dt * 60;
@@ -349,7 +371,10 @@ export abstract class BaseGame {
       }
     }
 
-    // Floating text update
+    // Floating text update & memory cap
+    if (this.floatingTexts.length > this.maxFloatingTexts) {
+      this.floatingTexts.splice(0, this.floatingTexts.length - this.maxFloatingTexts);
+    }
     for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
       const ft = this.floatingTexts[i];
       ft.y += ft.vy * dt;
@@ -369,12 +394,15 @@ export abstract class BaseGame {
       this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     }
     this.ctx.save();
+    this.currentFont = ''; // Invalidate font cache per frame
 
-    // Apply Screen Shake
+    // Apply Smooth Harmonic Screen Shake (Punchy & Cinematic)
     if (this.shakeDuration > 0) {
-      const intensity = this.shakeIntensity * (this.shakeDuration / 0.3);
-      const offsetX = (Math.random() - 0.5) * intensity;
-      const offsetY = (Math.random() - 0.5) * intensity;
+      this.shakeTime += 0.016;
+      const progress = Math.max(0, this.shakeDuration / 0.3);
+      const intensity = this.shakeIntensity * (progress * progress);
+      const offsetX = (Math.sin(this.shakeTime * 55) * 0.75 + (Math.random() - 0.5) * 0.25) * intensity;
+      const offsetY = (Math.cos(this.shakeTime * 42) * 0.75 + (Math.random() - 0.5) * 0.25) * intensity * 0.6;
       this.ctx.translate(offsetX, offsetY);
     }
 
@@ -576,7 +604,7 @@ export abstract class BaseGame {
       ? Math.max(11, Math.min(fontSize, Math.round(fontSize * 0.84)))
       : fontSize;
 
-    ctx.font = `600 ${effectiveFontSize}px "Geist Mono", monospace`;
+    this.setFont(`600 ${effectiveFontSize}px "Geist Mono", monospace`);
     const wordWidth = ctx.measureText(word).width;
     const padX = this.width < 450 ? 6 : 8;
     const padY = this.width < 450 ? 4 : 5;

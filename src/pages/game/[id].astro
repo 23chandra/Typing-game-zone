@@ -93,7 +93,8 @@ const gameStructuredData = [
       <canvas
         id="game-canvas"
         data-game-id={game.id}
-        class="w-full aspect-[16/10] sm:aspect-auto sm:h-[420px] lg:h-[500px] min-h-[220px] max-h-[46vh] block cursor-crosshair focus:outline-none"
+        class="w-full aspect-[16/10] sm:aspect-auto sm:h-[420px] lg:h-[500px] min-h-[220px] max-h-[46vh] block cursor-crosshair focus:outline-none select-none"
+        style="transform: translateZ(0); backface-visibility: hidden; will-change: contents;"
         tabindex="0"
       ></canvas>
 

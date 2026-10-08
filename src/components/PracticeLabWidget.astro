@@ -283,17 +283,18 @@
     <div
       id="prac-words-viewport"
       class="relative h-32 sm:h-36 overflow-hidden rounded-2xl p-4 sm:p-6 text-xl sm:text-2xl leading-[1.8] tracking-wide cursor-text select-none border border-hairline transition-all shadow-inner"
-      style="background-color: var(--mt-sub-alt, #2c2e31); border-color: var(--site-hairline);"
+      style="background-color: var(--mt-sub-alt, #2c2e31); border-color: var(--site-hairline); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility;"
     >
       <div
         id="prac-words-wrapper"
         class="relative transition-transform duration-100 ease-out select-none flex flex-wrap"
+        style="will-change: transform; transform: translate3d(0, 0, 0);"
       >
         <!-- Caret Element -->
         <div
           id="prac-caret"
           class="absolute top-0 left-0 transition-all duration-75 ease-out pointer-events-none z-20 opacity-0"
-          style="background-color: var(--mt-caret, var(--mt-main, #e2b714)); width: 3px; border-radius: 9999px;"
+          style="background-color: var(--mt-caret, var(--mt-main, #e2b714)); width: 3px; border-radius: 9999px; will-change: transform; transform: translate3d(0, 0, 0);"
         ></div>
       </div>
 
