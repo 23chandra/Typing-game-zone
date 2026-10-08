@@ -78,12 +78,12 @@ export class DeepSeaGame extends BaseGame {
       : 'jellyfish';
 
     const baseSpeed = 25 + this.currentLevel * 7;
-    const speed = isBoss ? 18 : type === 'manta' ? baseSpeed * 1.3 : baseSpeed;
+    const speed = (isBoss ? 18 : type === 'manta' ? baseSpeed * 1.3 : baseSpeed) * this.speedScale;
 
     this.creatures.push({
       id: this.nextId++,
       x: this.width + 40,
-      y: Math.random() * (this.height - 180) + 90,
+      y: Math.random() * (this.height - 140) + 70,
       word,
       typedIndex: 0,
       speed,
@@ -94,8 +94,12 @@ export class DeepSeaGame extends BaseGame {
     });
   }
 
+  public get subX(): number {
+    return Math.max(60, this.width * 0.16);
+  }
+
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -107,14 +111,20 @@ export class DeepSeaGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 4);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.catalogCreature(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.creatures
       .filter(c => this.matchesFirstChar(c.word, char))
@@ -129,6 +139,7 @@ export class DeepSeaGame extends BaseGame {
       this.spawnSparks(match.x, match.y, '#50e3c2', 4);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.catalogCreature(match);
         this.currentTarget = null;
       }
@@ -140,11 +151,15 @@ export class DeepSeaGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private catalogCreature(creature: SeaCreature): void {
+    this.lastWordCompletedTime = Date.now();
     soundEngine.playChime();
     this.spawnExplosion(creature.x, creature.y, creature.color, 24);
     this.triggerScreenShake(0.12, 5);
@@ -186,12 +201,15 @@ export class DeepSeaGame extends BaseGame {
       c.x -= c.speed * dt;
       c.pulsePhase += dt * 3;
 
-      if (c.x <= 140) {
+      if (c.x <= this.subX + 30) {
         this.takeDamage(20);
         this.spawnExplosion(c.x, c.y, '#ee0000', 25);
-        this.addFloatingText(140, c.y - 25, 'HULL COLLISION! -20 HP', '#ee0000', 18);
+        this.addFloatingText(this.subX, c.y - 25, 'HULL COLLISION! -20 HP', '#ee0000', 18);
         if (this.currentTarget === c) this.currentTarget = null;
         this.creatures.splice(i, 1);
+        if (this.creaturesCataloged >= this.creatureGoal && this.creatures.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -229,22 +247,22 @@ export class DeepSeaGame extends BaseGame {
     ctx.fillStyle = '#00dfd8';
     ctx.fillText(`SPECIES CATALOGED: ${this.creaturesCataloged} / ${this.creatureGoal}`, 30, 25);
 
-    // 2. Render Submarine Searchlight Cone
+    // 2. Render Submarine Searchlight Cone (Responsive)
     ctx.save();
-    const lightCone = ctx.createRadialGradient(150, this.subY, 20, 360, this.subY, 220);
+    const lightCone = ctx.createRadialGradient(this.subX + 40, this.subY, 20, this.subX + 250, this.subY, 220);
     lightCone.addColorStop(0, 'rgba(249, 203, 40, 0.35)');
     lightCone.addColorStop(1, 'rgba(249, 203, 40, 0)');
     ctx.fillStyle = lightCone;
     ctx.beginPath();
-    ctx.moveTo(150, this.subY);
-    ctx.lineTo(400, this.subY - 80);
-    ctx.lineTo(400, this.subY + 80);
+    ctx.moveTo(this.subX + 40, this.subY);
+    ctx.lineTo(this.subX + 290, this.subY - 80);
+    ctx.lineTo(this.subX + 290, this.subY + 80);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
 
-    // 3. Render Deep Sea Submarine (Left: x = 110)
-    this.renderSubmarine(ctx, 110, this.subY);
+    // 3. Render Deep Sea Submarine (Responsive: subX)
+    this.renderSubmarine(ctx, this.subX, this.subY);
 
     // 4. Render Bioluminescent Fauna
     for (const creature of this.creatures) {

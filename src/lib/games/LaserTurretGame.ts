@@ -56,7 +56,7 @@ export class LaserTurretGame extends BaseGame {
     const word = getRandomWord(cat, this.lang);
     const angle = Math.random() * Math.PI * 2;
     const spawnDist = Math.hypot(this.width / 2, this.height / 2) + 25;
-    const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.3 + 0.85);
+    const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.3 + 0.85) * this.speedScale;
 
     this.drones.push({
       id: this.nextId++,
@@ -66,12 +66,12 @@ export class LaserTurretGame extends BaseGame {
       word,
       typedIndex: 0,
       color: this.currentLevel >= 4 ? '#ff0080' : '#00dfd8',
-      size: 18
+      size: (this.isMobile ? 14 : 18) * this.scaleRatio
     });
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -81,14 +81,20 @@ export class LaserTurretGame extends BaseGame {
         this.aimAndFire(this.currentTarget);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.destroyDrone(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.drones
       .filter(d => this.matchesFirstChar(d.word, char))
@@ -101,6 +107,7 @@ export class LaserTurretGame extends BaseGame {
       this.aimAndFire(match);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.destroyDrone(match);
         this.currentTarget = null;
       }
@@ -112,6 +119,9 @@ export class LaserTurretGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
@@ -130,6 +140,7 @@ export class LaserTurretGame extends BaseGame {
   }
 
   private destroyDrone(drone: RadialDrone): void {
+    this.lastWordCompletedTime = Date.now();
     soundEngine.playExplosion();
     const cx = this.width / 2;
     const cy = this.height / 2;
@@ -170,14 +181,18 @@ export class LaserTurretGame extends BaseGame {
       const d = this.drones[i];
       d.distance -= d.speed * dt;
 
-      if (d.distance <= 40) {
+      const breachDist = this.isMobile ? 26 : 40;
+      if (d.distance <= breachDist) {
         this.takeDamage(20);
         const tx = cx + Math.cos(d.angle) * d.distance;
         const ty = cy + Math.sin(d.angle) * d.distance;
         this.spawnExplosion(tx, ty, '#ee0000', 30);
-        this.addFloatingText(cx, cy - 60, 'TURRET HULL DAMAGE! -20 HP', '#ee0000', 20);
+        this.addFloatingText(cx, cy - (this.isMobile ? 40 : 60), 'TURRET HULL DAMAGE! -20 HP', '#ee0000', 20);
         if (this.currentTarget === d) this.currentTarget = null;
         this.drones.splice(i, 1);
+        if (this.wordsKilled >= this.wordsGoal && this.drones.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -193,29 +208,30 @@ export class LaserTurretGame extends BaseGame {
     // Radial Holographic Range Rings
     ctx.strokeStyle = 'rgba(0, 223, 216, 0.16)';
     ctx.lineWidth = 1.2;
-    [65, 125, 185, 245, 305].forEach(r => {
+    const maxR = Math.min(this.width, this.height) * 0.45;
+    [0.25, 0.5, 0.75, 1.0].forEach(frac => {
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.arc(cx, cy, maxR * frac, 0, Math.PI * 2);
       ctx.stroke();
     });
 
     // Crosshairs
     ctx.beginPath();
-    ctx.moveTo(cx - 320, cy);
-    ctx.lineTo(cx + 320, cy);
-    ctx.moveTo(cx, cy - 320);
-    ctx.lineTo(cx, cy + 320);
+    ctx.moveTo(cx - maxR * 1.1, cy);
+    ctx.lineTo(cx + maxR * 1.1, cy);
+    ctx.moveTo(cx, cy - maxR * 1.1);
+    ctx.lineTo(cx, cy + maxR * 1.1);
     ctx.stroke();
 
     // Rotating Radar Sweep Beam
     ctx.save();
-    const sweepGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 320);
+    const sweepGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, maxR * 1.1);
     sweepGrad.addColorStop(0, 'rgba(0, 223, 216, 0.35)');
     sweepGrad.addColorStop(1, 'rgba(0, 223, 216, 0)');
     ctx.fillStyle = sweepGrad;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.arc(cx, cy, 320, this.radarScanAngle - 0.35, this.radarScanAngle);
+    ctx.arc(cx, cy, maxR * 1.1, this.radarScanAngle - 0.35, this.radarScanAngle);
     ctx.closePath();
     ctx.fill();
     ctx.restore();
@@ -241,13 +257,14 @@ export class LaserTurretGame extends BaseGame {
     // 3. Heavy Railgun Central Base & Turret
     ctx.save();
     // Central Armored Base Ring
+    const baseR = (this.isMobile ? 22 : 30);
     ctx.fillStyle = '#111827';
     ctx.strokeStyle = '#00dfd8';
     ctx.lineWidth = 3;
     ctx.shadowColor = '#00dfd8';
     ctx.shadowBlur = 14;
     ctx.beginPath();
-    ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+    ctx.arc(cx, cy, baseR, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
     ctx.shadowBlur = 0;
@@ -255,6 +272,7 @@ export class LaserTurretGame extends BaseGame {
     // Rotating Railgun Dual Barrels
     ctx.translate(cx, cy);
     ctx.rotate(this.turretAngle);
+    ctx.scale(this.scaleRatio, this.scaleRatio);
 
     // Twin Magnetic Accelerator Barrels
     ctx.fillStyle = '#ffffff';

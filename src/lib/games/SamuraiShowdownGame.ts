@@ -76,12 +76,12 @@ export class SamuraiShowdownGame extends BaseGame {
       // False start penalty
       this.recordKeystroke(false);
       this.takeDamage(25);
-      this.addFloatingText(220, this.height * 0.45, 'FALSE START! FOUL!', '#ee0000', 22);
+      this.addFloatingText(this.width / 2, this.height * 0.45, 'FALSE START! FOUL!', '#ee0000', 22);
       return;
     }
 
     if (this.phase === 'DRAW_SIGNAL') {
-      soundEngine.playKey();
+      soundEngine.playKey(char === ' ');
       const expected = this.drawWord[this.typedIndex];
       if (expected && this.matchesChar(char, expected)) {
         this.typedIndex++;
@@ -89,6 +89,7 @@ export class SamuraiShowdownGame extends BaseGame {
         this.spawnSparks(this.width / 2, this.height * 0.44, '#50e3c2', 5);
 
         if (this.typedIndex >= this.drawWord.length) {
+          this.lastWordCompletedTime = Date.now();
           const reactionTime = (Date.now() - this.reactionStartTime) / 1000;
           if (reactionTime <= this.opponentReactionTime) {
             this.executeSlash(true, reactionTime);
@@ -97,6 +98,9 @@ export class SamuraiShowdownGame extends BaseGame {
           }
         }
       } else {
+        if (char === ' ' && (this.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
     }
@@ -121,15 +125,23 @@ export class SamuraiShowdownGame extends BaseGame {
       this.score += 150;
       this.triggerFlash(0.18, 'rgba(255, 255, 255, 0.85)');
       this.triggerScreenShake(0.35, 12);
-      this.spawnExplosion(this.width - 220, this.height - 120, '#ff0080', 35);
+      this.spawnExplosion(this.oppX, this.height - 120, '#ff0080', 35);
       this.addFloatingText(this.width / 2, this.height * 0.3, `⚔️ ONE CUT VICTORY! (${reactionSec.toFixed(2)}s)`, '#50e3c2', 26);
     } else {
       this.takeDamage(35);
       this.triggerFlash(0.2, 'rgba(238, 0, 0, 0.6)');
       this.triggerScreenShake(0.35, 14);
-      this.spawnExplosion(220, this.height - 120, '#ee0000', 35);
+      this.spawnExplosion(this.playerX, this.height - 120, '#ee0000', 35);
       this.addFloatingText(this.width / 2, this.height * 0.3, `💀 TOO SLOW! (${reactionSec.toFixed(2)}s vs ${this.opponentReactionTime.toFixed(2)}s)`, '#ee0000', 24);
     }
+  }
+
+  private get playerX(): number {
+    return Math.max(65, this.width * 0.22);
+  }
+
+  private get oppX(): number {
+    return Math.min(this.width - 65, this.width * 0.78);
   }
 
   public updateGame(dt: number): void {
@@ -254,28 +266,30 @@ export class SamuraiShowdownGame extends BaseGame {
       ctx.stroke();
     }
 
-    // Telemetry HUD Bar (Top Letterbox)
-    ctx.font = 'bold 12px "Geist Mono", monospace';
+    // Telemetry HUD Bar (Top Letterbox - Responsive)
+    ctx.font = `bold ${this.width < 450 ? 10 : 12}px "Geist Mono", monospace`;
     ctx.fillStyle = '#f9cb28';
-    ctx.fillText(`DUELS WON: ${this.roundWins} / ${this.roundGoal}`, 30, 21);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(`OPPONENT: ${opp.name} (${opp.title})`, 220, 21);
+    ctx.fillText(`DUELS: ${this.roundWins}/${this.roundGoal}`, 16, 20);
+    if (this.width >= 450) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`VS: ${opp.name}`, this.width * 0.4, 20);
+    }
     ctx.fillStyle = '#50e3c2';
     ctx.textAlign = 'right';
-    ctx.fillText(`PARRY WINDOW: ${this.opponentReactionTime.toFixed(2)}s`, this.width - 30, 21);
+    ctx.fillText(`${this.opponentReactionTime.toFixed(2)}s`, this.width - 16, 20);
     ctx.textAlign = 'left';
 
-    // 2. Render Player Samurai (Left: x ~ 210)
-    this.renderPlayerSamurai(ctx, 210, floorY);
+    // 2. Render Player Samurai (Responsive: playerX)
+    this.renderPlayerSamurai(ctx, this.playerX, floorY);
 
-    // 3. Render Opponent Samurai (Right: x ~ width - 210)
-    this.renderOpponentSamurai(ctx, this.width - 210, floorY, opp);
+    // 3. Render Opponent Samurai (Responsive: oppX)
+    this.renderOpponentSamurai(ctx, this.oppX, floorY, opp);
 
     // 4. Standoff & Draw Prompts
     if (this.phase === 'STANDOFF') {
       ctx.save();
       ctx.textAlign = 'center';
-      ctx.font = '600 18px "Geist", sans-serif';
+      ctx.font = `600 ${this.width < 450 ? 14 : 18}px "Geist", sans-serif`;
       ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
       ctx.fillText('... Steady your blade ... Wait for the signal ...', this.width / 2, this.height * 0.35);
       ctx.restore();
@@ -283,7 +297,7 @@ export class SamuraiShowdownGame extends BaseGame {
       // Big Calligraphy "DRAW!"
       ctx.save();
       ctx.textAlign = 'center';
-      ctx.font = 'bold 36px "Geist", sans-serif';
+      ctx.font = `bold ${this.width < 450 ? 26 : 36}px "Geist", sans-serif`;
       ctx.fillStyle = '#f9cb28';
       ctx.shadowColor = '#ff0080';
       ctx.shadowBlur = 16;
@@ -291,12 +305,12 @@ export class SamuraiShowdownGame extends BaseGame {
       ctx.restore();
 
       // Word Box Prompt
-      this.drawWordBadge(ctx, this.drawWord, this.typedIndex, this.width / 2, this.height * 0.44, true, '#50e3c2', 26);
+      this.drawWordBadge(ctx, this.drawWord, this.typedIndex, this.width / 2, this.height * 0.44, true, '#50e3c2', this.width < 450 ? 16 : 24);
 
       // Remaining Reaction Countdown Bar
       const elapsed = (Date.now() - this.reactionStartTime) / 1000;
       const timeRemainingPct = Math.max(0, 1 - elapsed / this.opponentReactionTime);
-      const barW = 280;
+      const barW = Math.min(280, this.width - 40);
       const barX = this.width / 2 - barW / 2;
       const barY = this.height * 0.44 + 28;
 

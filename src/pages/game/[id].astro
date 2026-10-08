@@ -66,47 +66,47 @@ const gameStructuredData = [
   keywords={gameKeywords}
   structuredData={gameStructuredData}
 >
-  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-2 sm:py-6">
     
     <!-- Top Breadcrumb & Tag -->
-    <div class="mb-4 flex items-center justify-between">
-      <nav class="flex items-center gap-2 text-xs font-mono text-mute">
+    <div class="mb-2 sm:mb-4 flex items-center justify-between">
+      <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-mono text-mute truncate max-w-[200px] xs:max-w-none">
         <a href="/" class="hover:text-ink transition" data-i18n="nav.home">Home</a>
         <span>/</span>
         <a href={`/?cat=${game.category}`} class="hover:text-ink transition uppercase" data-i18n={`cat.${game.category}`}>{game.categoryName}</a>
         <span>/</span>
-        <span class="text-ink font-semibold" data-i18n={`game.${game.id}.title`}>{game.title}</span>
+        <span class="text-ink font-semibold truncate" data-i18n={`game.${game.id}.title`}>{game.title}</span>
       </nav>
 
-      <span class="rounded-full bg-canvas border border-hairline px-3 py-1 text-xs font-mono text-body shadow-level-1">
-        <span data-i18n={`diff.${game.difficulty.toLowerCase()}`}>{game.difficulty}</span> • 5 Levels
+      <span class="rounded-full bg-canvas border border-hairline px-2.5 py-0.5 sm:px-3 sm:py-1 text-[11px] sm:text-xs font-mono text-body shadow-level-1 flex-shrink-0">
+        <span data-i18n={`diff.${game.difficulty.toLowerCase()}`}>{game.difficulty}</span> • 5 Tiers
       </span>
     </div>
 
     <!-- Telemetry HUD -->
-    <div class="mb-4">
+    <div class="mb-2 sm:mb-4">
       <GameHUD gameTitle={game.title} gameId={game.id} />
     </div>
 
     <!-- Canvas Game Container -->
-    <div class="relative w-full overflow-hidden rounded-2xl border border-hairline bg-[#0a0d14] shadow-level-4">
+    <div class="relative w-full overflow-hidden rounded-2xl border border-hairline bg-[#0a0d14] shadow-level-4 touch-none">
       <canvas
         id="game-canvas"
         data-game-id={game.id}
-        class="w-full h-[260px] xs:h-[300px] sm:h-[420px] lg:h-[500px] block cursor-crosshair focus:outline-none"
+        class="w-full aspect-[16/10] sm:aspect-auto sm:h-[420px] lg:h-[500px] min-h-[220px] max-h-[46vh] block cursor-crosshair focus:outline-none"
         tabindex="0"
       ></canvas>
 
       <!-- Pause Overlay -->
-      <div id="pause-overlay" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm hidden font-mono">
-        <div class="text-4xl mb-2">⏸️</div>
+      <div id="pause-overlay" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/75 backdrop-blur-sm hidden font-mono cursor-pointer select-none">
+        <div class="text-4xl mb-2 animate-pulse">⏸️</div>
         <h3 class="text-2xl font-bold text-white tracking-tight" data-i18n="game.pause">GAME PAUSED</h3>
-        <p class="text-xs text-neutral-400 mt-1">Press Space, Enter, or Click Resume</p>
+        <p class="text-xs text-neutral-300 mt-2 text-center px-4">Click anywhere or press any key to Resume</p>
         <button
           id="resume-btn"
-          class="mt-4 rounded-full bg-cyan px-6 py-2 text-xs font-bold text-ink hover:opacity-90 transition cursor-pointer"
+          class="mt-4 rounded-full bg-cyan px-6 py-2.5 text-xs font-bold text-ink hover:opacity-90 active:scale-95 transition cursor-pointer shadow-level-2"
         >
-          <span data-i18n="game.resume">Resume Game</span>
+          <span data-i18n="game.resume">▶ Resume Game</span>
         </button>
       </div>
     </div>
@@ -224,8 +224,8 @@ const gameStructuredData = [
     const hudLevelTag = document.getElementById('hud-level-tag');
     const hudTimeTag = document.getElementById('hud-time-tag');
     const pauseOverlay = document.getElementById('pause-overlay');
-    const pauseBtn = document.getElementById('hud-pause-btn');
-    const restartBtn = document.getElementById('hud-restart-btn');
+    const pauseBtns = document.querySelectorAll('#hud-pause-btn, #hud-pause-btn-desktop');
+    const restartBtns = document.querySelectorAll('#hud-restart-btn, #hud-restart-btn-desktop');
     const resumeBtn = document.getElementById('resume-btn');
     const lvlBtns = document.querySelectorAll('.lvl-select-btn');
     const mobileInput = document.getElementById('mobile-game-input') as HTMLInputElement | null;
@@ -276,12 +276,29 @@ const gameStructuredData = [
     };
 
     // Hook game state transitions
-    gameInstance.onStateChange = (state: GameState, stats: GameStats) => {
-      if (state === 'PAUSED') {
+    const updatePauseUI = (isPaused: boolean) => {
+      if (isPaused) {
         pauseOverlay?.classList.remove('hidden');
       } else {
         pauseOverlay?.classList.add('hidden');
       }
+      pauseBtns.forEach(btn => {
+        btn.setAttribute('title', isPaused ? 'Resume Game' : 'Pause Game');
+        const icon = btn.querySelector('svg');
+        if (icon) {
+          if (isPaused) {
+            // Play icon
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />';
+          } else {
+            // Pause icon
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />';
+          }
+        }
+      });
+    };
+
+    gameInstance.onStateChange = (state: GameState, stats: GameStats) => {
+      updatePauseUI(state === 'PAUSED');
 
       if (state === 'LEVEL_CLEARED' || state === 'VICTORY' || state === 'GAME_OVER') {
         showModal(state, stats);
@@ -447,15 +464,15 @@ const gameStructuredData = [
       });
     });
 
-    // Quick Sound Toggle Button on HUD
-    const soundToggleBtn = document.getElementById('hud-sound-toggle');
-    const soundIconEl = document.getElementById('hud-sound-icon');
-    const soundNameEl = document.getElementById('hud-sound-name');
+    // Quick Sound Toggle Button on HUD (Mobile & Desktop)
+    const soundToggleBtns = document.querySelectorAll('#hud-sound-toggle, #hud-sound-toggle-desktop');
+    const soundIconEls = document.querySelectorAll('#hud-sound-icon, #hud-sound-icon-desktop');
+    const soundNameEls = document.querySelectorAll('#hud-sound-name, #hud-sound-name-desktop');
 
     const updateSoundToggleUI = () => {
       const cur = soundEngine.getSwitch();
       const isMuted = soundEngine.getIsMuted() || cur === 'off';
-      if (soundIconEl) soundIconEl.textContent = isMuted ? '🔇' : '🔊';
+      soundIconEls.forEach(el => { el.textContent = isMuted ? '🔇' : '🔊'; });
       const labels: Record<string, string> = {
         clicky: 'Clicky',
         thock: 'Thock',
@@ -465,42 +482,62 @@ const gameStructuredData = [
         beep: 'Digital',
         off: 'Muted'
       };
-      if (soundNameEl) soundNameEl.textContent = labels[cur] || 'Sound';
+      soundNameEls.forEach(el => { el.textContent = labels[cur] || 'Sound'; });
     };
 
     updateSoundToggleUI();
     window.addEventListener('typing:sound-change', updateSoundToggleUI);
 
-    soundToggleBtn?.addEventListener('click', () => {
-      const cycle: ('clicky' | 'thock' | 'linear' | 'typewriter' | 'pop' | 'beep' | 'off')[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
-      const cur = soundEngine.getSwitch();
-      const nextIdx = (cycle.indexOf(cur as any) + 1) % cycle.length;
-      const nextSwitch = cycle[nextIdx];
-      soundEngine.setSwitch(nextSwitch);
-      soundEngine.initContext();
-      soundEngine.playKey(false, nextSwitch === 'typewriter');
-      updateSoundToggleUI();
+    soundToggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cycle: ('clicky' | 'thock' | 'linear' | 'typewriter' | 'pop' | 'beep' | 'off')[] = ['clicky', 'thock', 'linear', 'typewriter', 'pop', 'beep', 'off'];
+        const cur = soundEngine.getSwitch();
+        const nextIdx = (cycle.indexOf(cur as any) + 1) % cycle.length;
+        const nextSwitch = cycle[nextIdx];
+        soundEngine.setSwitch(nextSwitch);
+        soundEngine.initContext();
+        soundEngine.playKey(false, nextSwitch === 'typewriter');
+        updateSoundToggleUI();
+      });
     });
 
     // Pause / Resume / Restart
-    pauseBtn?.addEventListener('click', () => {
-      if (gameInstance.state === 'PLAYING') gameInstance.pause();
-      else if (gameInstance.state === 'PAUSED') gameInstance.resume();
+    pauseBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (gameInstance.state === 'PLAYING') gameInstance.pause();
+        else if (gameInstance.state === 'PAUSED') gameInstance.resume();
+      });
     });
 
-    resumeBtn?.addEventListener('click', () => {
-      gameInstance.resume();
+    const resumeGame = () => {
+      if (gameInstance.state === 'PAUSED') {
+        gameInstance.resume();
+      }
       try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+    };
+
+    resumeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      resumeGame();
     });
 
-    restartBtn?.addEventListener('click', () => {
-      gameInstance.start(currentLvl);
-      try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+    pauseOverlay?.addEventListener('click', () => {
+      resumeGame();
     });
 
-    // Click canvas to focus and resume audio (and trigger mobile soft keyboard if on mobile)
+    restartBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        gameInstance.start(currentLvl);
+        try { canvas.focus({ preventScroll: true }); } catch { canvas.focus(); }
+      });
+    });
+
+    // Click canvas to focus, resume audio, and unpause if paused
     canvas.addEventListener('click', () => {
       soundEngine.initContext();
+      if (gameInstance.state === 'PAUSED') {
+        gameInstance.resume();
+      }
       if (window.innerWidth < 640 && mobileInput) {
         try { mobileInput.focus({ preventScroll: true }); } catch { mobileInput.focus(); }
       } else {
@@ -526,10 +563,16 @@ const gameStructuredData = [
       }
 
       if (gameInstance.state === 'PAUSED') {
-        if (e.key === ' ' || e.key === 'Enter') {
-          gameInstance.resume();
-          return;
+        // Any valid key unpauses and immediately processes the input
+        gameInstance.resume();
+        if (e.key === 'Backspace') {
+          gameInstance.handleBackspaceKey();
+          e.preventDefault();
+        } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          gameInstance.handleInputChar(e.key);
+          if (e.key === ' ') e.preventDefault();
         }
+        return;
       }
 
       if (gameInstance.state === 'PLAYING') {
@@ -550,6 +593,17 @@ const gameStructuredData = [
       const key = e.detail?.key;
       if (!key) return;
       soundEngine.initContext();
+
+      if (key === 'Escape' || key === 'ESC') {
+        if (gameInstance.state === 'PLAYING') gameInstance.pause();
+        else if (gameInstance.state === 'PAUSED') gameInstance.resume();
+        return;
+      }
+
+      if (gameInstance.state === 'PAUSED') {
+        gameInstance.resume();
+      }
+
       if (gameInstance.state !== 'PLAYING') return;
 
       if (key === 'Backspace' || key === 'backspace') {
@@ -560,11 +614,25 @@ const gameStructuredData = [
     };
     window.addEventListener('typing:virtual-key', onVirtualKey);
 
+    // Dynamic viewport and screen orientation resize handling
+    const onViewportResize = () => {
+      if (gameInstance) {
+        gameInstance.handleResize();
+      }
+    };
+    window.addEventListener('resize', onViewportResize);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', onViewportResize);
+    }
+
     // Mobile Virtual Input binding
     mobileInput?.addEventListener('input', (e) => {
       const val = (e.target as HTMLInputElement).value;
       if (val.length > 0) {
         soundEngine.initContext();
+        if (gameInstance.state === 'PAUSED') {
+          gameInstance.resume();
+        }
         if (gameInstance.state === 'PLAYING') {
           for (const char of val) {
             gameInstance.handleInputChar(char);
@@ -578,6 +646,9 @@ const gameStructuredData = [
     mobileInput?.addEventListener('keydown', (e) => {
       if (e.key === 'Backspace') {
         soundEngine.initContext();
+        if (gameInstance.state === 'PAUSED') {
+          gameInstance.resume();
+        }
         if (gameInstance.state === 'PLAYING') {
           gameInstance.handleBackspaceKey();
         }
@@ -607,6 +678,10 @@ const gameStructuredData = [
       window.removeEventListener('typing:sound-change', updateSoundToggleUI);
       window.removeEventListener('typing:virtual-key', onVirtualKey);
       window.removeEventListener('typing:language-change', onLanguageChange);
+      window.removeEventListener('resize', onViewportResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', onViewportResize);
+      }
     };
 
     // Auto start level 1 and focus

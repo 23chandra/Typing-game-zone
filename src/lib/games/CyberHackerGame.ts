@@ -69,11 +69,13 @@ export class CyberHackerGame extends BaseGame {
 
   private spawnNode(): void {
     if (this.breachedCount + this.nodes.length >= this.breachGoal) return;
-    const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'cyber' : 'hard';
-    const word = getRandomWord(cat, this.lang);
-    const x = Math.random() * (this.width - 240) + 120;
-    const y = Math.random() * (this.height - 200) + 80;
+    const minX = Math.max(50, this.width * 0.12);
+    const maxX = Math.min(this.width - 50, this.width * 0.88);
+    const x = Math.random() * (maxX - minX) + minX;
+    const y = Math.random() * (this.height - 150) + 65;
     const limit = Math.max(4.0, 9.0 - this.currentLevel * 0.85);
+    const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'technology' : 'hard';
+    const word = getRandomWord(cat, this.lang);
 
     this.nodes.push({
       id: this.nextId++,
@@ -90,7 +92,7 @@ export class CyberHackerGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -100,14 +102,20 @@ export class CyberHackerGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 4);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.breachNode(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.nodes
       .filter(n => this.matchesFirstChar(n.word, char))
@@ -120,6 +128,7 @@ export class CyberHackerGame extends BaseGame {
       this.spawnSparks(match.x, match.y, '#50e3c2', 4);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.breachNode(match);
         this.currentTarget = null;
       }
@@ -131,11 +140,15 @@ export class CyberHackerGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private breachNode(node: SecurityNode): void {
+    this.lastWordCompletedTime = Date.now();
     soundEngine.playChime();
     this.spawnExplosion(node.x, node.y, '#50e3c2', 22);
     this.traceProgress = Math.max(0, this.traceProgress - 10);
@@ -193,6 +206,9 @@ export class CyberHackerGame extends BaseGame {
         this.addFloatingText(n.x, n.y - 25, 'ICE TRACER LOCKED! +15% ICE', '#ee0000', 18);
         if (this.currentTarget === n) this.currentTarget = null;
         this.nodes.splice(i, 1);
+        if (this.breachedCount >= this.breachGoal && this.nodes.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -236,40 +252,42 @@ export class CyberHackerGame extends BaseGame {
     }
     ctx.setLineDash([]);
 
-    // 2. High-Tech ICE Trace Top Bar
+    // 2. High-Tech ICE Trace Top Bar (Responsive)
+    const barPad = this.width < 450 ? 12 : 30;
     ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-    ctx.fillRect(30, 16, this.width - 60, 24);
-    const traceW = (this.width - 64) * (this.traceProgress / 100);
-    const traceGrad = ctx.createLinearGradient(32, 0, 32 + traceW, 0);
+    ctx.fillRect(barPad, 12, this.width - barPad * 2, 22);
+    const traceW = (this.width - barPad * 2 - 4) * (this.traceProgress / 100);
+    const traceGrad = ctx.createLinearGradient(barPad + 2, 0, barPad + 2 + traceW, 0);
     traceGrad.addColorStop(0, '#00dfd8');
     traceGrad.addColorStop(0.6, '#f9cb28');
     traceGrad.addColorStop(1, '#ee0000');
     ctx.fillStyle = traceGrad;
-    ctx.fillRect(32, 18, traceW, 20);
+    ctx.fillRect(barPad + 2, 14, traceW, 18);
 
-    ctx.font = 'bold 11px "Geist Mono", monospace';
+    ctx.font = `bold ${this.width < 450 ? 9 : 11}px "Geist Mono", monospace`;
     ctx.fillStyle = '#ffffff';
     ctx.fillText(
-      `SECURITY ICE TRACE: ${Math.floor(this.traceProgress)}% [NODES BREACHED: ${this.breachedCount}/${this.breachGoal}]`,
-      44,
-      32
+      this.width < 450 ? `ICE: ${Math.floor(this.traceProgress)}% [${this.breachedCount}/${this.breachGoal}]` : `SECURITY ICE TRACE: ${Math.floor(this.traceProgress)}% [NODES BREACHED: ${this.breachedCount}/${this.breachGoal}]`,
+      barPad + 10,
+      27
     );
 
-    // 3. Cyberdeck Terminal Console at Bottom
-    const deskY = this.height - 45;
+    // 3. Cyberdeck Terminal Console at Bottom (Responsive)
+    const deskY = this.height - Math.min(45, this.height * 0.15);
     ctx.fillStyle = '#09140e';
-    ctx.fillRect(0, deskY, this.width, 45);
+    ctx.fillRect(0, deskY, this.width, this.height - deskY);
     ctx.strokeStyle = '#00dfd8';
     ctx.lineWidth = 2;
-    ctx.strokeRect(0, deskY, this.width, 45);
+    ctx.strokeRect(0, deskY, this.width, this.height - deskY);
 
     // Animated Oscilloscope Sine Wave on deck
     ctx.strokeStyle = '#50e3c2';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    for (let x = 40; x < 240; x += 3) {
-      const y = deskY + 22 + Math.sin(x * 0.08 + this.idleTime * 8) * 8;
-      if (x === 40) ctx.moveTo(x, y);
+    const oscEnd = Math.min(240, this.width - 40);
+    for (let x = 20; x < oscEnd; x += 3) {
+      const y = deskY + 18 + Math.sin(x * 0.08 + this.idleTime * 8) * 6;
+      if (x === 20) ctx.moveTo(x, y);
       else ctx.lineTo(x, y);
     }
     ctx.stroke();

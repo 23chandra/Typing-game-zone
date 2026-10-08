@@ -48,26 +48,30 @@ export class SkyClimberGame extends BaseGame {
     this.cameraY = 0;
     this.idleTime = 0;
 
+    const spacingY = Math.min(115, Math.max(75, this.height * 0.25));
+    const minInitX = Math.max(50, this.width * 0.24);
+    const maxInitX = Math.min(this.width - 50, this.width * 0.76);
+
     // Spawn initial stack of clouds
     for (let i = 0; i < 4; i++) {
       const cat = levelNumber === 1 ? 'easy' : levelNumber <= 3 ? 'medium' : 'space';
       const word = getRandomWord(cat, this.lang);
-      const cx = (i % 2 === 0 ? 0.32 : 0.68) * this.width + (Math.random() - 0.5) * 80;
+      const cx = (i % 2 === 0 ? minInitX : maxInitX) + (Math.random() - 0.5) * 30;
       this.clouds.push({
         id: this.nextId++,
         x: cx,
-        y: this.height - 190 - i * 115,
+        y: this.height - 180 - i * spacingY,
         word,
         typedIndex: 0,
         cleared: false,
         type: Math.random() < 0.25 ? 'star' : 'normal',
-        size: 55
+        size: 50 * this.scaleRatio
       });
     }
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -77,14 +81,20 @@ export class SkyClimberGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y - this.cameraY, '#50e3c2', 4);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.bounceToCloud(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.clouds
       .filter(c => !c.cleared && this.matchesFirstChar(c.word, char))
@@ -97,6 +107,7 @@ export class SkyClimberGame extends BaseGame {
       this.spawnSparks(match.x, match.y - this.cameraY, '#50e3c2', 4);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.bounceToCloud(match);
         this.currentTarget = null;
       }
@@ -108,11 +119,15 @@ export class SkyClimberGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private bounceToCloud(cloud: CloudPlatform): void {
+    this.lastWordCompletedTime = Date.now();
     cloud.cleared = true;
     soundEngine.playChime();
     this.climberX = cloud.x;
@@ -126,17 +141,20 @@ export class SkyClimberGame extends BaseGame {
 
     // Spawn next cloud higher up
     if (this.altitude + this.clouds.filter(c => !c.cleared).length < this.goalAltitude + 2) {
-      const highestY = this.clouds.length > 0 ? Math.min(...this.clouds.map(c => c.y)) : this.height - 190;
+      const spacingY = Math.min(115, Math.max(75, this.height * 0.25));
+      const highestY = this.clouds.length > 0 ? Math.min(...this.clouds.map(c => c.y)) : this.height - 180;
       const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
+      const minX = Math.max(50, this.width * 0.2);
+      const maxX = Math.min(this.width - 50, this.width * 0.8);
       this.clouds.push({
         id: this.nextId++,
-        x: Math.random() * (this.width - 240) + 120,
-        y: highestY - 115,
+        x: Math.random() * (maxX - minX) + minX,
+        y: highestY - spacingY,
         word: getRandomWord(cat, this.lang),
         typedIndex: 0,
         cleared: false,
         type: Math.random() < 0.25 ? 'star' : 'normal',
-        size: 55
+        size: 50 * this.scaleRatio
       });
     }
 
@@ -158,6 +176,7 @@ export class SkyClimberGame extends BaseGame {
     // Clean up old clouds
     for (let i = this.clouds.length - 1; i >= 0; i--) {
       if (this.clouds[i].y - this.cameraY > this.height + 100) {
+        if (this.currentTarget === this.clouds[i]) this.currentTarget = null;
         this.clouds.splice(i, 1);
       }
     }
@@ -212,7 +231,7 @@ export class SkyClimberGame extends BaseGame {
     const squash = isJumping ? 1.2 : 1.0;
 
     ctx.translate(x, y);
-    ctx.scale(1 / squash, squash);
+    ctx.scale((1 / squash) * this.scaleRatio, squash * this.scaleRatio);
 
     // Explorer Backpack (Red)
     ctx.fillStyle = '#e53e3e';

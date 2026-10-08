@@ -48,11 +48,15 @@ export class RetroInvadersGame extends BaseGame {
     this.ufoTimer = 8;
     this.idleTime = 0;
 
-    const rows = Math.min(4, Math.floor(lvl.wordCount / 3));
-    const spacingX = (this.width - 220) / 3;
+    const numCols = this.width < 450 ? 2 : 3;
+    const rows = Math.min(4, Math.ceil(lvl.wordCount / numCols));
+    const padX = this.width < 450 ? 45 : 90;
+    const spacingX = (this.width - padX * 2) / Math.max(1, numCols - 1);
+    const rowSpacing = this.height < 320 ? 45 : 62;
+    const startY = this.height < 320 ? 45 : 70;
 
     for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < 3; c++) {
+      for (let c = 0; c < numCols; c++) {
         if (this.invaders.length >= lvl.wordCount) break;
         const cat = levelNumber === 1 ? 'easy' : levelNumber <= 3 ? 'medium' : 'space';
         const word = getRandomWord(cat);
@@ -60,8 +64,8 @@ export class RetroInvadersGame extends BaseGame {
           id: this.nextId++,
           row: r,
           col: c,
-          x: 110 + c * spacingX,
-          y: 75 + r * 65,
+          x: padX + c * spacingX,
+          y: startY + r * rowSpacing,
           word,
           typedIndex: 0,
           spriteFrame: 0,
@@ -72,7 +76,7 @@ export class RetroInvadersGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     // Check UFO priority if targeted
     if (this.ufo && this.ufo.active && this.currentTarget?.id === -99) {
@@ -83,9 +87,13 @@ export class RetroInvadersGame extends BaseGame {
         this.spawnSparks(this.ufo.x, this.ufo.y, '#f9cb28', 6);
 
         if (this.ufo.typedIndex >= this.ufo.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.destroyUFO();
         }
       } else {
+        if (char === ' ' && (this.ufo.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
@@ -99,14 +107,20 @@ export class RetroInvadersGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 4);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.destroyInvader(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     // Match UFO first if first letter matches
     if (this.ufo && this.ufo.active && this.matchesFirstChar(this.ufo.word, char)) {
@@ -123,7 +137,10 @@ export class RetroInvadersGame extends BaseGame {
         color: '#f9cb28'
       };
       this.recordKeystroke(true);
-      if (this.ufo.word.length === 1) this.destroyUFO();
+      if (this.ufo.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
+        this.destroyUFO();
+      }
       return;
     }
 
@@ -138,6 +155,7 @@ export class RetroInvadersGame extends BaseGame {
       this.spawnSparks(match.x, match.y, '#50e3c2', 4);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.destroyInvader(match);
         this.currentTarget = null;
       }
@@ -149,11 +167,21 @@ export class RetroInvadersGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.id === -99 && this.ufo) {
+        this.ufo.typedIndex = this.currentTarget.typedIndex;
+      }
+      if (this.currentTarget.typedIndex === 0) {
+        if (this.currentTarget.id === -99 && this.ufo) {
+          this.ufo.typedIndex = 0;
+        }
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private destroyInvader(invader: PixelInvader): void {
+    this.lastWordCompletedTime = Date.now();
     soundEngine.playExplosion();
     this.spawnExplosion(invader.x, invader.y, invader.color, 22);
     this.triggerScreenShake(0.12, 5);
@@ -173,6 +201,7 @@ export class RetroInvadersGame extends BaseGame {
   }
 
   private destroyUFO(): void {
+    this.lastWordCompletedTime = Date.now();
     if (this.ufo) {
       soundEngine.playVictory();
       this.spawnExplosion(this.ufo.x, this.ufo.y, '#f9cb28', 35);
@@ -225,7 +254,8 @@ export class RetroInvadersGame extends BaseGame {
 
       if (hitWall) {
         this.marchDir *= -1;
-        for (const inv of this.invaders) {
+        for (let i = this.invaders.length - 1; i >= 0; i--) {
+          const inv = this.invaders[i];
           inv.y += this.dropDistance;
           if (inv.y >= this.height - 75) {
             this.takeDamage(30);
@@ -251,13 +281,16 @@ export class RetroInvadersGame extends BaseGame {
     ctx.fillStyle = '#50e3c2';
     ctx.fillRect(0, this.height - 35, this.width, 3);
 
-    // Green Defense Bunker Shields at bottom
-    [100, 260, 420, 580, 700].forEach(bx => {
+    // Green Defense Bunker Shields at bottom (Responsive count and spacing)
+    const bunkerCount = this.width < 450 ? 3 : 5;
+    for (let b = 0; b < bunkerCount; b++) {
+      const bx = (this.width / (bunkerCount + 1)) * (b + 1);
+      const bw = this.width < 450 ? 30 : 40;
       ctx.fillStyle = '#48bb78';
-      ctx.fillRect(bx - 20, this.height - 60, 40, 22);
+      ctx.fillRect(bx - bw / 2, this.height - 60, bw, 22);
       ctx.fillStyle = '#040608';
       ctx.fillRect(bx - 8, this.height - 48, 16, 12);
-    });
+    }
 
     // 2. Render Mystery Flying Saucer UFO
     if (this.ufo && this.ufo.active) {

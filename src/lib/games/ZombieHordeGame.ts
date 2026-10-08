@@ -49,7 +49,7 @@ export class ZombieHordeGame extends BaseGame {
     this.zombies = [];
     this.bulletTracers = [];
     this.currentTarget = null;
-    this.barricadeX = 110;
+    this.barricadeX = Math.max(65, this.width * 0.18);
     this.idleTime = 0;
 
     if (levelNumber === 5) {
@@ -57,12 +57,21 @@ export class ZombieHordeGame extends BaseGame {
     }
   }
 
+  public get floorY(): number {
+    return this.height - Math.min(85, this.height * 0.2);
+  }
+
+  public override handleResize(): void {
+    super.handleResize();
+    this.barricadeX = Math.max(65, this.width * 0.18);
+  }
+
   private spawnBossAbomination(): void {
     this.zombies.push({
       id: this.nextId++,
       x: this.width + 40,
-      y: this.height - 130,
-      speed: 24,
+      y: this.floorY - 45,
+      speed: 24 * this.speedScale,
       word: getRandomWord('hard', this.lang),
       typedIndex: 0,
       type: 'abomination',
@@ -81,12 +90,12 @@ export class ZombieHordeGame extends BaseGame {
     const isRunner = !isBrute && this.currentLevel >= 2 && Math.random() < 0.38;
 
     const baseSpeed = 26 + this.currentLevel * 8;
-    const speed = isRunner ? baseSpeed * 1.5 : isBrute ? baseSpeed * 0.75 : baseSpeed;
+    const speed = (isRunner ? baseSpeed * 1.5 : isBrute ? baseSpeed * 0.75 : baseSpeed) * this.speedScale;
 
     this.zombies.push({
       id: this.nextId++,
       x: this.width + 30,
-      y: this.height - 95 - (Math.random() * 50),
+      y: this.floorY - 20 - (Math.random() * 30),
       speed,
       word,
       typedIndex: 0,
@@ -99,7 +108,7 @@ export class ZombieHordeGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -113,10 +122,15 @@ export class ZombieHordeGame extends BaseGame {
           this.hitZombie(this.currentTarget);
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.zombies
       .filter(z => this.matchesFirstChar(z.word, char))
@@ -140,6 +154,9 @@ export class ZombieHordeGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
@@ -157,6 +174,7 @@ export class ZombieHordeGame extends BaseGame {
   }
 
   private hitZombie(zombie: ZombieEnemy): void {
+    this.lastWordCompletedTime = Date.now();
     zombie.hp--;
     if (zombie.hp > 0) {
       zombie.word = getRandomWord('medium', this.lang);
@@ -215,6 +233,9 @@ export class ZombieHordeGame extends BaseGame {
         this.addFloatingText(this.barricadeX, this.height - 160, 'BARRICADE BREACHED! -20 HP', '#ee0000', 20);
         if (this.currentTarget === z) this.currentTarget = null;
         this.zombies.splice(i, 1);
+        if (this.zombiesKilled >= this.zombiesGoal && this.zombies.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -254,13 +275,13 @@ export class ZombieHordeGame extends BaseGame {
     ctx.fillRect(lightX - 16, 30, 32, 10);
     ctx.restore();
 
-    // Wet Asphalt Street Floor
-    const floorY = this.height - 80;
+    // Wet Asphalt Street Floor (Responsive)
+    const floorY = this.floorY;
     ctx.fillStyle = '#11161d';
-    ctx.fillRect(0, floorY, this.width, 80);
+    ctx.fillRect(0, floorY, this.width, this.height - floorY);
     ctx.strokeStyle = '#232d3b';
     ctx.lineWidth = 3;
-    ctx.strokeRect(0, floorY, this.width, 80);
+    ctx.strokeRect(0, floorY, this.width, this.height - floorY);
 
     // Broken Yellow Street Dividing Lines
     ctx.fillStyle = 'rgba(246, 224, 94, 0.3)';

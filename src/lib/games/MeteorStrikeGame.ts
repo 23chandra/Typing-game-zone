@@ -53,6 +53,14 @@ export class MeteorStrikeGame extends BaseGame {
     this.currentTarget = null;
     this.idleTime = 0;
     this.shieldPulse = 0;
+    this.earthRadius = Math.max(160, this.width * 0.38);
+    this.earthY = this.height + this.earthRadius - Math.min(80, this.height * 0.22);
+  }
+
+  public override handleResize(): void {
+    super.handleResize();
+    this.earthRadius = Math.max(160, this.width * 0.38);
+    this.earthY = this.height + this.earthRadius - Math.min(80, this.height * 0.22);
   }
 
   private spawnMeteor(): void {
@@ -61,12 +69,14 @@ export class MeteorStrikeGame extends BaseGame {
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
     const word = getRandomWord(cat);
 
-    const startX = Math.random() * (this.width - 200) + 100;
-    const targetX = this.width / 2 + (Math.random() - 0.5) * 260;
+    const minX = Math.max(30, this.width * 0.1);
+    const maxX = Math.min(this.width - 30, this.width * 0.9);
+    const startX = Math.random() * (maxX - minX) + minX;
+    const targetX = this.width / 2 + (Math.random() - 0.5) * (this.width * 0.55);
     const targetY = this.height;
 
     const angle = Math.atan2(targetY, targetX - startX);
-    const speed = (32 + this.currentLevel * 10) * (Math.random() * 0.3 + 0.85);
+    const speed = (32 + this.currentLevel * 10) * (Math.random() * 0.3 + 0.85) * this.speedScale;
 
     this.meteors.push({
       id: this.nextId++,
@@ -87,7 +97,7 @@ export class MeteorStrikeGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -97,14 +107,20 @@ export class MeteorStrikeGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 5);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.destroyMeteor(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.meteors
       .filter(m => this.matchesFirstChar(m.word, char))
@@ -117,6 +133,7 @@ export class MeteorStrikeGame extends BaseGame {
       this.spawnSparks(match.x, match.y, '#50e3c2', 5);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.destroyMeteor(match);
         this.currentTarget = null;
       }
@@ -128,11 +145,15 @@ export class MeteorStrikeGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private destroyMeteor(meteor: Meteor): void {
+    this.lastWordCompletedTime = Date.now();
     soundEngine.playExplosion();
     this.spawnExplosion(meteor.x, meteor.y, meteor.color, 28);
     this.triggerScreenShake(0.2, 8);
@@ -147,6 +168,7 @@ export class MeteorStrikeGame extends BaseGame {
           }
         }
         this.meteors = [];
+        this.currentTarget = null;
         this.triggerFlash(0.2, 'rgba(249, 203, 40, 0.4)');
       } else if (meteor.specialType === 'shield') {
         this.health = Math.min(this.maxHealth, this.health + 30);
@@ -208,6 +230,9 @@ export class MeteorStrikeGame extends BaseGame {
         this.addFloatingText(m.x, m.y - 25, 'SURFACE IMPACT! -20 HP', '#ee0000', 20);
         if (this.currentTarget === m) this.currentTarget = null;
         this.meteors.splice(i, 1);
+        if (this.wordsCompleted >= this.wordsGoal && this.meteors.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }

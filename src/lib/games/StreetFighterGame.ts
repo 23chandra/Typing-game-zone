@@ -71,7 +71,7 @@ export class StreetFighterGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     const expected = this.currentWord[this.typedIndex];
     if (expected && this.matchesChar(char, expected)) {
@@ -92,12 +92,16 @@ export class StreetFighterGame extends BaseGame {
       }
 
       this.comboMeter = Math.min(100, this.comboMeter + 6);
-      this.spawnSparks(240, this.height - 130, '#50e3c2', 4);
+      this.spawnSparks(this.playerX + (this.width < 450 ? 20 : 35), this.height - 130, '#50e3c2', 4);
 
       if (this.typedIndex >= this.currentWord.length) {
+        this.lastWordCompletedTime = Date.now();
         this.executeFinisher();
       }
     } else {
+      if (char === ' ' && (this.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+        return;
+      }
       this.recordKeystroke(false);
       this.comboMeter = Math.max(0, this.comboMeter - 10);
     }
@@ -127,10 +131,10 @@ export class StreetFighterGame extends BaseGame {
       this.addFloatingText(this.width / 2, this.height * 0.4, '🔥 SUPER HADOKEN! -55 HP', '#00dfd8', 24);
 
       this.fireball = {
-        x: 230,
+        x: this.playerX + 30,
         y: this.height - 130,
         vx: 800,
-        radius: 32,
+        radius: this.width < 450 ? 22 : 32,
         active: true,
         isSuper: true
       };
@@ -139,19 +143,27 @@ export class StreetFighterGame extends BaseGame {
       this.animTimer = 0.25;
       soundEngine.playHit();
       this.triggerScreenShake(0.12, 6);
-      this.addFloatingText(this.width - 200, this.height - 180, `CRITICAL HIT! -${damage} HP`, '#ff0080', 20);
+      this.addFloatingText(this.oppX, this.height - 180, `CRITICAL HIT! -${damage} HP`, '#ff0080', 20);
 
       this.fireball = {
-        x: 230,
+        x: this.playerX + 30,
         y: this.height - 130,
         vx: 550,
-        radius: 18,
+        radius: this.width < 450 ? 14 : 18,
         active: true,
         isSuper: false
       };
     }
 
     this.nextWord();
+  }
+
+  private get playerX(): number {
+    return Math.max(65, this.width * 0.22);
+  }
+
+  private get oppX(): number {
+    return Math.min(this.width - 65, this.width * 0.78);
   }
 
   public updateGame(dt: number): void {
@@ -191,8 +203,8 @@ export class StreetFighterGame extends BaseGame {
         shape: 'spark'
       });
 
-      // Impact on opponent (x ~ width - 200)
-      if (this.fireball.x >= this.width - 200) {
+      // Impact on opponent
+      if (this.fireball.x >= this.oppX) {
         this.fireball.active = false;
         const damage = this.fireball.isSuper ? 55 : 25;
         this.opponentHp = Math.max(0, this.opponentHp - damage);
@@ -200,11 +212,11 @@ export class StreetFighterGame extends BaseGame {
         this.animTimer = 0.25;
 
         soundEngine.playExplosion();
-        this.spawnExplosion(this.width - 200, this.height - 130, this.fireball.isSuper ? '#00dfd8' : '#ff0080', this.fireball.isSuper ? 35 : 20);
+        this.spawnExplosion(this.oppX, this.height - 130, this.fireball.isSuper ? '#00dfd8' : '#ff0080', this.fireball.isSuper ? 35 : 20);
         this.triggerScreenShake(this.fireball.isSuper ? 0.35 : 0.18, this.fireball.isSuper ? 12 : 7);
 
         if (this.opponentHp <= 0) {
-          this.addFloatingText(this.width - 200, this.height * 0.4, '💥 K.O.! VICTORY!', '#f9cb28', 32);
+          this.addFloatingText(this.oppX, this.height * 0.4, '💥 K.O.! VICTORY!', '#f9cb28', 32);
           this.triggerLevelClear();
         }
       }
@@ -218,8 +230,8 @@ export class StreetFighterGame extends BaseGame {
         this.takeDamage(20);
         this.opponentAnim = 'attack';
         this.animTimer = 0.35;
-        this.addFloatingText(200, this.height - 180, 'OPPONENT STRIKE! -20 HP', '#ee0000', 20);
-        this.spawnExplosion(200, this.height - 130, '#ee0000', 25);
+        this.addFloatingText(this.playerX, this.height - 180, 'OPPONENT STRIKE! -20 HP', '#ee0000', 20);
+        this.spawnExplosion(this.playerX, this.height - 130, '#ee0000', 25);
       }
     }
   }
@@ -270,32 +282,32 @@ export class StreetFighterGame extends BaseGame {
       ctx.stroke();
     }
 
-    // 2. Health Bars UI (Classic 2D Arcade Style)
-    const barWidth = Math.min(260, (this.width - 120) / 2);
-    const barH = 16;
-    const topY = 24;
+    // 2. Health Bars UI (Classic 2D Arcade Style - Responsive)
+    const barWidth = Math.min(260, (this.width - 50) / 2);
+    const barH = this.height < 320 ? 12 : 16;
+    const topY = this.height < 320 ? 14 : 24;
 
     // Player Health (Left)
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(36, topY - 2, barWidth + 8, barH + 4);
+    ctx.fillRect(16, topY - 2, barWidth + 8, barH + 4);
     // Lag red bar
     const pLagPct = Math.max(0, this.playerLagHp / this.maxHealth);
     ctx.fillStyle = '#ee0000';
-    ctx.fillRect(40, topY, barWidth * pLagPct, barH);
+    ctx.fillRect(20, topY, barWidth * pLagPct, barH);
     // Active cyan/gold health
     const pHealthPct = Math.max(0, this.health / this.maxHealth);
-    const pGrad = ctx.createLinearGradient(40, 0, 40 + barWidth, 0);
+    const pGrad = ctx.createLinearGradient(20, 0, 20 + barWidth, 0);
     pGrad.addColorStop(0, '#00dfd8');
     pGrad.addColorStop(1, '#50e3c2');
     ctx.fillStyle = pGrad;
-    ctx.fillRect(40, topY, barWidth * pHealthPct, barH);
+    ctx.fillRect(20, topY, barWidth * pHealthPct, barH);
 
-    ctx.font = 'bold 11px "Geist Mono", monospace';
+    ctx.font = `bold ${this.width < 450 ? 9 : 11}px "Geist Mono", monospace`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(`PLAYER  ${this.health} / 100`, 44, topY + 12);
+    ctx.fillText(this.width < 450 ? `P1: ${this.health}` : `PLAYER  ${this.health} / 100`, 24, topY + barH - 3);
 
     // Opponent Health (Right)
-    const oppRightX = this.width - 40;
+    const oppRightX = this.width - 20;
     const oppLeftX = oppRightX - barWidth;
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(oppLeftX - 4, topY - 2, barWidth + 8, barH + 4);
@@ -310,7 +322,7 @@ export class StreetFighterGame extends BaseGame {
 
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'right';
-    ctx.fillText(`${opp.name}  ${Math.floor(this.opponentHp)} HP`, oppRightX - 4, topY + 12);
+    ctx.fillText(this.width < 450 ? `${Math.floor(this.opponentHp)} HP` : `${opp.name}  ${Math.floor(this.opponentHp)} HP`, oppRightX - 4, topY + barH - 3);
     ctx.textAlign = 'left';
 
     // Opponent Attack Countdown Timer Bar
@@ -319,24 +331,25 @@ export class StreetFighterGame extends BaseGame {
     ctx.fillRect(oppLeftX, topY + barH + 4, barWidth * attackTimePct, 4);
 
     // Super Meter Bar at bottom
+    const superW = Math.min(200, this.width * 0.45);
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-    ctx.fillRect(40, this.height - 24, 200, 12);
+    ctx.fillRect(20, this.height - 20, superW, 10);
     const superPct = this.comboMeter / 100;
-    const superGrad = ctx.createLinearGradient(40, 0, 240, 0);
+    const superGrad = ctx.createLinearGradient(20, 0, 20 + superW, 0);
     superGrad.addColorStop(0, '#7928ca');
     superGrad.addColorStop(1, '#ff0080');
     ctx.fillStyle = this.comboMeter >= 100 ? '#f9cb28' : superGrad;
-    ctx.fillRect(40, this.height - 24, 200 * superPct, 12);
+    ctx.fillRect(20, this.height - 20, superW * superPct, 10);
 
     ctx.font = 'bold 9px "Geist Mono", monospace';
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(this.comboMeter >= 100 ? '⚡ SUPER HADOKEN READY! ⚡' : `SUPER COMBO GAUGE: ${Math.floor(this.comboMeter)}%`, 44, this.height - 15);
+    ctx.fillText(this.comboMeter >= 100 ? '⚡ SUPER HADOKEN READY! ⚡' : `SUPER: ${Math.floor(this.comboMeter)}%`, 24, this.height - 12);
 
-    // 3. Render Player Martial Artist (Left: x ~ 200)
-    this.renderPlayerFighter(ctx, 200, floorY);
+    // 3. Render Player Martial Artist (Responsive: playerX)
+    this.renderPlayerFighter(ctx, this.playerX, floorY);
 
-    // 4. Render Opponent Martial Artist (Right: x ~ width - 200)
-    this.renderOpponentFighter(ctx, this.width - 200, floorY, opp);
+    // 4. Render Opponent Martial Artist (Responsive: oppX)
+    this.renderOpponentFighter(ctx, this.oppX, floorY, opp);
 
     // 5. Render Fireball / Hadoken
     if (this.fireball && this.fireball.active) {
@@ -371,7 +384,7 @@ export class StreetFighterGame extends BaseGame {
     }
 
     // 6. Word Combat Prompt (Center Screen)
-    this.drawWordBadge(ctx, this.currentWord, this.typedIndex, this.width / 2, this.height * 0.44, true, '#50e3c2', 24);
+    this.drawWordBadge(ctx, this.currentWord, this.typedIndex, this.width / 2, this.height * 0.44, true, '#50e3c2', this.width < 450 ? 16 : 24);
   }
 
   private renderPlayerFighter(ctx: CanvasRenderingContext2D, x: number, floorY: number): void {

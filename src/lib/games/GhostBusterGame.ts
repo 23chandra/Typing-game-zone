@@ -56,19 +56,21 @@ export class GhostBusterGame extends BaseGame {
     const word = getRandomWord(cat, this.lang);
     const types: ('poltergeist' | 'specter' | 'banshee' | 'slimer')[] = ['poltergeist', 'specter', 'banshee', 'slimer'];
     const type = types[Math.floor(Math.random() * types.length)];
-    const speed = (25 + this.currentLevel * 7) * (Math.random() * 0.3 + 0.85);
+    const speed = (25 + this.currentLevel * 7) * (Math.random() * 0.3 + 0.85) * this.speedScale;
+    const minSpawnX = Math.max(45, this.width * 0.12);
+    const maxSpawnX = Math.min(this.width - 45, this.width * 0.88);
 
     this.ghosts.push({
       id: this.nextId++,
-      x: Math.random() * (this.width - 240) + 120,
+      x: Math.random() * (maxSpawnX - minSpawnX) + minSpawnX,
       y: -30,
-      vx: (Math.random() - 0.5) * 35,
+      vx: (Math.random() - 0.5) * 35 * this.speedScale,
       vy: speed,
       word,
       typedIndex: 0,
       type,
       color: type === 'slimer' ? '#48bb78' : type === 'banshee' ? '#ff0080' : type === 'specter' ? '#00dfd8' : '#e2e8f0',
-      size: type === 'slimer' ? 28 : 22,
+      size: (type === 'slimer' ? 26 : 20) * this.scaleRatio,
       isTrapped: false,
       trapProgress: 0,
       wavePhase: Math.random() * Math.PI * 2
@@ -76,7 +78,7 @@ export class GhostBusterGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -87,14 +89,20 @@ export class GhostBusterGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 5);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.captureGhost(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.ghosts
       .filter(g => !g.isTrapped && this.matchesFirstChar(g.word, char))
@@ -108,6 +116,7 @@ export class GhostBusterGame extends BaseGame {
       this.spawnSparks(match.x, match.y, '#50e3c2', 5);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.captureGhost(match);
         this.currentTarget = null;
       }
@@ -119,11 +128,15 @@ export class GhostBusterGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private captureGhost(ghost: Ghost): void {
+    this.lastWordCompletedTime = Date.now();
     ghost.isTrapped = true;
     soundEngine.playVictory();
     this.spawnExplosion(ghost.x, ghost.y, '#f9cb28', 26);
@@ -158,7 +171,9 @@ export class GhostBusterGame extends BaseGame {
       g.x += g.vx * dt + Math.sin(g.wavePhase + this.idleTime * 4) * 20 * dt;
       g.wavePhase += dt * 3;
 
-      if (g.x < 80 || g.x > this.width - 80) g.vx *= -1;
+      const minBounceX = Math.max(35, this.width * 0.1);
+      const maxBounceX = Math.min(this.width - 35, this.width * 0.9);
+      if (g.x < minBounceX || g.x > maxBounceX) g.vx *= -1;
 
       if (g.y >= this.height - 75) {
         this.takeDamage(20);
@@ -166,6 +181,9 @@ export class GhostBusterGame extends BaseGame {
         this.addFloatingText(g.x, this.height - 100, 'ECTO SPOOK! -20 HP', '#ee0000', 18);
         if (this.currentTarget === g) this.currentTarget = null;
         this.ghosts.splice(i, 1);
+        if (this.capturedCount >= this.captureGoal && this.ghosts.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -180,7 +198,7 @@ export class GhostBusterGame extends BaseGame {
     ctx.fillRect(0, 0, this.width, this.height);
 
     // Moonlit Gothic Manor Windows in background
-    [100, this.width - 100].forEach(wx => {
+    [Math.max(45, this.width * 0.2), Math.min(this.width - 45, this.width * 0.8)].forEach(wx => {
       ctx.fillStyle = '#00dfd8';
       ctx.shadowColor = '#00dfd8';
       ctx.shadowBlur = 20;

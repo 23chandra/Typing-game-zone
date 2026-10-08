@@ -50,6 +50,14 @@ export class GladiatorArenaGame extends BaseGame {
     this.playerSlashAnim = 0;
   }
 
+  public get playerGladiatorX(): number {
+    return Math.max(65, this.width * 0.18);
+  }
+
+  public get floorY(): number {
+    return this.height - Math.min(85, this.height * 0.2);
+  }
+
   private spawnFoe(): void {
     if (this.defeatedCount + this.foes.length >= this.defeatGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'combat' : 'hard';
@@ -58,12 +66,12 @@ export class GladiatorArenaGame extends BaseGame {
     const isChariot = !isBoss && this.currentLevel >= 4 && Math.random() < 0.35;
     const isBeast = !isBoss && !isChariot && this.currentLevel <= 2 && Math.random() < 0.5;
     const type: 'lion' | 'spearman' | 'chariot' | 'champion' = isBoss ? 'champion' : isChariot ? 'chariot' : isBeast ? 'lion' : 'spearman';
-    const speed = (28 + this.currentLevel * 7) * (isChariot ? 1.4 : isBoss ? 0.6 : 1.0);
+    const speed = (28 + this.currentLevel * 7) * (isChariot ? 1.4 : isBoss ? 0.6 : 1.0) * this.speedScale;
 
     this.foes.push({
       id: this.nextId++,
       x: this.width + 40,
-      y: this.height - 110,
+      y: this.floorY - 25,
       word,
       typedIndex: 0,
       type,
@@ -76,7 +84,7 @@ export class GladiatorArenaGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -88,14 +96,20 @@ export class GladiatorArenaGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 5);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.defeatFoe(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.foes
       .filter(f => this.matchesFirstChar(f.word, char))
@@ -110,6 +124,7 @@ export class GladiatorArenaGame extends BaseGame {
       this.spawnSparks(match.x, match.y, '#50e3c2', 5);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.defeatFoe(match);
         this.currentTarget = null;
       }
@@ -121,11 +136,15 @@ export class GladiatorArenaGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private defeatFoe(foe: ArenaFoe): void {
+    this.lastWordCompletedTime = Date.now();
     if (foe.hp > 1) {
       foe.hp--;
       foe.word = getRandomWord('medium', this.lang);
@@ -167,12 +186,15 @@ export class GladiatorArenaGame extends BaseGame {
       const f = this.foes[i];
       f.x -= f.speed * dt;
 
-      if (f.x <= 160) {
+      if (f.x <= this.playerGladiatorX + 25) {
         this.takeDamage(20);
         this.spawnExplosion(f.x, f.y, '#ee0000', 25);
-        this.addFloatingText(160, this.height - 180, 'ARENA BREACH! -20 HP', '#ee0000', 20);
+        this.addFloatingText(this.playerGladiatorX, this.floorY - 60, 'ARENA BREACH! -20 HP', '#ee0000', 20);
         if (this.currentTarget === f) this.currentTarget = null;
         this.foes.splice(i, 1);
+        if (this.defeatedCount >= this.defeatGoal && this.foes.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -197,18 +219,19 @@ export class GladiatorArenaGame extends BaseGame {
       ctx.fill();
     }
 
-    // Roman Red Banners with Gold Trim
-    [120, this.width / 2, this.width - 120].forEach(bx => {
+    // Roman Red Banners with Gold Trim (Responsive)
+    const bannerPad = Math.max(40, this.width * 0.18);
+    [bannerPad, this.width / 2, this.width - bannerPad].forEach(bx => {
       ctx.fillStyle = '#9b2c2c';
       ctx.fillRect(bx - 12, 40, 24, 60);
       ctx.fillStyle = '#d69e2e';
       ctx.fillRect(bx - 12, 95, 24, 5);
     });
 
-    // Colosseum Sand Arena Floor
-    const floorY = this.height - 85;
+    // Colosseum Sand Arena Floor (Responsive)
+    const floorY = this.floorY;
     ctx.fillStyle = '#d69e2e';
-    ctx.fillRect(0, floorY, this.width, 85);
+    ctx.fillRect(0, floorY, this.width, this.height - floorY);
     // Sand Texture specs
     ctx.fillStyle = '#b7791f';
     for (let s = 0; s < 40; s++) {
@@ -225,8 +248,8 @@ export class GladiatorArenaGame extends BaseGame {
     ctx.fillStyle = '#ffffff';
     ctx.fillText(`FOES VANQUISHED: ${this.defeatedCount} / ${this.defeatGoal}`, 30, 25);
 
-    // 2. Render Player Roman Gladiator (Left: x = 140)
-    this.renderPlayerGladiator(ctx, 140, floorY);
+    // 2. Render Player Roman Gladiator (Responsive: playerGladiatorX)
+    this.renderPlayerGladiator(ctx, this.playerGladiatorX, floorY);
 
     // 3. Render Foes
     for (const foe of this.foes) {

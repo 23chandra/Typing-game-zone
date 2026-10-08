@@ -82,19 +82,23 @@ export class WizardDuelGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     const expected = this.currentIncantation[this.typedIndex];
     if (expected && this.matchesChar(char, expected)) {
       this.typedIndex++;
       this.recordKeystroke(true);
       soundEngine.playMagic();
-      this.spawnSparks(180, this.height - 145, this.getSpellColor(), 4);
+      this.spawnSparks(this.playerX + 25, this.height - 145, this.getSpellColor(), 4);
 
       if (this.typedIndex >= this.currentIncantation.length) {
+        this.lastWordCompletedTime = Date.now();
         this.castSpell();
       }
     } else {
+      if (char === ' ' && (this.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+        return;
+      }
       this.recordKeystroke(false);
     }
   }
@@ -116,23 +120,23 @@ export class WizardDuelGame extends BaseGame {
     const damage = 35;
 
     this.spellBeams.push({
-      x: 195,
+      x: this.playerX + 25,
       y: this.height - 145,
-      tx: this.width - 195,
+      tx: this.oppX - 25,
       ty: this.height - 145,
       color,
       life: 0.38,
       maxLife: 0.38
     });
 
-    this.spawnExplosion(this.width - 195, this.height - 145, color, 30);
+    this.spawnExplosion(this.oppX, this.height - 145, color, 30);
     this.triggerScreenShake(0.22, 9);
     this.triggerFlash(0.12, color);
     this.wizardHp -= damage;
 
     this.wordsCompletedInLevel++;
     this.score += 70;
-    this.addFloatingText(this.width - 195, this.height - 190, `✨ ${this.spellType.toUpperCase()} BURST! -${damage} HP`, color, 22);
+    this.addFloatingText(this.oppX, this.height - 190, `✨ ${this.spellType.toUpperCase()} BURST! -${damage} HP`, color, 22);
 
     if (this.wizardHp <= 0) {
       this.wizardHp = 0;
@@ -143,6 +147,14 @@ export class WizardDuelGame extends BaseGame {
 
     this.castTimer = this.castInterval;
     this.nextIncantation();
+  }
+
+  private get playerX(): number {
+    return Math.max(65, this.width * 0.22);
+  }
+
+  private get oppX(): number {
+    return Math.min(this.width - 65, this.width * 0.78);
   }
 
   public updateGame(dt: number): void {
@@ -178,16 +190,16 @@ export class WizardDuelGame extends BaseGame {
         this.takeDamage(25);
         const opp = this.duelOpponents[this.currentLevel - 1] || this.duelOpponents[0];
         this.spellBeams.push({
-          x: this.width - 195,
+          x: this.oppX - 25,
           y: this.height - 145,
-          tx: 195,
+          tx: this.playerX + 25,
           ty: this.height - 145,
           color: opp.staffColor,
           life: 0.38,
           maxLife: 0.38
         });
-        this.spawnExplosion(195, this.height - 145, opp.staffColor, 25);
-        this.addFloatingText(195, this.height - 190, `CURSE STRIKE! -25 HP`, '#ee0000', 20);
+        this.spawnExplosion(this.playerX, this.height - 145, opp.staffColor, 25);
+        this.addFloatingText(this.playerX, this.height - 190, `CURSE STRIKE! -25 HP`, '#ee0000', 20);
       }
     }
   }
@@ -243,31 +255,31 @@ export class WizardDuelGame extends BaseGame {
     ctx.fillStyle = '#7928ca';
     ctx.fillRect(0, floorY, this.width, 3);
 
-    // Glowing Runic Circles on Floor (Player & Opponent)
-    this.drawRunicCircle(ctx, 180, floorY, '#50e3c2', this.runicCircleAngle);
-    this.drawRunicCircle(ctx, this.width - 180, floorY, opp.staffColor, -this.runicCircleAngle);
+    // Glowing Runic Circles on Floor (Player & Opponent - Responsive)
+    this.drawRunicCircle(ctx, this.playerX, floorY, '#50e3c2', this.runicCircleAngle);
+    this.drawRunicCircle(ctx, this.oppX, floorY, opp.staffColor, -this.runicCircleAngle);
 
-    // 2. Health & Telemetry Bars UI
-    const barWidth = Math.min(260, (this.width - 120) / 2);
-    const barH = 16;
-    const topY = 24;
+    // 2. Health & Telemetry Bars UI (Responsive)
+    const barWidth = Math.min(260, (this.width - 50) / 2);
+    const barH = this.height < 320 ? 12 : 16;
+    const topY = this.height < 320 ? 14 : 24;
 
     // Player Mana/Health (Left)
     ctx.fillStyle = 'rgba(0,0,0,0.7)';
-    ctx.fillRect(36, topY - 2, barWidth + 8, barH + 4);
+    ctx.fillRect(16, topY - 2, barWidth + 8, barH + 4);
     const pLagPct = Math.max(0, this.playerLagHp / this.maxHealth);
     ctx.fillStyle = '#ee0000';
-    ctx.fillRect(40, topY, barWidth * pLagPct, barH);
+    ctx.fillRect(20, topY, barWidth * pLagPct, barH);
     const pHealthPct = Math.max(0, this.health / this.maxHealth);
     ctx.fillStyle = '#00dfd8';
-    ctx.fillRect(40, topY, barWidth * pHealthPct, barH);
+    ctx.fillRect(20, topY, barWidth * pHealthPct, barH);
 
-    ctx.font = 'bold 11px "Geist Mono", monospace';
+    ctx.font = `bold ${this.width < 450 ? 9 : 11}px "Geist Mono", monospace`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(`ARCHMAGE  ${this.health} / 100`, 44, topY + 12);
+    ctx.fillText(this.width < 450 ? `P1: ${this.health}` : `ARCHMAGE  ${this.health} / 100`, 24, topY + barH - 3);
 
     // Opponent Wizard Health (Right)
-    const oppRightX = this.width - 40;
+    const oppRightX = this.width - 20;
     const oppLeftX = oppRightX - barWidth;
     ctx.fillStyle = 'rgba(0,0,0,0.7)';
     ctx.fillRect(oppLeftX - 4, topY - 2, barWidth + 8, barH + 4);
@@ -280,7 +292,7 @@ export class WizardDuelGame extends BaseGame {
 
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'right';
-    ctx.fillText(`${opp.name}  ${Math.floor(this.wizardHp)} HP`, oppRightX - 4, topY + 12);
+    ctx.fillText(this.width < 450 ? `${Math.floor(this.wizardHp)} HP` : `${opp.name}  ${Math.floor(this.wizardHp)} HP`, oppRightX - 4, topY + barH - 3);
     ctx.textAlign = 'left';
 
     // Opponent Cast Timer Bar
@@ -288,11 +300,11 @@ export class WizardDuelGame extends BaseGame {
     ctx.fillStyle = castPct < 0.35 ? '#ff0080' : '#f9cb28';
     ctx.fillRect(oppLeftX, topY + barH + 4, barWidth * castPct, 4);
 
-    // 3. Render Player Wizard (Left: x ~ 180)
-    this.renderPlayerMage(ctx, 180, floorY);
+    // 3. Render Player Wizard (Responsive: playerX)
+    this.renderPlayerMage(ctx, this.playerX, floorY);
 
-    // 4. Render Opponent Wizard (Right: x ~ width - 180)
-    this.renderOpponentMage(ctx, this.width - 180, floorY, opp);
+    // 4. Render Opponent Wizard (Responsive: oppX)
+    this.renderOpponentMage(ctx, this.oppX, floorY, opp);
 
     // 5. Render Spell Beams & Clashing Lightning
     for (const beam of this.spellBeams) {
@@ -332,7 +344,7 @@ export class WizardDuelGame extends BaseGame {
     }
 
     // 6. Word Combat Prompt (Center Screen)
-    this.drawWordBadge(ctx, this.currentIncantation, this.typedIndex, this.width / 2, this.height * 0.44, true, this.getSpellColor(), 24);
+    this.drawWordBadge(ctx, this.currentIncantation, this.typedIndex, this.width / 2, this.height * 0.44, true, this.getSpellColor(), this.width < 450 ? 15 : 24);
   }
 
   private drawRunicCircle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, angle: number): void {

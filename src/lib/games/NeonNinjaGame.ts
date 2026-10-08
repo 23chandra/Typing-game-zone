@@ -50,7 +50,12 @@ export class NeonNinjaGame extends BaseGame {
     this.bladeTrails = [];
     this.currentTarget = null;
     this.idleTime = 0;
-    this.ninjaTargetPos = { x: 120, y: this.height - 100 };
+    this.ninjaTargetPos = { x: Math.max(60, this.width * 0.18), y: this.height - Math.min(80, this.height * 0.2) };
+  }
+
+  public override handleResize(): void {
+    super.handleResize();
+    this.ninjaTargetPos = { x: Math.max(60, this.width * 0.18), y: this.height - Math.min(80, this.height * 0.2) };
   }
 
   private spawnTarget(): void {
@@ -59,9 +64,9 @@ export class NeonNinjaGame extends BaseGame {
     const word = getRandomWord(cat, this.lang);
     const fromLeft = Math.random() < 0.5;
     const startX = fromLeft ? -20 : this.width + 20;
-    const startY = Math.random() * (this.height - 220) + 100;
-    const vx = fromLeft ? Math.random() * 80 + 60 : -(Math.random() * 80 + 60);
-    const vy = -(Math.random() * 70 + 40);
+    const startY = Math.random() * (this.height - 180) + 70;
+    const vx = (fromLeft ? Math.random() * 80 + 60 : -(Math.random() * 80 + 60)) * this.speedScale;
+    const vy = -(Math.random() * 60 + 35) * this.speedScale;
 
     const isLantern = Math.random() < 0.3;
     const type: 'shuriken' | 'lantern' | 'kunai' = isLantern ? 'lantern' : Math.random() < 0.5 ? 'shuriken' : 'kunai';
@@ -83,7 +88,7 @@ export class NeonNinjaGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -94,14 +99,20 @@ export class NeonNinjaGame extends BaseGame {
         this.createSliceTrail(this.currentTarget.x, this.currentTarget.y);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.sliceTarget(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.targets
       .filter(t => this.matchesFirstChar(t.word, char))
@@ -115,6 +126,7 @@ export class NeonNinjaGame extends BaseGame {
       this.createSliceTrail(match.x, match.y);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.sliceTarget(match);
         this.currentTarget = null;
       }
@@ -126,6 +138,9 @@ export class NeonNinjaGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
@@ -148,6 +163,7 @@ export class NeonNinjaGame extends BaseGame {
   }
 
   private sliceTarget(target: NinjaTarget): void {
+    this.lastWordCompletedTime = Date.now();
     soundEngine.playSlice();
     this.spawnExplosion(target.x, target.y, target.color, 26);
     this.triggerScreenShake(0.14, 6);
@@ -201,6 +217,9 @@ export class NeonNinjaGame extends BaseGame {
         this.addFloatingText(t.x, this.height - 60, 'MISSED TARGET! -15 HP', '#ee0000', 18);
         if (this.currentTarget === t) this.currentTarget = null;
         this.targets.splice(i, 1);
+        if (this.slicedCount >= this.sliceGoal && this.targets.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -214,13 +233,15 @@ export class NeonNinjaGame extends BaseGame {
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, this.width, this.height);
 
-    // Full Glowing Moon
+    // Full Glowing Moon (Responsive)
     ctx.save();
     ctx.fillStyle = '#edf2f7';
     ctx.shadowColor = '#00dfd8';
     ctx.shadowBlur = 35;
     ctx.beginPath();
-    ctx.arc(this.width - 120, 85, 45, 0, Math.PI * 2);
+    const moonX = this.width - Math.min(100, this.width * 0.22);
+    const moonR = this.width < 450 ? 32 : 45;
+    ctx.arc(moonX, 70, moonR, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
 
@@ -230,10 +251,10 @@ export class NeonNinjaGame extends BaseGame {
       ctx.fillRect(b * 75 + 15, 0, 10, this.height);
     }
 
-    // Japanese Pagoda Rooftop Floor
-    const floorY = this.height - 75;
+    // Japanese Pagoda Rooftop Floor (Responsive)
+    const floorY = this.height - Math.min(75, this.height * 0.18);
     ctx.fillStyle = '#0f172a';
-    ctx.fillRect(0, floorY, this.width, 75);
+    ctx.fillRect(0, floorY, this.width, this.height - floorY);
     ctx.fillStyle = '#50e3c2';
     ctx.fillRect(0, floorY, this.width, 3);
 

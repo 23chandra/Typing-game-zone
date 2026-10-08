@@ -103,6 +103,7 @@ export abstract class BaseGame {
   public wordsCompletedInLevel: number = 0;
   public health: number = 100;
   public maxHealth: number = 100;
+  public lastWordCompletedTime: number = 0;
 
   // Animation & Loop
   protected animFrameId: number | null = null;
@@ -114,10 +115,14 @@ export abstract class BaseGame {
   protected flashDuration: number = 0;
   protected flashColor: string = 'rgba(255, 255, 255, 0.5)';
 
-  // Viewport
+  // Viewport & Responsiveness
   public width: number = 800;
   public height: number = 500;
   public dpr: number = 1;
+  public isMobile: boolean = false;
+  public isTablet: boolean = false;
+  public speedScale: number = 1.0;
+  public scaleRatio: number = 1.0;
 
   // Event Callbacks
   public onStatsChange?: (stats: GameStats) => void;
@@ -140,9 +145,14 @@ export abstract class BaseGame {
 
   public handleResize(): void {
     const rect = this.canvas.getBoundingClientRect ? this.canvas.getBoundingClientRect() : { width: 800, height: 500 };
-    this.width = Math.max(320, Math.floor(rect.width || 800));
-    this.height = Math.max(240, Math.floor(rect.height || 500));
+    this.width = Math.max(300, Math.floor(rect.width || 800));
+    this.height = Math.max(220, Math.floor(rect.height || 500));
     this.dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+
+    this.isMobile = this.width < 640;
+    this.isTablet = this.width >= 640 && this.width < 1024;
+    this.speedScale = Math.max(0.65, Math.min(1.0, this.width / 750));
+    this.scaleRatio = Math.max(0.7, Math.min(1.0, this.width / 800));
 
     this.canvas.width = Math.round(this.width * this.dpr);
     this.canvas.height = Math.round(this.height * this.dpr);
@@ -222,6 +232,7 @@ export abstract class BaseGame {
     this.totalPausedDuration = 0;
     this.pauseStartTime = 0;
     this.wordsCompletedInLevel = 0;
+    this.lastWordCompletedTime = 0;
 
     this.initLevel(this.currentLevel);
     this.state = 'PLAYING';
@@ -284,12 +295,15 @@ export abstract class BaseGame {
 
   // Floating Combat & Telemetry Text
   public addFloatingText(x: number, y: number, text: string, color: string = '#50e3c2', size: number = 18): void {
+    const clampedX = Math.max(35, Math.min(this.width - 35, x));
+    const clampedY = Math.max(25, Math.min(this.height - 25, y));
+    const effectiveSize = this.width < 450 ? Math.max(12, Math.round(size * 0.82)) : size;
     this.floatingTexts.push({
-      x,
-      y,
+      x: clampedX,
+      y: clampedY,
       text,
       color,
-      size,
+      size: effectiveSize,
       alpha: 1.0,
       vy: -45,
       scale: 1.3
@@ -543,7 +557,7 @@ export abstract class BaseGame {
     this.flashColor = color;
   }
 
-  // Consistent High-Contrast Word Tag Renderer
+  // Consistent High-Contrast Word Tag Renderer (Responsive & Edge-Clamped)
   public drawWordBadge(
     ctx: CanvasRenderingContext2D,
     word: string,
@@ -557,20 +571,27 @@ export abstract class BaseGame {
     const typed = word.substring(0, typedIndex);
     const remaining = word.substring(typedIndex);
 
-    ctx.font = `600 ${fontSize}px "Geist Mono", monospace`;
+    // Responsive font scaling on small mobile screens
+    const effectiveFontSize = this.width < 450
+      ? Math.max(11, Math.min(fontSize, Math.round(fontSize * 0.84)))
+      : fontSize;
+
+    ctx.font = `600 ${effectiveFontSize}px "Geist Mono", monospace`;
     const wordWidth = ctx.measureText(word).width;
-    const padX = 8;
-    const padY = 5;
+    const padX = this.width < 450 ? 6 : 8;
+    const padY = this.width < 450 ? 4 : 5;
     const badgeW = wordWidth + padX * 2;
-    const badgeH = fontSize + padY * 2;
-    const bx = x - badgeW / 2;
-    const by = y - badgeH / 2;
+    const badgeH = effectiveFontSize + padY * 2;
+
+    // Safety Clamp: Never let word badge overflow off the canvas boundaries!
+    const bx = Math.max(4, Math.min(this.width - badgeW - 4, x - badgeW / 2));
+    const by = Math.max(4, Math.min(this.height - badgeH - 4, y - badgeH / 2));
 
     ctx.save();
     // Shadow glow for active targeted word
     if (isTarget) {
       ctx.shadowColor = accentColor;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = this.width < 450 ? 6 : 10;
       ctx.fillStyle = 'rgba(10, 15, 25, 0.92)';
       ctx.strokeStyle = accentColor;
       ctx.lineWidth = 2;
@@ -588,7 +609,7 @@ export abstract class BaseGame {
 
     // Word Text
     let curX = bx + padX;
-    const textY = by + fontSize + 1;
+    const textY = by + effectiveFontSize + 1;
 
     if (typed.length > 0) {
       ctx.fillStyle = '#50e3c2';

@@ -110,16 +110,19 @@ export class TypeDefenderGame extends BaseGame {
     if (this.levelWordsKilled + this.enemies.length >= this.levelWordGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
     const word = getRandomWord(cat);
-    const x = Math.random() * (this.width - 200) + 100;
-    const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.4 + 0.8);
+    const minX = Math.max(40, this.width * 0.1);
+    const maxX = Math.min(this.width - 40, this.width * 0.9);
+    const x = Math.random() * (maxX - minX) + minX;
+    const speed = (28 + this.currentLevel * 8) * (Math.random() * 0.4 + 0.8) * this.speedScale;
     const type = this.currentLevel >= 4 ? 'cruiser' : this.currentLevel >= 3 ? 'interceptor' : 'scout';
+    const floorY = this.height - Math.min(75, this.height * 0.18);
 
     this.enemies.push({
       id: this.nextEnemyId++,
       x,
       y: -35,
       targetX: x,
-      targetY: this.height - 75,
+      targetY: floorY,
       vx: (Math.random() - 0.5) * 20,
       vy: speed,
       word,
@@ -132,7 +135,7 @@ export class TypeDefenderGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const expected = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -142,14 +145,20 @@ export class TypeDefenderGame extends BaseGame {
         this.fireLaser(this.currentTarget.x, this.currentTarget.y);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.destroyEnemy(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.enemies
       .filter(e => this.matchesFirstChar(e.word, char))
@@ -162,6 +171,7 @@ export class TypeDefenderGame extends BaseGame {
       this.fireLaser(match.x, match.y);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.destroyEnemy(match);
         this.currentTarget = null;
       }
@@ -173,6 +183,9 @@ export class TypeDefenderGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
@@ -191,6 +204,7 @@ export class TypeDefenderGame extends BaseGame {
   }
 
   private destroyEnemy(enemy: SpaceEnemy): void {
+    this.lastWordCompletedTime = Date.now();
     if (enemy.isBoss && enemy.bossHp && enemy.bossHp > 1) {
       enemy.bossHp--;
       enemy.word = getRandomWord('medium');
@@ -214,7 +228,7 @@ export class TypeDefenderGame extends BaseGame {
     this.wordsCompletedInLevel++;
     this.score += enemy.isBoss ? 350 : 50;
 
-    if (this.levelWordsKilled >= this.levelWordGoal && this.enemies.length === 0) {
+    if (enemy.isBoss || (this.levelWordsKilled >= this.levelWordGoal && this.enemies.length === 0)) {
       this.triggerLevelClear();
     }
   }
@@ -250,23 +264,29 @@ export class TypeDefenderGame extends BaseGame {
     // Enemies update
     for (let i = this.enemies.length - 1; i >= 0; i--) {
       const e = this.enemies[i];
+      const floorY = this.height - Math.min(75, this.height * 0.18);
       if (e.isBoss) {
         e.x += e.vx * dt;
-        if (e.x > this.width - 130 || e.x < 130) {
+        const bossMinX = Math.max(70, this.width * 0.18);
+        const bossMaxX = Math.min(this.width - 70, this.width * 0.82);
+        if (e.x > bossMaxX || e.x < bossMinX) {
           e.vx *= -1;
         }
       } else {
         e.y += e.vy * dt;
         e.x += e.vx * dt;
-        if (e.x < 60 || e.x > this.width - 60) e.vx *= -1;
+        if (e.x < 40 || e.x > this.width - 40) e.vx *= -1;
 
         // Perimeter Breach
-        if (e.y >= this.height - 75) {
+        if (e.y >= floorY) {
           this.takeDamage(20);
           this.spawnExplosion(e.x, e.y, '#ee0000', 30);
-          this.addFloatingText(e.x, this.height - 90, 'PERIMETER BREACH! -20 HP', '#ee0000', 20);
+          this.addFloatingText(e.x, floorY - 15, 'PERIMETER BREACH! -20 HP', '#ee0000', 20);
           if (this.currentTarget === e) this.currentTarget = null;
           this.enemies.splice(i, 1);
+          if (this.levelWordsKilled >= this.levelWordGoal && this.enemies.length === 0) {
+            this.triggerLevelClear();
+          }
           continue;
         }
       }
@@ -280,21 +300,22 @@ export class TypeDefenderGame extends BaseGame {
       ctx.fillRect(star.x, star.y, star.size, star.size);
     }
 
-    // Orbital Defense Energy Shield Floor
-    const shieldGrad = ctx.createLinearGradient(0, this.height - 75, 0, this.height);
+    // Orbital Defense Energy Shield Floor (Responsive)
+    const floorY = this.height - Math.min(75, this.height * 0.18);
+    const shieldGrad = ctx.createLinearGradient(0, floorY, 0, this.height);
     shieldGrad.addColorStop(0, 'rgba(0, 124, 240, 0.0)');
     shieldGrad.addColorStop(0.5, 'rgba(0, 124, 240, 0.2)');
     shieldGrad.addColorStop(1, 'rgba(0, 223, 216, 0.45)');
     ctx.fillStyle = shieldGrad;
-    ctx.fillRect(0, this.height - 75, this.width, 75);
+    ctx.fillRect(0, floorY, this.width, this.height - floorY);
 
     // Defense Grid Line
     ctx.strokeStyle = 'rgba(0, 223, 216, 0.5)';
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
-    ctx.moveTo(0, this.height - 75);
-    ctx.lineTo(this.width, this.height - 75);
+    ctx.moveTo(0, floorY);
+    ctx.lineTo(this.width, floorY);
     ctx.stroke();
     ctx.setLineDash([]);
 

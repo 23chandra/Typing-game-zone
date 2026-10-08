@@ -55,7 +55,7 @@ export class SpeedTyperProGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     const expected = this.currentWord[this.typedIndex];
     if (expected && this.matchesChar(char, expected)) {
@@ -66,11 +66,15 @@ export class SpeedTyperProGame extends BaseGame {
       this.playerProgress += 14;
 
       if (this.typedIndex >= this.currentWord.length) {
+        this.lastWordCompletedTime = Date.now();
         this.wordsCompleted++;
         this.wordsCompletedInLevel++;
         this.score += 50;
         soundEngine.playChime();
-        this.spawnExplosion(120, this.getLaneY(0), '#50e3c2', 14);
+        const trackW = this.width - (this.isMobile ? 80 : 180);
+        const startCarX = this.isMobile ? 28 : 60;
+        const playerCarX = startCarX + Math.min(trackW, (this.playerProgress / this.trackLength) * trackW);
+        this.spawnExplosion(playerCarX - 20, this.getLaneY(0), '#50e3c2', 14);
         this.addFloatingText(this.width / 2, this.getLaneY(0) - 30, '+50 SHIFT GEAR!', '#50e3c2', 20);
 
         if (this.playerProgress >= this.trackLength) {
@@ -82,6 +86,9 @@ export class SpeedTyperProGame extends BaseGame {
         this.nextWord();
       }
     } else {
+      if (char === ' ' && (this.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+        return;
+      }
       this.recordKeystroke(false);
     }
   }
@@ -93,9 +100,17 @@ export class SpeedTyperProGame extends BaseGame {
     }
   }
 
+  private getTrackMetrics() {
+    const dashH = this.isMobile ? 48 : 66;
+    const dashY = this.height - dashH;
+    const startY = this.isMobile ? 65 : 105;
+    const trackH = Math.max(80, dashY - startY - 8);
+    const laneH = trackH / 4;
+    return { dashH, dashY, startY, trackH, laneH };
+  }
+
   private getLaneY(lane: number): number {
-    const startY = 120;
-    const laneH = (this.height - 200) / 4;
+    const { startY, laneH } = this.getTrackMetrics();
     return startY + lane * laneH + laneH / 2;
   }
 
@@ -122,32 +137,32 @@ export class SpeedTyperProGame extends BaseGame {
     ctx.fillStyle = '#0e121a';
     ctx.fillRect(0, 0, this.width, this.height);
 
-    const startY = 110;
-    const trackH = this.height - 200;
-    const laneH = trackH / 4;
+    const { dashY, startY, trackH, laneH } = this.getTrackMetrics();
+    const padX = this.isMobile ? 12 : 30;
 
     // Asphalt Pavement
     ctx.fillStyle = '#181f2c';
-    ctx.fillRect(30, startY, this.width - 60, trackH);
+    ctx.fillRect(padX, startY, this.width - padX * 2, trackH);
 
     // Lane Dividing Dashes
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
     ctx.setLineDash([16, 16]);
     for (let l = 1; l < 4; l++) {
       ctx.beginPath();
-      ctx.moveTo(30, startY + l * laneH);
-      ctx.lineTo(this.width - 30, startY + l * laneH);
+      ctx.moveTo(padX, startY + l * laneH);
+      ctx.lineTo(this.width - padX, startY + l * laneH);
       ctx.stroke();
     }
     ctx.setLineDash([]);
 
     // Finish Line Checkers (Right side)
-    const finishX = this.width - 80;
+    const finishX = this.width - (this.isMobile ? 38 : 75);
+    const finishW = this.isMobile ? 6 : 10;
     for (let f = 0; f < 10; f++) {
       ctx.fillStyle = f % 2 === 0 ? '#ffffff' : '#000000';
-      ctx.fillRect(finishX, startY + f * (trackH / 10), 10, trackH / 10);
+      ctx.fillRect(finishX, startY + f * (trackH / 10), finishW, trackH / 10);
       ctx.fillStyle = f % 2 === 0 ? '#000000' : '#ffffff';
-      ctx.fillRect(finishX + 10, startY + f * (trackH / 10), 10, trackH / 10);
+      ctx.fillRect(finishX + finishW, startY + f * (trackH / 10), finishW, trackH / 10);
     }
 
     // 2. Render Player Formula Car (Lane 0)
@@ -162,16 +177,21 @@ export class SpeedTyperProGame extends BaseGame {
     this.renderSpeedometerDashboard(ctx);
 
     // Center Word Prompt
-    this.drawWordBadge(ctx, this.currentWord, this.typedIndex, this.width / 2, 60, true, '#50e3c2', 24);
+    const promptY = this.isMobile ? 32 : 55;
+    const promptFont = this.isMobile ? 18 : 24;
+    this.drawWordBadge(ctx, this.currentWord, this.typedIndex, this.width / 2, promptY, true, '#50e3c2', promptFont);
   }
 
   private renderFormulaCar(ctx: CanvasRenderingContext2D, progress: number, laneIndex: number, color: string, label: string): void {
     const cy = this.getLaneY(laneIndex);
-    const trackW = this.width - 180;
-    const cx = 60 + Math.min(trackW, (progress / this.trackLength) * trackW);
+    const trackW = this.width - (this.isMobile ? 80 : 180);
+    const startCarX = this.isMobile ? 28 : 60;
+    const cx = startCarX + Math.min(trackW, (progress / this.trackLength) * trackW);
 
     ctx.save();
     ctx.translate(cx, cy);
+    const carScale = this.isMobile ? 0.65 : 1.0;
+    ctx.scale(carScale, carScale);
 
     // Formula F1 Car Body
     ctx.fillStyle = color;
@@ -210,47 +230,49 @@ export class SpeedTyperProGame extends BaseGame {
     ctx.restore();
 
     // Driver Label & Progress Meter
-    ctx.font = 'bold 9px "Geist Mono", monospace';
+    ctx.font = `bold ${this.isMobile ? 8 : 9}px "Geist Mono", monospace`;
     ctx.fillStyle = '#ffffff';
-    ctx.fillText(`${label} [${Math.round((progress / this.trackLength) * 100)}%]`, 40, cy - 14);
+    ctx.fillText(`${label} [${Math.round((progress / this.trackLength) * 100)}%]`, this.isMobile ? 24 : 40, cy - (this.isMobile ? 10 : 14));
   }
 
   private renderSpeedometerDashboard(ctx: CanvasRenderingContext2D): void {
-    const dashY = this.height - 70;
+    const { dashH, dashY } = this.getTrackMetrics();
     ctx.fillStyle = '#0b0f17';
-    ctx.fillRect(0, dashY, this.width, 70);
+    ctx.fillRect(0, dashY, this.width, dashH);
     ctx.strokeStyle = '#00dfd8';
     ctx.lineWidth = 2;
-    ctx.strokeRect(0, dashY, this.width, 70);
+    ctx.strokeRect(0, dashY, this.width, dashH);
 
     // Analog Speedometer Needle Dial on Left
-    const dialX = 80;
-    const dialY = dashY + 35;
+    const dialX = this.isMobile ? 26 : 70;
+    const dialY = dashY + dashH / 2;
+    const dialR = this.isMobile ? 15 : 24;
     ctx.save();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.arc(dialX, dialY, 26, Math.PI * 0.75, Math.PI * 2.25);
+    ctx.arc(dialX, dialY, dialR, Math.PI * 0.75, Math.PI * 2.25);
     ctx.stroke();
 
     // Speed Needle
     const wpmRatio = Math.min(1.0, this.instantWPM / 120);
     const needleAngle = Math.PI * 0.75 + wpmRatio * (Math.PI * 1.5);
     ctx.strokeStyle = '#ff0080';
-    ctx.lineWidth = 2.5;
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(dialX, dialY);
-    ctx.lineTo(dialX + Math.cos(needleAngle) * 22, dialY + Math.sin(needleAngle) * 22);
+    ctx.lineTo(dialX + Math.cos(needleAngle) * (dialR - 3), dialY + Math.sin(needleAngle) * (dialR - 3));
     ctx.stroke();
     ctx.restore();
 
     // Digital WPM readout
-    ctx.font = 'bold 20px "Geist Mono", monospace';
+    const textX = this.isMobile ? 50 : 115;
+    ctx.font = `bold ${this.isMobile ? 14 : 20}px "Geist Mono", monospace`;
     ctx.fillStyle = '#50e3c2';
-    ctx.fillText(`${this.instantWPM} WPM`, 125, dashY + 36);
+    ctx.fillText(`${this.instantWPM} WPM`, textX, dashY + (this.isMobile ? 20 : 34));
 
-    ctx.font = '10px "Geist Mono", monospace';
+    ctx.font = `${this.isMobile ? 8.5 : 10}px "Geist Mono", monospace`;
     ctx.fillStyle = '#8b949e';
-    ctx.fillText(`ACCURACY: ${this.getStats().accuracy}% | STREAK: ${this.streak}x`, 125, dashY + 54);
+    ctx.fillText(`ACC: ${this.getStats().accuracy}% | STREAK: ${this.streak}x`, textX, dashY + (this.isMobile ? 36 : 52));
   }
 }

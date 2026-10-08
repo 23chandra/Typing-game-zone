@@ -53,7 +53,7 @@ export class RhythmBeatGame extends BaseGame {
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'space';
     const word = getRandomWord(cat, this.lang);
     const lane = Math.floor(Math.random() * 4);
-    const speed = (this.bpm / 60) * (this.currentLevel >= 4 ? 48 : 40);
+    const speed = (this.bpm / 60) * (this.currentLevel >= 4 ? 48 : 40) * this.speedScale;
 
     this.notes.push({
       id: this.nextId++,
@@ -67,7 +67,7 @@ export class RhythmBeatGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -78,14 +78,20 @@ export class RhythmBeatGame extends BaseGame {
         this.spawnSparks(nx, this.currentTarget.y, '#50e3c2', 5);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.hitNote(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.notes
       .filter(n => this.matchesFirstChar(n.word, char))
@@ -99,6 +105,7 @@ export class RhythmBeatGame extends BaseGame {
       this.spawnSparks(nx, match.y, '#50e3c2', 5);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.hitNote(match);
         this.currentTarget = null;
       }
@@ -110,17 +117,32 @@ export class RhythmBeatGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
+  public get highwayPadX(): number {
+    return this.width < 450 ? 16 : 60;
+  }
+
+  public get laneW(): number {
+    return (this.width - this.highwayPadX * 2) / 4;
+  }
+
+  public get strikeY(): number {
+    return this.height - Math.min(75, this.height * 0.18);
+  }
+
   private getLaneX(lane: number): number {
-    const laneW = (this.width - 160) / 4;
-    return 80 + lane * laneW + laneW / 2;
+    return this.highwayPadX + lane * this.laneW + this.laneW / 2;
   }
 
   private hitNote(note: BeatNote): void {
-    const strikeY = this.height - 75;
+    this.lastWordCompletedTime = Date.now();
+    const strikeY = this.strikeY;
     const accuracyDelta = Math.abs(note.y - strikeY);
     const nx = this.getLaneX(note.lane);
 
@@ -161,7 +183,7 @@ export class RhythmBeatGame extends BaseGame {
       this.spawnTimer = this.spawnInterval;
     }
 
-    const strikeY = this.height - 75;
+    const strikeY = this.strikeY;
 
     for (let i = this.notes.length - 1; i >= 0; i--) {
       const n = this.notes[i];
@@ -174,6 +196,9 @@ export class RhythmBeatGame extends BaseGame {
         this.addFloatingText(nx, strikeY - 20, 'NOTE MISSED! -20 HP', '#ee0000', 18);
         if (this.currentTarget === n) this.currentTarget = null;
         this.notes.splice(i, 1);
+        if (this.notesHitCount >= this.notesGoal && this.notes.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -194,14 +219,15 @@ export class RhythmBeatGame extends BaseGame {
       ctx.fillRect(this.width / 2 - 120 + i * 25, 45 - barH, 18, barH);
     }
 
-    // 2. 4-Lane 3D Perspective Highway
-    const laneW = (this.width - 160) / 4;
-    const startX = 80;
-    const strikeY = this.height - 75;
+    // 2. 4-Lane Perspective Highway (Responsive)
+    const laneW = this.laneW;
+    const startX = this.highwayPadX;
+    const highwayW = this.width - startX * 2;
+    const strikeY = this.strikeY;
 
     // Highway surface
     ctx.fillStyle = '#0f051d';
-    ctx.fillRect(startX, 0, this.width - 160, this.height);
+    ctx.fillRect(startX, 0, highwayW, this.height);
 
     // Lane Dividers
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
@@ -217,7 +243,7 @@ export class RhythmBeatGame extends BaseGame {
     ctx.fillStyle = '#50e3c2';
     ctx.shadowColor = '#50e3c2';
     ctx.shadowBlur = 15;
-    ctx.fillRect(startX, strikeY - 2, this.width - 160, 4);
+    ctx.fillRect(startX, strikeY - 2, highwayW, 4);
     ctx.shadowBlur = 0;
 
     // HUD Counter

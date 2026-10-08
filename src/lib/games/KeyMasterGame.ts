@@ -78,14 +78,15 @@ export class KeyMasterGame extends BaseGame {
     this.uniqueKeycaps = [];
 
     const totalRowUnits = 15.0;
-    const keyGap = this.width < 450 ? 2 : 4;
-    const padding = this.width < 450 ? 12 : 24;
-    const baseKeySize = Math.min(36, Math.max(12, (this.width - padding * 2 - 14 * keyGap) / totalRowUnits));
+    const keyGap = this.width < 450 ? 1.5 : 4;
+    const padding = this.width < 450 ? 6 : 24;
+    const baseKeySize = Math.min(36, Math.max(10, (this.width - padding * 2 - 14 * keyGap) / totalRowUnits));
     const totalKeyboardWidth = 15.0 * baseKeySize + 14 * keyGap;
-    const startX = Math.max(4, (this.width - totalKeyboardWidth) / 2);
+    const startX = Math.max(2, (this.width - totalKeyboardWidth) / 2);
     const kh = baseKeySize * 1.1;
     const totalKeyboardHeight = 5 * (kh + keyGap + 2);
-    const startY = Math.max(115, this.height - totalKeyboardHeight - 15);
+    const minStartY = this.isMobile ? 68 : 110;
+    const startY = Math.max(minStartY, this.height - totalKeyboardHeight - (this.isMobile ? 8 : 15));
 
     PHYSICAL_KEYBOARD_LAYOUT.forEach((row, rIdx) => {
       let curX = startX;
@@ -177,6 +178,7 @@ export class KeyMasterGame extends BaseGame {
       this.recordKeystroke(true);
 
       if (this.currentTypedIndex >= currentWord.length) {
+        this.lastWordCompletedTime = Date.now();
         this.currentWordIndex++;
         this.currentTypedIndex = 0;
         this.wordsCompletedInLevel++;
@@ -189,8 +191,10 @@ export class KeyMasterGame extends BaseGame {
         }
       }
     } else {
+      if (char === ' ' && (this.currentTypedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+        return;
+      }
       if (cap) cap.errorCount++;
-      soundEngine.playError();
       this.recordKeystroke(false);
     }
   }
@@ -236,19 +240,23 @@ export class KeyMasterGame extends BaseGame {
     const activeCap = this.getKeyCapForChar(expectedChar);
 
     // 2. Active Target Pangram Word Box (Top)
-    this.drawWordBadge(ctx, currentWord, this.currentTypedIndex, this.width / 2, 60, true, theme.main, 24);
+    const promptY = this.isMobile ? 26 : 55;
+    const promptFont = this.isMobile ? 16 : 24;
+    this.drawWordBadge(ctx, currentWord, this.currentTypedIndex, this.width / 2, promptY, true, theme.main, promptFont);
 
     // Dynamic Finger Placement Guide Banner with Theme Primary Color
     if (activeCap) {
-      ctx.font = 'bold 13px "Geist Mono", monospace';
+      const guideFont = this.isMobile ? 10 : 13;
+      const guideY = this.isMobile ? 52 : 98;
+      ctx.font = `bold ${guideFont}px "Geist Mono", monospace`;
       ctx.textAlign = 'center';
       ctx.fillStyle = theme.main;
       ctx.shadowColor = theme.main;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 8;
       const isShift = activeCap.shiftKey && expectedChar === activeCap.shiftKey;
-      const keyPrompt = isShift ? `[${activeCap.shiftKey} (Shift + ${activeCap.display})]` : `[KEY: ${activeCap.display}]`;
-      const handTxt = activeCap.hand === 'left' ? 'LEFT HAND' : activeCap.hand === 'right' ? 'RIGHT HAND' : 'THUMBS';
-      ctx.fillText(`👉 ${handTxt} • ${activeCap.fingerName.toUpperCase()} ${keyPrompt}`, this.width / 2, 102);
+      const keyPrompt = isShift ? `[${activeCap.shiftKey} (Shift)]` : `[KEY: ${activeCap.display}]`;
+      const handTxt = activeCap.hand === 'left' ? 'LEFT' : activeCap.hand === 'right' ? 'RIGHT' : 'THUMBS';
+      ctx.fillText(`👉 ${handTxt} • ${activeCap.fingerName.toUpperCase()} ${keyPrompt}`, this.width / 2, guideY);
       ctx.shadowBlur = 0;
       ctx.textAlign = 'left';
     }
@@ -303,7 +311,9 @@ export class KeyMasterGame extends BaseGame {
     ctx.shadowBlur = 0;
 
     // Keycap Letter Text
-    const fontSize = k.key === ' ' ? 9 : k.shiftKey ? 10 : 11;
+    const fontSize = this.isMobile
+      ? (k.key === ' ' ? 7 : k.shiftKey ? 8 : 8.5)
+      : (k.key === ' ' ? 9 : k.shiftKey ? 10 : 11);
     ctx.font = `bold ${fontSize}px "Geist Mono", monospace`;
     ctx.fillStyle = isTarget ? (theme.isLight ? '#ffffff' : theme.bg) : theme.text;
     ctx.textAlign = 'center';

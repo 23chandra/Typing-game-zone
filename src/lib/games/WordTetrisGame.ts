@@ -47,14 +47,29 @@ export class WordTetrisGame extends BaseGame {
     this.idleTime = 0;
   }
 
+  public get activeColCount(): number {
+    return this.width < 450 ? 3 : this.width < 650 ? 4 : 6;
+  }
+
+  public get colPadX(): number {
+    return this.width < 450 ? 12 : 36;
+  }
+
+  public get colWidth(): number {
+    return (this.width - this.colPadX * 2) / this.activeColCount;
+  }
+
+  public get groundY(): number {
+    return this.height - Math.min(65, this.height * 0.16);
+  }
+
   private spawnBlock(): void {
     if (this.clearedCount + this.blocks.length >= this.clearGoal) return;
     const cat = this.currentLevel === 1 ? 'easy' : this.currentLevel <= 3 ? 'medium' : 'hard';
     const word = getRandomWord(cat, this.lang);
-    const col = Math.floor(Math.random() * this.colCount);
-    const colWidth = (this.width - 120) / this.colCount;
-    const x = 60 + col * colWidth + colWidth / 2;
-    const speed = (30 + this.currentLevel * 9) * (Math.random() * 0.25 + 0.9);
+    const col = Math.floor(Math.random() * this.activeColCount);
+    const x = this.colPadX + col * this.colWidth + this.colWidth / 2;
+    const speed = (30 + this.currentLevel * 9) * (Math.random() * 0.25 + 0.9) * this.speedScale;
 
     const colors = ['#00dfd8', '#ff0080', '#f9cb28', '#7928ca', '#0070f3'];
 
@@ -72,7 +87,7 @@ export class WordTetrisGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -82,14 +97,20 @@ export class WordTetrisGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.currentTarget.y, '#50e3c2', 5);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.destroyBlock(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.blocks
       .filter(b => !b.isLanded && this.matchesFirstChar(b.word, char))
@@ -102,6 +123,7 @@ export class WordTetrisGame extends BaseGame {
       this.spawnSparks(match.x, match.y, '#50e3c2', 5);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.destroyBlock(match);
         this.currentTarget = null;
       }
@@ -113,11 +135,15 @@ export class WordTetrisGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private destroyBlock(block: FallingBlock): void {
+    this.lastWordCompletedTime = Date.now();
     soundEngine.playChime();
     this.spawnExplosion(block.x, block.y, block.color, 26);
     this.triggerScreenShake(0.14, 6);
@@ -130,7 +156,7 @@ export class WordTetrisGame extends BaseGame {
     this.wordsCompletedInLevel++;
     this.score += 70;
 
-    if (this.clearedCount >= this.clearGoal && this.blocks.length === 0) {
+    if (this.clearedCount >= this.clearGoal) {
       this.triggerLevelClear();
     }
   }
@@ -144,7 +170,7 @@ export class WordTetrisGame extends BaseGame {
       this.spawnTimer = this.spawnInterval;
     }
 
-    const groundY = this.height - 65;
+    const groundY = this.groundY;
 
     for (let i = this.blocks.length - 1; i >= 0; i--) {
       const b = this.blocks[i];
@@ -156,6 +182,9 @@ export class WordTetrisGame extends BaseGame {
         this.addFloatingText(b.x, groundY - 30, 'GRID IMPACT! -20 HP', '#ee0000', 18);
         if (this.currentTarget === b) this.currentTarget = null;
         this.blocks.splice(i, 1);
+        if (this.clearedCount >= this.clearGoal && this.blocks.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -165,14 +194,15 @@ export class WordTetrisGame extends BaseGame {
     ctx.fillStyle = '#080612';
     ctx.fillRect(0, 0, this.width, this.height);
 
-    const colWidth = (this.width - 120) / this.colCount;
-    const startX = 60;
-    const groundY = this.height - 65;
+    const colWidth = this.colWidth;
+    const startX = this.colPadX;
+    const groundY = this.groundY;
+    const totalW = this.width - startX * 2;
 
     // Neon Column Grids
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1.2;
-    for (let c = 0; c <= this.colCount; c++) {
+    for (let c = 0; c <= this.activeColCount; c++) {
       const gx = startX + c * colWidth;
       ctx.beginPath();
       ctx.moveTo(gx, 35);
@@ -184,7 +214,7 @@ export class WordTetrisGame extends BaseGame {
     ctx.fillStyle = '#ff0080';
     ctx.shadowColor = '#ff0080';
     ctx.shadowBlur = 12;
-    ctx.fillRect(startX, groundY, this.width - 120, 4);
+    ctx.fillRect(startX, groundY, totalW, 4);
     ctx.shadowBlur = 0;
 
     // HUD Counter

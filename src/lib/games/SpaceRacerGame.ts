@@ -70,7 +70,7 @@ export class SpaceRacerGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -80,14 +80,20 @@ export class SpaceRacerGame extends BaseGame {
         this.playerLane = this.currentTarget.lane;
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.clearGate(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.gates
       .filter(g => !g.cleared && this.matchesFirstChar(g.word, char))
@@ -100,6 +106,7 @@ export class SpaceRacerGame extends BaseGame {
       this.recordKeystroke(true);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.clearGate(match);
         this.currentTarget = null;
       }
@@ -111,11 +118,15 @@ export class SpaceRacerGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private clearGate(gate: WarpGate): void {
+    this.lastWordCompletedTime = Date.now();
     gate.cleared = true;
     soundEngine.playChime();
     this.warpBoostTime = 0.6;
@@ -139,7 +150,7 @@ export class SpaceRacerGame extends BaseGame {
     const fov = 300;
     const depth = Math.max(1, z + fov);
     const scale = fov / depth;
-    const laneWidth = 260;
+    const laneWidth = Math.min(240, this.width * 0.28);
 
     const x = this.width / 2 + lane * laneWidth * scale;
     const y = horizonY + (this.height - horizonY) * scale;
@@ -148,7 +159,8 @@ export class SpaceRacerGame extends BaseGame {
 
   public updateGame(dt: number): void {
     this.idleTime += dt;
-    const speed = this.warpBoostTime > 0 ? this.currentSpeed * 1.8 : this.currentSpeed;
+    const baseSpeed = this.warpBoostTime > 0 ? this.currentSpeed * 1.8 : this.currentSpeed;
+    const speed = baseSpeed * this.speedScale;
     if (this.warpBoostTime > 0) this.warpBoostTime -= dt;
 
     this.gridOffset = (this.gridOffset + speed * dt * 0.6) % 80;
@@ -174,7 +186,11 @@ export class SpaceRacerGame extends BaseGame {
       }
 
       if (g.z <= -100) {
+        if (this.currentTarget === g) this.currentTarget = null;
         this.gates.splice(i, 1);
+        if (this.gatesClearedCount >= this.gatesGoal && this.gates.every(gate => gate.cleared || gate.z <= 0)) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -195,13 +211,14 @@ export class SpaceRacerGame extends BaseGame {
     ctx.fillStyle = '#f9cb28';
     ctx.shadowColor = '#ff0080';
     ctx.shadowBlur = 30;
+    const sunR = Math.min(55, this.width * 0.14);
     ctx.beginPath();
-    ctx.arc(this.width / 2, horizonY, 55, Math.PI, 0);
+    ctx.arc(this.width / 2, horizonY, sunR, Math.PI, 0);
     ctx.fill();
     // Sun horizontal stripes
     ctx.fillStyle = '#28004d';
-    for (let s = 10; s < 50; s += 8) {
-      ctx.fillRect(this.width / 2 - 55, horizonY - s, 110, 3);
+    for (let s = 8; s < sunR - 4; s += 7) {
+      ctx.fillRect(this.width / 2 - sunR, horizonY - s, sunR * 2, 3);
     }
     ctx.restore();
 
@@ -247,22 +264,23 @@ export class SpaceRacerGame extends BaseGame {
 
     // 4. Render Cyber Supercar (Player in foreground)
     const carPos = this.project3D(this.playerVisualLane, 30);
-    this.renderCyberCar(ctx, carPos.x, this.height - 45);
+    this.renderCyberCar(ctx, carPos.x, this.height - (this.isMobile ? 32 : 45));
 
     // HUD Counter
-    ctx.font = 'bold 12px "Geist Mono", monospace';
+    ctx.font = 'bold 11px "Geist Mono", monospace';
     ctx.fillStyle = '#00dfd8';
-    ctx.fillText(`WARP GATES: ${this.gatesClearedCount} / ${this.gatesGoal}`, 30, 25);
+    ctx.fillText(`WARP GATES: ${this.gatesClearedCount} / ${this.gatesGoal}`, this.isMobile ? 12 : 30, 22);
     ctx.fillStyle = '#f9cb28';
     ctx.textAlign = 'right';
     const mph = Math.round(this.currentSpeed * (this.warpBoostTime > 0 ? 1.8 : 1.0));
-    ctx.fillText(`VELOCITY: ${mph} MPH ${this.warpBoostTime > 0 ? '[NITRO BOOST]' : ''}`, this.width - 30, 25);
+    ctx.fillText(`${mph} MPH ${this.warpBoostTime > 0 ? '⚡BOOST' : ''}`, this.width - (this.isMobile ? 12 : 30), 22);
     ctx.textAlign = 'left';
   }
 
   private renderCyberCar(ctx: CanvasRenderingContext2D, x: number, y: number): void {
     ctx.save();
     ctx.translate(x, y);
+    ctx.scale(this.scaleRatio, this.scaleRatio);
 
     // Neon Underglow
     ctx.fillStyle = this.warpBoostTime > 0 ? 'rgba(0, 223, 216, 0.6)' : 'rgba(255, 0, 128, 0.5)';
@@ -304,8 +322,10 @@ export class SpaceRacerGame extends BaseGame {
   private renderWarpGate(ctx: CanvasRenderingContext2D, g: WarpGate): void {
     const isTarget = this.currentTarget === g;
     const pos = this.project3D(g.lane, g.z);
-    const gateW = 180 * pos.scale;
-    const gateH = 140 * pos.scale;
+    const baseGateW = this.isMobile ? 130 : 180;
+    const baseGateH = this.isMobile ? 100 : 140;
+    const gateW = baseGateW * pos.scale;
+    const gateH = baseGateH * pos.scale;
 
     ctx.save();
     ctx.strokeStyle = g.color;

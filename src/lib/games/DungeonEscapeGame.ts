@@ -38,15 +38,23 @@ export class DungeonEscapeGame extends BaseGame {
     ];
   }
 
+  public get floorY(): number {
+    return this.height - Math.min(85, this.height * 0.2);
+  }
+
+  public get runnerX(): number {
+    return Math.max(65, this.width * 0.18);
+  }
+
   public initLevel(levelNumber: number): void {
     const lvl = this.getLevels()[levelNumber - 1] || this.getLevels()[0];
     this.trapsGoal = lvl.wordCount;
     this.trapsClearedCount = 0;
-    this.scrollSpeed = lvl.speed;
+    this.scrollSpeed = lvl.speed * this.speedScale;
     this.spawnDistanceTimer = 1.0;
     this.traps = [];
     this.currentTarget = null;
-    this.runnerY = this.height - 85;
+    this.runnerY = this.floorY;
     this.runnerVY = 0;
     this.isJumping = false;
     this.idleTime = 0;
@@ -71,7 +79,7 @@ export class DungeonEscapeGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -81,14 +89,20 @@ export class DungeonEscapeGame extends BaseGame {
         this.spawnSparks(this.currentTarget.x, this.height - 90, '#50e3c2', 4);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.clearTrap(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.traps
       .filter(t => !t.cleared && this.matchesFirstChar(t.word, char))
@@ -101,6 +115,7 @@ export class DungeonEscapeGame extends BaseGame {
       this.spawnSparks(match.x, this.height - 90, '#50e3c2', 4);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.clearTrap(match);
         this.currentTarget = null;
       }
@@ -112,11 +127,15 @@ export class DungeonEscapeGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
 
   private clearTrap(trap: DungeonTrap): void {
+    this.lastWordCompletedTime = Date.now();
     trap.cleared = true;
     soundEngine.playChime();
     this.spawnExplosion(trap.x, this.height - 90, '#50e3c2', 18);
@@ -143,8 +162,8 @@ export class DungeonEscapeGame extends BaseGame {
     if (this.isJumping) {
       this.runnerY += this.runnerVY * dt * 60;
       this.runnerVY += 18 * dt; // Gravity
-      if (this.runnerY >= this.height - 85) {
-        this.runnerY = this.height - 85;
+      if (this.runnerY >= this.floorY) {
+        this.runnerY = this.floorY;
         this.isJumping = false;
         this.runnerVY = 0;
       }
@@ -166,20 +185,22 @@ export class DungeonEscapeGame extends BaseGame {
       if (trap.x <= this.runnerX + 25 && trap.x >= this.runnerX - 25 && !trap.cleared && !this.isJumping) {
         this.takeDamage(20);
         trap.cleared = true;
-        this.spawnExplosion(trap.x, this.height - 90, '#ee0000', 25);
-        this.addFloatingText(this.runnerX, this.height - 130, 'TRAP HIT! -20 HP', '#ee0000', 20);
+        this.spawnExplosion(trap.x, this.floorY - 5, '#ee0000', 25);
+        this.addFloatingText(this.runnerX, this.floorY - 45, 'TRAP HIT! -20 HP', '#ee0000', 20);
         if (this.currentTarget === trap) this.currentTarget = null;
       }
 
       if (trap.x < -100) {
+        if (this.currentTarget === trap) this.currentTarget = null;
         this.traps.splice(i, 1);
+        if (this.trapsClearedCount >= this.trapsGoal && this.traps.every(t => t.cleared || t.x < this.runnerX)) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
 
   public renderGame(ctx: CanvasRenderingContext2D): void {
-    const floorY = this.height - 85;
-
     // 1. Dark Cavern Brick Background
     ctx.fillStyle = '#0a080d';
     ctx.fillRect(0, 0, this.width, this.height);
@@ -217,9 +238,10 @@ export class DungeonEscapeGame extends BaseGame {
       }
     }
 
-    // Dungeon Stone Floor
+    // Dungeon Stone Floor (Responsive)
+    const floorY = this.floorY;
     ctx.fillStyle = '#231d30';
-    ctx.fillRect(0, floorY, this.width, 85);
+    ctx.fillRect(0, floorY, this.width, this.height - floorY);
     ctx.fillStyle = '#50e3c2';
     ctx.fillRect(0, floorY, this.width, 3);
 

@@ -66,15 +66,23 @@ export class RoboRampageGame extends BaseGame {
     }
   }
 
+  public get playerMechX(): number {
+    return Math.max(65, this.width * 0.18);
+  }
+
+  public get floorY(): number {
+    return this.height - Math.min(85, this.height * 0.2);
+  }
+
   private spawnBossTitan(): void {
     this.mechs.push({
       id: this.nextId++,
       x: this.width + 40,
-      y: this.height - 130,
+      y: this.floorY - 45,
       word: getRandomWord('hard', this.lang),
       typedIndex: 0,
       type: 'titan',
-      speed: 20,
+      speed: 20 * this.speedScale,
       hp: 8,
       maxHp: 8,
       color: '#ff0080',
@@ -92,12 +100,12 @@ export class RoboRampageGame extends BaseGame {
     const type: 'drone' | 'walker' | 'turret' = isDrone ? 'drone' : isWalker ? 'walker' : 'turret';
 
     const baseSpeed = 25 + this.currentLevel * 7;
-    const speed = type === 'drone' ? baseSpeed * 1.3 : baseSpeed;
+    const speed = (type === 'drone' ? baseSpeed * 1.3 : baseSpeed) * this.speedScale;
 
     this.mechs.push({
       id: this.nextId++,
       x: this.width + 30,
-      y: type === 'drone' ? this.height - 180 - Math.random() * 80 : this.height - 110,
+      y: type === 'drone' ? this.floorY - 95 - Math.random() * 50 : this.floorY - 25,
       word,
       typedIndex: 0,
       type,
@@ -111,7 +119,7 @@ export class RoboRampageGame extends BaseGame {
   }
 
   public handleInputChar(char: string): void {
-    soundEngine.playKey();
+    soundEngine.playKey(char === ' ');
 
     if (this.currentTarget) {
       const next = this.currentTarget.word[this.currentTarget.typedIndex];
@@ -121,14 +129,20 @@ export class RoboRampageGame extends BaseGame {
         this.fireMechSalvo(this.currentTarget.x, this.currentTarget.y);
 
         if (this.currentTarget.typedIndex >= this.currentTarget.word.length) {
+          this.lastWordCompletedTime = Date.now();
           this.destroyMech(this.currentTarget);
           this.currentTarget = null;
         }
       } else {
+        if (char === ' ' && (this.currentTarget.typedIndex === 0 || Date.now() - this.lastWordCompletedTime < 1200)) {
+          return;
+        }
         this.recordKeystroke(false);
       }
       return;
     }
+
+    if (char === ' ') return;
 
     const match = this.mechs
       .filter(m => this.matchesFirstChar(m.word, char))
@@ -141,6 +155,7 @@ export class RoboRampageGame extends BaseGame {
       this.fireMechSalvo(match.x, match.y);
 
       if (match.word.length === 1) {
+        this.lastWordCompletedTime = Date.now();
         this.destroyMech(match);
         this.currentTarget = null;
       }
@@ -152,6 +167,9 @@ export class RoboRampageGame extends BaseGame {
   public handleBackspaceKey(): void {
     if (this.currentTarget && this.currentTarget.typedIndex > 0) {
       this.currentTarget.typedIndex--;
+      if (this.currentTarget.typedIndex === 0) {
+        this.currentTarget = null;
+      }
       soundEngine.playKey();
     }
   }
@@ -171,6 +189,7 @@ export class RoboRampageGame extends BaseGame {
   }
 
   private destroyMech(mech: RogueMech): void {
+    this.lastWordCompletedTime = Date.now();
     if (mech.hp > 1) {
       mech.hp--;
       mech.word = getRandomWord('medium', this.lang);
@@ -239,12 +258,15 @@ export class RoboRampageGame extends BaseGame {
       const m = this.mechs[i];
       m.x -= m.speed * dt;
 
-      if (m.x <= 160) {
+      if (m.x <= this.playerMechX + 25) {
         this.takeDamage(20);
         this.spawnExplosion(m.x, m.y, '#ee0000', 30);
-        this.addFloatingText(160, this.height - 180, 'HULL IMPACT! -20 HP', '#ee0000', 20);
+        this.addFloatingText(this.playerMechX, this.floorY - 60, 'HULL IMPACT! -20 HP', '#ee0000', 20);
         if (this.currentTarget === m) this.currentTarget = null;
         this.mechs.splice(i, 1);
+        if (this.destroyedCount >= this.destroyGoal && this.mechs.length === 0) {
+          this.triggerLevelClear();
+        }
       }
     }
   }
@@ -268,10 +290,10 @@ export class RoboRampageGame extends BaseGame {
       ctx.fillStyle = '#0a1017';
     }
 
-    // Metallic Factory Floor with Hazard Stripes
-    const floorY = this.height - 85;
+    // Metallic Factory Floor with Hazard Stripes (Responsive)
+    const floorY = this.floorY;
     ctx.fillStyle = '#17202a';
-    ctx.fillRect(0, floorY, this.width, 85);
+    ctx.fillRect(0, floorY, this.width, this.height - floorY);
     ctx.fillStyle = '#00dfd8';
     ctx.fillRect(0, floorY, this.width, 3);
 
@@ -292,8 +314,8 @@ export class RoboRampageGame extends BaseGame {
     ctx.fillStyle = '#50e3c2';
     ctx.fillText(`ROGUE UNITS NEUTRALIZED: ${this.destroyedCount} / ${this.destroyGoal}`, 30, 25);
 
-    // 2. Render Player Titan Mech (Left: x = 130)
-    this.renderPlayerMech(ctx, 130, floorY);
+    // 2. Render Player Titan Mech (Responsive: playerMechX)
+    this.renderPlayerMech(ctx, this.playerMechX, floorY);
 
     // 3. Render Missiles In Flight
     for (const m of this.missiles) {
